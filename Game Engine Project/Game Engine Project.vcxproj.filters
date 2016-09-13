@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Color.cpp">
+      <Filter>Source Code\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="glmath.cpp">
+      <Filter>Source Code\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Code\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysBody3D.cpp">
+      <Filter>Source Code\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysVehicle3D.cpp">
+      <Filter>Source Code\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Source Code\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Tower.cpp">
+      <Filter>Source Code\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleAudio.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleCamera3D.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleInput.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePhysics3D.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRenderer3D.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleWindow.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene1.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene2.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene3.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene4.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene5.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene6.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleScene7.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneEnd.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePlayer.cpp">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Source Code\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Code\Tools</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="Color.h">
+      <Filter>Source Code\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="glmath.h">
+      <Filter>Source Code\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="p2DynArray.h">
+      <Filter>Source Code\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="p2List.h">
+      <Filter>Source Code\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="p2Point.h">
+      <Filter>Source Code\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Source Code\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysBody3D.h">
+      <Filter>Source Code\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysVehicle3D.h">
+      <Filter>Source Code\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Source Code\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Tower.h">
+      <Filter>Source Code\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleAudio.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleCamera3D.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleInput.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePhysics3D.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRenderer3D.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleWindow.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene1.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene2.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene3.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene4.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene5.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene6.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleScene7.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneEnd.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePlayer.h">
+      <Filter>Source Code\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Source Code\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Code">
+      <UniqueIdentifier>{e0f95dbb-9480-4263-968e-4c8d81d9f35f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Containers">
+      <UniqueIdentifier>{25dffa32-e346-4af8-9669-2bc3f87525f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Helpers">
+      <UniqueIdentifier>{d504f829-ec6d-4862-b41a-942669824cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Modules">
+      <UniqueIdentifier>{f317e83d-1e91-4b12-b14b-79ece024fba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Modules\Game">
+      <UniqueIdentifier>{a8da357b-6bbc-4d9a-8ca1-a22b4fc3a6df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Tools">
+      <UniqueIdentifier>{759f7e70-31f7-4b86-be00-debebc558f59}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -27,11 +27,30 @@ update_status ModuleUI::Update(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	ImGui::ShowTestWindow();
-	//ImGuiIO& io = ImGui::GetIO();
+	ImGuiIO& io = ImGui::GetIO();
 
-	//ImGui::Text("Hello, world!");
+	ImGui::Text("Hello, world!");
+
+	if (ImGui::Button("Quit", ImVec2(100, 50)))
+	{
+		return UPDATE_STOP;
+	}
+
+	if (ImGui::Button("Open Window", ImVec2(100, 50)))
+	{
+		show_second_window ^= 1;
+	}
+
+	if (show_second_window)
+	{
+		ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Another Window", &show_second_window);
+		ImGui::Text("Hi there niggz!");
+		ImGui::BeginMenu("Menu");
+		ImGui::End();
+	}
+
 	ImGui::Render();
-
 	return UPDATE_CONTINUE;
 }
 

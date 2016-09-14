@@ -15,7 +15,7 @@ public:
 	bool CleanUp();
 
 private:
-
+	bool show_second_window = false;
 
 };
 

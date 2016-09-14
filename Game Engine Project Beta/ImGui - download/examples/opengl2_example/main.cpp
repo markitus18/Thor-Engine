@@ -20,7 +20,7 @@ int main(int, char**)
     GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui OpenGL2 example", NULL, NULL);
     glfwMakeContextCurrent(window);
 	 
-	ImGui::ImGuiIO img = ImGui::GetIO();
+	//ImGui::ImGuiIO img = ImGui::GetIO();
 	
     // Setup ImGui binding
     ImGui_ImplGlfw_Init(window, true);

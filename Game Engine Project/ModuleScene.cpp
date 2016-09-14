@@ -5,6 +5,10 @@
 #include "PhysBody3D.h"
 
 
+//#include <stdio.h>
+
+//#include <GLFW/glfw3.h>
+
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -16,6 +20,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
+
 	bool ret = true;
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
@@ -40,7 +45,6 @@ update_status ModuleScene::Update(float dt)
 	Plane p(0, 0, 0, 1);
 	p.axis = true;
 	p.Render();
-
 
 	return UPDATE_CONTINUE;
 }

@@ -48,14 +48,23 @@
     <ClCompile Include="ModuleScene.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>Source Code\ImGui\imgui</Filter>
+    <ClCompile Include="Imgui\imgui_demo.cpp">
+      <Filter>Source Code\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>Source Code\ImGui\imgui</Filter>
+    <ClCompile Include="Imgui\imgui_draw.cpp">
+      <Filter>Source Code\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>Source Code\ImGui\imgui</Filter>
+    <ClCompile Include="Imgui\imgui_impl_sdl_gl3.cpp">
+      <Filter>Source Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui_user2.cpp">
+      <Filter>Source Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui.cpp">
+      <Filter>Source Code\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleUI.cpp">
+      <Filter>Source Code\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,14 +124,32 @@
     <ClInclude Include="ModuleScene.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>Source Code\ImGui\imgui</Filter>
+    <ClInclude Include="Imgui\imgui_impl_sdl_gl3.h">
+      <Filter>Source Code\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>Source Code\ImGui\imgui</Filter>
+    <ClInclude Include="Imgui\imgui_internal.h">
+      <Filter>Source Code\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>Source Code\ImGui\imgui</Filter>
+    <ClInclude Include="Imgui\imgui_user.h">
+      <Filter>Source Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\stb_rect_pack.h">
+      <Filter>Source Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\stb_textedit.h">
+      <Filter>Source Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\stb_truetype.h">
+      <Filter>Source Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imconfig.h">
+      <Filter>Source Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui.h">
+      <Filter>Source Code\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleUI.h">
+      <Filter>Source Code\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,12 +170,6 @@
     </Filter>
     <Filter Include="Source Code\ImGui">
       <UniqueIdentifier>{5064927b-e69e-427b-8674-aed6b4b4e8e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Code\ImGui\imgui">
-      <UniqueIdentifier>{71dcb1b2-209b-411e-b276-a9edc691790c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Code\ImGui\sources">
-      <UniqueIdentifier>{965b172b-d52b-4ba0-8fe2-1dba17e5323c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

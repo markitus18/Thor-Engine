@@ -39,18 +39,52 @@ update_status ModuleUI::Update(float dt)
 		return UPDATE_STOP;
 	}
 
-	if (ImGui::Button("Open Window", ImVec2(100, 50)))
+	char* button_label = "Open Window";
+	if (show_second_window)
+	{
+		button_label = "Close Window";
+	}
+
+	if (ImGui::Button(button_label, ImVec2(100, 50)))
 	{
 		show_second_window ^= 1;
 	}
 
 	if (show_second_window)
 	{
-		ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin("Another Window", &show_second_window, ImVec2(0.f, 0.f), 0.5f);
+		//Setting up window flags
+		ImGuiWindowFlags window_flags = 0;
+		//Allowing menu bar on the window
+		window_flags |= ImGuiWindowFlags_MenuBar;
+
+		//ImGui::SetNextWindowSize(ImVec2(560, 680), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("this is a damn window", &show_second_window, ImVec2(500, 300), 1.0f, window_flags);
 		ImGui::Text("Hi there niggz!");
-		ImGui::BeginMenu("Menu");
-		ImGui::ColorEdit3("Color bitches :D", (float*)&test_color);
+
+		//Menu Bar
+		if (ImGui::BeginMenuBar())
+		{
+			//Menu Bar -- Menu Button
+			if (ImGui::BeginMenu("Menu"))
+			{
+				ImGui::MenuItem("Disabled button", NULL, false, false);
+				ImGui::MenuItem("Menu option 1");
+				ImGui::MenuItem("Menu option 2");
+				ImGui::MenuItem("Menu option 3");
+				ImGui::MenuItem("Menu option 4");
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Edit"))
+			{
+				ImGui::MenuItem("Nothing in here, sorry!", NULL, false, false);
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+
+		
+		ImGui::ColorEdit3("Change Bg color", (float*)&test_color);
 		ImGui::End();
 	}
 

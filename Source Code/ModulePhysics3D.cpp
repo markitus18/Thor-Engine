@@ -149,7 +149,7 @@ bool ModulePhysics3D::ClearVehicle(PhysVehicle3D* vehicle)
 
 	return true;
 }
-
+/*
 PhysBody3D* ModulePhysics3D::Shoot(vec3 position, vec3 direction, float force, float radius)
 {
 	Sphere s(radius);
@@ -159,7 +159,7 @@ PhysBody3D* ModulePhysics3D::Shoot(vec3 position, vec3 direction, float force, f
 	ret->Push(direction.x * force, direction.y * force, direction.z * force);
 	return ret;
 }
-
+*/
 // ---------------------------------------------------------
 update_status ModulePhysics3D::PostUpdate(float dt)
 {
@@ -219,7 +219,7 @@ bool ModulePhysics3D::CleanUp()
 
 	return true;
 }
-
+/*
 // ---------------------------------------------------------
 PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 {
@@ -298,7 +298,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 
 	return pbody;
 }
-
+*/
 // ---------------------------------------------------------
 PhysVehicle3D* ModulePhysics3D::AddVehicle(VehicleInfo& info, float x, float y, float z)
 {
@@ -358,19 +358,8 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(VehicleInfo& info, float x, float y, 
 		vehicle->addWheel(conn, dir, axis, info.wheels[i].suspensionRestLength, info.wheels[i].radius, tuning, info.wheels[i].front);
 	}
 	
-
-
-	//Turret --------------
-	vec3 turretCenter;
-	turretCenter.x = x + info.chassis_offset.x;
-	turretCenter.y = y + info.chassis_offset.y + info.chassis_size.y * 0.5f + 1.0f;
-	turretCenter.z = z + info.chassis_offset.z + info.turret.turretOffset;
-	Sphere turret(info.turret.turretRadius);
-	turret.SetPos(turretCenter.x, turretCenter.y, turretCenter.z);
-	info.turret.turret = AddBody(turret);
-	
 	// ---------------------
-
+	/*
 	//Horizontal joint
 	info.turret.horizontalJoint = new btHingeConstraint(
 		*(body),
@@ -382,17 +371,8 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(VehicleInfo& info, float x, float y, 
 	world->addConstraint(info.turret.horizontalJoint, true);
 	constraints.add(info.turret.horizontalJoint);
 	info.turret.horizontalJoint->setDbgDrawSize(2.0f);
-
+	*/
 	//------------------------
-
-	//Canon
-
-	Cylinder canon(info.turret.canonRadius, info.turret.canonLength);
-	//canon.SetRotation(90, { 0,1,0 });
-	canon.SetPos(turretCenter.x, turretCenter.y, turretCenter.z + info.turret.canonLength);
-	info.turret.canon = AddBody(canon);
-
-	// ---------
 
 	//Vertical joint
 	info.turret.verticalJoint = new btHingeConstraint(
@@ -456,12 +436,13 @@ void ModulePhysics3D::DeleteBody(PhysBody3D* body)
 }
 
 // =============================================
+
 void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
-{
+{/*
 	line.origin.Set(from.getX(), from.getY(), from.getZ());
 	line.destination.Set(to.getX(), to.getY(), to.getZ());
 	line.color.Set(color.getX(), color.getY(), color.getZ());
-	line.Render();
+	line.Render();*/
 }
 
 void DebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)

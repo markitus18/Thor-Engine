@@ -37,33 +37,33 @@ protected:
 };
 
 // ============================================
-class Cube : public Primitive
+class P_Cube : public Primitive
 {
 public :
-	Cube();
-	Cube(float sizeX, float sizeY, float sizeZ);
+	P_Cube();
+	P_Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
 public:
 	vec3 size;
 };
 
 // ============================================
-class Sphere : public Primitive
+class P_Sphere : public Primitive
 {
 public:
-	Sphere();
-	Sphere(float radius);
+	P_Sphere();
+	P_Sphere(float radius);
 	void InnerRender() const;
 public:
 	float radius;
 };
 
 // ============================================
-class Cylinder : public Primitive
+class P_Cylinder : public Primitive
 {
 public:
-	Cylinder();
-	Cylinder(float radius, float height);
+	P_Cylinder();
+	P_Cylinder(float radius, float height);
 	void InnerRender() const;
 public:
 	float radius;
@@ -71,11 +71,11 @@ public:
 };
 
 // ============================================
-class Line : public Primitive
+class P_Line : public Primitive
 {
 public:
-	Line();
-	Line(float x, float y, float z);
+	P_Line();
+	P_Line(float x, float y, float z);
 	void InnerRender() const;
 public:
 	vec3 origin;

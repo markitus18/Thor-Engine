@@ -135,7 +135,7 @@ update_status ModulePhysics3D::Update(float dt)
 		}
 	}
 
-	Cube ground;
+	P_Cube ground;
 	ground.color = { 0.0f, 0.3f, 0.1f };
 	ground.size = { 1000, 10, 1000 };
 	ground.SetPos(0, -5.1f, 0);
@@ -219,9 +219,9 @@ bool ModulePhysics3D::CleanUp()
 
 	return true;
 }
-/*
+
 // ---------------------------------------------------------
-PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
+PhysBody3D* ModulePhysics3D::AddBody(const P_Sphere& sphere, float mass)
 {
 	btCollisionShape* colShape = new btSphereShape(sphere.radius);
 	shapes.add(colShape);
@@ -248,7 +248,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 
 
 // ---------------------------------------------------------
-PhysBody3D* ModulePhysics3D::AddBody(const Cube& cube, float mass)
+PhysBody3D* ModulePhysics3D::AddBody(const P_Cube& cube, float mass)
 {
 	btCollisionShape* colShape = new btBoxShape(btVector3(cube.size.x*0.5f, cube.size.y*0.5f, cube.size.z*0.5f));
 	shapes.add(colShape);
@@ -274,7 +274,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cube& cube, float mass)
 }
 
 // ---------------------------------------------------------
-PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
+PhysBody3D* ModulePhysics3D::AddBody(const P_Cylinder& cylinder, float mass)
 {
 	btCollisionShape* colShape = new btCylinderShapeX(btVector3(cylinder.height*0.5f, cylinder.radius, 0.0f));
 	shapes.add(colShape);
@@ -298,7 +298,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 
 	return pbody;
 }
-*/
+
 // ---------------------------------------------------------
 PhysVehicle3D* ModulePhysics3D::AddVehicle(VehicleInfo& info, float x, float y, float z)
 {

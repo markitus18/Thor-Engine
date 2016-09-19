@@ -151,6 +151,7 @@
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.h" />
     <ClInclude Include="Source Code\glmath.h" />
+    <ClInclude Include="Source Code\Globals.h" />
     <ClInclude Include="Source Code\Light.h" />
     <ClInclude Include="Source Code\Module.h" />
     <ClInclude Include="Source Code\ModuleAudio.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Source Code\PhysVehicle3D.h" />
     <ClInclude Include="Source Code\Primitive.h" />
     <ClInclude Include="Source Code\Timer.h" />
+    <ClInclude Include="Source Code\UI_Console.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLib.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLibFwd.h" />
@@ -232,6 +234,7 @@
     <ClCompile Include="Source Code\PhysVehicle3D.cpp" />
     <ClCompile Include="Source Code\Primitive.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
+    <ClCompile Include="Source Code\UI_Console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source Code\External Libraries\MathGeoLib\src\Geometry\KDTree.inl" />

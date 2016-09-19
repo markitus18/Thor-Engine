@@ -4,6 +4,7 @@
 #include "PhysBody3D.h"
 #include "PhysVehicle3D.h"
 #include "Primitive.h"
+#include "ModuleInput.h"
 #include "glmath.h"
 
 #include "Bullet/src/btBulletDynamicsCommon.h"

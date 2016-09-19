@@ -1,5 +1,15 @@
 #include "Application.h"
 
+#include "Module.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleScene.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleUI.h"
+
 Application::Application()
 {
 	window = new ModuleWindow(this);
@@ -139,6 +149,11 @@ bool Application::CleanUp()
 		item = item->prev;
 	}
 	return ret;
+}
+
+void Application::Log(const char* input)
+{
+	moduleUI->Log(input);
 }
 
 void Application::AddModule(Module* mod)

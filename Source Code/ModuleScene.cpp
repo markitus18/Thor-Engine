@@ -3,7 +3,8 @@
 #include "ModuleScene.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
-
+#include "ModuleCamera3D.h"
+#include "ModuleInput.h"
 
 //#include <stdio.h>
 
@@ -45,6 +46,11 @@ update_status ModuleScene::Update(float dt)
 	P_Plane p(0, 0, 0, 1);
 	p.axis = true;
 	p.Render();
+
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+	{
+		LOG("C DOWN");
+	}
 
 	return UPDATE_CONTINUE;
 }

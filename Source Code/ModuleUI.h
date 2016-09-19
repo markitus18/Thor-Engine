@@ -4,7 +4,7 @@
 #include "Module.h"
 #include "ImGui\imgui.h"
 
-struct ImVec4;
+class UI_Console;
 
 class ModuleUI : public Module
 {
@@ -17,9 +17,12 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void Log(const char* input);
+
 private:
 	bool show_second_window = false;
 	ImVec4 test_color;
+	UI_Console* console = NULL;
 };
 
 #endif

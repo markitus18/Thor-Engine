@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
+#include "UI_Console.h"
 
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
@@ -20,6 +21,8 @@ bool ModuleUI::Init()
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "imgui.ini";
 
+	console = new UI_Console();
+
 	test_color = ImColor(114, 144, 154);
 	return true;
 }
@@ -35,9 +38,34 @@ update_status ModuleUI::Update(float dt)
 
 	if (ImGui::BeginMainMenuBar())
 	{
-		ImGui::MenuItem("File");
-		ImGui::MenuItem("View");
-		ImGui::MenuItem("Help");
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Exit", "Esc"))
+			{
+				ImGui::EndMenu();
+				return UPDATE_STOP;	
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Window"))
+		{
+			if (ImGui::MenuItem("Console"))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("Nothing in here yet, sorry :'(", NULL, false, false))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMainMenuBar();
 	}
 
@@ -95,6 +123,11 @@ update_status ModuleUI::Update(float dt)
 		ImGui::End();
 	}
 
+	if (console->active)
+	{
+		console->Draw("Console", &console->active);
+	}
+
 	//Change background color, we use "test_color", controllable variable from UI
 	glClearColor(test_color.x, test_color.y, test_color.z, test_color.w);
 
@@ -104,6 +137,18 @@ update_status ModuleUI::Update(float dt)
 
 bool ModuleUI::CleanUp()
 {
+	if (console)
+	{
+		delete console;
+		console = NULL;
+	}
+
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
+}
+
+void ModuleUI::Log(const char* input)
+{
+	if (console != NULL)
+		console->AddLog(input);
 }

@@ -33,6 +33,13 @@ update_status ModuleUI::Update(float dt)
 	ImGui::Text("Hello, world!");
 
 
+	if (ImGui::BeginMainMenuBar())
+	{
+		ImGui::MenuItem("File");
+		ImGui::MenuItem("View");
+		ImGui::MenuItem("Help");
+		ImGui::EndMainMenuBar();
+	}
 
 	if (ImGui::Button("Quit", ImVec2(100, 50)))
 	{

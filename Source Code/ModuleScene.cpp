@@ -64,7 +64,6 @@ void ModuleScene::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 
 }
 
-
 void ModuleScene::ResetScene()
 {
 	App->camera->Disable();

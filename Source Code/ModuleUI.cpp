@@ -38,7 +38,7 @@ update_status ModuleUI::Update(float dt)
 
 	if (ImGui::BeginMainMenuBar())
 	{
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor::HSV(1.0f, 0.8f, 0.8f));
+		//ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor::HSV(1.0f, 0.8f, 0.8f));
 		if (ImGui::BeginMenu("File"))
 		{
 			//ImGui::PopStyleColor();
@@ -50,7 +50,7 @@ update_status ModuleUI::Update(float dt)
 			ImGui::EndMenu();
 
 		}
-		ImGui::PopStyleColor();
+		//ImGui::PopStyleColor();
 		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Console          ", "1", &console->active))

@@ -27,28 +27,31 @@ void UI_Console::AddLog(const char* input)
 
 void UI_Console::Draw(const char* title, bool* p_open)
 {
-	if (ImGui::Begin("Console", &active, ImVec2(500, 300), 1.0f, 0))
+	if (!ImGui::Begin("Console", &active, ImVec2(500, 300), 1.0f, 0))
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, -10)); // Tighten spacing
-
-		ImColor col = ImColor(0.6f, 0.6f, 1.0f, 1.0f);
-
-		for (int i = 0; i < items.Size; i++)
-		{
-			const char* item = items[i];
-			ImGui::PushStyleColor(0, col);
-			ImGui::TextUnformatted(item);
-			ImGui::PopStyleColor();
-
-		}
-
-		if (scrollToBottom)
-			ImGui::SetScrollHere(1.0f);
-
-		ImGui::PopStyleVar();
-
-		scrollToBottom = false;
-
 		ImGui::End();
+		return;
 	}
+
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing
+
+	ImColor col = ImColor(0.6f, 0.6f, 1.0f, 1.0f);
+
+	for (int i = 0; i < items.Size; i++)
+	{
+		const char* item = items[i];
+		ImGui::PushStyleColor(0, col);
+		ImGui::TextUnformatted(item);
+		ImGui::PopStyleColor();
+
+	}
+
+	if (scrollToBottom)
+		ImGui::SetScrollHere(1.0f);
+
+	ImGui::PopStyleVar();
+
+	scrollToBottom = false;
+
+	ImGui::End();
 }

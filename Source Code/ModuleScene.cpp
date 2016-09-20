@@ -47,6 +47,10 @@ update_status ModuleScene::Update(float dt)
 	p.axis = true;
 	p.Render();
 
+	//P_Cube c(50, 0, 50);
+	//c.wire = true;
+	//c.axis = true;
+	//c.Render();
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
 	{
 		LOG("C DOWN");

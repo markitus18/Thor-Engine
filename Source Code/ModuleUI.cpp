@@ -38,37 +38,54 @@ update_status ModuleUI::Update(float dt)
 
 	if (ImGui::BeginMainMenuBar())
 	{
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor::HSV(1.0f, 0.8f, 0.8f));
 		if (ImGui::BeginMenu("File"))
 		{
+			//ImGui::PopStyleColor();
 			if (ImGui::MenuItem("Exit          ", "Esc"))
 			{
 				ImGui::EndMenu();
 				return UPDATE_STOP;	
 			}
 			ImGui::EndMenu();
-		}
 
+		}
+		ImGui::PopStyleColor();
 		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Console          ", "1", &console->active))
 			{
-				//int i = 0;
-				//console->active = !console->active;
 			}
 			if (ImGui::MenuItem("Settings         ", "2", &console->active))
 			{
-				//int i = 0;
-				//console->active = !console->active;
 			}
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("Nothing in here yet, sorry :'(", NULL, false, false))
+			if (ImGui::MenuItem("About Thor Engine   "))
 			{
 
 			}
+			ImGui::Separator();
+			if (ImGui::MenuItem("Documentation       "))
+			{
+
+			}
+			if (ImGui::MenuItem("Download latest     "))
+			{
+
+			}
+			if (ImGui::MenuItem("Report a bug        "))
+			{
+
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Debugging Tools"))
+		{
 			ImGui::EndMenu();
 		}
 

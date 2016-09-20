@@ -40,7 +40,7 @@ update_status ModuleUI::Update(float dt)
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Exit", "Esc"))
+			if (ImGui::MenuItem("Exit          ", "Esc"))
 			{
 				ImGui::EndMenu();
 				return UPDATE_STOP;	
@@ -50,9 +50,15 @@ update_status ModuleUI::Update(float dt)
 
 		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::MenuItem("Console"))
+			if (ImGui::MenuItem("Console          ", "1", &console->active))
 			{
-
+				//int i = 0;
+				//console->active = !console->active;
+			}
+			if (ImGui::MenuItem("Settings         ", "2", &console->active))
+			{
+				//int i = 0;
+				//console->active = !console->active;
 			}
 			ImGui::EndMenu();
 		}

@@ -31,7 +31,7 @@ bool ModuleRenderer3D::Init()
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
 	{
-		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
+		LOG("OpenGL context could not be created! SDL_Error: %s", SDL_GetError());
 		ret = false;
 	}
 	
@@ -39,7 +39,7 @@ bool ModuleRenderer3D::Init()
 
 	if (error != GL_NO_ERROR)
 	{
-		LOG("Error initializing glew library! %s\n", SDL_GetError());
+		LOG("Error initializing glew library! %s", SDL_GetError());
 		ret = false;
 	}
 
@@ -47,7 +47,7 @@ bool ModuleRenderer3D::Init()
 	{
 		//Use Vsync
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
-			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+			LOG("Warning: Unable to set VSync! SDL Error: %s", SDL_GetError());
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
@@ -57,7 +57,7 @@ bool ModuleRenderer3D::Init()
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("Error initializing OpenGL! %s", gluErrorString(error));
 			ret = false;
 		}
 
@@ -69,7 +69,7 @@ bool ModuleRenderer3D::Init()
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("Error initializing OpenGL! %s", gluErrorString(error));
 			ret = false;
 		}
 		
@@ -83,7 +83,7 @@ bool ModuleRenderer3D::Init()
 		error = glGetError();
 		if(error != GL_NO_ERROR)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("Error initializing OpenGL! %s", gluErrorString(error));
 			ret = false;
 		}
 		

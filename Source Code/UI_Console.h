@@ -6,8 +6,8 @@
 class UI_Console
 {
 private:
-	ImGuiTextBuffer buffer;
-	bool scrollToBottom;
+	ImVector<char*>	items;
+	bool			scrollToBottom;
 
 public:
 	bool active = true;

@@ -20,7 +20,7 @@ bool ModuleAudio::Init()
 
 	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
 	{
-		LOG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
+		LOG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s", SDL_GetError());
 		ret = false;
 	}
 
@@ -37,7 +37,7 @@ bool ModuleAudio::Init()
 	//Initialize SDL_mixer
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
-		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s", Mix_GetError());
 		ret = false;
 	}
 
@@ -92,7 +92,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 
 	if(music == NULL)
 	{
-		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
+		LOG("Cannot load music %s. Mix_GetError(): %s", path, Mix_GetError());
 		ret = false;
 	}
 	else

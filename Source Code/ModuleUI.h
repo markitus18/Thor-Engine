@@ -27,7 +27,8 @@ private:
 	void ShowSettingsWindow();
 
 private:
-	char buf[26];
+	char tmp_appName[26] = "Not working yet";
+	char tmp_orgName[26] = "Not working yet";
 
 	//Active window controllers
 	bool show_second_window = false;

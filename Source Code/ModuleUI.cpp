@@ -85,7 +85,7 @@ update_status ModuleUI::Update(float dt)
 			}
 			if (ImGui::MenuItem("Report a bug        "))
 			{
-				App->RequestBrowser("https://github.com/ markitus18/Game-Engine/issues");
+				App->RequestBrowser("https://github.com/markitus18/Game-Engine/issues");
 			}
 
 			ImGui::EndMenu();
@@ -210,7 +210,7 @@ void ModuleUI::ShowSettingsWindow()
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
-		ImGui::InputText("Application name", buf, IM_ARRAYSIZE(buf));
+		ImGui::InputText("Application name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
 	}
 
 	if (ImGui::CollapsingHeader("Window"))

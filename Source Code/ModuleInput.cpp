@@ -1,165 +1,123 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
-#include "ModuleWindow.h"
-#include "ModuleEditor.h"
-#include "Event.h"
-#include "SDL/include/SDL.h"
+#include "ModuleRenderer3D.h"
 
 #define MAX_KEYS 300
 
-ModuleInput::ModuleInput(bool start_enabled) : Module("Input", start_enabled)
+ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	keyboard = new KeyState[MAX_KEYS];
-	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
-	memset(mouse_buttons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
+	keyboard = new KEY_STATE[MAX_KEYS];
+	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
+	memset(mouse_buttons, KEY_IDLE, sizeof(KEY_STATE) * MAX_MOUSE_BUTTONS);
 }
 
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	RELEASE_ARRAY(keyboard);
+	delete[] keyboard;
 }
 
 // Called before render is available
-bool ModuleInput::Init(Config* config)
+bool ModuleInput::Init()
 {
 	LOG("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
 
-	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
+	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
+		LOG("SDL_EVENTS could not initialize! SDL_Error: %s", SDL_GetError());
 		ret = false;
 	}
 
 	return ret;
 }
 
-// Called each loop iteration
+// Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
-	static SDL_Event event;
+	SDL_PumpEvents();
 
 	mouse_motion_x = mouse_motion_y = 0;
-	memset(windowEvents, false, WE_COUNT * sizeof(bool));
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
-
-	for (int i = 0; i < MAX_KEYS; ++i)
+	
+	for(int i = 0; i < MAX_KEYS; ++i)
 	{
-		if (keys[i] == 1)
+		if(keys[i] == 1)
 		{
-			if (keyboard[i] == KEY_IDLE)
-			{
+			if(keyboard[i] == KEY_IDLE)
 				keyboard[i] = KEY_DOWN;
-				App->editor->LogInputEvent(i, KEY_DOWN);
-			}
-			else if (keyboard[i] != KEY_REPEAT)
-			{
-
-				App->editor->LogInputEvent(i, KEY_REPEAT);
+			else
 				keyboard[i] = KEY_REPEAT;
-			}
 		}
 		else
 		{
-			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
-			{
+			if(keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
 				keyboard[i] = KEY_UP;
-				App->editor->LogInputEvent(i, KEY_UP);
-			}
 			else
 				keyboard[i] = KEY_IDLE;
 		}
 	}
 
-	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
-	{
-		if (mouse_buttons[i] == KEY_DOWN)
-		{
-			App->editor->LogInputEvent(1000 + i, KEY_DOWN);
-			App->editor->LogInputEvent(1000 + i, KEY_REPEAT);
-			mouse_buttons[i] = KEY_REPEAT;
-		}
+	Uint32 buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
 
-		if (mouse_buttons[i] == KEY_UP)
+	mouse_x /= SCREEN_SIZE;
+	mouse_y /= SCREEN_SIZE;
+	mouse_z = 0;
+
+	for(int i = 0; i < 5; ++i)
+	{
+		if(buttons & SDL_BUTTON(i))
 		{
-			mouse_buttons[i] = KEY_IDLE;
-			App->editor->LogInputEvent(1000 + i, KEY_UP);
+			if(mouse_buttons[i] == KEY_IDLE)
+				mouse_buttons[i] = KEY_DOWN;
+			else
+				mouse_buttons[i] = KEY_REPEAT;
+		}
+		else
+		{
+			if(mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
+				mouse_buttons[i] = KEY_UP;
+			else
+				mouse_buttons[i] = KEY_IDLE;
 		}
 	}
 
-	mouse_wheel = 0;
-
-	while (SDL_PollEvent(&event) != 0)
+	bool quit = false;
+	SDL_Event e;
+	while(SDL_PollEvent(&e))
 	{
-		App->editor->HandleInput(&event);
-		switch (event.type)
+		switch(e.type)
 		{
-		case SDL_QUIT:
-			windowEvents[WE_QUIT] = true;
+			case SDL_MOUSEWHEEL:
+			mouse_z = e.wheel.y;
 			break;
 
-		case SDL_WINDOWEVENT:
-			switch (event.window.event)
+			case SDL_MOUSEMOTION:
+			mouse_x = e.motion.x / SCREEN_SIZE;
+			mouse_y = e.motion.y / SCREEN_SIZE;
+
+			mouse_motion_x = e.motion.xrel / SCREEN_SIZE;
+			mouse_motion_y = e.motion.yrel / SCREEN_SIZE;
+			break;
+
+			case SDL_QUIT:
+			quit = true;
+			break;
+
+			case SDL_WINDOWEVENT:
 			{
-				//case SDL_WINDOWEVENT_LEAVE:
-			case SDL_WINDOWEVENT_HIDDEN:
-			case SDL_WINDOWEVENT_MINIMIZED:
-			case SDL_WINDOWEVENT_FOCUS_LOST:
-				windowEvents[WE_HIDE] = true;
-				break;
-
-				//case SDL_WINDOWEVENT_ENTER:
-			case SDL_WINDOWEVENT_SHOWN:
-			case SDL_WINDOWEVENT_FOCUS_GAINED:
-			case SDL_WINDOWEVENT_MAXIMIZED:
-			case SDL_WINDOWEVENT_RESTORED:
-				windowEvents[WE_SHOW] = true;
-				break;
-
-
-			case SDL_WINDOWEVENT_RESIZED:
-			case SDL_WINDOWEVENT_SIZE_CHANGED:
-				Event ev(Event::window_resize);
-				ev.point2d.x = event.window.data1;
-				ev.point2d.y = event.window.data2;
-				App->BroadcastEvent(ev);
-				break;
+				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
+					App->renderer3D->OnResize(e.window.data1, e.window.data2);
 			}
-			break;
-
-		case SDL_MOUSEBUTTONDOWN:
-			mouse_buttons[event.button.button - 1] = KEY_DOWN;
-			break;
-
-		case SDL_MOUSEBUTTONUP:
-			mouse_buttons[event.button.button - 1] = KEY_UP;
-			break;
-
-		case SDL_MOUSEMOTION:
-			mouse_motion_x = event.motion.xrel;
-			mouse_motion_y = event.motion.yrel;
-			mouse_x = event.motion.x;
-			mouse_y = event.motion.y;
-			break;
-
-		case SDL_MOUSEWHEEL:
-			mouse_wheel = event.wheel.y;
-			break;
-
-		case SDL_DROPFILE:
-			Event ev(Event::file_dropped);
-			ev.string.ptr = event.drop.file;
-			App->BroadcastEvent(ev);
-			SDL_free(event.drop.file);
-			break;
 		}
 	}
 
-	if (GetWindowEvent(EventWindow::WE_QUIT) == true || GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	SDL_PollEvent(&e);
+
+	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
 
 	return UPDATE_CONTINUE;
@@ -168,30 +126,7 @@ update_status ModuleInput::PreUpdate(float dt)
 // Called before quitting
 bool ModuleInput::CleanUp()
 {
-	LOG("Quitting SDL event subsystem");
+	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
-}
-
-// ---------
-bool ModuleInput::GetWindowEvent(EventWindow ev) const
-{
-	return windowEvents[ev];
-}
-
-void ModuleInput::GetMouseMotion(int & x, int & y) const
-{
-	x = mouse_motion_x;
-	y = mouse_motion_y;
-}
-
-void ModuleInput::GetMousePosition(int & x, int & y) const
-{
-	x = mouse_x;
-	y = mouse_y;
-}
-
-int ModuleInput::GetMouseWheel() const
-{
-	return mouse_wheel;
 }

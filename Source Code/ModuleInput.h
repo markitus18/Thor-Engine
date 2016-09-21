@@ -50,12 +50,12 @@ public:
 
 	int GetMouseXMotion() const
 	{
-		return mouse_x_motion;
+		return mouse_motion_x;
 	}
 
 	int GetMouseYMotion() const
 	{
-		return mouse_y_motion;
+		return mouse_motion_y;
 	}
 
 private:
@@ -64,7 +64,6 @@ private:
 	int mouse_x;
 	int mouse_y;
 	int mouse_z;
-	int mouse_x_motion;
-	int mouse_y_motion;
-	//int mouse_z_motion;
+	int mouse_motion_x;
+	int mouse_motion_y;
 };

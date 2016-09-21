@@ -48,6 +48,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void RequestBrowser(char* path);
 	void Log(const char* input);
 
 private:

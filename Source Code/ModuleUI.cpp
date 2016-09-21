@@ -21,6 +21,9 @@ bool ModuleUI::Init()
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "imgui.ini";
 
+	buf = new char[20];
+	buf = "hey";
+
 	console = new UI_Console();
 
 	test_color = ImColor(114, 144, 154);
@@ -30,12 +33,21 @@ bool ModuleUI::Init()
 update_status ModuleUI::Update(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-	ImGui::ShowTestWindow();
 	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::Text("Hello, world!");
 
+	//Showing all windows ----------
+	if (show_About_window)
+		ShowAboutWindow();
+	if (show_Demo_window)
+		ImGui::ShowTestWindow();
+	if (show_Test_window)
+		ShowTestWindow();
+	if (show_Settings_window)
+		ShowSettingsWindow();
 
+	// -----------------------------
 	if (ImGui::BeginMainMenuBar())
 	{
 		//ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor::HSV(1.0f, 0.8f, 0.8f));
@@ -56,7 +68,7 @@ update_status ModuleUI::Update(float dt)
 			if (ImGui::MenuItem("Console          ", "1", &console->active))
 			{
 			}
-			if (ImGui::MenuItem("Settings         ", "2", &console->active))
+			if (ImGui::MenuItem("Settings         ", "2", &show_Settings_window))
 			{
 			}
 			ImGui::EndMenu();
@@ -64,28 +76,27 @@ update_status ModuleUI::Update(float dt)
 
 		if (ImGui::BeginMenu("Help"))
 		{
-			if (ImGui::MenuItem("About Thor Engine   "))
-			{
-
-			}
+			ImGui::MenuItem("About Thor Engine   ", NULL, &show_About_window);
 			ImGui::Separator();
 			if (ImGui::MenuItem("Documentation       "))
 			{
-
+				App->RequestBrowser("https://github.com/markitus18/Game-Engine/wiki");
 			}
 			if (ImGui::MenuItem("Download latest     "))
 			{
-
+				App->RequestBrowser("https://github.com/markitus18/Game-Engine/releases");
 			}
 			if (ImGui::MenuItem("Report a bug        "))
 			{
-
+				App->RequestBrowser("https://github.com/markitus18/Game-Engine/issues");
 			}
+
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Debugging Tools"))
 		{
+			ImGui::MenuItem("ImGui Demo", NULL, &show_Demo_window);
 			ImGui::EndMenu();
 		}
 
@@ -98,52 +109,14 @@ update_status ModuleUI::Update(float dt)
 	}
 
 	char* button_label = "Open Window";
-	if (show_second_window)
+	if (show_Test_window)
 	{
 		button_label = "Close Window";
 	}
 
 	if (ImGui::Button(button_label, ImVec2(100, 50)))
 	{
-		show_second_window ^= 1;
-	}
-
-	if (show_second_window)
-	{
-		//Setting up window flags
-		ImGuiWindowFlags window_flags = 0;
-		//Allowing menu bar on the window
-		window_flags |= ImGuiWindowFlags_MenuBar;
-
-		//ImGui::SetNextWindowSize(ImVec2(560, 680), ImGuiSetCond_FirstUseEver);
-		ImGui::Begin("this is a damn window", &show_second_window, ImVec2(500, 300), 1.0f, window_flags);
-		ImGui::Text("Hi there niggz!");
-
-		//Menu Bar
-		if (ImGui::BeginMenuBar())
-		{
-			//Menu Bar -- Menu Button
-			if (ImGui::BeginMenu("Menu"))
-			{
-				ImGui::MenuItem("Disabled button", NULL, false, false);
-				ImGui::MenuItem("Menu option 1");
-				ImGui::MenuItem("Menu option 2");
-				ImGui::MenuItem("Menu option 3");
-				ImGui::MenuItem("Menu option 4");
-				ImGui::EndMenu();
-			}
-
-			if (ImGui::BeginMenu("Edit"))
-			{
-				ImGui::MenuItem("Nothing in here, sorry!", NULL, false, false);
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenuBar();
-		}
-
-		
-		ImGui::ColorEdit3("Change Bg color", (float*)&test_color);
-		ImGui::End();
+		show_Test_window ^= 1;
 	}
 
 	if (console->active)
@@ -174,4 +147,94 @@ void ModuleUI::Log(const char* input)
 {
 	if (console != NULL)
 		console->AddLog(input);
+}
+
+void ModuleUI::GetEvent(SDL_Event* event)
+{
+	ImGui_ImplSdlGL3_ProcessEvent(event);
+}
+
+void ModuleUI::ShowAboutWindow()
+{
+	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(400, 100), 1.0f);
+	ImGui::Text("v0.1-alpha");
+	ImGui::Separator();
+	ImGui::Text("By Marc Garrigo for educational purposes.");
+	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
+	ImGui::End();	
+}
+
+void ModuleUI::ShowTestWindow()
+{
+	//Setting up window flags
+	ImGuiWindowFlags window_flags = 0;
+	//Allowing menu bar on the window
+	window_flags |= ImGuiWindowFlags_MenuBar;
+	ImGui::Begin("Testing windows", &show_Test_window, ImVec2(500, 300), 1.0f, window_flags);
+	ImGui::Text("Some random text in here!");
+
+	//Menu Bar
+	if (ImGui::BeginMenuBar())
+	{
+		//Menu Bar -- Menu Button
+		if (ImGui::BeginMenu("Menu"))
+		{
+			ImGui::MenuItem("Disabled button", NULL, false, false);
+			ImGui::MenuItem("Menu option 1");
+			ImGui::MenuItem("Menu option 2");
+			ImGui::MenuItem("Menu option 3");
+			ImGui::MenuItem("Menu option 4");
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Edit"))
+		{
+			ImGui::MenuItem("Nothing in here, sorry!", NULL, false, false);
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+
+	ImGui::ColorEdit3("Change Bg color", (float*)&test_color);
+	ImGui::End();
+}
+
+void ModuleUI::ShowSettingsWindow()
+{
+	ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
+	if (ImGui::BeginMenu("Options"))
+	{
+		ImGui::MenuItem("Default", NULL, false, false);
+		ImGui::MenuItem("Save", NULL, false, false);
+		ImGui::MenuItem("Load", NULL, false, false);
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::CollapsingHeader("Application"))
+	{
+		ImGui::InputText("Application name", buf, IM_ARRAYSIZE(buf));
+	}
+
+	if (ImGui::CollapsingHeader("Window"))
+	{
+
+	}
+
+	if (ImGui::CollapsingHeader("File System"))
+	{
+
+	}
+
+	if (ImGui::CollapsingHeader("Input"))
+	{
+
+	}
+
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+
+	}
+
+	ImGui::End();
 }

@@ -151,6 +151,12 @@ bool Application::CleanUp()
 	return ret;
 }
 
+void Application::RequestBrowser(char* path)
+{
+	ShellExecuteA(0, "Open", path, 0, "", 3);
+}
+
+
 void Application::Log(const char* input)
 {
 	moduleUI->Log(input);

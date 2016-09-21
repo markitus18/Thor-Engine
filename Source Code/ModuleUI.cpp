@@ -21,9 +21,6 @@ bool ModuleUI::Init()
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "imgui.ini";
 
-	buf = new char[20];
-	buf = "hey";
-
 	console = new UI_Console();
 
 	test_color = ImColor(114, 144, 154);
@@ -88,7 +85,7 @@ update_status ModuleUI::Update(float dt)
 			}
 			if (ImGui::MenuItem("Report a bug        "))
 			{
-				App->RequestBrowser("https://github.com/markitus18/Game-Engine/issues");
+				App->RequestBrowser("https://github.com/ markitus18/Game-Engine/issues");
 			}
 
 			ImGui::EndMenu();

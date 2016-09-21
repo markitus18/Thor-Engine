@@ -27,7 +27,7 @@ private:
 	void ShowSettingsWindow();
 
 private:
-	char* buf;
+	char buf[26];
 
 	//Active window controllers
 	bool show_second_window = false;

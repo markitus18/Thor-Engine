@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleUI.h"
 
 #define MAX_KEYS 300
 
@@ -37,19 +38,20 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
-	SDL_PumpEvents();
+	static SDL_Event event;
 
 	mouse_motion_x = mouse_motion_y = 0;
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
-	
+	bool quit = false;
+
 	for(int i = 0; i < MAX_KEYS; ++i)
 	{
 		if(keys[i] == 1)
 		{
 			if(keyboard[i] == KEY_IDLE)
 				keyboard[i] = KEY_DOWN;
-			else
+			else if (keyboard[i] != KEY_REPEAT)
 				keyboard[i] = KEY_REPEAT;
 		}
 		else
@@ -65,7 +67,6 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	mouse_x /= SCREEN_SIZE;
 	mouse_y /= SCREEN_SIZE;
-	mouse_z = 0;
 
 	for(int i = 0; i < 5; ++i)
 	{
@@ -85,22 +86,24 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 	}
 
-	bool quit = false;
-	SDL_Event e;
-	while(SDL_PollEvent(&e))
+	mouse_z = 0;
+
+	while(SDL_PollEvent(&event) != 0)
 	{
-		switch(e.type)
+		App->moduleUI->GetEvent(&event);
+
+		switch(event.type)
 		{
 			case SDL_MOUSEWHEEL:
-			mouse_z = e.wheel.y;
+			mouse_z = event.wheel.y;
 			break;
 
 			case SDL_MOUSEMOTION:
-			mouse_x = e.motion.x / SCREEN_SIZE;
-			mouse_y = e.motion.y / SCREEN_SIZE;
+			mouse_x = event.motion.x / SCREEN_SIZE;
+			mouse_y = event.motion.y / SCREEN_SIZE;
 
-			mouse_motion_x = e.motion.xrel / SCREEN_SIZE;
-			mouse_motion_y = e.motion.yrel / SCREEN_SIZE;
+			mouse_motion_x = event.motion.xrel / SCREEN_SIZE;
+			mouse_motion_y = event.motion.yrel / SCREEN_SIZE;
 			break;
 
 			case SDL_QUIT:
@@ -109,13 +112,11 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			case SDL_WINDOWEVENT:
 			{
-				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-					App->renderer3D->OnResize(e.window.data1, e.window.data2);
+				if(event.window.event == SDL_WINDOWEVENT_RESIZED)
+					App->renderer3D->OnResize(event.window.data1, event.window.data2);
 			}
 		}
 	}
-
-	SDL_PollEvent(&e);
 
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;

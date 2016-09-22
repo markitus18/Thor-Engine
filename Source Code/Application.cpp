@@ -57,7 +57,7 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
-	totalTimer.Start();
+
 	// Call Init() in all modules
 	p2List_item<Module*>* item = list_modules.getFirst();
 
@@ -79,7 +79,10 @@ bool Application::Init()
 		item = item->next;
 	}
 	
+	//Setting up all timers
 	frameTimer.Start();
+	frame_ms_cap = (float)1000 / (float)maxFPS;
+
 	return ret;
 }
 
@@ -94,10 +97,22 @@ void Application::PrepareUpdate()
 void Application::FinishUpdate()
 {
 	float frame_ms = frameTimer.Read();
-	if (maxFPS > 0 && frame_ms < (1 / maxFPS))
+	if (frame_ms > 0 && frame_ms < frame_ms_cap)
 	{
-		SDL_Delay(1 / maxFPS - frame_ms);
+		SDL_Delay(frame_ms_cap - frame_ms);
 	}
+
+	frame_count++;
+	if (second_count.Read() >= 1000)
+	{
+		second_count.Start();
+		last_FPS = frame_count;
+		frame_count = 0;
+	}
+
+	App->moduleUI->UpdateFPSData(last_FPS);
+	LOG("Frame MS: %d", frameTimer.Read());
+
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

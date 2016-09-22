@@ -35,10 +35,16 @@ public:
 
 private:
 
-	PerfTimer	pTimer;
+	int			maxFPS = 60;
+	float		frame_ms_cap = 0.0f;
+
 	Timer		frameTimer;
 	float		dt;
-	int			maxFPS = 60;
+
+	//FPS
+	Timer		second_count;
+	int			frame_count;
+	int			last_FPS;
 
 	p2List<Module*> list_modules;
 
@@ -47,7 +53,7 @@ public:
 	Application();
 	~Application();
 
-	Timer totalTimer;
+
 	bool Init();
 	update_status Update();
 	bool CleanUp();

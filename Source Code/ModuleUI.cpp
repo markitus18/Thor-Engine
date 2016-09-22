@@ -158,7 +158,7 @@ void ModuleUI::ShowAboutWindow()
 	ImGui::Separator();
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
-	ImGui::End();	
+	ImGui::End();
 }
 
 void ModuleUI::ShowTestWindow()
@@ -211,6 +211,9 @@ void ModuleUI::ShowSettingsWindow()
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		ImGui::InputText("Project Name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
+		ImGui::PlotHistogram("FPS", FPS_data, IM_ARRAYSIZE(FPS_data), 0, NULL, 0.0f, 120.0f, ImVec2(0, 80));
+
+		//	PlotLines("Lines", values, IM_ARRAYSIZE(values), values_offset, "avg 0.0", -1.0f, 1.0f, ImVec2(0, 80));
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -234,4 +237,21 @@ void ModuleUI::ShowSettingsWindow()
 	}
 
 	ImGui::End();
+}
+
+void ModuleUI::InitFPSData()
+{
+	for (int i = 0; i < 40; i++)
+	{
+		FPS_data[i] = 0;
+	}
+}
+
+void ModuleUI::UpdateFPSData(int fps)
+{
+	for (int i = 0; i < 40; i++)
+	{
+		FPS_data[i] = FPS_data[i + 1];
+	}
+	FPS_data[40 - 1] = fps;
 }

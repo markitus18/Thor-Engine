@@ -79,20 +79,25 @@ bool Application::Init()
 		item = item->next;
 	}
 	
-	ms_timer.Start();
+	frameTimer.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
+	dt = (float)frameTimer.ReadSec();
+	frameTimer.Start();
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	float frame_ms = frameTimer.Read();
+	if (maxFPS > 0 && frame_ms < (1 / maxFPS))
+	{
+		SDL_Delay(1 / maxFPS - frame_ms);
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

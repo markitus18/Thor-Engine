@@ -210,7 +210,7 @@ void ModuleUI::ShowSettingsWindow()
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
-		ImGui::InputText("Application name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
+		ImGui::InputText("Project Name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
 	}
 
 	if (ImGui::CollapsingHeader("Window"))

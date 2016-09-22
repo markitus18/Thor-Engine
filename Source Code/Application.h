@@ -5,6 +5,7 @@
 #include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
+#include "PerfTimer.h"
 
 class Module;
 
@@ -34,8 +35,11 @@ public:
 
 private:
 
-	Timer	ms_timer;
-	float	dt;
+	PerfTimer	pTimer;
+	Timer		frameTimer;
+	float		dt;
+	int			maxFPS = 60;
+
 	p2List<Module*> list_modules;
 
 public:

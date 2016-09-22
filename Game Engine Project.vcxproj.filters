@@ -181,6 +181,9 @@
     <ClCompile Include="Source Code\UI_Console.cpp">
       <Filter>Source Code\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\PerfTimer.cpp">
+      <Filter>Source Code\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -461,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\Globals.h">
       <Filter>Source Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PerfTimer.h">
+      <Filter>Source Code\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

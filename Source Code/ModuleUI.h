@@ -19,7 +19,7 @@ public:
 
 	void Log(const char* input);
 	void GetEvent(SDL_Event* event);
-	void UpdateFPSData(int fps);
+	void UpdateFPSData(int fps, int ms);
 
 private:
 
@@ -40,8 +40,8 @@ private:
 	bool show_Settings_window = true;
 
 	//FPS data saving
-	float FPS_data [40];
-
+	float FPS_data [100];
+	float ms_data[100];
 
 	ImVec4 test_color;
 	UI_Console* console = NULL;

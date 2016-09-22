@@ -110,8 +110,7 @@ void Application::FinishUpdate()
 		frame_count = 0;
 	}
 
-	App->moduleUI->UpdateFPSData(last_FPS);
-	LOG("Frame MS: %d", frameTimer.Read());
+	App->moduleUI->UpdateFPSData(last_FPS, frameTimer.Read());
 
 }
 

@@ -31,6 +31,7 @@ update_status ModuleUI::Update(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	ImGuiIO& io = ImGui::GetIO();
+	io.MouseDrawCursor = true;
 
 	ImGui::Text("Hello, world!");
 
@@ -47,10 +48,8 @@ update_status ModuleUI::Update(float dt)
 	// -----------------------------
 	if (ImGui::BeginMainMenuBar())
 	{
-		//ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor::HSV(1.0f, 0.8f, 0.8f));
 		if (ImGui::BeginMenu("File"))
 		{
-			//ImGui::PopStyleColor();
 			if (ImGui::MenuItem("Exit          ", "Esc"))
 			{
 				ImGui::EndMenu();
@@ -59,7 +58,6 @@ update_status ModuleUI::Update(float dt)
 			ImGui::EndMenu();
 
 		}
-		//ImGui::PopStyleColor();
 		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Console          ", "1", &console->active))
@@ -200,9 +198,13 @@ void ModuleUI::ShowTestWindow()
 void ModuleUI::ShowSettingsWindow()
 {
 	ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
+
 	if (ImGui::BeginMenu("Options"))
 	{
+
 		ImGui::MenuItem("Default", NULL, false, false);
+		if (ImGui::IsItemHovered())
+			ImGui::SetMouseCursor(2);
 		ImGui::MenuItem("Save", NULL, false, false);
 		ImGui::MenuItem("Load", NULL, false, false);
 		ImGui::EndMenu();
@@ -211,9 +213,10 @@ void ModuleUI::ShowSettingsWindow()
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		ImGui::InputText("Project Name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
+		if (ImGui::IsItemHovered())
+			ImGui::SetMouseCursor(1);
 		ImGui::PlotHistogram("FPS", FPS_data, IM_ARRAYSIZE(FPS_data), 0, NULL, 0.0f, 120.0f, ImVec2(0, 80));
-
-		//	PlotLines("Lines", values, IM_ARRAYSIZE(values), values_offset, "avg 0.0", -1.0f, 1.0f, ImVec2(0, 80));
+		ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -241,17 +244,20 @@ void ModuleUI::ShowSettingsWindow()
 
 void ModuleUI::InitFPSData()
 {
-	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		FPS_data[i] = 0;
+		ms_data[i] = 0;
 	}
 }
 
-void ModuleUI::UpdateFPSData(int fps)
+void ModuleUI::UpdateFPSData(int fps, int ms)
 {
-	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		FPS_data[i] = FPS_data[i + 1];
+		ms_data[i] = ms_data[i + 1];
 	}
-	FPS_data[40 - 1] = fps;
+	FPS_data[100 - 1] = fps;
+	ms_data[100 - 1] = ms;
 }

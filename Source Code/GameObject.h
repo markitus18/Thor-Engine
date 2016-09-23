@@ -5,7 +5,7 @@
 
 enum GameObjectTypes
 {
-	GameObject_Point,
+	GameObject_Empty,
 	GameObject_Line,
 	GameObject_Plane,
 	GameObject_Cube,
@@ -25,6 +25,9 @@ public:
 	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
 	GameObjectTypes	GetType() const;
+
+private:
+	void			DrawAxis() const;
 
 public:
 	

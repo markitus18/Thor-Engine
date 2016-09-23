@@ -2,6 +2,7 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "UI_Console.h"
+#include "ModuleInput.h"
 
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
@@ -198,10 +199,8 @@ void ModuleUI::ShowTestWindow()
 void ModuleUI::ShowSettingsWindow()
 {
 	ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
-
 	if (ImGui::BeginMenu("Options"))
 	{
-
 		ImGui::MenuItem("Default", NULL, false, false);
 		if (ImGui::IsItemHovered())
 			ImGui::SetMouseCursor(2);
@@ -231,6 +230,9 @@ void ModuleUI::ShowSettingsWindow()
 
 	if (ImGui::CollapsingHeader("Input"))
 	{
+		ImGui::Text("Mouse position: %i, %i", App->input->GetMouseX(), App->input->GetMouseY());
+		ImGui::Text("Mouse motion: %i, %i", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+		ImGui::Text("Mouse wheel: %i", App->input->GetMouseZ());
 
 	}
 

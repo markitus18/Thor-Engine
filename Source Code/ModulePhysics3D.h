@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2List.h"
-#include "Primitive.h"
+#include "GameObject.h"
 
 #include "Bullet/src/btBulletDynamicsCommon.h"
 
@@ -27,9 +27,9 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	PhysBody3D* AddBody(const P_Sphere& sphere, float mass = 1.0f);
-	PhysBody3D* AddBody(const P_Cube& cube, float mass = 1.0f);
-	PhysBody3D* AddBody(const P_Cylinder& cylinder, float mass = 1.0f);
+	PhysBody3D* AddBody(const GO_Sphere& sphere, float mass = 1.0f);
+	PhysBody3D* AddBody(const GO_Cube& cube, float mass = 1.0f);
+	PhysBody3D* AddBody(const GO_Cylinder& cylinder, float mass = 1.0f);
 	PhysVehicle3D* AddVehicle(VehicleInfo& info, float x, float y, float z);
 
 	bool ClearVehicle(PhysVehicle3D* vehicle);
@@ -75,5 +75,5 @@ public:
 	int	 getDebugMode() const;
 
 	DebugDrawModes mode;
-	Primitive point;
+	GameObject point;
 };

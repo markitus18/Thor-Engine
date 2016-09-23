@@ -2,23 +2,23 @@
 #include "Globals.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "Primitive.h"
+#include "GameObject.h"
 #include "glut/glut.h"
 
 #pragma comment (lib, "glut/glut32.lib")
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
+GameObject::GameObject() : transform(IdentityMatrix), color(White), wire(false), axis(false), type(GameObjectTypes::GameObject_Point)
 {}
 
 // ------------------------------------------------------------
-PrimitiveTypes Primitive::GetType() const
+GameObjectTypes GameObject::GetType() const
 {
 	return type;
 }
 
 // ------------------------------------------------------------
-void Primitive::Render() const
+void GameObject::Render() const
 {
 	glPushMatrix();
 	glMultMatrixf(transform.M);
@@ -57,18 +57,25 @@ void Primitive::Render() const
 
 	glColor3f(color.r, color.g, color.b);
 
-	if(wire)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else
+	//if (wire)
+	//{
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//}
+
+//	else
+//	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//	}
+
 
 	InnerRender();
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glPopMatrix();
 }
 
 // ------------------------------------------------------------
-void Primitive::InnerRender() const
+void GameObject::InnerRender() const
 {
 	glPointSize(5.0f);
 
@@ -82,35 +89,35 @@ void Primitive::InnerRender() const
 }
 
 // ------------------------------------------------------------
-void Primitive::SetPos(float x, float y, float z)
+void GameObject::SetPos(float x, float y, float z)
 {
 	transform.translate(x, y, z);
 }
 
 // ------------------------------------------------------------
-void Primitive::SetRotation(float angle, const vec3 &u)
+void GameObject::SetRotation(float angle, const vec3 &u)
 {
 	transform.rotate(angle, u);
 }
 
 // ------------------------------------------------------------
-void Primitive::Scale(float x, float y, float z)
+void GameObject::Scale(float x, float y, float z)
 {
 	transform.scale(x, y, z);
 }
 
 // CUBE ============================================
-P_Cube::P_Cube() : Primitive(), size(1.0f, 1.0f, 1.0f)
+GO_Cube::GO_Cube() : GameObject(), size(1.0f, 1.0f, 1.0f)
 {
-	type = PrimitiveTypes::Primitive_Cube;
+	type = GameObjectTypes::GameObject_Cube;
 }
 
-P_Cube::P_Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+GO_Cube::GO_Cube(float sizeX, float sizeY, float sizeZ) : GameObject(), size(sizeX, sizeY, sizeZ)
 {
-	type = PrimitiveTypes::Primitive_Cube;
+	type = GameObjectTypes::GameObject_Cube;
 }
 
-void P_Cube::InnerRender() const
+void GO_Cube::InnerRender() const
 {	
 	float sx = size.x * 0.5f;
 	float sy = size.y * 0.5f;
@@ -158,34 +165,34 @@ void P_Cube::InnerRender() const
 }
 
 // SPHERE ============================================
-P_Sphere::P_Sphere() : Primitive(), radius(1.0f)
+GO_Sphere::GO_Sphere() : GameObject(), radius(1.0f)
 {
-	type = PrimitiveTypes::Primitive_Sphere;
+	type = GameObjectTypes::GameObject_Sphere;
 }
 
-P_Sphere::P_Sphere(float radius) : Primitive(), radius(radius)
+GO_Sphere::GO_Sphere(float radius) : GameObject(), radius(radius)
 {
-	type = PrimitiveTypes::Primitive_Sphere;
+	type = GameObjectTypes::GameObject_Sphere;
 }
 
-void P_Sphere::InnerRender() const
+void GO_Sphere::InnerRender() const
 {
 	glutSolidSphere(radius, 25, 25);
 }
 
 
 // CYLINDER ============================================
-P_Cylinder::P_Cylinder() : Primitive(), radius(1.0f), height(1.0f)
+GO_Cylinder::GO_Cylinder() : GameObject(), radius(1.0f), height(1.0f)
 {
-	type = PrimitiveTypes::Primitive_Cylinder;
+	type = GameObjectTypes::GameObject_Cylinder;
 }
 
-P_Cylinder::P_Cylinder(float radius, float height) : Primitive(), radius(radius), height(height)
+GO_Cylinder::GO_Cylinder(float radius, float height) : GameObject(), radius(radius), height(height)
 {
-	type = PrimitiveTypes::Primitive_Cylinder;
+	type = GameObjectTypes::GameObject_Cylinder;
 }
 
-void P_Cylinder::InnerRender() const
+void GO_Cylinder::InnerRender() const
 {
 	int n = 30;
 
@@ -222,17 +229,17 @@ void P_Cylinder::InnerRender() const
 }
 
 // LINE ==================================================
-P_Line::P_Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
+GO_Line::GO_Line() : GameObject(), origin(0, 0, 0), destination(1, 1, 1)
 {
-	type = PrimitiveTypes::Primitive_Line;
+	type = GameObjectTypes::GameObject_Line;
 }
 
-P_Line::P_Line(float x, float y, float z) : Primitive(), origin(0, 0, 0), destination(x, y, z)
+GO_Line::GO_Line(float x, float y, float z) : GameObject(), origin(0, 0, 0), destination(x, y, z)
 {
-	type = PrimitiveTypes::Primitive_Line;
+	type = GameObjectTypes::GameObject_Line;
 }
 
-void P_Line::InnerRender() const
+void GO_Line::InnerRender() const
 {
 	glLineWidth(2.0f);
 
@@ -247,25 +254,48 @@ void P_Line::InnerRender() const
 }
 
 // PLANE ==================================================
-P_Plane::P_Plane() : Primitive(), normal(0, 1, 0), constant(1)
+GO_Plane::GO_Plane() : GameObject(), normal(0, 1, 0), constant(1)
 {
-	type = PrimitiveTypes::Primitive_Plane;
+	type = GameObjectTypes::GameObject_Plane;
 }
 
-P_Plane::P_Plane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
+GO_Plane::GO_Plane(float x, float y, float z, float d) : GameObject(), normal(x, y, z), constant(d)
 {
-	type = PrimitiveTypes::Primitive_Plane;
+	type = GameObjectTypes::GameObject_Plane;
 }
 
-void P_Plane::InnerRender() const
+void GO_Plane::InnerRender() const
+{
+
+	glBegin(GL_QUADS);
+
+	glNormal3f(0.0f, 0.0f, -1.0f);
+
+	glVertex3f(-1, 1, 1);
+	glVertex3f(1, 1, 1);
+	glVertex3f(1, -1, 1);
+	glVertex3f(-1, -1, 1);
+
+	glEnd();
+}
+
+GO_Grid::GO_Grid()
+{
+
+}
+GO_Grid::~GO_Grid()
+{
+
+}
+
+void GO_Grid::InnerRender() const
 {
 	glLineWidth(1.0f);
 
 	glBegin(GL_LINES);
 
 	float d = 20.0f;
-
-	for(float i = -d; i <= d; i += 1.0f)
+	for (float i = -d; i <= d; i += 1.0f)
 	{
 		glVertex3f(i, 0.0f, -d);
 		glVertex3f(i, 0.0f, d);

@@ -169,9 +169,6 @@
     <ClCompile Include="Source Code\PhysVehicle3D.cpp">
       <Filter>Source Code\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\Primitive.cpp">
-      <Filter>Source Code\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Color.cpp">
       <Filter>Source Code\Containers</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="Source Code\PerfTimer.cpp">
       <Filter>Source Code\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\GameObject.cpp">
+      <Filter>Source Code\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -441,9 +441,6 @@
     <ClInclude Include="Source Code\PhysVehicle3D.h">
       <Filter>Source Code\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\Primitive.h">
-      <Filter>Source Code\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\p2List.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
@@ -467,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\PerfTimer.h">
       <Filter>Source Code\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\GameObject.h">
+      <Filter>Source Code\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

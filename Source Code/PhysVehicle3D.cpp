@@ -1,5 +1,5 @@
 #include "PhysVehicle3D.h"
-#include "Primitive.h"
+#include "GameObject.h"
 
 // ----------------------------------------------------------------------------
 VehicleInfo::~VehicleInfo()
@@ -25,9 +25,9 @@ PhysVehicle3D::~PhysVehicle3D()
 void PhysVehicle3D::Render()
 {
 	//Wheels render
-	P_Cylinder wheel;
-	P_Cube wheelRadius;
-	P_Cube joints;
+	GO_Cylinder wheel;
+	GO_Cube wheelRadius;
+	GO_Cube joints;
 
 	wheelRadius.color = Green;
 	wheel.color = Blue;
@@ -49,7 +49,7 @@ void PhysVehicle3D::Render()
 	}
 
 	//Chassis render
-	P_Cube chassis(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
+	GO_Cube chassis(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
 	vehicle->getChassisWorldTransform().getOpenGLMatrix(&chassis.transform);
 	btQuaternion q = vehicle->getChassisWorldTransform().getRotation();
 	btVector3 offset(info.chassis_offset.x, info.chassis_offset.y, info.chassis_offset.z);
@@ -62,7 +62,7 @@ void PhysVehicle3D::Render()
 	chassis.Render();
 
 	//turret render
-	P_Sphere turret;
+	GO_Sphere turret;
 	turret.radius = info.turret.turretRadius;
 	float matrix[16];
 	info.turret.turret->GetTransform(matrix);
@@ -72,7 +72,7 @@ void PhysVehicle3D::Render()
 	turret.Render();
 
 	//Turret base render
-	P_Cylinder turretBase;
+	GO_Cylinder turretBase;
 	turretBase.color = Blue;
 	float x, y, z;
 	info.turret.turret->GetPos(&x,&y,&z);
@@ -84,7 +84,7 @@ void PhysVehicle3D::Render()
 	turretBase.Render();
 
 	//Canon render
-	P_Cylinder canon;
+	GO_Cylinder canon;
 	canon.height = info.turret.canonLength;
 	canon.radius = info.turret.canonRadius;
 	info.turret.canon->GetTransform(matrix);

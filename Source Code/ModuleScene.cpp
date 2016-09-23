@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleScene.h"
-#include "Primitive.h"
+#include "GameObject.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
@@ -26,6 +26,8 @@ bool ModuleScene::Start()
 
 	bool ret = true;
 
+	grid.axis = true;
+
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	timer.Start();
@@ -45,36 +47,27 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
-	P_Plane p(0, 0, 0, 1);
-	p.axis = true;
-	p.Render();
+	grid.Render();
 
-	//Polygon testing --------------
-	glPushMatrix();
-	glColor3f(255, 255, 255);
-
-	glBegin(GL_QUADS);
-
-//	glNormal3f(0.0f, 0.0f, -1.0f);
-
-	glVertex3f(-1, 1, 1);
-	glVertex3f(1, 1, 1);
-	glVertex3f(1, -1, 1);
-	glVertex3f(-1, -1, 1);
-
-	glEnd();
-	glPopMatrix();
-	//-------------------------------
-
-
-	//P_Cube c(50, 0, 50);
-	//c.wire = true;
-	//c.axis = true;
-	//c.Render();
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+	bool toClear = false;
+	for (int i = 0; i < gameObjects.size(); i++)
 	{
-		LOG("C DOWN");
+		if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+		{
+			toClear = true;
+			delete (gameObjects[i]);
+			gameObjects[i] = NULL;
+		}
+		else
+		{
+			if (gameObjects[i] != NULL && gameObjects[i]->alive)
+			{
+				gameObjects[i]->Render();
+			}
+		}
 	}
+	if (toClear)
+		gameObjects.clear();
 
 	return UPDATE_CONTINUE;
 }
@@ -100,4 +93,22 @@ void ModuleScene::ResetScene()
 	this->Disable();
 	this->Enable();
 	App->camera->Enable();
+}
+
+void ModuleScene::CreateCube()
+{
+	GO_Cube* new_cube = new GO_Cube(1, 1, 1);
+	gameObjects.push_back(new_cube);
+}
+
+void ModuleScene::CreateCylinder()
+{
+	GO_Cylinder* new_cyl = new GO_Cylinder(1, 5);
+	gameObjects.push_back(new_cyl);
+}
+
+void ModuleScene::CreateSphere()
+{
+	GO_Sphere* new_sphere = new GO_Sphere(1);
+	gameObjects.push_back(new_sphere);
 }

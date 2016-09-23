@@ -3,67 +3,69 @@
 #include "glmath.h"
 #include "Color.h"
 
-enum PrimitiveTypes
+enum GameObjectTypes
 {
-	Primitive_Point,
-	Primitive_Line,
-	Primitive_Plane,
-	Primitive_Cube,
-	Primitive_Sphere,
-	Primitive_Cylinder
+	GameObject_Point,
+	GameObject_Line,
+	GameObject_Plane,
+	GameObject_Cube,
+	GameObject_Sphere,
+	GameObject_Cylinder
 };
 
-class Primitive
+class GameObject
 {
 public:
 
-	Primitive();
+	GameObject();
 
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 	void			SetPos(float x, float y, float z);
 	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
-	PrimitiveTypes	GetType() const;
+	GameObjectTypes	GetType() const;
 
 public:
 	
 	Color color;
 	mat4x4 transform;
 	bool axis,wire;
+	bool active = true;
+	bool alive = true;
 
 protected:
-	PrimitiveTypes type;
+	GameObjectTypes type;
 };
 
 // ============================================
-class P_Cube : public Primitive
+class GO_Cube : public GameObject
 {
 public :
-	P_Cube();
-	P_Cube(float sizeX, float sizeY, float sizeZ);
+	GO_Cube();
+	GO_Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
 public:
 	vec3 size;
 };
 
 // ============================================
-class P_Sphere : public Primitive
+class GO_Sphere : public GameObject
 {
 public:
-	P_Sphere();
-	P_Sphere(float radius);
+	GO_Sphere();
+	GO_Sphere(float radius);
 	void InnerRender() const;
 public:
 	float radius;
 };
 
 // ============================================
-class P_Cylinder : public Primitive
+class GO_Cylinder : public GameObject
 {
 public:
-	P_Cylinder();
-	P_Cylinder(float radius, float height);
+	GO_Cylinder();
+	GO_Cylinder(float radius, float height);
 	void InnerRender() const;
 public:
 	float radius;
@@ -71,11 +73,11 @@ public:
 };
 
 // ============================================
-class P_Line : public Primitive
+class GO_Line : public GameObject
 {
 public:
-	P_Line();
-	P_Line(float x, float y, float z);
+	GO_Line();
+	GO_Line(float x, float y, float z);
 	void InnerRender() const;
 public:
 	vec3 origin;
@@ -83,13 +85,23 @@ public:
 };
 
 // ============================================
-class P_Plane : public Primitive
+class GO_Plane : public GameObject
 {
 public:
-	P_Plane();
-	P_Plane(float x, float y, float z, float d);
+	GO_Plane();
+	GO_Plane(float x, float y, float z, float d);
 	void InnerRender() const;
 public:
 	vec3 normal;
 	float constant;
+};
+
+class GO_Grid : public GameObject
+{
+public:
+	GO_Grid();
+	~GO_Grid();
+	void InnerRender() const;
+
+
 };

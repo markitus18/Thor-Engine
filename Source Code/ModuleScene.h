@@ -3,7 +3,7 @@
 #include "Module.h"
 #include "p2DynArray.h"
 #include "Globals.h"
-#include "Primitive.h"
+#include "GameObject.h"
 #include "PhysBody3D.h"
 #include "Timer.h"
 
@@ -28,8 +28,14 @@ public:
 	
 	void ResetScene();
 
+	void CreateCube();
+	void CreateCylinder();
+	void CreateSphere();
+
 public:
 	bool reset = false;
+	GO_Grid grid;
 
 	Timer timer;
+	std::vector<GameObject*> gameObjects;
 };

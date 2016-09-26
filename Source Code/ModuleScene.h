@@ -3,7 +3,7 @@
 #include "Module.h"
 #include "p2DynArray.h"
 #include "Globals.h"
-#include "GameObject.h"
+#include "Primitive.h"
 #include "PhysBody3D.h"
 #include "Timer.h"
 
@@ -36,6 +36,11 @@ public:
 	bool reset = false;
 	GO_Grid grid;
 
+	vec3* vertices;
+	uint* index;
+
+	uint  buf_id;
+
 	Timer timer;
-	std::vector<GameObject*> gameObjects;
+	std::vector<Primitive*> Primitives;
 };

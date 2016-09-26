@@ -1,5 +1,5 @@
 #include "PhysVehicle3D.h"
-#include "GameObject.h"
+#include "Primitive.h"
 
 // ----------------------------------------------------------------------------
 VehicleInfo::~VehicleInfo()

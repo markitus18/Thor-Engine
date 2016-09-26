@@ -3,28 +3,28 @@
 #include "glmath.h"
 #include "Color.h"
 
-enum GameObjectTypes
+enum PrimitiveTypes
 {
-	GameObject_Empty,
-	GameObject_Line,
-	GameObject_Plane,
-	GameObject_Cube,
-	GameObject_Sphere,
-	GameObject_Cylinder
+	Primitive_Empty,
+	Primitive_Line,
+	Primitive_Plane,
+	Primitive_Cube,
+	Primitive_Sphere,
+	Primitive_Cylinder
 };
 
-class GameObject
+class Primitive
 {
 public:
 
-	GameObject();
+	Primitive();
 
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 	void			SetPos(float x, float y, float z);
 	void			SetRotation(float angle, const vec3 &u);
 	void			Scale(float x, float y, float z);
-	GameObjectTypes	GetType() const;
+	PrimitiveTypes	GetType() const;
 
 private:
 	void			DrawAxis() const;
@@ -38,11 +38,11 @@ public:
 	bool alive = true;
 
 protected:
-	GameObjectTypes type;
+	PrimitiveTypes type;
 };
 
 // ============================================
-class GO_Cube : public GameObject
+class GO_Cube : public Primitive
 {
 public :
 	GO_Cube();
@@ -53,7 +53,7 @@ public:
 };
 
 // ============================================
-class GO_Sphere : public GameObject
+class GO_Sphere : public Primitive
 {
 public:
 	GO_Sphere();
@@ -64,7 +64,7 @@ public:
 };
 
 // ============================================
-class GO_Cylinder : public GameObject
+class GO_Cylinder : public Primitive
 {
 public:
 	GO_Cylinder();
@@ -76,7 +76,7 @@ public:
 };
 
 // ============================================
-class GO_Line : public GameObject
+class GO_Line : public Primitive
 {
 public:
 	GO_Line();
@@ -88,7 +88,7 @@ public:
 };
 
 // ============================================
-class GO_Plane : public GameObject
+class GO_Plane : public Primitive
 {
 public:
 	GO_Plane();
@@ -99,7 +99,7 @@ public:
 	float constant;
 };
 
-class GO_Grid : public GameObject
+class GO_Grid : public Primitive
 {
 public:
 	GO_Grid();

@@ -181,7 +181,7 @@
     <ClCompile Include="Source Code\PerfTimer.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\GameObject.cpp">
+    <ClCompile Include="Source Code\Primitive.cpp">
       <Filter>Source Code\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -465,7 +465,7 @@
     <ClInclude Include="Source Code\PerfTimer.h">
       <Filter>Source Code\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\GameObject.h">
+    <ClInclude Include="Source Code\Primitive.h">
       <Filter>Source Code\Helpers</Filter>
     </ClInclude>
   </ItemGroup>

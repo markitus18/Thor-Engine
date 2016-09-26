@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleScene.h"
-#include "GameObject.h"
+#include "Primitive.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
@@ -33,6 +33,36 @@ bool ModuleScene::Start()
 	timer.Start();
 	timer.Stop();
 	reset = false;
+
+#pragma region vertices
+	vertices = new vec3[
+
+		//Bottom vertices
+		(0, 0, 0), //0
+		(0, 0, 1), //1
+		(1, 0, 1), //2
+		(1, 0, 0), //3
+
+		//Upper vertices
+		(0, 1, 0), //4
+		(0, 1, 1), //5
+		(1, 1, 1), //6
+		(1, 1, 0) //7
+	];
+
+	index = new uint[0, 7, 3,
+		0, 5, 7,
+
+		0, 1, 5,
+		1, 6, 5
+
+	];
+#pragma endregion
+
+	glGenBuffers(1, (GLuint*) &(buf_id));
+	glBindBuffer(GL_ARRAY_BUFFER, buf_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36  * 3, vertices, GL_STATIC_DRAW);
+
 	return ret;
 }
 
@@ -49,25 +79,35 @@ update_status ModuleScene::Update(float dt)
 {
 	grid.Render();
 
+	//Cube testing
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, buf_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, 36 * 3);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+
+
 	bool toClear = false;
-	for (int i = 0; i < gameObjects.size(); i++)
+	for (int i = 0; i < Primitives.size(); i++)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 		{
 			toClear = true;
-			delete (gameObjects[i]);
-			gameObjects[i] = NULL;
+			delete (Primitives[i]);
+			Primitives[i] = NULL;
 		}
 		else
 		{
-			if (gameObjects[i] != NULL && gameObjects[i]->alive)
+			if (Primitives[i] != NULL && Primitives[i]->alive)
 			{
-				gameObjects[i]->Render();
+				Primitives[i]->Render();
 			}
 		}
 	}
 	if (toClear)
-		gameObjects.clear();
+		Primitives.clear();
 
 	return UPDATE_CONTINUE;
 }
@@ -98,17 +138,17 @@ void ModuleScene::ResetScene()
 void ModuleScene::CreateCube()
 {
 	GO_Cube* new_cube = new GO_Cube(1, 1, 1);
-	gameObjects.push_back(new_cube);
+	Primitives.push_back(new_cube);
 }
 
 void ModuleScene::CreateCylinder()
 {
 	GO_Cylinder* new_cyl = new GO_Cylinder(1, 5);
-	gameObjects.push_back(new_cyl);
+	Primitives.push_back(new_cyl);
 }
 
 void ModuleScene::CreateSphere()
 {
 	GO_Sphere* new_sphere = new GO_Sphere(1);
-	gameObjects.push_back(new_sphere);
+	Primitives.push_back(new_sphere);
 }

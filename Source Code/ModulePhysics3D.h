@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2List.h"
-#include "GameObject.h"
+#include "Primitive.h"
 
 #include "Bullet/src/btBulletDynamicsCommon.h"
 
@@ -75,5 +75,5 @@ public:
 	int	 getDebugMode() const;
 
 	DebugDrawModes mode;
-	GameObject point;
+	Primitive point;
 };

@@ -170,7 +170,7 @@
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\PhysBody3D.h" />
     <ClInclude Include="Source Code\PhysVehicle3D.h" />
-    <ClInclude Include="Source Code\GameObject.h" />
+    <ClInclude Include="Source Code\Primitive.h" />
     <ClInclude Include="Source Code\Timer.h" />
     <ClInclude Include="Source Code\UI_Console.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
@@ -236,7 +236,7 @@
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\PhysBody3D.cpp" />
     <ClCompile Include="Source Code\PhysVehicle3D.cpp" />
-    <ClCompile Include="Source Code\GameObject.cpp" />
+    <ClCompile Include="Source Code\Primitive.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
     <ClCompile Include="Source Code\UI_Console.cpp" />
   </ItemGroup>

@@ -34,38 +34,9 @@ bool ModuleScene::Start()
 	timer.Stop();
 	reset = false;
 
-#pragma region vertices
-	vertices = new vec3[
-
-		//Bottom vertices
-		(0, 0, 0), //0
-		(0, 0, 1), //1
-		(1, 0, 1), //2
-		(1, 0, 0), //3
-
-		//Upper vertices
-		(0, 1, 0), //4
-		(0, 1, 1), //5
-		(1, 1, 1), //6
-		(1, 1, 0) //7
-	];
-
-	index = new uint[0, 7, 3,
-		0, 5, 7,
-
-		0, 1, 5,
-		1, 6, 5
-
-	];
-#pragma endregion
-
-	glGenBuffers(1, (GLuint*) &(buf_id));
-	glBindBuffer(GL_ARRAY_BUFFER, buf_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36  * 3, vertices, GL_STATIC_DRAW);
-
 	return ret;
 }
-
+ 
 // Load assets
 bool ModuleScene::CleanUp()
 {
@@ -78,16 +49,6 @@ bool ModuleScene::CleanUp()
 update_status ModuleScene::Update(float dt)
 {
 	grid.Render();
-
-	//Cube testing
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, buf_id);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawArrays(GL_TRIANGLES, 0, 36 * 3);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-
-
 
 	bool toClear = false;
 	for (int i = 0; i < Primitives.size(); i++)

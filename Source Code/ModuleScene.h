@@ -36,11 +36,6 @@ public:
 	bool reset = false;
 	GO_Grid grid;
 
-	vec3* vertices;
-	uint* index;
-
-	uint  buf_id;
-
 	Timer timer;
 	std::vector<Primitive*> Primitives;
 };

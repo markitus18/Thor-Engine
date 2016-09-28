@@ -9,7 +9,7 @@ private :
 	bool enabled;
 
 public:
-	Application* App = NULL;
+	Application* App;
 
 	Module(Application* parent, bool start_enabled = true) : App(parent)
 	{

@@ -26,17 +26,14 @@ bool ModuleScene::Start()
 
 	bool ret = true;
 
-	grid.axis = true;
-
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	timer.Start();
 	timer.Stop();
 	reset = false;
-
 	return ret;
 }
- 
+
 // Load assets
 bool ModuleScene::CleanUp()
 {
@@ -48,27 +45,36 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
-	grid.Render();
+	P_Plane p(0, 0, 0, 1);
+	p.axis = true;
+	p.Render();
 
-	bool toClear = false;
-	for (int i = 0; i < Primitives.size(); i++)
+	//Polygon testing --------------
+	glPushMatrix();
+	glColor3f(255, 255, 255);
+
+	glBegin(GL_QUADS);
+
+//	glNormal3f(0.0f, 0.0f, -1.0f);
+
+	glVertex3f(-1, 1, 1);
+	glVertex3f(1, 1, 1);
+	glVertex3f(1, -1, 1);
+	glVertex3f(-1, -1, 1);
+
+	glEnd();
+	glPopMatrix();
+	//-------------------------------
+
+
+	//P_Cube c(50, 0, 50);
+	//c.wire = true;
+	//c.axis = true;
+	//c.Render();
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
-		{
-			toClear = true;
-			delete (Primitives[i]);
-			Primitives[i] = NULL;
-		}
-		else
-		{
-			if (Primitives[i] != NULL && Primitives[i]->alive)
-			{
-				Primitives[i]->Render();
-			}
-		}
+		LOG("C DOWN");
 	}
-	if (toClear)
-		Primitives.clear();
 
 	return UPDATE_CONTINUE;
 }
@@ -94,22 +100,4 @@ void ModuleScene::ResetScene()
 	this->Disable();
 	this->Enable();
 	App->camera->Enable();
-}
-
-void ModuleScene::CreateCube()
-{
-	GO_Cube* new_cube = new GO_Cube(1, 1, 1);
-	Primitives.push_back(new_cube);
-}
-
-void ModuleScene::CreateCylinder()
-{
-	GO_Cylinder* new_cyl = new GO_Cylinder(1, 5);
-	Primitives.push_back(new_cyl);
-}
-
-void ModuleScene::CreateSphere()
-{
-	GO_Sphere* new_sphere = new GO_Sphere(1);
-	Primitives.push_back(new_sphere);
 }

@@ -3,8 +3,6 @@
 #include "ModuleWindow.h"
 #include "UI_Console.h"
 #include "ModuleInput.h"
-//TODO
-#include "ModuleScene.h"
 
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
@@ -61,30 +59,6 @@ update_status ModuleUI::Update(float dt)
 			ImGui::EndMenu();
 
 		}
-		if (ImGui::BeginMenu("Game Object"))
-		{
-			if (ImGui::BeginMenu("3D Object"))
-			{
-				ImGui::MenuItem("3D Object", NULL, false, false);
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Cube"))
-				{
-					App->scene->CreateCube();
-				}
-				if (ImGui::MenuItem("Cylinder"))
-				{
-					App->scene->CreateCylinder();
-				}
-				if (ImGui::MenuItem("Sphere"))
-				{
-					App->scene->CreateSphere();
-				}
-				ImGui::EndPopup();
-			}
-			ImGui::EndMenu();
-		}
-
 		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Console          ", "1", &console->active))

@@ -5,7 +5,7 @@
 
 enum PrimitiveTypes
 {
-	Primitive_Empty,
+	Primitive_Point,
 	Primitive_Line,
 	Primitive_Plane,
 	Primitive_Cube,
@@ -26,49 +26,44 @@ public:
 	void			Scale(float x, float y, float z);
 	PrimitiveTypes	GetType() const;
 
-private:
-	void			DrawAxis() const;
-
 public:
 	
 	Color color;
 	mat4x4 transform;
 	bool axis,wire;
-	bool active = true;
-	bool alive = true;
 
 protected:
 	PrimitiveTypes type;
 };
 
 // ============================================
-class GO_Cube : public Primitive
+class P_Cube : public Primitive
 {
 public :
-	GO_Cube();
-	GO_Cube(float sizeX, float sizeY, float sizeZ);
+	P_Cube();
+	P_Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
 public:
 	vec3 size;
 };
 
 // ============================================
-class GO_Sphere : public Primitive
+class P_Sphere : public Primitive
 {
 public:
-	GO_Sphere();
-	GO_Sphere(float radius);
+	P_Sphere();
+	P_Sphere(float radius);
 	void InnerRender() const;
 public:
 	float radius;
 };
 
 // ============================================
-class GO_Cylinder : public Primitive
+class P_Cylinder : public Primitive
 {
 public:
-	GO_Cylinder();
-	GO_Cylinder(float radius, float height);
+	P_Cylinder();
+	P_Cylinder(float radius, float height);
 	void InnerRender() const;
 public:
 	float radius;
@@ -76,11 +71,11 @@ public:
 };
 
 // ============================================
-class GO_Line : public Primitive
+class P_Line : public Primitive
 {
 public:
-	GO_Line();
-	GO_Line(float x, float y, float z);
+	P_Line();
+	P_Line(float x, float y, float z);
 	void InnerRender() const;
 public:
 	vec3 origin;
@@ -88,23 +83,13 @@ public:
 };
 
 // ============================================
-class GO_Plane : public Primitive
+class P_Plane : public Primitive
 {
 public:
-	GO_Plane();
-	GO_Plane(float x, float y, float z, float d);
+	P_Plane();
+	P_Plane(float x, float y, float z, float d);
 	void InnerRender() const;
 public:
 	vec3 normal;
 	float constant;
-};
-
-class GO_Grid : public Primitive
-{
-public:
-	GO_Grid();
-	~GO_Grid();
-	void InnerRender() const;
-
-
 };

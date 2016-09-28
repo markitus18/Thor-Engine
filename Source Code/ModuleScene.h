@@ -28,14 +28,8 @@ public:
 	
 	void ResetScene();
 
-	void CreateCube();
-	void CreateCylinder();
-	void CreateSphere();
-
 public:
 	bool reset = false;
-	GO_Grid grid;
 
 	Timer timer;
-	std::vector<Primitive*> Primitives;
 };

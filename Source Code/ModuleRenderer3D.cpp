@@ -130,6 +130,69 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
+#pragma region Direct-Mode Cube
+
+	glBegin(GL_TRIANGLES);
+	
+	//Front face
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 1, 0);
+	glVertex3f(1, 0, 0);
+
+	glVertex3f(1, 0, 0);
+	glVertex3f(0, 1, 0);
+	glVertex3f(1, 1, 0);
+	
+
+	//Right face
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 1, 1);
+	glVertex3f(0, 1, 0);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, 1);
+	glVertex3f(0, 1, 1);
+
+
+	//Back face
+	glVertex3f(0, 0, 1);
+	glVertex3f(1, 1, 1);
+	glVertex3f(0, 1, 1);
+
+	glVertex3f(0, 0, 1);
+	glVertex3f(1, 0, 1);
+	glVertex3f(1, 1, 1);
+
+	//Left face
+	glVertex3f(1, 0, 0);
+	glVertex3f(1, 1, 0);
+	glVertex3f(1, 0, 1);
+
+	glVertex3f(1, 1, 0);
+	glVertex3f(1, 1, 1);
+	glVertex3f(1, 0, 1);
+
+	//Upper face
+	glVertex3f(0, 1, 0);
+	glVertex3f(0, 1, 1);
+	glVertex3f(1, 1, 0);
+
+	glVertex3f(1, 1, 0);
+	glVertex3f(0, 1, 1);
+	glVertex3f(1, 1, 1);
+
+	//Bottom face
+	glVertex3f(0, 0, 0);
+	glVertex3f(1, 0, 0);
+	glVertex3f(1, 0, 1);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(1, 0, 1);
+	glVertex3f(0, 0, 1);
+
+	glEnd();
+
+#pragma endregion
 	return UPDATE_CONTINUE;
 }
 

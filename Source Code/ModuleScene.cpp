@@ -49,24 +49,6 @@ update_status ModuleScene::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	//Polygon testing --------------
-	glPushMatrix();
-	glColor3f(255, 255, 255);
-
-	glBegin(GL_QUADS);
-
-//	glNormal3f(0.0f, 0.0f, -1.0f);
-
-	glVertex3f(-1, 1, 1);
-	glVertex3f(1, 1, 1);
-	glVertex3f(1, -1, 1);
-	glVertex3f(-1, -1, 1);
-
-	glEnd();
-	glPopMatrix();
-	//-------------------------------
-
-
 	//P_Cube c(50, 0, 50);
 	//c.wire = true;
 	//c.axis = true;

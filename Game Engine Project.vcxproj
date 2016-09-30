@@ -164,6 +164,7 @@
     <ClInclude Include="Source Code\ModuleScene.h" />
     <ClInclude Include="Source Code\ModuleUI.h" />
     <ClInclude Include="Source Code\ModuleWindow.h" />
+    <ClInclude Include="Source Code\OpenGL.h" />
     <ClInclude Include="Source Code\p2DynArray.h" />
     <ClInclude Include="Source Code\p2List.h" />
     <ClInclude Include="Source Code\p2Point.h" />

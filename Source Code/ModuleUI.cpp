@@ -4,6 +4,8 @@
 #include "UI_Console.h"
 #include "ModuleInput.h"
 
+#include "OpenGL.h"
+
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
 

@@ -468,6 +468,9 @@
     <ClInclude Include="Source Code\PerfTimer.h">
       <Filter>Source Code\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\OpenGL.h">
+      <Filter>Source Code\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">

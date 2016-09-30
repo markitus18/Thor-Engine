@@ -25,4 +25,11 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	uint	array_cube_id;
+	uint	index_cube_index_id;
+	uint	index_cube_vertex_id;
+
+	float cube_vertices[24];
+	uint cube_indices[36];
 };

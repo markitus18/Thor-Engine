@@ -6,6 +6,8 @@
 
 #include "OpenGL.h"
 
+#include "ModuleImport.h"
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
@@ -248,6 +250,10 @@ bool ModuleRenderer3D::Init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_cube_index_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, cube_indices, GL_STATIC_DRAW);
 #pragma endregion
+
+
+
+
 	return ret;
 }
 
@@ -361,12 +367,35 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
+#pragma endregion
 
+#pragma region Robot
 
-	while (glGetError() != GL_NO_ERROR)
+	if (!BuffersON)
 	{
-		int e = 0;
+		Mesh* mesh = App->moduleImport->GetMesh();
+
+		glGenBuffers(1, (GLuint*)&mesh->id_vertices);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices, mesh->vertices, GL_STATIC_DRAW);
+
+
+		glGenBuffers(1, (GLuint*)&mesh->id_indices);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+
+		BuffersON = true;
 	}
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.id_vertices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, App->moduleImport->robotMesh.id_indices);
+
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
 #pragma endregion
 	return UPDATE_CONTINUE;
 }

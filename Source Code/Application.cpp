@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleUI.h"
+#include "ModuleImport.h"
 
 Application::Application()
 {
@@ -23,6 +24,7 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 
 	moduleUI = new ModuleUI(this);
+	moduleImport = new ModuleImport(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -41,6 +43,7 @@ Application::Application()
 	AddModule(renderer3D);
 
 	AddModule(moduleUI);
+	AddModule(moduleImport);
 }
 
 Application::~Application()

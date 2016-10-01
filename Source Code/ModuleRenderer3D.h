@@ -32,4 +32,6 @@ public:
 
 	float cube_vertices[24];
 	uint cube_indices[36];
+
+	bool BuffersON = false;
 };

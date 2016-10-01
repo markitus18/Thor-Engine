@@ -6,11 +6,11 @@
 struct Mesh
 {
 	uint	id_vertices = 0;
-	uint	num_indices = 0;
+	uint	num_vertices = 0;
 	uint*	indices = NULL;
 
 	uint	id_indices = 0;
-	uint	num_vertices = 0;
+	uint	num_indices = 0;
 	float*	vertices = NULL;
 };
 
@@ -25,6 +25,11 @@ public:
 
 	bool Init();
 	bool CleanUp();
+	update_status Update(float dt);
+
+	Mesh* GetMesh();
+public:
+	Mesh robotMesh;
 
 private:
 

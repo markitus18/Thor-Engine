@@ -29,7 +29,7 @@ bool ModuleCamera3D::Start()
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 400.0f, -10.0f);
+	Position = vec3(0.0f, 20.0f, -10.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 	return ret;
 }

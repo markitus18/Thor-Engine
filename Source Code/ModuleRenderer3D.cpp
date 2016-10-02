@@ -317,7 +317,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glVertex3f(1, 0, 1);
 
 	//Upper face
-	glColor4f(1, 0, 0, 1);
+	glColor4f(1, 0, 1, 1);
 	glVertex3f(0, 1, 0);
 	glVertex3f(0, 1, 1);
 	glVertex3f(1, 1, 0);

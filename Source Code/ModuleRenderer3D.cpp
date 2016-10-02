@@ -394,15 +394,15 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
-	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.mesh.id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.id_normals);
+	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.mesh.id_normals);
 	glNormalPointer(GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, App->moduleImport->robotMesh.id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, App->moduleImport->robotMesh.mesh.id_indices);
 
-	glDrawElements(GL_TRIANGLES, App->moduleImport->robotMesh.num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, App->moduleImport->robotMesh.mesh.num_indices, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);

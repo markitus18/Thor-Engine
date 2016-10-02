@@ -53,11 +53,10 @@ void ModuleImport::LoadFBX(char* path)
 			LOG("New mesh with %d vertices", robotMesh.num_vertices);
 
 			//Loading mesh faces
-			if (file->mMeshes[i]->HasFaces())
+			if (newMesh->HasFaces())
 			{
 				robotMesh.num_indices = newMesh->mNumFaces * 3;
 				robotMesh.indices = new uint[robotMesh.num_indices];
-
 				for (uint i = 0; i < newMesh->mNumFaces; i++)
 				{
 					if (newMesh->mFaces[i].mNumIndices != 3)
@@ -71,6 +70,14 @@ void ModuleImport::LoadFBX(char* path)
 					}
 				}
 			}
+			//Loading mesh normals
+			if (newMesh->HasNormals())
+			{
+				robotMesh.num_normals = newMesh->mNumVertices;
+				robotMesh.normals = new float[robotMesh.num_normals * 3];
+				memcpy(robotMesh.normals, newMesh->mNormals, sizeof(float) * robotMesh.num_normals * 3);
+			}
+
 		}
 		aiReleaseImport(file);
 	}

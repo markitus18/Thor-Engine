@@ -12,6 +12,10 @@ struct Mesh
 	uint	id_indices = 0;
 	uint	num_indices = 0;
 	float*	vertices = NULL;
+
+	uint	id_normals = 0;
+	uint	num_normals = 0;
+	float*	normals = NULL;
 };
 
 class ModuleImport : public Module

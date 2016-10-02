@@ -384,17 +384,27 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 
+		glGenBuffers(1, (GLuint*)&mesh->id_normals);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->num_normals, mesh->normals, GL_STATIC_DRAW);
+
 		BuffersON = true;
 	}
 
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+
 	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.id_normals);
+	glNormalPointer(GL_FLOAT, 0, NULL);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, App->moduleImport->robotMesh.id_indices);
 
 	glDrawElements(GL_TRIANGLES, App->moduleImport->robotMesh.num_indices, GL_UNSIGNED_INT, NULL);
 
+	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 #pragma endregion
 	return UPDATE_CONTINUE;

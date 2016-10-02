@@ -22,7 +22,7 @@ bool ModuleImport::Init()
 	LOG("Loading Module Import");
 
 	//Assimp initialization -------------
-	LoadFBX("Game/warrior.fbx");
+	LoadFBX("Game/RandomStuff.fbx");
 
 	return true;
 }

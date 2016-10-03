@@ -520,9 +520,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_index_id);
 
 	glBindTexture(GL_TEXTURE_2D, image_texture);
-//	glColor4f(1.0, 0, 1, 1);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
-//	glColor4f(1, 1, 1, 1);
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);

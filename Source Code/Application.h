@@ -19,10 +19,12 @@ class ModuleCamera3D;
 class ModulePhysics3D;
 class ModuleUI;
 class ModuleImport;
+class ModuleFileSystem;
 
 class Application
 {
 public:
+	ModuleFileSystem* fileSystem = NULL;
 	ModuleWindow* window = NULL;
 	ModuleInput* input = NULL;
 	ModuleAudio* audio = NULL;

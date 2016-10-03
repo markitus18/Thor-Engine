@@ -34,5 +34,13 @@ public:
 	float cube_vertices[24];
 	uint cube_indices[36];
 
+	uint	texture_vertex_id;
+	uint	texture_UV_id;
+	uint	texture_index_id;
+
+	float	texture_vertices[16 * 3];
+	float	texture_UV[16 * 2];
+	uint	texture_indices[36];
+
 	bool BuffersON = false;
 };

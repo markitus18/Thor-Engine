@@ -280,8 +280,85 @@ bool ModuleRenderer3D::Init()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, cube_indices, GL_STATIC_DRAW);
 #pragma endregion
 
+#pragma region Textured_Cube
+	//Loading vertex data
+	texture_vertices[0] = 0;		texture_vertices[1] = 1;		texture_vertices[2] = 0;		//0
+	texture_vertices[3] = 1;		texture_vertices[4] = 1;		texture_vertices[5] = 1;		//1
+	texture_vertices[6] = 1;		texture_vertices[7] = 1;		texture_vertices[8] = 1;		//2
+	texture_vertices[9] = 0;		texture_vertices[10] = 1;		texture_vertices[11] = 1;		//3
+	texture_vertices[12] = 0;		texture_vertices[13] = 1;		texture_vertices[14] = 1;		//4
+	texture_vertices[15] = 1;		texture_vertices[16] = 1;		texture_vertices[17] = 0;		//5
+	texture_vertices[18] = 1;		texture_vertices[19] = 0;		texture_vertices[20] = 1;		//6
+	texture_vertices[21] = 1;		texture_vertices[22] = 0;		texture_vertices[23] = 1;		//7
+	texture_vertices[24] = 0;		texture_vertices[25] = 0;		texture_vertices[26] = 1;		//8
+	texture_vertices[27] = 0;		texture_vertices[28] = 0;		texture_vertices[29] = 1;		//9
+	texture_vertices[30] = 1;		texture_vertices[31] = 0;		texture_vertices[32] = 0;		//10
+	texture_vertices[33] = 1;		texture_vertices[34] = 0;		texture_vertices[35] = 0;		//11
+	texture_vertices[36] = 1;		texture_vertices[37] = 0;		texture_vertices[38] = 0;		//12
+	texture_vertices[39] = 0;		texture_vertices[40] = 0;		texture_vertices[41] = 0;		//13
+	texture_vertices[42] = 0;		texture_vertices[43] = 0;		texture_vertices[44] = 0;		//14
+	texture_vertices[45] = 0;		texture_vertices[46] = 0;		texture_vertices[47] = 0;		//15
 
+	for (int i = 0; i < 48; i += 3)
+	{
+		texture_vertices[i] -= 6;
+	}
 
+	glGenBuffers(1, (GLuint*)&texture_vertex_id);
+	glBindBuffer(GL_ARRAY_BUFFER, texture_vertex_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 48, texture_vertices, GL_STATIC_DRAW);
+
+	//Loading UV data
+	texture_UV[0] = 1;	texture_UV[1] = 1;
+	texture_UV[2] = 0;	texture_UV[3] = 0;
+	texture_UV[4] = 1;	texture_UV[5] = 1;
+	texture_UV[6] = 1;	texture_UV[7] = 0;
+	texture_UV[8] = 0;	texture_UV[9] = 1;
+	texture_UV[10] = 0;	texture_UV[11] = 1;
+	texture_UV[12] = 1;	texture_UV[13] = 0;
+	texture_UV[14] = 0;	texture_UV[15] = 0;
+	texture_UV[16] = 0;	texture_UV[17] = 0;
+	texture_UV[18] = 1;	texture_UV[19] = 0;
+	texture_UV[20] = 0;	texture_UV[21] = 0;
+	texture_UV[22] = 1;	texture_UV[23] = 1;
+	texture_UV[24] = 0;	texture_UV[25] = 1;
+	texture_UV[26] = 0;	texture_UV[27] = 1;
+	texture_UV[28] = 1;	texture_UV[29] = 0;
+	texture_UV[30] = 1;	texture_UV[31] = 1;
+
+	glGenBuffers(1, (GLuint*)&texture_UV_id);
+	glBindBuffer(GL_ARRAY_BUFFER, texture_UV_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 32, texture_UV, GL_STATIC_DRAW);
+
+	//Loading index data
+	//Front face
+	texture_indices[0] = 10;		texture_indices[1] = 14;	texture_indices[2] = 0;
+	texture_indices[3] = 10;		texture_indices[4] = 0;		texture_indices[5] = 5;
+
+	//Right face
+	texture_indices[6] = 13;		texture_indices[7] = 8;		texture_indices[8] = 3;
+	texture_indices[9] = 13;		texture_indices[10] = 3;	texture_indices[11] = 0;
+
+	//Left face
+	texture_indices[12] = 6;		texture_indices[13] = 11;	texture_indices[14] = 5;
+	texture_indices[15] = 6;		texture_indices[16] = 5;	texture_indices[17] = 1;
+
+	//Back face
+	texture_indices[18] = 8;		texture_indices[19] = 6;	texture_indices[20] = 2;
+	texture_indices[21] = 8;		texture_indices[22] = 2;	texture_indices[23] = 4;
+
+	//Upper face
+	texture_indices[24] = 5;	texture_indices[25] = 3;	texture_indices[26] = 1;
+	texture_indices[27] = 5;	texture_indices[28] = 0;	texture_indices[29] = 3;
+
+	//Bottom face
+	texture_indices[30] = 15;	texture_indices[31] = 12;	texture_indices[32] = 7;
+	texture_indices[33] = 15;	texture_indices[34] = 7;	texture_indices[35] = 9;
+
+	glGenBuffers(1, (GLuint*)&texture_index_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_index_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, texture_indices, GL_STATIC_DRAW);
+#pragma endregion
 
 	return ret;
 }
@@ -304,7 +381,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 #pragma region Direct-Mode Cube
 
 	glBindTexture(GL_TEXTURE_2D, image_texture);
-	glBegin(GL_TRIANGLES);
+	glBegin(GL_TRIANGLES);
+
 
 	//Front face
 	glTexCoord2f(0.0f, 0.0f);
@@ -427,6 +505,30 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 #pragma endregion
+
+#pragma region Textured_Cube
+
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, texture_vertex_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, texture_UV_id);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_index_id);
+
+	glBindTexture(GL_TEXTURE_2D, image_texture);
+//	glColor4f(1.0, 0, 1, 1);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+//	glColor4f(1, 1, 1, 1);
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, 0);
+#pragma endregion
+
 
 	return UPDATE_CONTINUE;
 }

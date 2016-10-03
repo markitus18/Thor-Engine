@@ -5,7 +5,8 @@
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
-
+#include "ModuleImport.h"
+#include "GameObject.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 //#include <stdio.h>
@@ -23,6 +24,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
+	AddGameObject("Game/RandomStuff.fbx");
 
 	bool ret = true;
 
@@ -45,17 +47,24 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
-	P_Plane p(0, 0, 0, 1);
-	p.axis = true;
-	p.Render();
-
-	//P_Cube c(50, 0, 50);
-	//c.wire = true;
-	//c.axis = true;
-	//c.Render();
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+	if (drawGrid)
 	{
-		LOG("C DOWN");
+		P_Plane p(0, 0, 0, 1);
+		p.axis = true;
+		p.Render();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+	{
+		drawGrid = !drawGrid;
+	}
+
+	std::list<GameObject*>::iterator it = gameObjects.begin();
+	
+	while (it != gameObjects.end())
+	{
+		(*it)->mesh.Draw();
+		it++;;
 	}
 
 	return UPDATE_CONTINUE;
@@ -82,4 +91,13 @@ void ModuleScene::ResetScene()
 	this->Disable();
 	this->Enable();
 	App->camera->Enable();
+}
+
+void ModuleScene::AddGameObject(char* mesh_path)
+{
+	GameObject* gameObject = App->moduleImport->LoadFBX(mesh_path);
+	if (gameObject)
+	{
+		gameObjects.push_back(gameObject);
+	}
 }

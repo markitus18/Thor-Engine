@@ -9,6 +9,7 @@ class GameObject
 {
 public:
 	GameObject();
+	GameObject(const Mesh& mesh);
 	~GameObject();
 
 public:

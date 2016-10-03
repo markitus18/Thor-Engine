@@ -5,7 +5,6 @@
 #include "ModuleWindow.h"
 
 #include "OpenGL.h"
-
 #include "ModuleImport.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -132,6 +131,36 @@ bool ModuleRenderer3D::Init()
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+#pragma region Direct_texture
+
+	GLubyte checkImage[40][40][4];
+	for (int i = 0; i < 40; i++)
+	{
+		for (int j = 0; j < 40; j++)
+		{
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &image_texture);
+	glBindTexture(GL_TEXTURE_2D, image_texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 40, 40, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+#pragma endregion
 
 #pragma region Array_Cube
 
@@ -274,71 +303,101 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 #pragma region Direct-Mode Cube
 
-	glBegin(GL_TRIANGLES);
+	glBindTexture(GL_TEXTURE_2D, image_texture);
+	glBegin(GL_TRIANGLES);
 
 	//Front face
-	glColor4f(1, 0, 0, 1);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 0, 0);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0, 1, 0);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 0, 0);
 
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 0, 0);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0, 1, 0);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1, 1, 0);
 	
 	//Right face
-	glColor4f(1, 0, 0, 1);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 0, 0);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(0, 1, 1);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0, 1, 0);
 
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 0, 0);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0, 0, 1);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(0, 1, 1);
 
 	//Back face
-	glColor4f(1, 0, 0, 1);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 0, 1);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1, 1, 1);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0, 1, 1);
 
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 0, 1);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 0, 1);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1, 1, 1);
 
 	//Left face
-	glColor4f(1, 0, 0, 1);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(1, 0, 0);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 1, 0);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1, 0, 1);
 
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 1, 0);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1, 1, 1);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(1, 0, 1);
 
 	//Upper face
-	glColor4f(1, 0, 1, 1);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 1, 0);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0, 1, 1);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 1, 0);
 
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 1, 0);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0, 1, 1);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1, 1, 1);
 
 	//Bottom face
-	glColor4f(1, 0, 0, 1);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 0, 0);
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(1, 0, 0);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1, 0, 1);
 
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0, 0, 0);
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(1, 0, 1);
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0, 0, 1);
 
-	glColor4f(1.0, 1, 1, 1);
 	glEnd();
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 #pragma endregion
 
 #pragma region Array Cube
@@ -369,44 +428,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 #pragma endregion
 
-#pragma region Robot
-
-	if (!BuffersON)
-	{
-		Mesh* mesh = App->moduleImport->GetMesh();
-
-		glGenBuffers(1, (GLuint*)&mesh->id_vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
-
-
-		glGenBuffers(1, (GLuint*)&mesh->id_indices);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
-
-		glGenBuffers(1, (GLuint*)&mesh->id_normals);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->num_normals, mesh->normals, GL_STATIC_DRAW);
-
-		BuffersON = true;
-	}
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-
-	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.mesh.id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, App->moduleImport->robotMesh.mesh.id_normals);
-	glNormalPointer(GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, App->moduleImport->robotMesh.mesh.id_indices);
-
-	glDrawElements(GL_TRIANGLES, App->moduleImport->robotMesh.mesh.num_indices, GL_UNSIGNED_INT, NULL);
-
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-#pragma endregion
 	return UPDATE_CONTINUE;
 }
 

@@ -10,8 +10,11 @@
 #include "MathGeoLib/src/MathBuildConfig.h"
 #include "MathGeoLib/src/MathGeoLib.h"
 
+#include <list>
+
 struct PhysBody3D;
 struct PhysMotor3D;
+class GameObject;
 
 class ModuleScene : public Module
 {
@@ -28,8 +31,13 @@ public:
 	
 	void ResetScene();
 
+	void AddGameObject(char* mesh_path);
+
 public:
 	bool reset = false;
-
 	Timer timer;
+
+private:
+	bool drawGrid = true;
+	std::list<GameObject*> gameObjects;
 };

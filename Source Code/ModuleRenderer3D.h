@@ -26,6 +26,7 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
+	uint	image_texture;
 	uint	array_cube_id;
 	uint	index_cube_index_id;
 	uint	index_cube_vertex_id;

@@ -8,6 +8,9 @@ class Mesh
 public:
 	Mesh();
 	~Mesh();
+	void LoadData(char* path);
+	void LoadBuffers();
+	void Draw();
 public:
 	//Vertices data
 	uint	id_vertices = 0;

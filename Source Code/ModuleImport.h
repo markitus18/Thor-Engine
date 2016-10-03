@@ -11,17 +11,11 @@ public:
 	ModuleImport(Application* app, bool start_enabled = true);
 	~ModuleImport();
 
-	void LoadFBX(char* path);
+	GameObject* LoadFBX(char* path);
 
 	bool Init();
 	bool CleanUp();
 	update_status Update(float dt);
-
-	Mesh* GetMesh();
-public:
-	GameObject robotMesh;
-
-private:
 
 };
 

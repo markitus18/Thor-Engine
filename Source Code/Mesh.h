@@ -27,10 +27,10 @@ public:
 	uint	num_normals = 0;
 	float*	normals = NULL;
 
-	//UV's data
-	uint	id_UV = 0;
-	uint	num_UV = 0;
-	float*	UV_coords = NULL;
+	//Texture coords
+	uint	id_tex_coords = 0;
+	uint	num_tex_coords = 0;
+	float*	tex_coords = NULL;
 };
 
 #endif

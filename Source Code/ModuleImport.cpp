@@ -73,14 +73,17 @@ GameObject* ModuleImport::LoadFBX(char* path)
 				mesh->normals = new float[mesh->num_normals * 3];
 				memcpy(mesh->normals, newMesh->mNormals, sizeof(float) * mesh->num_normals * 3);
 			}
-			//Loading mesh UV's
+
+			//Loading mesh texture coordinates
 			if (newMesh->HasTextureCoords(0))
 			{
-				mesh->num_UV = *newMesh->mNumUVComponents * 2;
-				mesh->UV_coords = new float[mesh->num_UV];
-				for (uint i = 0; i < *newMesh->mNumUVComponents; i++)
-				{
+				mesh->num_tex_coords = mesh->num_vertices;
+				mesh->tex_coords = new float[newMesh->mNumVertices * 2];
 
+				for (unsigned int i = 0; i < mesh->num_tex_coords; i++)
+				{
+					mesh->tex_coords[i * 2] = newMesh->mTextureCoords[0][i].x;
+					mesh->tex_coords[i * 2 + 1] = newMesh->mTextureCoords[0][i].y;
 				}
 			}
 		}

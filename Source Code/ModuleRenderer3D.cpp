@@ -282,17 +282,6 @@ bool ModuleRenderer3D::Init()
 
 #pragma region Textured_Cube
 
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//glGenTextures(1, &lenna_texture);
-	//glBindTexture(GL_TEXTURE_2D, lenna_texture);
-
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 40, 40, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-	//glBindTexture(GL_TEXTURE_2D, 0);
 	//Loading vertex data
 	texture_vertices[0] = 0;		texture_vertices[1] = 1;		texture_vertices[2] = 0;		//0
 	texture_vertices[3] = 1;		texture_vertices[4] = 1;		texture_vertices[5] = 1;		//1

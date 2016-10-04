@@ -534,7 +534,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, texture_UV_id);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_index_id);
 
+	glBindTexture(GL_TEXTURE_2D, lenna_texture);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

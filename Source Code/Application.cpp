@@ -10,11 +10,9 @@
 #include "ModulePhysics3D.h"
 #include "ModuleUI.h"
 #include "ModuleImport.h"
-#include "ModuleFileSystem.h"
 
 Application::Application()
 {
-	fileSystem = new ModuleFileSystem(this);
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
@@ -32,7 +30,6 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
-	AddModule(fileSystem);
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);

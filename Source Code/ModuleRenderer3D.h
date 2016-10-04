@@ -4,6 +4,9 @@
 #include "glmath.h"
 #include "Light.h"
 
+//#include "Devil\include\ilu.h"
+//#include "Devil\include\ilut.h"
+
 #define MAX_LIGHTS 8
 
 class ModuleRenderer3D : public Module
@@ -41,6 +44,9 @@ public:
 	float	texture_vertices[16 * 3];
 	float	texture_UV[16 * 2];
 	uint	texture_indices[36];
+
+	uint	lenna_texture;
+	bool	lenaON = false;
 
 	bool BuffersON = false;
 };

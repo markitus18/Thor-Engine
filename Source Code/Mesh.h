@@ -26,6 +26,11 @@ public:
 	uint	id_normals = 0;
 	uint	num_normals = 0;
 	float*	normals = NULL;
+
+	//UV's data
+	uint	id_UV = 0;
+	uint	num_UV = 0;
+	float*	UV_coords = NULL;
 };
 
 #endif

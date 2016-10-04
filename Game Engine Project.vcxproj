@@ -84,6 +84,14 @@
   <ItemGroup>
     <ClInclude Include="Source Code\Application.h" />
     <ClInclude Include="Source Code\Color.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\devil_internal_exports.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\il.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilu.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilut.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilut_config.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilu_region.h" />
+    <ClInclude Include="Source Code\External Libraries\Devil\include\il_wrap.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imconfig.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imgui.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imgui_impl_sdl_gl3.h" />
@@ -160,7 +168,6 @@
     <ClInclude Include="Source Code\Module.h" />
     <ClInclude Include="Source Code\ModuleAudio.h" />
     <ClInclude Include="Source Code\ModuleCamera3D.h" />
-    <ClInclude Include="Source Code\ModuleFileSystem.h" />
     <ClInclude Include="Source Code\ModuleImport.h" />
     <ClInclude Include="Source Code\ModuleInput.h" />
     <ClInclude Include="Source Code\ModulePhysics3D.h" />
@@ -226,7 +233,6 @@
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Math\SSEMath.cpp" />
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.cpp" />
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.cpp" />
-    <ClCompile Include="Source Code\ModuleFileSystem.cpp" />
     <ClCompile Include="Source Code\GameObject.cpp" />
     <ClCompile Include="Source Code\glmath.cpp" />
     <ClCompile Include="Source Code\Light.cpp" />

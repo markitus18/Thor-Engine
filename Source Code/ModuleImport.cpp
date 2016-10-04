@@ -21,13 +21,15 @@ bool ModuleImport::Init()
 {
 	LOG("Loading Module Import");
 
-	//Assimp initialization -------------
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
 
 	return true;
 }
 update_status ModuleImport::Update(float dt)
 {
-
 	return UPDATE_CONTINUE;
 }
 
@@ -71,6 +73,16 @@ GameObject* ModuleImport::LoadFBX(char* path)
 				mesh->normals = new float[mesh->num_normals * 3];
 				memcpy(mesh->normals, newMesh->mNormals, sizeof(float) * mesh->num_normals * 3);
 			}
+			//Loading mesh UV's
+			if (newMesh->HasTextureCoords(0))
+			{
+				mesh->num_UV = *newMesh->mNumUVComponents * 2;
+				mesh->UV_coords = new float[mesh->num_UV];
+				for (uint i = 0; i < *newMesh->mNumUVComponents; i++)
+				{
+
+				}
+			}
 		}
 		aiReleaseImport(file);
 
@@ -84,6 +96,13 @@ GameObject* ModuleImport::LoadFBX(char* path)
 		return NULL;
 	}
 
+}
+
+GLuint ModuleImport::LoadIMG(char* path)
+{
+	GLuint ret;
+	ret = ilutGLLoadImage(path);
+	return ret;
 }
 
 // Called before quitting

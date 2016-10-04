@@ -193,9 +193,6 @@
     <ClCompile Include="Source Code\Mesh.cpp">
       <Filter>Source Code\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleFileSystem.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -492,8 +489,29 @@
     <ClInclude Include="Source Code\Mesh.h">
       <Filter>Source Code\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleFileSystem.h">
-      <Filter>Source Code\Modules</Filter>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\config.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\devil_internal_exports.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\il.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\il_wrap.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilu.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilu_region.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilut.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\Devil\include\ilut_config.h">
+      <Filter>Source Code\External Libraries\Devil</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -538,6 +556,9 @@
     </Filter>
     <Filter Include="Source Code\GameObjects">
       <UniqueIdentifier>{70ddd702-1d19-464d-8fe9-5d0edbdab5a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\External Libraries\Devil">
+      <UniqueIdentifier>{4f51e8ea-0cf5-427a-91b5-48b2a4251d59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

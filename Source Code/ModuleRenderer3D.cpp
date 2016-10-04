@@ -281,6 +281,18 @@ bool ModuleRenderer3D::Init()
 #pragma endregion
 
 #pragma region Textured_Cube
+
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//glGenTextures(1, &lenna_texture);
+	//glBindTexture(GL_TEXTURE_2D, lenna_texture);
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 40, 40, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 	//Loading vertex data
 	texture_vertices[0] = 0;		texture_vertices[1] = 1;		texture_vertices[2] = 0;		//0
 	texture_vertices[3] = 1;		texture_vertices[4] = 1;		texture_vertices[5] = 1;		//1
@@ -508,6 +520,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 #pragma region Textured_Cube
 
+	if (!lenaON)
+	{
+		lenna_texture = App->moduleImport->LoadIMG("Game/Lenna.png");
+		lenaON = true;
+	}
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, texture_vertex_id);
@@ -517,9 +534,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, texture_UV_id);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_index_id);
 
-	glBindTexture(GL_TEXTURE_2D, image_texture);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

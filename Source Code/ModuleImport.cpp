@@ -171,8 +171,8 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	{
 		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject);
 		App->scene->tmp_goCount++;
-		if (new_child)
-			gameObject->childs.push_back(new_child);
+		//if (new_child)
+		//	gameObject->childs.push_back(new_child);
 	}
 
 	//GameObject* gameObject = new GameObject(*mesh);

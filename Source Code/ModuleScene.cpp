@@ -63,7 +63,7 @@ update_status ModuleScene::Update(float dt)
 	
 	while (it != gameObjects.end())
 	{
-		(*it)->mesh->Draw();
+		(*it)->Draw();
 		it++;;
 	}
 

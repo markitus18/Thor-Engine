@@ -21,7 +21,11 @@ GameObject::~GameObject()
 
 void GameObject::Draw()
 {
-	mesh->Draw();
+	if (mesh)
+	{
+		mesh->Draw();
+	}
+
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		childs[i]->Draw();

@@ -26,7 +26,7 @@ public:
 	const GameObject* parent = NULL;
 	std::vector<GameObject*> childs;
 
-	Mesh* mesh;
+	Mesh* mesh = NULL;
 
 };
 

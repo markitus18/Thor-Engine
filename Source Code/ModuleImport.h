@@ -14,7 +14,7 @@ public:
 	ModuleImport(Application* app, bool start_enabled = true);
 	~ModuleImport();
 
-	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent);
+	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path);
 	uint LoadIMG(char* path);
 	bool Init();
 	bool CleanUp();

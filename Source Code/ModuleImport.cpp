@@ -45,13 +45,13 @@ update_status ModuleImport::Update(float dt)
 	{
 		fbx_loaded = true;
 		const aiScene* file = aiImportFile("Game/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-		LoadFBX(file, file->mRootNode, App->scene->getRoot());
+		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game / maya tmp test.fbx");
 
 	}
 	return UPDATE_CONTINUE;
 }
 
-GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent)
+GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path)
 {
 	//TODO: get all transforms
 	aiVector3D		translation;
@@ -93,6 +93,8 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		}
 	}
 	
+	if (name == "RootNode")
+		name = path;
 	GameObject* gameObject = new GameObject(parent, pos, scale, rot, name.c_str());
 	parent->childs.push_back(gameObject);
 	App->scene->tmp_goCount++;
@@ -169,7 +171,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
-		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject);
+		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject, path);
 		App->scene->tmp_goCount++;
 		//if (new_child)
 		//	gameObject->childs.push_back(new_child);

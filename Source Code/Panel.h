@@ -3,7 +3,10 @@
 
 class Panel
 {
+	Panel();
+	virtual ~Panel();
 
+	virtual void Draw();
 };
 
 #endif //__PANEL_H__

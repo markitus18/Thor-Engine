@@ -31,7 +31,7 @@ public:
 	
 	void ResetScene();
 
-	void AddGameObject(char* mesh_path);
+	void AddGameObject(GameObject* gameObject);
 
 public:
 	bool reset = false;

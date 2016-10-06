@@ -2,6 +2,7 @@
 #define __MESH_H__
 
 #include "Globals.h"
+#include <vector>
 
 class Mesh
 {
@@ -31,6 +32,8 @@ public:
 	uint	id_tex_coords = 0;
 	uint	num_tex_coords = 0;
 	float*	tex_coords = NULL;
+
+	std::vector<Mesh> childs;
 };
 
 #endif

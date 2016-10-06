@@ -1,11 +1,3 @@
-aaliyah
-
-aron
-
-abbie
-
-caprice
-
 anjelica
 
 abigail
@@ -30,7 +22,6 @@ brandt
 
 candace
 
-cassie
 
 cedric
 
@@ -39,8 +30,6 @@ clay
 damion
 
 davey
-
-derryl
 
 detta
 

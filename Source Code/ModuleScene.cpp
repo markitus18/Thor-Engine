@@ -24,7 +24,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
-	AddGameObject("Game/RandomStuff.fbx");
+	//AddGameObject("Game/RandomStuff.fbx");
 
 	bool ret = true;
 
@@ -63,7 +63,7 @@ update_status ModuleScene::Update(float dt)
 	
 	while (it != gameObjects.end())
 	{
-		(*it)->mesh.Draw();
+		(*it)->mesh->Draw();
 		it++;;
 	}
 
@@ -93,11 +93,7 @@ void ModuleScene::ResetScene()
 	App->camera->Enable();
 }
 
-void ModuleScene::AddGameObject(char* mesh_path)
+void ModuleScene::AddGameObject(GameObject* gameObject)
 {
-	GameObject* gameObject = App->moduleImport->LoadFBX(mesh_path);
-	if (gameObject)
-	{
-		gameObjects.push_back(gameObject);
-	}
+	gameObjects.push_back(gameObject);
 }

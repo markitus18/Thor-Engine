@@ -5,6 +5,7 @@
 #include "ImGui\imgui.h"
 
 class UI_Console;
+class PanelHierarchy;
 
 class ModuleEditor : public Module
 {
@@ -23,6 +24,7 @@ public:
 
 private:
 
+	void DrawPanels();
 	void ShowAboutWindow();
 	void ShowTestWindow();
 	void ShowSettingsWindow();
@@ -45,6 +47,9 @@ private:
 
 	ImVec4 test_color;
 	UI_Console* console = NULL;
+
+	//Panels
+	PanelHierarchy* panelHierarchy = NULL;
 };
 
 #endif

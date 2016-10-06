@@ -26,7 +26,7 @@ bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
 
-	root = new GameObject(NULL);
+	root = new GameObject(NULL, "root");
 
 	bool ret = true;
 
@@ -62,7 +62,7 @@ update_status ModuleScene::Update(float dt)
 
 	root->Draw();
 
-	LOG("GameObjects in scene: %i", tmp_goCount)
+	//LOG("GameObjects in scene: %i", tmp_goCount)
 	return UPDATE_CONTINUE;
 }
 

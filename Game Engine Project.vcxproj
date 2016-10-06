@@ -180,6 +180,7 @@
     <ClInclude Include="Source Code\p2List.h" />
     <ClInclude Include="Source Code\p2Point.h" />
     <ClInclude Include="Source Code\Panel.h" />
+    <ClInclude Include="Source Code\PanelHierarchy.h" />
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\PhysBody3D.h" />
     <ClInclude Include="Source Code\PhysVehicle3D.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="Source Code\ModuleEditor.cpp" />
     <ClCompile Include="Source Code\ModuleWindow.cpp" />
     <ClCompile Include="Source Code\Panel.cpp" />
+    <ClCompile Include="Source Code\PanelHierarchy.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\PhysBody3D.cpp" />
     <ClCompile Include="Source Code\PhysVehicle3D.cpp" />

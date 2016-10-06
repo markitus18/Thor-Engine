@@ -93,7 +93,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		}
 	}
 	
-	GameObject* gameObject = new GameObject(parent, pos, scale, rot);
+	GameObject* gameObject = new GameObject(parent, pos, scale, rot, name.c_str());
 	parent->childs.push_back(gameObject);
 	App->scene->tmp_goCount++;
 	// Loading node meshes
@@ -104,7 +104,8 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 		if (node->mNumMeshes > 1)
 		{
-			GameObject* child = new GameObject(parent);
+			name = newMesh->mName.C_Str();
+			GameObject* child = new GameObject(parent, name.c_str());
 			App->scene->tmp_goCount++;
 			gameObject->childs.push_back(child);
 		}

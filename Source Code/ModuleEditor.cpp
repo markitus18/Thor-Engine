@@ -1,8 +1,12 @@
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
-#include "UI_Console.h"
+
 #include "ModuleInput.h"
+
+//Panels
+#include "PanelHierarchy.h"
+#include "UI_Console.h"
 
 #include "OpenGL.h"
 
@@ -24,7 +28,9 @@ bool ModuleEditor::Init()
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "imgui.ini";
 
+	//Initializing all panels
 	console = new UI_Console();
+	panelHierarchy = new PanelHierarchy();
 
 	test_color = ImColor(114, 144, 154);
 	return true;
@@ -36,6 +42,7 @@ update_status ModuleEditor::Update(float dt)
 	ImGuiIO& io = ImGui::GetIO();
 	io.MouseDrawCursor = true;
 
+	DrawPanels();
 	ImGui::Text("Hello, world!");
 
 	//Showing all windows ----------
@@ -150,6 +157,14 @@ void ModuleEditor::Log(const char* input)
 void ModuleEditor::GetEvent(SDL_Event* event)
 {
 	ImGui_ImplSdlGL3_ProcessEvent(event);
+}
+
+void ModuleEditor::DrawPanels()
+{
+	if (panelHierarchy != NULL)
+	{
+		panelHierarchy->Draw();
+	}
 }
 
 void ModuleEditor::ShowAboutWindow()

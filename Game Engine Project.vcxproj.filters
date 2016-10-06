@@ -190,10 +190,13 @@
     <ClCompile Include="Source Code\Mesh.cpp">
       <Filter>Source Code\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleEditor.cpp">
+    <ClCompile Include="Source Code\Panel.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\Panel.cpp">
+    <ClCompile Include="Source Code\ModuleEditor.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\PanelHierarchy.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -513,10 +516,13 @@
     <ClInclude Include="Source Code\External Libraries\Devil\include\ilut_config.h">
       <Filter>Source Code\External Libraries\Devil</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleEditor.h">
+    <ClInclude Include="Source Code\Panel.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\Panel.h">
+    <ClInclude Include="Source Code\ModuleEditor.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PanelHierarchy.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
   </ItemGroup>

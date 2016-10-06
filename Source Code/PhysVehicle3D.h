@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PHYS_VEHICLE_H__
+#define __PHYS_VEHICLE_H__
 
 #include "PhysBody3D.h"
 #include "glmath.h"
@@ -88,3 +89,5 @@ public:
 	VehicleInfo info;
 	btRaycastVehicle* vehicle;
 };
+
+#endif //__PHYS_VEHICLE_H__

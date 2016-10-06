@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULE_PHYSICS_H__
+#define __MODULE_PHYSICS_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "p2List.h"
@@ -77,3 +79,5 @@ public:
 	DebugDrawModes mode;
 	Primitive point;
 };
+
+#endif //__MODULE_PHYSICS_H__

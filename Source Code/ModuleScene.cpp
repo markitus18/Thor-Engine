@@ -18,17 +18,18 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, sta
 }
 
 ModuleScene::~ModuleScene()
-{}
+{
+}
 
 // Load assets
 bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
-	//AddGameObject("Game/RandomStuff.fbx");
+
+	root = new GameObject(NULL);
 
 	bool ret = true;
 
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	timer.Start();
 	timer.Stop();
@@ -59,14 +60,9 @@ update_status ModuleScene::Update(float dt)
 		drawGrid = !drawGrid;
 	}
 
-	std::list<GameObject*>::iterator it = gameObjects.begin();
-	
-	while (it != gameObjects.end())
-	{
-		(*it)->Draw();
-		it++;;
-	}
+	root->Draw();
 
+	LOG("GameObjects in scene: %i", tmp_goCount)
 	return UPDATE_CONTINUE;
 }
 
@@ -93,7 +89,11 @@ void ModuleScene::ResetScene()
 	App->camera->Enable();
 }
 
-void ModuleScene::AddGameObject(GameObject* gameObject)
+GameObject* ModuleScene::getRoot()
 {
-	gameObjects.push_back(gameObject);
+	return root;
+}
+const GameObject* ModuleScene::getRoot() const
+{
+	return root;
 }

@@ -1,7 +1,6 @@
 
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleUI.h"
 
 void log(const char file[], int line, const char* format, ...)
 {

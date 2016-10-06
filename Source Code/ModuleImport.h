@@ -20,6 +20,8 @@ public:
 	bool CleanUp();
 	update_status Update(float dt);
 
+	bool fbx_loaded = false;
+
 };
 
 #endif

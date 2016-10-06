@@ -37,13 +37,17 @@ bool ModuleImport::Init()
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
-	const aiScene* file = aiImportFile("Game/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-	GameObject* go = LoadFBX(file, file->mRootNode, NULL);
-	App->scene->AddGameObject(go);
 	return true;
 }
 update_status ModuleImport::Update(float dt)
 {
+	if (!fbx_loaded)
+	{
+		fbx_loaded = true;
+		const aiScene* file = aiImportFile("Game/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+		LoadFBX(file, file->mRootNode, App->scene->getRoot());
+
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -60,13 +64,14 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	float3 pos(translation.x, translation.y, translation.z);
 	float3 scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
-
+	
 	//TODO: skipp all dummy modules. Assimp loads fbx nodes to stack all transformations
-	/*
 	std::string name = node->mName.C_Str();	
-	static const char* dummies[5] = {
+	static const char* dummies[5] =
+	{
 		"$AssimpFbx$_PreRotation", "$AssimpFbx$_Rotation", "$AssimpFbx$_PostRotation",
-		"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation" };
+		"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation"
+	};
 
 	for (int i = 0; i < 5; ++i)
 	{
@@ -82,19 +87,31 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
 			name = node->mName.C_Str();
-			i = -1; // start over!
+			//if we find a dummy node we "change" our current node into the dummy one and search
+			//for other dummy nodes inside that one.
+			i = -1;
 		}
 	}
-	*/
+	
 	GameObject* gameObject = new GameObject(parent, pos, scale, rot);
-
+	parent->childs.push_back(gameObject);
+	App->scene->tmp_goCount++;
 	// Loading node meshes
 	for (uint i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
+		GameObject* child = NULL;
 
-		GameObject* child = new GameObject(parent);
-		parent->childs.push_back(child);
+		if (node->mNumMeshes > 1)
+		{
+			GameObject* child = new GameObject(parent);
+			App->scene->tmp_goCount++;
+			gameObject->childs.push_back(child);
+		}
+		else
+		{
+			child = gameObject;
+		}
 
 		Mesh* go_mesh = new Mesh();
 
@@ -122,6 +139,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 				}
 			}
 		}
+
 		//Loading mesh normals data
 		if (newMesh->HasNormals())
 		{
@@ -142,6 +160,8 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 				go_mesh->tex_coords[i * 2 + 1] = newMesh->mTextureCoords[0][i].y;
 			}
 		}
+
+		//Loading mesh buffers
 		go_mesh->LoadBuffers();
 		child->mesh = go_mesh;
 	}
@@ -149,6 +169,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
 		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject);
+		App->scene->tmp_goCount++;
 		if (new_child)
 			gameObject->childs.push_back(new_child);
 	}

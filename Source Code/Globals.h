@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __GLOBALS_H__
+#define __GLOBALS_H__
 
 #include <windows.h>
 #include <stdio.h>
@@ -55,3 +56,5 @@ enum update_status
 	       x = nullptr;\
 		 }\
 	 }
+
+#endif

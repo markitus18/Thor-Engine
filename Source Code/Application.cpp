@@ -8,7 +8,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
-#include "ModuleUI.h"
+#include "ModuleEditor.h"
 #include "ModuleImport.h"
 
 Application::Application()
@@ -23,7 +23,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 
-	moduleUI = new ModuleUI(this);
+	moduleEditor = new ModuleEditor(this);
 	moduleImport = new ModuleImport(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -42,7 +42,7 @@ Application::Application()
 	// Renderer last!
 	AddModule(renderer3D);
 
-	AddModule(moduleUI);
+	AddModule(moduleEditor);
 	AddModule(moduleImport);
 }
 
@@ -113,7 +113,7 @@ void Application::FinishUpdate()
 		frame_count = 0;
 	}
 
-	App->moduleUI->UpdateFPSData(last_FPS, frameTimer.Read());
+	App->moduleEditor->UpdateFPSData(last_FPS, frameTimer.Read());
 
 }
 
@@ -181,7 +181,7 @@ void Application::RequestBrowser(char* path)
 
 void Application::Log(const char* input)
 {
-	moduleUI->Log(input);
+	moduleEditor->Log(input);
 }
 
 void Application::AddModule(Module* mod)

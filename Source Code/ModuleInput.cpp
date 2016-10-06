@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleUI.h"
+#include "ModuleEditor.h"
 
 #define MAX_KEYS 300
 
@@ -90,7 +90,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	while(SDL_PollEvent(&event) != 0)
 	{
-		App->moduleUI->GetEvent(&event);
+		App->moduleEditor->GetEvent(&event);
 
 		switch(event.type)
 		{

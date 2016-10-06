@@ -154,9 +154,6 @@
     <ClCompile Include="Source Code\ModuleScene.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleUI.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\ModuleWindow.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -192,6 +189,12 @@
     </ClCompile>
     <ClCompile Include="Source Code\Mesh.cpp">
       <Filter>Source Code\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ModuleEditor.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Panel.cpp">
+      <Filter>Source Code\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,9 +441,6 @@
     <ClInclude Include="Source Code\ModuleScene.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleUI.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Light.h">
       <Filter>Source Code\Helpers</Filter>
     </ClInclude>
@@ -513,6 +513,12 @@
     <ClInclude Include="Source Code\External Libraries\Devil\include\ilut_config.h">
       <Filter>Source Code\External Libraries\Devil</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\ModuleEditor.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Panel.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -559,6 +565,9 @@
     </Filter>
     <Filter Include="Source Code\External Libraries\Devil">
       <UniqueIdentifier>{4f51e8ea-0cf5-427a-91b5-48b2a4251d59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Editor">
+      <UniqueIdentifier>{5c23cb72-7b71-4648-8e76-e1494dd55f3a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

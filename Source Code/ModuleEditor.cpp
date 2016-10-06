@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "ModuleUI.h"
+#include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "UI_Console.h"
 #include "ModuleInput.h"
@@ -9,15 +9,15 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
 
-ModuleUI::ModuleUI(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 
 }
 
-ModuleUI::~ModuleUI()
+ModuleEditor::~ModuleEditor()
 {}
 
-bool ModuleUI::Init()
+bool ModuleEditor::Init()
 {
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
@@ -30,7 +30,7 @@ bool ModuleUI::Init()
 	return true;
 }
 
-update_status ModuleUI::Update(float dt)
+update_status ModuleEditor::Update(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	ImGuiIO& io = ImGui::GetIO();
@@ -129,7 +129,7 @@ update_status ModuleUI::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleUI::CleanUp()
+bool ModuleEditor::CleanUp()
 {
 	if (console)
 	{
@@ -141,18 +141,18 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
-void ModuleUI::Log(const char* input)
+void ModuleEditor::Log(const char* input)
 {
 	if (console != NULL)
 		console->AddLog(input);
 }
 
-void ModuleUI::GetEvent(SDL_Event* event)
+void ModuleEditor::GetEvent(SDL_Event* event)
 {
 	ImGui_ImplSdlGL3_ProcessEvent(event);
 }
 
-void ModuleUI::ShowAboutWindow()
+void ModuleEditor::ShowAboutWindow()
 {
 	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(400, 100), 1.0f);
 	ImGui::Text("v0.2-alpha");
@@ -162,7 +162,7 @@ void ModuleUI::ShowAboutWindow()
 	ImGui::End();
 }
 
-void ModuleUI::ShowTestWindow()
+void ModuleEditor::ShowTestWindow()
 {
 	//Setting up window flags
 	ImGuiWindowFlags window_flags = 0;
@@ -198,7 +198,7 @@ void ModuleUI::ShowTestWindow()
 	ImGui::End();
 }
 
-void ModuleUI::ShowSettingsWindow()
+void ModuleEditor::ShowSettingsWindow()
 {
 	ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
 	if (ImGui::BeginMenu("Options"))
@@ -246,7 +246,7 @@ void ModuleUI::ShowSettingsWindow()
 	ImGui::End();
 }
 
-void ModuleUI::InitFPSData()
+void ModuleEditor::InitFPSData()
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -255,7 +255,7 @@ void ModuleUI::InitFPSData()
 	}
 }
 
-void ModuleUI::UpdateFPSData(int fps, int ms)
+void ModuleEditor::UpdateFPSData(int fps, int ms)
 {
 	for (int i = 0; i < 100; i++)
 	{

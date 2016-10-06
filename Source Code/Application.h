@@ -1,6 +1,5 @@
-#pragma once
-
-//#include "Glew/include/glew.h"
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include "p2List.h"
 #include "Globals.h"
@@ -17,7 +16,7 @@ class ModuleScene;
 class ModuleRenderer3D;
 class ModuleCamera3D;
 class ModulePhysics3D;
-class ModuleUI;
+class ModuleEditor;
 class ModuleImport;
 
 class Application
@@ -32,7 +31,7 @@ public:
 	ModuleCamera3D* camera = NULL;
 	ModulePhysics3D* physics = NULL;
 
-	ModuleUI* moduleUI = NULL;
+	ModuleEditor* moduleEditor = NULL;
 	ModuleImport* moduleImport = NULL;
 	
 private:
@@ -71,3 +70,5 @@ private:
 };
 
 extern Application* App;
+
+#endif //__APPLICATION_H__

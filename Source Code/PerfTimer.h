@@ -1,4 +1,3 @@
-#pragma once
 #ifndef __j1PERFTIMER_H__
 #define __j1PERFTIMER_H__
 

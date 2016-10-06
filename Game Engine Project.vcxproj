@@ -173,12 +173,13 @@
     <ClInclude Include="Source Code\ModulePhysics3D.h" />
     <ClInclude Include="Source Code\ModuleRenderer3D.h" />
     <ClInclude Include="Source Code\ModuleScene.h" />
-    <ClInclude Include="Source Code\ModuleUI.h" />
+    <ClInclude Include="Source Code\ModuleEditor.h" />
     <ClInclude Include="Source Code\ModuleWindow.h" />
     <ClInclude Include="Source Code\OpenGL.h" />
     <ClInclude Include="Source Code\p2DynArray.h" />
     <ClInclude Include="Source Code\p2List.h" />
     <ClInclude Include="Source Code\p2Point.h" />
+    <ClInclude Include="Source Code\Panel.h" />
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\PhysBody3D.h" />
     <ClInclude Include="Source Code\PhysVehicle3D.h" />
@@ -246,8 +247,9 @@
     <ClCompile Include="Source Code\ModulePhysics3D.cpp" />
     <ClCompile Include="Source Code\ModuleRenderer3D.cpp" />
     <ClCompile Include="Source Code\ModuleScene.cpp" />
-    <ClCompile Include="Source Code\ModuleUI.cpp" />
+    <ClCompile Include="Source Code\ModuleEditor.cpp" />
     <ClCompile Include="Source Code\ModuleWindow.cpp" />
+    <ClCompile Include="Source Code\Panel.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\PhysBody3D.cpp" />
     <ClCompile Include="Source Code\PhysVehicle3D.cpp" />

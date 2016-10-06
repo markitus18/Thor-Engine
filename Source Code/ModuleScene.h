@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MODULE_SCENE_H__
+#define __MODULE_SCENE_H__
 
 #include "Module.h"
 #include "p2DynArray.h"
@@ -31,13 +32,18 @@ public:
 	
 	void ResetScene();
 
-	void AddGameObject(GameObject* gameObject);
+	GameObject* getRoot();
+	const GameObject* getRoot() const;
 
 public:
 	bool reset = false;
 	Timer timer;
+	uint tmp_goCount = 1;
 
 private:
 	bool drawGrid = true;
-	std::list<GameObject*> gameObjects;
+	GameObject* root = NULL;
+
 };
+
+#endif //__MODULE_SCENE_H__

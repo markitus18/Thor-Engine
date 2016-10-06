@@ -1,17 +1,17 @@
-#ifndef __MODULEUI_H__
-#define __MODULEUI_H__
+#ifndef __ModuleEditor_H__
+#define __ModuleEditor_H__
 
 #include "Module.h"
 #include "ImGui\imgui.h"
 
 class UI_Console;
 
-class ModuleUI : public Module
+class ModuleEditor : public Module
 {
 public:
 
-	ModuleUI(Application* app, bool start_enabled = true);
-	~ModuleUI();
+	ModuleEditor(Application* app, bool start_enabled = true);
+	~ModuleEditor();
 
 	bool Init();
 	update_status Update(float dt);

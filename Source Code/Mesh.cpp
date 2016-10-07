@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "OpenGL.h"
+#include "GameObject.h"
 
 Mesh::Mesh()
 {
@@ -53,6 +54,28 @@ void Mesh::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	if (gameObject->IsSelected() || gameObject->IsParentSelected())
+	{
+		if (!gameObject->IsSelected())
+		{
+			glColor3f(0.51, 0.58, 0.68);
+			glLineWidth(1);
+		}
+
+		else
+		{
+			glColor3f(0.81, 0.88, 0.98);
+			glLineWidth(2);
+		}
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glLineWidth(1);
+		glColor4f(1, 1, 1, 1);
+	}
+
 	if (num_normals > 0)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
@@ -66,14 +89,11 @@ void Mesh::Draw()
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-	glNormalPointer(GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
-
 	glBindTexture(GL_TEXTURE_2D, 2);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	//glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);

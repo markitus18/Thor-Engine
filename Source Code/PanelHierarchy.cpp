@@ -23,12 +23,20 @@ void PanelHierarchy::Draw()
 	{
 		ImGui::Begin("Hierarchy", &active, ImVec2(size.x, size.y), 1.0f);
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
-		DrawGameObject(App->scene->getRoot(), default_flags);
+		DrawRootChilds(App->scene->getRoot(), default_flags);
 		//ImGui::Text("v0.2-alpha");
 		//ImGui::Separator();
 		//ImGui::Text("By Marc Garrigo for educational purposes.");
 		//ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
 		ImGui::End();
+	}
+}
+
+void PanelHierarchy::DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
+{
+	for (uint i = 0; i < gameObject->childs.size(); i++)
+	{
+		DrawGameObject(gameObject->childs[i], default_flags);
 	}
 }
 
@@ -71,6 +79,7 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 			ImGui::TreePop();
 	}
 }
+
 void PanelHierarchy::SelectSingle(GameObject* gameObject)
 {
 	if (!selectedGameObjects.empty())

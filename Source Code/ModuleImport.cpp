@@ -93,12 +93,23 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		}
 	}
 	
+	//Cutting path into file name --------------------
 	if (name == "RootNode")
+	{
 		name = path;
+		uint slashPos = name.find_last_of("/") + 2;
+		name = name.substr(slashPos, name.size() - slashPos);
+
+		uint pointPos = name.find_first_of(".");
+		name = name.substr(0, name.size() - (name.size() - pointPos));
+	}
+	//-----------------------------------------------
+
 	GameObject* gameObject = new GameObject(parent, pos, scale, rot, name.c_str());
 	parent->childs.push_back(gameObject);
 	App->scene->tmp_goCount++;
-	// Loading node meshes
+
+	// Loading node meshes ----------------------------------------
 	for (uint i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
@@ -143,7 +154,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			}
 		}
 
-		//Loading mesh normals data
+		//Loading mesh normals data ------------------
 		if (newMesh->HasNormals())
 		{
 			go_mesh->num_normals = newMesh->mNumVertices;
@@ -151,7 +162,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			memcpy(go_mesh->normals, newMesh->mNormals, sizeof(float) * go_mesh->num_normals * 3);
 		}
 
-		//Loading mesh texture coordinates
+		//Loading mesh texture coordinates -----------
 		if (newMesh->HasTextureCoords(0))
 		{
 			go_mesh->num_tex_coords = go_mesh->num_vertices;
@@ -163,12 +174,12 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 				go_mesh->tex_coords[i * 2 + 1] = newMesh->mTextureCoords[0][i].y;
 			}
 		}
+		//-------------------------------------------
 
-		//Loading mesh buffers
 		go_mesh->LoadBuffers();
-		child->mesh = go_mesh;
+		child->AddMesh(go_mesh);
 	}
-
+	// ------------------------------------------------------------
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
 		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject, path);

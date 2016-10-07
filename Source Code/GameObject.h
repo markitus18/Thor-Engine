@@ -21,9 +21,14 @@ public:
 	const float3 GetScale();
 	const Quat GetQuatRotation();
 
+	//Selection methods
 	void Select();
 	void Unselect();
-	bool IsSelected();
+	bool IsSelected() const;
+	bool IsParentSelected() const;
+
+	void AddMesh(Mesh* mesh);
+
 public:
 	std::string					name;
 	const GameObject*			parent = NULL;

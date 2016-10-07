@@ -57,7 +57,21 @@ void GameObject::Unselect()
 	selected = false;
 }
 
-bool GameObject::IsSelected()
+bool GameObject::IsSelected() const
 {
 	return selected;
+}
+
+bool GameObject::IsParentSelected() const
+{
+	if (parent)
+	{
+		return parent->IsSelected() ? true : parent->IsParentSelected();
+	}
+	return false;
+}
+void GameObject::AddMesh(Mesh* new_mesh)
+{
+	mesh = new_mesh;
+	mesh->gameObject = this;
 }

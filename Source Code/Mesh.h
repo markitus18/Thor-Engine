@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include <vector>
 
+class GameObject;
+
 class Mesh
 {
 public:
@@ -33,7 +35,7 @@ public:
 	uint	num_tex_coords = 0;
 	float*	tex_coords = NULL;
 
-	std::vector<Mesh> childs;
+	const GameObject* gameObject;
 };
 
 #endif

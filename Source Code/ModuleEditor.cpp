@@ -32,7 +32,7 @@ bool ModuleEditor::Init()
 	console = new UI_Console();
 	panelHierarchy = new PanelHierarchy();
 
-	test_color = ImColor(114, 144, 154);
+	test_color = ImColor(71, 71, 71);
 	return true;
 }
 

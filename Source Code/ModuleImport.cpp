@@ -60,33 +60,30 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	
 	//Decomposing transform matrix into translation rotation and scale
 	node->mTransformation.Decompose(scaling, rotation, translation);
-
+	//node->mTransformation.
 	float3 pos(translation.x, translation.y, translation.z);
 	float3 scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 	
 	//TODO: skipp all dummy modules. Assimp loads fbx nodes to stack all transformations
 	std::string name = node->mName.C_Str();	
-	static const char* dummies[5] =
-	{
-		"$AssimpFbx$_PreRotation", "$AssimpFbx$_Rotation", "$AssimpFbx$_PostRotation",
-		"$AssimpFbx$_Scaling", "$AssimpFbx$_Translation"
-	};
-
+	
 	for (int i = 0; i < 5; ++i)
 	{
 		//All dummy modules have one children (next dummy module or last module containing the mesh)
-		if (name.find(dummies[i]) != std::string::npos && node->mNumChildren == 1)
+		if (name.find("$AssimpFbx$") != std::string::npos && node->mNumChildren == 1)
 		{
+			//Dummy module have only one child node, so we use that one as our next GameObject
 			node = node->mChildren[0];
 
+			// Accumulate transform 
 			node->mTransformation.Decompose(scaling, rotation, translation);
-			// accumulate transform
 			pos += float3(translation.x, translation.y, translation.z);
 			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
 			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
 			name = node->mName.C_Str();
+
 			//if we find a dummy node we "change" our current node into the dummy one and search
 			//for other dummy nodes inside that one.
 			i = -1;
@@ -97,11 +94,13 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	if (name == "RootNode")
 	{
 		name = path;
-		uint slashPos = name.find_last_of("/") + 2;
-		name = name.substr(slashPos, name.size() - slashPos);
+		uint slashPos;
+		if ((slashPos = name.find_last_of("/")) != std::string::npos)
+			name = name.substr(slashPos + 2, name.size() - slashPos);
 
-		uint pointPos = name.find_first_of(".");
-		name = name.substr(0, name.size() - (name.size() - pointPos));
+		uint pointPos;
+		if ((pointPos = name.find_first_of(".")) != std::string::npos)
+			name = name.substr(0, name.size() - (name.size() - pointPos));
 	}
 	//-----------------------------------------------
 

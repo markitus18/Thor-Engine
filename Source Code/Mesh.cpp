@@ -48,6 +48,7 @@ void Mesh::LoadBuffers()
 
 void Mesh::Draw()
 {
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
@@ -90,7 +91,7 @@ void Mesh::Draw()
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 2);
-	//glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 

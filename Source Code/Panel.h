@@ -12,9 +12,11 @@ public:
 	virtual void Draw();
 
 protected:
-	bool active = true;
 	p2Point<int> position;
 	p2Point<int> size;
+
+public:
+	bool active = true;
 };
 
 #endif //__PANEL_H__

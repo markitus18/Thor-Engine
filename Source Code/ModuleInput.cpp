@@ -3,7 +3,8 @@
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleEditor.h"
-
+#include "Assimp/include/cfileio.h"
+#include "Assimp/include/types.h"
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -17,6 +18,7 @@ ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, sta
 ModuleInput::~ModuleInput()
 {
 	delete[] keyboard;
+	keyboard = NULL;
 }
 
 // Called before render is available

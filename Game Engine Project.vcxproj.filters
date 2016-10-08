@@ -175,9 +175,6 @@
     <ClCompile Include="Source Code\glmath.cpp">
       <Filter>Source Code\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\UI_Console.cpp">
-      <Filter>Source Code\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\PerfTimer.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
@@ -197,6 +194,12 @@
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\PanelHierarchy.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\PanelConsole.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\PanelInspector.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -471,9 +474,6 @@
     <ClInclude Include="Source Code\p2DynArray.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\UI_Console.h">
-      <Filter>Source Code\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Globals.h">
       <Filter>Source Code</Filter>
     </ClInclude>
@@ -525,6 +525,12 @@
     <ClInclude Include="Source Code\PanelHierarchy.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\PanelConsole.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PanelInspector.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -562,9 +568,6 @@
     </Filter>
     <Filter Include="Source Code\External Libraries\MathGeoLib\Time">
       <UniqueIdentifier>{67e54249-6e6f-483a-89fd-eb4b78a4f4ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Code\UI">
-      <UniqueIdentifier>{fd7117d3-a53f-4b9f-a11d-2d24dee7048a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Code\GameObjects">
       <UniqueIdentifier>{70ddd702-1d19-464d-8fe9-5d0edbdab5a6}</UniqueIdentifier>

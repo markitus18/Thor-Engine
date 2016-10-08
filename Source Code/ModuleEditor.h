@@ -4,8 +4,9 @@
 #include "Module.h"
 #include "ImGui\imgui.h"
 
-class UI_Console;
+class PanelConsole;
 class PanelHierarchy;
+class PanelInspector;
 
 class ModuleEditor : public Module
 {
@@ -15,6 +16,7 @@ public:
 	~ModuleEditor();
 
 	bool Init();
+	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	bool CleanUp();
 
@@ -26,10 +28,15 @@ private:
 
 	void DrawPanels();
 	void ShowAboutWindow();
-	void ShowTestWindow();
 	void ShowSettingsWindow();
 
 	void InitFPSData();
+
+public:
+	//Panels
+	PanelHierarchy* panelHierarchy = NULL;
+	PanelConsole* panelConsole = NULL;
+	PanelInspector* panelInspector = NULL;
 
 private:
 	char tmp_appName[26] = "Not working yet";
@@ -38,18 +45,11 @@ private:
 	//Active window controllers
 	bool show_About_window = false;
 	bool show_Demo_window = false;
-	bool show_Test_window = false;
 	bool show_Settings_window = true;
 
 	//FPS data saving
 	float FPS_data [100];
 	float ms_data[100];
-
-	ImVec4 test_color;
-	UI_Console* console = NULL;
-
-	//Panels
-	PanelHierarchy* panelHierarchy = NULL;
 };
 
 #endif

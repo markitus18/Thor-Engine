@@ -181,12 +181,13 @@
     <ClInclude Include="Source Code\p2Point.h" />
     <ClInclude Include="Source Code\Panel.h" />
     <ClInclude Include="Source Code\PanelHierarchy.h" />
+    <ClInclude Include="Source Code\PanelInspector.h" />
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\PhysBody3D.h" />
     <ClInclude Include="Source Code\PhysVehicle3D.h" />
     <ClInclude Include="Source Code\Primitive.h" />
     <ClInclude Include="Source Code\Timer.h" />
-    <ClInclude Include="Source Code\UI_Console.h" />
+    <ClInclude Include="Source Code\PanelConsole.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLib.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLibFwd.h" />
@@ -252,12 +253,13 @@
     <ClCompile Include="Source Code\ModuleWindow.cpp" />
     <ClCompile Include="Source Code\Panel.cpp" />
     <ClCompile Include="Source Code\PanelHierarchy.cpp" />
+    <ClCompile Include="Source Code\PanelInspector.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\PhysBody3D.cpp" />
     <ClCompile Include="Source Code\PhysVehicle3D.cpp" />
     <ClCompile Include="Source Code\Primitive.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
-    <ClCompile Include="Source Code\UI_Console.cpp" />
+    <ClCompile Include="Source Code\PanelConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source Code\External Libraries\MathGeoLib\src\Geometry\KDTree.inl" />

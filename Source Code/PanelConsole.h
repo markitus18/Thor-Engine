@@ -2,25 +2,23 @@
 #define __UI_CONSOLE_H__
 
 #include "ImGui\imgui.h"
+#include "Panel.h"
 
-class UI_Console
+class PanelConsole : public Panel
 {
 private:
 	ImVector<char*>	items;
 	bool			scrollToBottom;
 
 public:
-	bool active = true;
 
-public:
-
-	UI_Console();
-	~UI_Console();
+	PanelConsole();
+	~PanelConsole();
 
 	void ClearLog();
 	void AddLog(const char* input);
 
-	void Draw(const char* title, bool* p_open);
+	void Draw();
 };
 
 #endif //__UI_CONSOLE_H__

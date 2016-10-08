@@ -4,12 +4,11 @@
 #include "GameObject.h"
 
 #include "ImGui\imgui.h"
-#include "ImGui\imgui_impl_sdl_gl3.h"
 
 PanelHierarchy::PanelHierarchy()
 {
-	size.x = 1200;
-	size.y = 200;
+	size.x = 390;
+	size.y = 630;
 }
 
 PanelHierarchy::~PanelHierarchy()
@@ -24,10 +23,6 @@ void PanelHierarchy::Draw()
 		ImGui::Begin("Hierarchy", &active, ImVec2(size.x, size.y), 1.0f);
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
 		DrawRootChilds(App->scene->getRoot(), default_flags);
-		//ImGui::Text("v0.2-alpha");
-		//ImGui::Separator();
-		//ImGui::Text("By Marc Garrigo for educational purposes.");
-		//ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
 		ImGui::End();
 	}
 }

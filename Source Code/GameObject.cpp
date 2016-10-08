@@ -1,16 +1,19 @@
 #include "GameObject.h"
+#include "OpenGL.h"
 
 GameObject::GameObject()
 {
 }
-GameObject::GameObject(const GameObject* parent, const char* name) : position(float3::zero), scale(float3::one), rotation(Quat::identity), name(name)
+GameObject::GameObject(const GameObject* parent, const char* new_name) : position(float3::zero), scale(float3::one), rotation(Quat::identity), name(new_name)
 {
-
+	UpdateTransformMatrix();
 }
 
-GameObject::GameObject(const GameObject* new_parent, const float3& translation, const float3& scale, const Quat& rotation, const char* name) : position(translation), scale(scale), rotation(rotation), name(name)
+GameObject::GameObject(const GameObject* new_parent, const float3& translation, const float3& scale, const Quat& rotation, const char* new_name) : position(translation), scale(scale),
+						rotation(rotation), name(new_name)
 {
 	parent = new_parent;
+	UpdateTransformMatrix();
 }
 
 GameObject::~GameObject()
@@ -21,6 +24,8 @@ GameObject::~GameObject()
 
 void GameObject::Draw()
 {
+	glPushMatrix();
+	glMultMatrixf((float*)&transform);
 	if (mesh)
 	{
 		mesh->Draw();
@@ -30,21 +35,42 @@ void GameObject::Draw()
 	{
 		childs[i]->Draw();
 	}
+	glPopMatrix();
 }
 
-const float3 GameObject::GetPosition()
+float3 GameObject::GetPosition() const
 {
 	return position;
 }
 
-const float3 GameObject::GetScale()
+float3 GameObject::GetScale() const
 {
 	return scale;
 }
 
-const Quat GameObject::GetQuatRotation()
+Quat GameObject::GetQuatRotation() const
 {
 	return rotation;
+}
+
+void GameObject::SetPosition(float3 new_position)
+{
+	position = new_position;
+}
+
+void GameObject::SetScale(float3 new_scale)
+{
+	scale = new_scale;
+}
+
+void GameObject::SetRotation(float3 euler_angles)
+{
+
+}
+
+void GameObject::UpdateTransformMatrix()
+{
+	transform = float4x4::FromTRS(position, rotation, scale);
 }
 
 void GameObject::Select()

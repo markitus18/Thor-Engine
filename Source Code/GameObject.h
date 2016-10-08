@@ -17,9 +17,15 @@ public:
 
 	void Draw();
 
-	const float3 GetPosition();
-	const float3 GetScale();
-	const Quat GetQuatRotation();
+	float3 GetPosition() const;
+	float3 GetScale() const;
+	Quat GetQuatRotation() const;
+	
+	void SetPosition(float3 new_position);
+	void SetScale(float3 new_scale);
+	void SetRotation(float3 euler_angles);
+
+	void UpdateTransformMatrix();
 
 	//Selection methods
 	void Select();
@@ -31,16 +37,20 @@ public:
 
 public:
 	std::string					name;
+
 	const GameObject*			parent = NULL;
 	std::vector<GameObject*>	childs;
+	bool						active = true;
 
 	Mesh* mesh = NULL;
 
 private:
+	float4x4	transform;
+
 	float3		position;
 	float3		scale;
 	Quat		rotation;
-	float4x4	transform;
+	float3		rotation_euler;
 
 	bool selected = false;
 

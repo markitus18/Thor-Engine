@@ -51,12 +51,21 @@ void PanelInspector::Draw()
 			{
 				float3 pos = gameObject->GetPosition();
 				float3 scale = gameObject->GetScale();
-				//const Quat rotation = gameObject->GetQuatRotation();
-				if (ImGui::DragFloat3("Position", (float*)&pos))
+				float3 rotation = gameObject->GetEulerRotation();
+				if (ImGui::DragFloat3("Position", (float*)&pos, 0.15f))
 				{
 					gameObject->SetPosition(pos);
 				}
 
+				if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.5f))
+				{
+					gameObject->SetRotation(rotation);
+				}
+
+				if (ImGui::DragFloat3("Scale", (float*)&scale, 0.15f))
+				{
+					gameObject->SetScale(scale);
+				}
 			}
 		}
 

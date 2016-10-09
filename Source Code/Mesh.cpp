@@ -2,13 +2,14 @@
 #include "OpenGL.h"
 #include "GameObject.h"
 
-Mesh::Mesh()
+Mesh::Mesh(GameObject* new_GameObject)
 {
 
 }
 
 Mesh::~Mesh()
 {
+
 }
 
 void Mesh::LoadData(char* path)
@@ -22,20 +23,19 @@ void Mesh::LoadBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
 
-
 	glGenBuffers(1, (GLuint*)&id_indices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);
-
-	glGenBuffers(1, (GLuint*)&id_normals);
-	glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * num_normals * 3, normals, GL_STATIC_DRAW);
 
 	if (num_normals > 0)
 	{
 		glGenBuffers(1, (GLuint*)&id_normals);
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * num_normals * 3, normals, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_normals * 3, normals, GL_STATIC_DRAW);
+
+		glGenBuffers(1, (GLuint*)&id_flipped_normals);
+		glBindBuffer(GL_ARRAY_BUFFER, id_flipped_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_normals * 3, flipped_normals, GL_STATIC_DRAW);
 	}
 
 	if (num_tex_coords > 0)
@@ -79,8 +79,13 @@ void Mesh::Draw()
 
 	if (num_normals > 0)
 	{
+		if (gameObject->HasFlippedNormals())
+		{
+			//TODO: Flip normals
+		}
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
+		//glDisable(GL_NORMALIZE);
 	}
 
 	if (num_tex_coords > 0)
@@ -93,7 +98,6 @@ void Mesh::Draw()
 	glBindTexture(GL_TEXTURE_2D, 2);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

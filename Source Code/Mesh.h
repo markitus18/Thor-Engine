@@ -9,7 +9,7 @@ class GameObject;
 class Mesh
 {
 public:
-	Mesh();
+	Mesh(GameObject* new_GameObject);
 	~Mesh();
 	void LoadData(char* path);
 	void LoadBuffers();
@@ -27,8 +27,10 @@ public:
 
 	//Normals data
 	uint	id_normals = 0;
+	uint	id_flipped_normals;
 	uint	num_normals = 0;
 	float*	normals = NULL;
+	float*	flipped_normals = NULL;
 
 	//Texture coords
 	uint	id_tex_coords = 0;

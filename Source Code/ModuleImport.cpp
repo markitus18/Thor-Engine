@@ -126,7 +126,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			child = gameObject;
 		}
 
-		Mesh* go_mesh = new Mesh();
+		Mesh* go_mesh = new Mesh(child);
 
 		//Loading mesh vertices data
 		go_mesh->num_vertices = newMesh->mNumVertices;
@@ -159,6 +159,10 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			go_mesh->num_normals = newMesh->mNumVertices;
 			go_mesh->normals = new float[go_mesh->num_normals * 3];
 			memcpy(go_mesh->normals, newMesh->mNormals, sizeof(float) * go_mesh->num_normals * 3);
+
+			go_mesh->flipped_normals = new float[go_mesh->num_normals * 3];
+			for (uint i = 0; i < go_mesh->num_normals; i++)
+				go_mesh->flipped_normals[i] = -go_mesh->normals[i];
 		}
 
 		//Loading mesh texture coordinates -----------

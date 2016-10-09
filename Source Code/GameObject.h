@@ -17,15 +17,19 @@ public:
 
 	void Draw();
 
-	float3 GetPosition() const;
-	float3 GetScale() const;
-	Quat GetQuatRotation() const;
-	
+	float3	GetPosition() const;
+	float3	GetScale() const;
+	Quat	GetQuatRotation() const;
+	float3	GetEulerRotation() const;
+
 	void SetPosition(float3 new_position);
 	void SetScale(float3 new_scale);
 	void SetRotation(float3 euler_angles);
 
 	void UpdateTransformMatrix();
+	void UpdateEulerAngles();
+
+	bool HasFlippedNormals() const;
 
 	//Selection methods
 	void Select();
@@ -51,6 +55,7 @@ private:
 	float3		scale;
 	Quat		rotation;
 	float3		rotation_euler;
+	bool		flipped_normals = false;
 
 	bool selected = false;
 

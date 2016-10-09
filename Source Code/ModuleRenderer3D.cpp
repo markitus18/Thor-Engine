@@ -59,6 +59,10 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 
+
+
+		int monitor_screen_width = GetSystemMetrics(SM_CXSCREEN);
+		int monitor_screen_height = GetSystemMetrics(SM_CYSCREEN);
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();

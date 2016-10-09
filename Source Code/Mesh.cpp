@@ -81,11 +81,10 @@ void Mesh::Draw()
 	{
 		if (gameObject->HasFlippedNormals())
 		{
-			//TODO: Flip normals
+			glFrontFace(GL_CW);
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
-		//glDisable(GL_NORMALIZE);
 	}
 
 	if (num_tex_coords > 0)
@@ -101,6 +100,7 @@ void Mesh::Draw()
 
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glFrontFace(GL_CCW);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }

@@ -75,7 +75,7 @@ void GameObject::SetScale(float3 new_scale)
 	UpdateTransformMatrix();
 
 	//Getting normals sign
-	int result = scale.x * scale.y * scale.z;
+	float result = scale.x * scale.y * scale.z;
 	flipped_normals = result >= 0 ? false : true;
 }
 

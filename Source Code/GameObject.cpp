@@ -37,7 +37,8 @@ void GameObject::Draw()
 
 	for (uint i = 0; i < childs.size(); i++)
 	{
-		childs[i]->Draw();
+		if (childs[i]->active)
+			childs[i]->Draw();	
 	}
 	glPopMatrix();
 }
@@ -89,6 +90,20 @@ void GameObject::SetRotation(float3 euler_angles)
 	UpdateTransformMatrix();
 }
 
+void GameObject::ResetTransform()
+{
+	position = float3::zero;
+	scale = float3::one;
+	rotation = Quat::identity;
+
+	UpdateEulerAngles();
+	UpdateTransformMatrix();
+
+	//Getting normals sign
+	float result = scale.x * scale.y * scale.z;
+	flipped_normals = result >= 0 ? false : true;
+}
+
 void GameObject::UpdateTransformMatrix()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
@@ -133,6 +148,7 @@ bool GameObject::IsParentSelected() const
 	}
 	return false;
 }
+
 void GameObject::AddMesh(Mesh* new_mesh)
 {
 	mesh = new_mesh;

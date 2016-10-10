@@ -7,9 +7,16 @@ class Panel
 {
 public:
 	Panel();
+	Panel(int, int, int, int);
 	virtual ~Panel();
 
 	virtual void Draw();
+
+	void SetSize(int, int);
+	void SetPosition(int, int);
+
+	virtual void UpdateSize(int, int);
+	virtual void UpdatePosition(int, int);
 
 protected:
 	p2Point<int> position;

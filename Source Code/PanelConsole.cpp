@@ -3,6 +3,8 @@
 
 PanelConsole::PanelConsole()
 {
+	position.x = 2;
+	position.y = 286;
 	ClearLog();
 }
 
@@ -27,15 +29,17 @@ void PanelConsole::AddLog(const char* input)
 
 void PanelConsole::Draw()
 {
-	//ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar;
-
 	if (active)
 	{
-		if (!ImGui::Begin("Console", &active, ImVec2(500, 300), 1.0f, 0))
+		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
+		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
+
+		if (!ImGui::Begin("Console", &active, ImVec2(size.x, size.y), 1.0f, 0))
 		{
 			ImGui::End();
 			return;
 		}
+
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing
 
@@ -59,4 +63,13 @@ void PanelConsole::Draw()
 
 		ImGui::End();
 	}
+}
+
+void PanelConsole::UpdatePosition(int screen_width, int screen_height)
+{
+	position.x = 0;
+	position.y = (screen_height * (0.75));
+
+	size.y = screen_height - position.y;
+	size.x = screen_width * (0.75);
 }

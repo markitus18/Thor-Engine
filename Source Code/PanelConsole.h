@@ -19,6 +19,8 @@ public:
 	void AddLog(const char* input);
 
 	void Draw();
+
+	void UpdatePosition(int, int);
 };
 
 #endif //__UI_CONSOLE_H__

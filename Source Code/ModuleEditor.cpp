@@ -27,8 +27,12 @@ bool ModuleEditor::Init()
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.IniFilename = "imgui.ini";
+	io.IniFilename = NULL;
 	io.MouseDrawCursor = true;
+
+
+	int screen_width = GetSystemMetrics(SM_CXSCREEN);
+	int screen_height = GetSystemMetrics(SM_CYSCREEN);
 
 	//Initializing all panels
 	panelConsole = new PanelConsole();
@@ -240,4 +244,11 @@ void ModuleEditor::UpdateFPSData(int fps, int ms)
 	}
 	FPS_data[100 - 1] = fps;
 	ms_data[100 - 1] = ms;
+}
+
+void ModuleEditor::OnResize(int screen_width, int screen_height)
+{
+	panelConsole->UpdatePosition(screen_width, screen_height);
+	panelHierarchy->UpdatePosition(screen_width, screen_height);
+	panelInspector->UpdatePosition(screen_width, screen_height);
 }

@@ -24,6 +24,7 @@ public:
 	void GetEvent(SDL_Event* event);
 	void UpdateFPSData(int fps, int ms);
 
+	void OnResize(int screen_width, int screen_height);
 private:
 
 	void DrawPanels();

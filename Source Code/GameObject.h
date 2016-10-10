@@ -26,6 +26,8 @@ public:
 	void SetScale(float3 new_scale);
 	void SetRotation(float3 euler_angles);
 
+	void ResetTransform();
+
 	void UpdateTransformMatrix();
 	void UpdateEulerAngles();
 

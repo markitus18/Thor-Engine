@@ -114,8 +114,11 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			case SDL_WINDOWEVENT:
 			{
-				if(event.window.event == SDL_WINDOWEVENT_RESIZED)
+				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+				{
 					App->renderer3D->OnResize(event.window.data1, event.window.data2);
+					App->moduleEditor->OnResize(event.window.data1, event.window.data2);
+				}
 			}
 		}
 	}

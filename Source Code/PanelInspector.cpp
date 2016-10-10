@@ -9,19 +9,25 @@
 
 PanelInspector::PanelInspector()
 {
+	position.x = 0;
+	position.y = 0;
+
 	size.x = 340;
 	size.y = 380;
 }
 
 PanelInspector::~PanelInspector()
 {
-
+	
 }
 
 void PanelInspector::Draw()
 {
 	if (active)
 	{
+		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
+		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
+
 		if (!ImGui::Begin("Inspector", &active, ImVec2(size.x, size.y), 1.0f))
 		{
 			ImGui::End();
@@ -47,8 +53,24 @@ void PanelInspector::Draw()
 			ImGui::Separator();
 
 			ImGuiTreeNodeFlags transform_header_flags = ImGuiTreeNodeFlags_DefaultOpen;
-			if (ImGui::CollapsingHeader("Transform"), transform_header_flags)
+			if (ImGui::CollapsingHeader("Transform", transform_header_flags))
 			{
+
+				if (ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[1])
+				{
+					ImGui::OpenPopup("reset");
+				}
+
+				if (ImGui::BeginPopup("reset"))
+				{
+					if (ImGui::Button("Reset"))
+					{
+						gameObject->ResetTransform();
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::EndPopup();
+				}
+
 				float3 pos = gameObject->GetPosition();
 				float3 scale = gameObject->GetScale();
 				float3 rotation = gameObject->GetEulerRotation();
@@ -85,4 +107,12 @@ void PanelInspector::Draw()
 	ImGui::Button("Debug console");
 	ImGui::End();
 	*/
+}
+
+void PanelInspector::UpdatePosition(int screen_width, int screen_height)
+{
+	position.x = screen_width * (0.75);
+	position.y = 20;
+	size.x = screen_width * (0.25);
+	size.y =screen_height * (0.60) - 20;
 }

@@ -17,10 +17,12 @@ public:
 	p2Point()
 	{}
 
-	p2Point(const p2Point& p)
+	p2Point(const p2Point& p) : x (p.x), y(p.y)
 	{
-		x = p.x;
-		y = p.y;
+	}
+
+	p2Point(TYPE _x, TYPE _y) : x(_x), y(_y)
+	{
 	}
 
 	// Math ------------------------------------------------

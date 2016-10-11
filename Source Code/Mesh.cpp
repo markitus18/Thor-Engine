@@ -94,9 +94,9 @@ void Mesh::Draw()
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	}
 
-	glBindTexture(GL_TEXTURE_2D, 2);
+	//glBindTexture(GL_TEXTURE_2D, 2);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
 
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

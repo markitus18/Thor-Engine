@@ -44,11 +44,66 @@ update_status ModuleImport::Update(float dt)
 	if (!fbx_loaded)
 	{
 		fbx_loaded = true;
-		const aiScene* file = aiImportFile("Game/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game / maya tmp test.fbx");
+		const aiScene* file = aiImportFile("Game/Street environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
+		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Street environment_V01.FBX");
+
+		const aiScene* file2 = aiImportFile("Game/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+		LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/maya tmp test.fbx");
 
 	}
 	return UPDATE_CONTINUE;
+}
+
+void ModuleImport::LoadMesh(Mesh* mesh, const aiMesh* from)
+{
+	//Loading mesh vertices data
+	mesh->num_vertices = from->mNumVertices;
+	mesh->vertices = new float[mesh->num_vertices * 3];
+	memcpy(mesh->vertices, from->mVertices, sizeof(float) * mesh->num_vertices * 3);
+	LOG("New mesh with %d vertices", mesh->num_vertices);
+
+	//Loading mesh faces data
+	if (from->HasFaces())
+	{
+		mesh->num_indices = from->mNumFaces * 3;
+		mesh->indices = new uint[mesh->num_indices];
+		for (uint i = 0; i < from->mNumFaces; i++)
+		{
+			if (from->mFaces[i].mNumIndices != 3)
+			{
+				LOG("WARNING, geometry face with != 3 indices!");
+			}
+			else
+			{
+				//Copying each face, we skip 3 slots in indices because an aiFace is made of 3 uints
+				memcpy(&mesh->indices[i * 3], from->mFaces[i].mIndices, 3 * sizeof(uint));
+			}
+		}
+	}
+
+	//Loading mesh normals data ------------------
+	if (from->HasNormals())
+	{
+		mesh->num_normals = from->mNumVertices;
+		mesh->normals = new float[mesh->num_normals * 3];
+		memcpy(mesh->normals, from->mNormals, sizeof(float) * mesh->num_normals * 3);
+	}
+
+	//Loading mesh texture coordinates -----------
+	if (from->HasTextureCoords(0))
+	{
+		mesh->num_tex_coords = mesh->num_vertices;
+		mesh->tex_coords = new float[from->mNumVertices * 2];
+
+		for (unsigned int i = 0; i < mesh->num_tex_coords; i++)
+		{
+			mesh->tex_coords[i * 2] = from->mTextureCoords[0][i].x;
+			mesh->tex_coords[i * 2 + 1] = from->mTextureCoords[0][i].y;
+		}
+	}
+	//-------------------------------------------
+
+	mesh->LoadBuffers();
 }
 
 GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path)
@@ -60,15 +115,15 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	
 	//Decomposing transform matrix into translation rotation and scale
 	node->mTransformation.Decompose(scaling, rotation, translation);
-	//node->mTransformation.
+
 	float3 pos(translation.x, translation.y, translation.z);
 	float3 scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 	
-	//TODO: skipp all dummy modules. Assimp loads fbx nodes to stack all transformations
+	//Skipp all dummy modules. Assimp loads fbx nodes to stack all transformations
 	std::string name = node->mName.C_Str();	
-	
-	for (int i = 0; i < 5; ++i)
+	bool dummyFound = true;
+	while (dummyFound)
 	{
 		//All dummy modules have one children (next dummy module or last module containing the mesh)
 		if (name.find("$AssimpFbx$") != std::string::npos && node->mNumChildren == 1)
@@ -86,8 +141,10 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 			//if we find a dummy node we "change" our current node into the dummy one and search
 			//for other dummy nodes inside that one.
-			i = -1;
+			dummyFound = true;
 		}
+		else
+			dummyFound = false;
 	}
 	
 	//Cutting path into file name --------------------
@@ -96,7 +153,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		name = path;
 		uint slashPos;
 		if ((slashPos = name.find_last_of("/")) != std::string::npos)
-			name = name.substr(slashPos + 2, name.size() - slashPos);
+			name = name.substr(slashPos + 1, name.size() - slashPos);
 
 		uint pointPos;
 		if ((pointPos = name.find_first_of(".")) != std::string::npos)
@@ -104,11 +161,12 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	}
 	//-----------------------------------------------
 
-	GameObject* gameObject = new GameObject(parent, pos, scale, rot, name.c_str());
+	GameObject* gameObject = new GameObject(parent, name.c_str(), pos, scale, rot);
 	parent->childs.push_back(gameObject);
 	App->scene->tmp_goCount++;
 
 	// Loading node meshes ----------------------------------------
+
 	for (uint i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
@@ -117,7 +175,9 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		if (node->mNumMeshes > 1)
 		{
 			name = newMesh->mName.C_Str();
-			GameObject* child = new GameObject(parent, name.c_str());
+			if (name == "")
+				name = "No name";
+			child = new GameObject(parent, name.c_str());
 			App->scene->tmp_goCount++;
 			gameObject->childs.push_back(child);
 		}
@@ -127,59 +187,8 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		}
 
 		Mesh* go_mesh = new Mesh(child);
+		LoadMesh(go_mesh, newMesh);
 
-		//Loading mesh vertices data
-		go_mesh->num_vertices = newMesh->mNumVertices;
-		go_mesh->vertices = new float[go_mesh->num_vertices * 3];
-		memcpy(go_mesh->vertices, newMesh->mVertices, sizeof(float) * go_mesh->num_vertices * 3);
-		LOG("New mesh with %d vertices", go_mesh->num_vertices);
-
-		//Loading mesh faces data
-		if (newMesh->HasFaces())
-		{
-			go_mesh->num_indices = newMesh->mNumFaces * 3;
-			go_mesh->indices = new uint[go_mesh->num_indices];
-			for (uint i = 0; i < newMesh->mNumFaces; i++)
-			{
-				if (newMesh->mFaces[i].mNumIndices != 3)
-				{
-					LOG("WARNING, geometry face with != 3 indices!");
-				}
-				else
-				{
-					//Copying each face, we skip 3 slots in indices because an aiFace is made of 3 uints
-					memcpy(&go_mesh->indices[i * 3], newMesh->mFaces[i].mIndices, 3 * sizeof(uint));
-				}
-			}
-		}
-
-		//Loading mesh normals data ------------------
-		if (newMesh->HasNormals())
-		{
-			go_mesh->num_normals = newMesh->mNumVertices;
-			go_mesh->normals = new float[go_mesh->num_normals * 3];
-			memcpy(go_mesh->normals, newMesh->mNormals, sizeof(float) * go_mesh->num_normals * 3);
-
-			go_mesh->flipped_normals = new float[go_mesh->num_normals * 3];
-			for (uint i = 0; i < go_mesh->num_normals; i++)
-				go_mesh->flipped_normals[i] = -go_mesh->normals[i];
-		}
-
-		//Loading mesh texture coordinates -----------
-		if (newMesh->HasTextureCoords(0))
-		{
-			go_mesh->num_tex_coords = go_mesh->num_vertices;
-			go_mesh->tex_coords = new float[newMesh->mNumVertices * 2];
-
-			for (unsigned int i = 0; i < go_mesh->num_tex_coords; i++)
-			{
-				go_mesh->tex_coords[i * 2] = newMesh->mTextureCoords[0][i].x;
-				go_mesh->tex_coords[i * 2 + 1] = newMesh->mTextureCoords[0][i].y;
-			}
-		}
-		//-------------------------------------------
-
-		go_mesh->LoadBuffers();
 		child->AddMesh(go_mesh);
 	}
 	// ------------------------------------------------------------

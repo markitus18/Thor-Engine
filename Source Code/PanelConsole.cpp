@@ -71,5 +71,5 @@ void PanelConsole::UpdatePosition(int screen_width, int screen_height)
 	position.y = (screen_height * (0.75));
 
 	size.y = screen_height - position.y;
-	size.x = screen_width * (0.75);
+	size.x = screen_width * (0.80);
 }

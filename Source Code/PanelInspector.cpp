@@ -111,8 +111,8 @@ void PanelInspector::Draw()
 
 void PanelInspector::UpdatePosition(int screen_width, int screen_height)
 {
-	position.x = screen_width * (0.75);
+	position.x = screen_width * (0.80);
 	position.y = 20;
-	size.x = screen_width * (0.25);
+	size.x = screen_width * (0.20);
 	size.y =screen_height * (0.60) - 20;
 }

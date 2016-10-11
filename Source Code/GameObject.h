@@ -11,8 +11,8 @@ class GameObject
 {
 public:
 	GameObject();
-	GameObject(const GameObject* parent, const char* name);
-	GameObject(const GameObject* parent, const float3& translation, const float3& scale, const Quat& rotation, const char* name);
+	//GameObject(const GameObject* parent, const char* name);
+	GameObject(const GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
 	~GameObject();
 
 	void Draw();

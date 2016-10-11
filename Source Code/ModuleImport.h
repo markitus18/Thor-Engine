@@ -6,6 +6,8 @@
 
 struct aiScene;
 struct aiNode;
+struct aiMesh;
+class Mesh;
 
 class ModuleImport : public Module
 {
@@ -20,6 +22,9 @@ public:
 	bool CleanUp();
 	update_status Update(float dt);
 
+	void LoadMesh(Mesh* mesh, const aiMesh* from);
+
+private:
 	bool fbx_loaded = false;
 
 };

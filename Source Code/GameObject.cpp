@@ -5,14 +5,14 @@
 GameObject::GameObject()
 {
 }
-GameObject::GameObject(const GameObject* new_parent, const char* new_name) : position(float3::zero), scale(float3::one), rotation(Quat::identity), name(new_name)
-{
-	parent = new_parent;
-	UpdateEulerAngles();
-	UpdateTransformMatrix();
-}
+//GameObject::GameObject(const GameObject* new_parent, const char* new_name) : position(float3::zero), scale(float3::one), rotation(Quat::identity), name(new_name)
+//{
+//	parent = new_parent;
+//	UpdateEulerAngles();
+//	UpdateTransformMatrix();
+//}
 
-GameObject::GameObject(const GameObject* new_parent, const float3& translation, const float3& scale, const Quat& rotation, const char* new_name) : position(translation), scale(scale),
+GameObject::GameObject(const GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : position(translation), scale(scale),
 						rotation(rotation), name(new_name)
 {
 	parent = new_parent;

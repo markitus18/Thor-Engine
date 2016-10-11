@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleImport.h"
 #include "ModuleScene.h"
-#include "ModuleScene.h"
+#include "C_Material.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -44,66 +44,35 @@ update_status ModuleImport::Update(float dt)
 	if (!fbx_loaded)
 	{
 		fbx_loaded = true;
-		const aiScene* file = aiImportFile("Game/Street environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
-		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Street environment_V01.FBX");
+		const aiScene* file = aiImportFile("Game/Models/3D Models/Street environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
+		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/Street environment_V01.FBX");
 
-		const aiScene* file2 = aiImportFile("Game/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-		LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/maya tmp test.fbx");
+		const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+		LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
 
 	}
 	return UPDATE_CONTINUE;
 }
 
-void ModuleImport::LoadMesh(Mesh* mesh, const aiMesh* from)
+//Tmp function, move to file system
+void ModuleImport::CutPath(std::string& str)
 {
-	//Loading mesh vertices data
-	mesh->num_vertices = from->mNumVertices;
-	mesh->vertices = new float[mesh->num_vertices * 3];
-	memcpy(mesh->vertices, from->mVertices, sizeof(float) * mesh->num_vertices * 3);
-	LOG("New mesh with %d vertices", mesh->num_vertices);
-
-	//Loading mesh faces data
-	if (from->HasFaces())
+	uint position = str.find_last_of("\\/");
+	if (position != std::string::npos)
 	{
-		mesh->num_indices = from->mNumFaces * 3;
-		mesh->indices = new uint[mesh->num_indices];
-		for (uint i = 0; i < from->mNumFaces; i++)
-		{
-			if (from->mFaces[i].mNumIndices != 3)
-			{
-				LOG("WARNING, geometry face with != 3 indices!");
-			}
-			else
-			{
-				//Copying each face, we skip 3 slots in indices because an aiFace is made of 3 uints
-				memcpy(&mesh->indices[i * 3], from->mFaces[i].mIndices, 3 * sizeof(uint));
-			}
-		}
+		str = str.substr(position + 1, str.size() - position);
 	}
+}
 
-	//Loading mesh normals data ------------------
-	if (from->HasNormals())
+std::string ModuleImport::GetFileFolder(const std::string& str)
+{
+	std::string ret;
+	uint position = str.find_last_of("\\/");
+	if (position != std::string::npos)
 	{
-		mesh->num_normals = from->mNumVertices;
-		mesh->normals = new float[mesh->num_normals * 3];
-		memcpy(mesh->normals, from->mNormals, sizeof(float) * mesh->num_normals * 3);
+		ret = str.substr(0, position + 1);
 	}
-
-	//Loading mesh texture coordinates -----------
-	if (from->HasTextureCoords(0))
-	{
-		mesh->num_tex_coords = mesh->num_vertices;
-		mesh->tex_coords = new float[from->mNumVertices * 2];
-
-		for (unsigned int i = 0; i < mesh->num_tex_coords; i++)
-		{
-			mesh->tex_coords[i * 2] = from->mTextureCoords[0][i].x;
-			mesh->tex_coords[i * 2 + 1] = from->mTextureCoords[0][i].y;
-		}
-	}
-	//-------------------------------------------
-
-	mesh->LoadBuffers();
+	return ret;
 }
 
 GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path)
@@ -186,10 +155,25 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			child = gameObject;
 		}
 
-		Mesh* go_mesh = new Mesh(child);
+		C_Mesh* go_mesh = new C_Mesh(child);
 		LoadMesh(go_mesh, newMesh);
-
 		child->AddMesh(go_mesh);
+
+		//Loading mesh materials ---------
+		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
+		uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
+
+		aiString file_path;
+		material->GetTexture(aiTextureType_DIFFUSE, 0, &file_path);
+
+		std::string mat_path(GetFileFolder(path));
+		mat_path += file_path.C_Str();
+		C_Material* go_mat = new C_Material(child);
+		LoadMaterial(go_mat, material, mat_path.c_str());
+		child->AddMaterial(go_mat);
+		//CutPath(path_string);
+		//--------------------------------
+
 	}
 	// ------------------------------------------------------------
 	for (uint i = 0; i < node->mNumChildren; i++)
@@ -202,6 +186,66 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 	//GameObject* gameObject = new GameObject(*mesh);
 	return gameObject;
+}
+
+
+void ModuleImport::LoadMesh(C_Mesh* mesh, const aiMesh* from)
+{
+	//Loading mesh vertices data
+	mesh->num_vertices = from->mNumVertices;
+	mesh->vertices = new float[mesh->num_vertices * 3];
+	memcpy(mesh->vertices, from->mVertices, sizeof(float) * mesh->num_vertices * 3);
+	LOG("New mesh with %d vertices", mesh->num_vertices);
+
+	//Loading mesh faces data
+	if (from->HasFaces())
+	{
+		mesh->num_indices = from->mNumFaces * 3;
+		mesh->indices = new uint[mesh->num_indices];
+		for (uint i = 0; i < from->mNumFaces; i++)
+		{
+			if (from->mFaces[i].mNumIndices != 3)
+			{
+				LOG("WARNING, geometry face with != 3 indices!");
+			}
+			else
+			{
+				//Copying each face, we skip 3 slots in indices because an aiFace is made of 3 uints
+				memcpy(&mesh->indices[i * 3], from->mFaces[i].mIndices, 3 * sizeof(uint));
+			}
+		}
+	}
+
+	//Loading mesh normals data ------------------
+	if (from->HasNormals())
+	{
+		mesh->num_normals = from->mNumVertices;
+		mesh->normals = new float[mesh->num_normals * 3];
+		memcpy(mesh->normals, from->mNormals, sizeof(float) * mesh->num_normals * 3);
+	}
+
+	//Loading mesh texture coordinates -----------
+	if (from->HasTextureCoords(0))
+	{
+		mesh->num_tex_coords = mesh->num_vertices;
+		mesh->tex_coords = new float[from->mNumVertices * 2];
+
+		for (unsigned int i = 0; i < mesh->num_tex_coords; i++)
+		{
+			mesh->tex_coords[i * 2] = from->mTextureCoords[0][i].x;
+			mesh->tex_coords[i * 2 + 1] = from->mTextureCoords[0][i].y;
+		}
+	}
+	//-------------------------------------------
+
+	mesh->LoadBuffers();
+}
+
+void ModuleImport::LoadMaterial(C_Material* material, const aiMaterial* from, const char* path)
+{
+	material->texture_path = "Game/Models/3DModels/..\\Textures\\building03_c.tga";
+	material->texture_path = (char*)path;
+	material->texture_id = LoadIMG(material->texture_path);
 }
 
 uint ModuleImport::LoadIMG(char* path)

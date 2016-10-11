@@ -1,7 +1,9 @@
 #ifndef __GAMEOBJECT_H__
 #define __GAMEOBJECT_H__
 
-#include "Mesh.h"
+#include "C_Mesh.h"
+#include "C_Material.h"
+
 #include "MathGeoLib/src/MathBuildConfig.h"
 #include "MathGeoLib/src/MathGeoLib.h"
 
@@ -39,7 +41,8 @@ public:
 	bool IsSelected() const;
 	bool IsParentSelected() const;
 
-	void AddMesh(Mesh* mesh);
+	void AddMesh(C_Mesh* mesh);
+	void AddMaterial(C_Material* material);
 
 public:
 	std::string					name;
@@ -48,7 +51,8 @@ public:
 	std::vector<GameObject*>	childs;
 	bool						active = true;
 
-	Mesh* mesh = NULL;
+	C_Mesh*		mesh = NULL;
+	C_Material* material = NULL;
 
 private:
 	float4x4	transform;

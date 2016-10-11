@@ -7,7 +7,9 @@
 struct aiScene;
 struct aiNode;
 struct aiMesh;
-class Mesh;
+struct aiMaterial;
+class C_Mesh;
+class C_Material;
 
 class ModuleImport : public Module
 {
@@ -22,8 +24,11 @@ public:
 	bool CleanUp();
 	update_status Update(float dt);
 
-	void LoadMesh(Mesh* mesh, const aiMesh* from);
-
+	void LoadMesh(C_Mesh* mesh, const aiMesh* from);
+	void LoadMaterial(C_Material* material, const aiMaterial* from, const char* path);
+	//Tmp function, move to file system
+	void CutPath(std::string&);
+	std::string GetFileFolder(const std::string&);
 private:
 	bool fbx_loaded = false;
 

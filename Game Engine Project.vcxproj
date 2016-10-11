@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="Source Code\Application.h" />
     <ClInclude Include="Source Code\Color.h" />
+    <ClInclude Include="Source Code\Component.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\devil_internal_exports.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\il.h" />
@@ -164,7 +165,8 @@
     <ClInclude Include="Source Code\glmath.h" />
     <ClInclude Include="Source Code\Globals.h" />
     <ClInclude Include="Source Code\Light.h" />
-    <ClInclude Include="Source Code\Mesh.h" />
+    <ClInclude Include="Source Code\C_Material.h" />
+    <ClInclude Include="Source Code\C_Mesh.h" />
     <ClInclude Include="Source Code\Module.h" />
     <ClInclude Include="Source Code\ModuleAudio.h" />
     <ClInclude Include="Source Code\ModuleCamera3D.h" />
@@ -195,6 +197,7 @@
   <ItemGroup>
     <ClCompile Include="Source Code\Application.cpp" />
     <ClCompile Include="Source Code\Color.cpp" />
+    <ClCompile Include="Source Code\Component.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui_draw.cpp" />
@@ -241,7 +244,8 @@
     <ClCompile Include="Source Code\Light.cpp" />
     <ClCompile Include="Source Code\log.cpp" />
     <ClCompile Include="Source Code\Main.cpp" />
-    <ClCompile Include="Source Code\Mesh.cpp" />
+    <ClCompile Include="Source Code\C_Material.cpp" />
+    <ClCompile Include="Source Code\C_Mesh.cpp" />
     <ClCompile Include="Source Code\ModuleAudio.cpp" />
     <ClCompile Include="Source Code\ModuleCamera3D.cpp" />
     <ClCompile Include="Source Code\ModuleImport.cpp" />

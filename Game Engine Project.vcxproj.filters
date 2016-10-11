@@ -184,9 +184,6 @@
     <ClCompile Include="Source Code\GameObject.cpp">
       <Filter>Source Code\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\Mesh.cpp">
-      <Filter>Source Code\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Panel.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
@@ -201,6 +198,15 @@
     </ClCompile>
     <ClCompile Include="Source Code\PanelInspector.cpp">
       <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Component.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\C_Mesh.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\C_Material.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -489,9 +495,6 @@
     <ClInclude Include="Source Code\GameObject.h">
       <Filter>Source Code\GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\Mesh.h">
-      <Filter>Source Code\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h">
       <Filter>Source Code\External Libraries\Devil</Filter>
     </ClInclude>
@@ -530,6 +533,15 @@
     </ClInclude>
     <ClInclude Include="Source Code\PanelInspector.h">
       <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Component.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\C_Mesh.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\C_Material.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -577,6 +589,9 @@
     </Filter>
     <Filter Include="Source Code\Editor">
       <UniqueIdentifier>{5c23cb72-7b71-4648-8e76-e1494dd55f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\GameObjects\Components">
+      <UniqueIdentifier>{7a22f48e-f24f-4f9b-87ca-da9c7d73ac05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

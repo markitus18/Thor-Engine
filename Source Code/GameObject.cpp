@@ -30,9 +30,20 @@ void GameObject::Draw()
 {
 	glPushMatrix();
 	glMultMatrixf((float*)&transform);
+
+	if (material)
+	{
+		material->StackTexture();
+	}
+
 	if (mesh)
 	{
 		mesh->Draw();
+	}
+
+	if (material)
+	{
+		material->PopTexture();
 	}
 
 	for (uint i = 0; i < childs.size(); i++)
@@ -149,8 +160,14 @@ bool GameObject::IsParentSelected() const
 	return false;
 }
 
-void GameObject::AddMesh(Mesh* new_mesh)
+void GameObject::AddMesh(C_Mesh* new_mesh)
 {
 	mesh = new_mesh;
 	mesh->gameObject = this;
+}
+
+void GameObject::AddMaterial(C_Material* new_material)
+{
+	material = new_material;
+	material->gameObject = this;
 }

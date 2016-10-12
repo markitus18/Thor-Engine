@@ -202,7 +202,7 @@ void ModuleEditor::DrawPanels()
 void ModuleEditor::ShowAboutWindow()
 {
 	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(400, 100), 1.0f);
-	ImGui::Text("v0.2-alpha");
+	ImGui::Text("v0.3-alpha");
 	ImGui::Separator();
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");

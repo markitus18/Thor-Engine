@@ -7,6 +7,7 @@
 class PanelConsole;
 class PanelHierarchy;
 class PanelInspector;
+class PanelConfiguration;
 
 class ModuleEditor : public Module
 {
@@ -38,7 +39,7 @@ public:
 	PanelHierarchy* panelHierarchy = NULL;
 	PanelConsole* panelConsole = NULL;
 	PanelInspector* panelInspector = NULL;
-
+	PanelConfiguration* panelConfiguration = NULL;
 private:
 	char tmp_appName[26] = "Not working yet";
 	char tmp_orgName[26] = "Not working yet";

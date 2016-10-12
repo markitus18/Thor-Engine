@@ -8,6 +8,7 @@
 #include "PanelHierarchy.h"
 #include "PanelConsole.h"
 #include "PanelInspector.h"
+#include "PanelConfiguration.h"
 
 #include "OpenGL.h"
 
@@ -38,7 +39,7 @@ bool ModuleEditor::Init()
 	panelConsole = new PanelConsole();
 	panelHierarchy = new PanelHierarchy();
 	panelInspector = new PanelInspector();
-
+	panelConfiguration = new PanelConfiguration();
 	//Change background color, we use "test_color", controllable variable from UI
 	ImVec4 BgColor = ImColor(71, 71, 71);
 	glClearColor(BgColor.x, BgColor.y, BgColor.z, BgColor.w);
@@ -137,6 +138,18 @@ bool ModuleEditor::CleanUp()
 		panelHierarchy = NULL;
 	}
 
+	if (panelInspector)
+	{
+		delete panelInspector;
+		panelInspector = NULL;
+	}
+
+	if (panelConfiguration)
+	{
+		delete panelConfiguration;
+		panelConfiguration = NULL;
+	}
+
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
 }
@@ -168,6 +181,11 @@ void ModuleEditor::DrawPanels()
 	{
 		panelInspector->Draw();
 	}
+
+	if (panelConfiguration != NULL)
+	{
+		panelConfiguration->Draw();
+	}
 }
 
 void ModuleEditor::ShowAboutWindow()
@@ -182,48 +200,8 @@ void ModuleEditor::ShowAboutWindow()
 
 void ModuleEditor::ShowSettingsWindow()
 {
-	ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
-	if (ImGui::BeginMenu("Options"))
-	{
-		ImGui::MenuItem("Default", NULL, false, false);
-		if (ImGui::IsItemHovered())
-			ImGui::SetMouseCursor(2);
-		ImGui::MenuItem("Save", NULL, false, false);
-		ImGui::MenuItem("Load", NULL, false, false);
-		ImGui::EndMenu();
-	}
+	//ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
 
-	if (ImGui::CollapsingHeader("Application"))
-	{
-		ImGui::InputText("Project Name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
-		ImGui::PlotHistogram("FPS", FPS_data, IM_ARRAYSIZE(FPS_data), 0, NULL, 0.0f, 120.0f, ImVec2(0, 80));
-		ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
-	}
-
-	if (ImGui::CollapsingHeader("Window"))
-	{
-
-	}
-
-	if (ImGui::CollapsingHeader("File System"))
-	{
-
-	}
-
-	if (ImGui::CollapsingHeader("Input"))
-	{
-		ImGui::Text("Mouse position: %i, %i", App->input->GetMouseX(), App->input->GetMouseY());
-		ImGui::Text("Mouse motion: %i, %i", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-		ImGui::Text("Mouse wheel: %i", App->input->GetMouseZ());
-
-	}
-
-	if (ImGui::CollapsingHeader("Hardware"))
-	{
-
-	}
-
-	ImGui::End();
 }
 
 void ModuleEditor::InitFPSData()
@@ -251,4 +229,5 @@ void ModuleEditor::OnResize(int screen_width, int screen_height)
 	panelConsole->UpdatePosition(screen_width, screen_height);
 	panelHierarchy->UpdatePosition(screen_width, screen_height);
 	panelInspector->UpdatePosition(screen_width, screen_height);
+	panelHierarchy->UpdatePosition(screen_width, screen_height);
 }

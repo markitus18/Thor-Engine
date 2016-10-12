@@ -211,6 +211,9 @@
     <ClCompile Include="Source Code\ModuleMaterials.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\PanelConfiguration.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -548,6 +551,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\ModuleMaterials.h">
       <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\PanelConfiguration.h">
+      <Filter>Source Code\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

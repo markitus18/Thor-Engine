@@ -1,6 +1,6 @@
 #include "PanelInspector.h"
 
-#include "ImGui\imgui.h"
+
 
 #include "Application.h"
 #include "ModuleEditor.h"

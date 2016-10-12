@@ -2,6 +2,7 @@
 #define __PANEL_H__
 
 #include "p2Point.h"
+#include "ImGui\imgui.h"
 
 class Panel
 {

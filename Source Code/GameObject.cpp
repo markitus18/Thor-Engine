@@ -163,11 +163,11 @@ bool GameObject::IsParentSelected() const
 void GameObject::AddMesh(C_Mesh* new_mesh)
 {
 	mesh = new_mesh;
-	mesh->gameObject = this;
+	//mesh->gameObject = this;
 }
 
 void GameObject::AddMaterial(C_Material* new_material)
 {
 	material = new_material;
-	material->gameObject = this;
+	//material->gameObject = this;
 }

@@ -18,6 +18,7 @@ class ModuleCamera3D;
 class ModulePhysics3D;
 class ModuleEditor;
 class ModuleImport;
+class ModuleMaterials;
 
 class Application
 {
@@ -33,7 +34,8 @@ public:
 
 	ModuleEditor* moduleEditor = NULL;
 	ModuleImport* moduleImport = NULL;
-	
+	ModuleMaterials* moduleMaterials = NULL;
+
 private:
 
 	int			maxFPS = 60;

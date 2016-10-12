@@ -208,6 +208,9 @@
     <ClCompile Include="Source Code\C_Material.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\ModuleMaterials.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -541,6 +544,9 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\C_Material.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ModuleMaterials.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>

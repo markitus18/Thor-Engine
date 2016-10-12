@@ -2,6 +2,7 @@
 #define __C_MATERIAL_H__
 
 #include "Component.h"
+#include <string>
 
 class GameObject;
 
@@ -16,7 +17,7 @@ public:
 
 public:
 	uint texture_id;
-	char* texture_path;
+	std::string texture_path;
 };
 
 #endif // __C_MATERIAL_H__

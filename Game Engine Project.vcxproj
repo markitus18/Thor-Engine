@@ -172,6 +172,7 @@
     <ClInclude Include="Source Code\ModuleCamera3D.h" />
     <ClInclude Include="Source Code\ModuleImport.h" />
     <ClInclude Include="Source Code\ModuleInput.h" />
+    <ClInclude Include="Source Code\ModuleMaterials.h" />
     <ClInclude Include="Source Code\ModulePhysics3D.h" />
     <ClInclude Include="Source Code\ModuleRenderer3D.h" />
     <ClInclude Include="Source Code\ModuleScene.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="Source Code\ModuleCamera3D.cpp" />
     <ClCompile Include="Source Code\ModuleImport.cpp" />
     <ClCompile Include="Source Code\ModuleInput.cpp" />
+    <ClCompile Include="Source Code\ModuleMaterials.cpp" />
     <ClCompile Include="Source Code\ModulePhysics3D.cpp" />
     <ClCompile Include="Source Code\ModuleRenderer3D.cpp" />
     <ClCompile Include="Source Code\ModuleScene.cpp" />

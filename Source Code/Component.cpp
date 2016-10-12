@@ -2,7 +2,8 @@
 
 Component::Component(Type type, GameObject* _gameObject) : type(type)
 {
-	gameObject = _gameObject;
+	//Removed temporaly. Is it really necessary?
+	//gameObject = _gameObject;
 }
 
 Component::~Component()

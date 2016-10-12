@@ -24,7 +24,8 @@ public:
 	Type GetType() const;
 
 	//TMP: going to be public now to avoid some errors
-	const GameObject* gameObject;
+	//Removed temporaly. Is it really necessary?
+	//const GameObject* gameObject;
 
 protected:
 	bool active;

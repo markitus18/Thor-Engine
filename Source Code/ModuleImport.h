@@ -19,18 +19,19 @@ public:
 	~ModuleImport();
 
 	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path);
-	uint LoadIMG(char* path);
+	uint LoadIMG(const char* path);
 	bool Init();
 	bool CleanUp();
 	update_status Update(float dt);
 
 	void LoadMesh(C_Mesh* mesh, const aiMesh* from);
-	void LoadMaterial(C_Material* material, const aiMaterial* from, const char* path);
+	C_Material* LoadMaterial(const aiMaterial* from, const char* path);
 	//Tmp function, move to file system
 	void CutPath(std::string&);
 	std::string GetFileFolder(const std::string&);
 private:
 	bool fbx_loaded = false;
+	uint material_count = 0;
 
 };
 

@@ -55,6 +55,8 @@ void C_Mesh::Draw()
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
+	//Removed temporaly: game objects will use buffers, not mesh itself
+	/*
 	if (gameObject->IsSelected() || gameObject->IsParentSelected())
 	{
 		if (!gameObject->IsSelected())
@@ -75,13 +77,16 @@ void C_Mesh::Draw()
 		glLineWidth(1);
 		glColor4f(1, 1, 1, 1);
 	}
-
+	*/
 	if (num_normals > 0)
 	{
+		//Removed temporaly: game objects will use buffers, not mesh itself
+		/*
 		if (gameObject->HasFlippedNormals())
 		{
 			glFrontFace(GL_CW);
 		}
+		*/
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 	}

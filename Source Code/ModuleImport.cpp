@@ -3,6 +3,7 @@
 #include "ModuleImport.h"
 #include "ModuleScene.h"
 #include "C_Material.h"
+#include "ModuleMaterials.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -168,8 +169,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 		std::string mat_path(GetFileFolder(path));
 		mat_path += file_path.C_Str();
-		C_Material* go_mat = new C_Material(child);
-		LoadMaterial(go_mat, material, mat_path.c_str());
+		C_Material* go_mat = App->moduleMaterials->LoadMaterial(mat_path.c_str());
 		child->AddMaterial(go_mat);
 		//CutPath(path_string);
 		//--------------------------------
@@ -241,17 +241,20 @@ void ModuleImport::LoadMesh(C_Mesh* mesh, const aiMesh* from)
 	mesh->LoadBuffers();
 }
 
-void ModuleImport::LoadMaterial(C_Material* material, const aiMaterial* from, const char* path)
+C_Material* ModuleImport::LoadMaterial(const aiMaterial* from, const char* path)
 {
+	C_Material* material = new C_Material(NULL);
 	material->texture_path = "Game/Models/3DModels/..\\Textures\\building03_c.tga";
 	material->texture_path = (char*)path;
-	material->texture_id = LoadIMG(material->texture_path);
+	material->texture_id = LoadIMG(material->texture_path.c_str());
+
+	return material;
 }
 
-uint ModuleImport::LoadIMG(char* path)
+uint ModuleImport::LoadIMG(const char* path)
 {
 	uint ret;
-	ret = ilutGLLoadImage(path);
+	ret = ilutGLLoadImage((char*)path);
 	return ret;
 }
 

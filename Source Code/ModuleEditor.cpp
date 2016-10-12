@@ -40,16 +40,26 @@ bool ModuleEditor::Init()
 	panelHierarchy = new PanelHierarchy();
 	panelInspector = new PanelInspector();
 	panelConfiguration = new PanelConfiguration();
+
 	//Change background color, we use "test_color", controllable variable from UI
 	ImVec4 BgColor = ImColor(71, 71, 71);
 	glClearColor(BgColor.x, BgColor.y, BgColor.z, BgColor.w);
+
+	//Chaning ImGui style
+	ImGuiStyle style = ImGui::GetStyle();
+
+	//Window rounding
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+
+	//Window title color
+	ImVec4 headerColor = style.Colors[ImGuiCol_TitleBg];
+	headerColor.w = 1.0f;
+	ImGui::PushStyleColor(ImGuiCol_TitleBg, headerColor);
 	return true;
 }
 
 update_status ModuleEditor::PreUpdate(float dt)
 {
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -167,24 +177,25 @@ void ModuleEditor::GetEvent(SDL_Event* event)
 
 void ModuleEditor::DrawPanels()
 {
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize;
 	if (panelHierarchy != NULL)
 	{
-		panelHierarchy->Draw();
+		panelHierarchy->Draw(windowFlags);
 	}
 
 	if (panelConsole != NULL)
 	{
-		panelConsole->Draw();
+		panelConsole->Draw(windowFlags);
 	}
 
 	if (panelInspector != NULL)
 	{
-		panelInspector->Draw();
+		panelInspector->Draw(windowFlags);
 	}
 
 	if (panelConfiguration != NULL)
 	{
-		panelConfiguration->Draw();
+		panelConfiguration->Draw(windowFlags);
 	}
 }
 
@@ -229,5 +240,5 @@ void ModuleEditor::OnResize(int screen_width, int screen_height)
 	panelConsole->UpdatePosition(screen_width, screen_height);
 	panelHierarchy->UpdatePosition(screen_width, screen_height);
 	panelInspector->UpdatePosition(screen_width, screen_height);
-	panelHierarchy->UpdatePosition(screen_width, screen_height);
+	panelConfiguration->UpdatePosition(screen_width, screen_height);
 }

@@ -13,7 +13,7 @@ public:
 	PanelHierarchy();
 	~PanelHierarchy();
 
-	void Draw();
+	void Draw(ImGuiWindowFlags flags);
 	void DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags);
 	void DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags default_flags);
 

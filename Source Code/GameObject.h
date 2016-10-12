@@ -41,6 +41,12 @@ public:
 	bool IsSelected() const;
 	bool IsParentSelected() const;
 
+	//Component management
+	void CreateComponent(Component::Type type);
+	void AddComponent(Component* component);
+	bool HasComponent(Component::Type type);
+	void GetComponents(Component::Type type, std::vector<Component*>& vec);
+
 	void AddMesh(C_Mesh* mesh);
 	void AddMaterial(C_Material* material);
 
@@ -61,6 +67,8 @@ private:
 	Quat		rotation;
 	float3		rotation_euler;
 	bool		flipped_normals = false;
+
+	std::vector<Component*> components;
 
 	bool selected = false;
 };

@@ -22,14 +22,14 @@ PanelInspector::~PanelInspector()
 	
 }
 
-void PanelInspector::Draw()
+void PanelInspector::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
 		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
 		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
 
-		if (!ImGui::Begin("Inspector", &active, ImVec2(size.x, size.y), 1.0f))
+		if (!ImGui::Begin("Inspector", &active, ImVec2(size.x, size.y), 1.0f, flags))
 		{
 			ImGui::End();
 			return;
@@ -139,7 +139,7 @@ void PanelInspector::Draw()
 void PanelInspector::UpdatePosition(int screen_width, int screen_height)
 {
 	position.x = screen_width * (0.80);
-	position.y = 20;
+	position.y = 19;
 	size.x = screen_width * (0.20);
-	size.y =screen_height * (0.60) - 20;
+	size.y =screen_height * (0.60) - position.y;
 }

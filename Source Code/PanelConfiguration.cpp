@@ -2,7 +2,11 @@
 
 PanelConfiguration::PanelConfiguration()
 {
+	position.x = 0;
+	position.y = 0;
 
+	size.x = 340;
+	size.y = 380;
 }
 
 PanelConfiguration::~PanelConfiguration()
@@ -10,14 +14,18 @@ PanelConfiguration::~PanelConfiguration()
 
 }
 
-void PanelConfiguration::Draw()
+void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
 		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
 		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
 
-		ImGui::Begin("Configuration", &active, ImVec2(size.x, size.y), 1.0f);
+		if (!ImGui::Begin("Configuration", &active, ImVec2(size.x, size.y), 1.0f, flags))
+		{
+			ImGui::End();
+			return;
+		}
 		if (ImGui::BeginMenu("Options"))
 		{
 			ImGui::MenuItem("Default", NULL, false, false);
@@ -27,7 +35,7 @@ void PanelConfiguration::Draw()
 			ImGui::MenuItem("Load", NULL, false, false);
 			ImGui::EndMenu();
 		}
-
+		ImGui::Text("Random text");
 		if (ImGui::CollapsingHeader("Application"))
 		{
 			//ImGui::InputText("Project Name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
@@ -61,11 +69,11 @@ void PanelConfiguration::Draw()
 	}
 }
 
-void PanelConfiguration::UpdatePosition(int screen_height, int screen_width)
+void PanelConfiguration::UpdatePosition(int screen_width, int screen_height)
 {
 	position.x = screen_width * (0.80);
 	position.y = screen_height * (0.60);
 
-	size.x = screen_width * (0.20);
-	size.y = screen_height - screen_height * (0.60);
+	size.x = screen_width - (screen_width * (0.20));
+	size.y = screen_height - (screen_height * (0.60));
 }

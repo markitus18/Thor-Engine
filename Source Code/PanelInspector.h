@@ -12,14 +12,13 @@ public:
 	PanelInspector();
 	~PanelInspector();
 
-	void Draw();
+	void Draw(ImGuiWindowFlags flags);
 
 	void UpdatePosition(int, int);
 
 private:
-	bool transform_open = true;
-	bool mesh_open = true;
-	bool material_open = true;
+
+
 };
 
 #endif //__PANEL_INSPECTOR_H__

@@ -9,7 +9,7 @@ public:
 	PanelConfiguration();
 	~PanelConfiguration();
 
-	void Draw();
+	void Draw(ImGuiWindowFlags flags);
 	void UpdatePosition(int, int);
 };
 #endif // __PANEL_CONFIGURATION_H__

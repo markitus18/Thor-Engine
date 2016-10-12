@@ -150,6 +150,70 @@ bool GameObject::IsParentSelected() const
 	return false;
 }
 
+void GameObject::CreateComponent(Component::Type type)
+{
+	Component* new_component = NULL;
+	switch (type)
+	{
+	case(Component::Type::Mesh):
+		{
+			if (!HasComponent(Component::Type::Mesh))
+			{
+				new_component = new C_Mesh(this);
+			}
+		}
+	case(Component::Type::Material):
+		{
+			std::vector<Component*> mesh;
+			GetComponents(Component::Type::Mesh, mesh);
+			if (!mesh.empty())
+			{
+				((C_Mesh*)mesh[0])->CreateMaterial();
+			}
+		}
+	}
+}
+
+void GameObject::AddComponent(Component* component)
+{
+	//Check if single component types already exist
+	switch (component->GetType())
+	{
+	case(Component::Type::Mesh):
+		{
+			if (!HasComponent(Component::Type::Mesh))
+			{
+				components.push_back(component);
+			}
+		}
+	default:
+		{
+			components.push_back(component);
+		}
+	}
+}
+
+bool GameObject::HasComponent(Component::Type type)
+{
+	for (uint i = 0; i < components.size(); i++)
+	{
+		if (components[i]->GetType() == type)
+			return true;
+	}
+	return false;
+}
+
+void GameObject::GetComponents(Component::Type type, std::vector<Component*>& vec)
+{
+	for (uint i = 0; i < components.size(); i++)
+	{
+		if (components[i]->GetType() == type)
+		{
+			vec.push_back(components[i]);
+		}
+	}
+}
+
 void GameObject::AddMesh(C_Mesh* new_mesh)
 {
 	mesh = new_mesh;

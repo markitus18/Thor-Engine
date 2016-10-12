@@ -81,12 +81,12 @@ void C_Mesh::Draw()
 	if (num_normals > 0)
 	{
 		//Removed temporaly: game objects will use buffers, not mesh itself
-		/*
+		
 		if (gameObject->HasFlippedNormals())
 		{
 			glFrontFace(GL_CW);
 		}
-		*/
+		
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 	}
@@ -116,8 +116,17 @@ void C_Mesh::Draw()
 
 void C_Mesh::AddMaterial(C_Material* material)
 {
+	//TMP: we could have multiple materials in one mesh
 	if (materials.empty())
 		materials.push_back(material);
+}
+
+void C_Mesh::CreateMaterial()
+{
+	if (materials.empty())
+	{
+		materials.push_back(new C_Material(gameObject));
+	}
 }
 
 void C_Mesh::RemoveMaterial(C_Material* material)

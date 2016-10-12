@@ -10,13 +10,14 @@ class Component
 public:
 	enum Type
 	{
+		None,
 		Transform, //?
 		Mesh,
 		Material,
 	};
 
 public:
-	Component(Type type, GameObject*);
+	Component(Type type, const GameObject*);
 	virtual ~Component();
 
 	void SetActive(bool set);

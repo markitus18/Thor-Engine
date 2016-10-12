@@ -19,14 +19,14 @@ PanelHierarchy::~PanelHierarchy()
 
 }
 
-void PanelHierarchy::Draw()
+void PanelHierarchy::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
 		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
 		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
 
-		ImGui::Begin("Hierarchy", &active, ImVec2(size.x, size.y), 1.0f);
+		ImGui::Begin("Hierarchy", &active, ImVec2(size.x, size.y), 1.0f, flags);
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
 		DrawRootChilds(App->scene->getRoot(), default_flags);
 		ImGui::End();
@@ -84,9 +84,9 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 void PanelHierarchy::UpdatePosition(int screen_width, int screen_height)
 {
 	position.x = 0;
-	position.y = 20;
+	position.y = 19;
 	size.x = screen_width * (0.20);
-	size.y = screen_height * (0.75) - 20;
+	size.y = screen_height * (0.75) - position.y;
 
 }
 

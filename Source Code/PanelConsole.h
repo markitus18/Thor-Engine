@@ -18,7 +18,7 @@ public:
 	void ClearLog();
 	void AddLog(const char* input);
 
-	void Draw();
+	void Draw(ImGuiWindowFlags flags);
 
 	void UpdatePosition(int, int);
 };

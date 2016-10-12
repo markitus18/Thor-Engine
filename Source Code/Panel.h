@@ -4,6 +4,8 @@
 #include "p2Point.h"
 #include "ImGui\imgui.h"
 
+//struct ImGuiWindowFlags;
+
 class Panel
 {
 public:
@@ -11,7 +13,7 @@ public:
 	Panel(int, int, int, int);
 	virtual ~Panel();
 
-	virtual void Draw();
+	virtual void Draw(ImGuiWindowFlags flags);
 
 	void SetSize(int, int);
 	void SetPosition(int, int);

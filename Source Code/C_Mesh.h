@@ -21,6 +21,7 @@ public:
 	void Draw();
 	
 	void AddMaterial(C_Material*);
+	void CreateMaterial();
 	void RemoveMaterial(C_Material*);
 	const C_Material* GetMaterial(uint position) const;
 	uint GetMaterialsSize() const;

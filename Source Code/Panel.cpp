@@ -15,7 +15,7 @@ Panel::~Panel()
 
 }
 
-void Panel::Draw()
+void Panel::Draw(ImGuiWindowFlags flags)
 {
 
 }

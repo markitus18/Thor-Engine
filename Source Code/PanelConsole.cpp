@@ -27,14 +27,14 @@ void PanelConsole::AddLog(const char* input)
 	scrollToBottom = true;
 }
 
-void PanelConsole::Draw()
+void PanelConsole::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
 		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
 		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
 
-		if (!ImGui::Begin("Console", &active, ImVec2(size.x, size.y), 1.0f, 0))
+		if (!ImGui::Begin("Console", &active, ImVec2(size.x, size.y), 1.0f, flags))
 		{
 			ImGui::End();
 			return;
@@ -60,7 +60,6 @@ void PanelConsole::Draw()
 		ImGui::PopStyleVar();
 
 		scrollToBottom = false;
-
 		ImGui::End();
 	}
 }

@@ -12,12 +12,15 @@ GameObject::GameObject()
 //	UpdateTransformMatrix();
 //}
 
-GameObject::GameObject(const GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : position(translation), scale(scale),
-						rotation(rotation), name(new_name)
+GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), position(translation), scale(scale),
+						rotation(rotation)
 {
 	parent = new_parent;
+
 	UpdateEulerAngles();
 	UpdateTransformMatrix();
+	if (new_parent)
+		new_parent->childs.push_back(this);
 }
 
 GameObject::~GameObject()
@@ -31,9 +34,17 @@ void GameObject::Draw()
 	glPushMatrix();
 	glMultMatrixf((float*)&transform);
 
-	if (mesh)
+	C_Mesh* _mesh = NULL;
+	for(uint i = 0; i < components.size(); i++)
 	{
-		mesh->Draw();
+		if (components[i]->GetType() == Component::Type::Mesh)
+		{
+			_mesh = (C_Mesh*)components[i];
+		}
+	}
+	if (_mesh)
+	{
+		_mesh->Draw();
 	}
 
 	for (uint i = 0; i < childs.size(); i++)
@@ -150,7 +161,7 @@ bool GameObject::IsParentSelected() const
 	return false;
 }
 
-void GameObject::CreateComponent(Component::Type type)
+Component* GameObject::CreateComponent(Component::Type type)
 {
 	Component* new_component = NULL;
 	switch (type)
@@ -168,10 +179,15 @@ void GameObject::CreateComponent(Component::Type type)
 			GetComponents(Component::Type::Mesh, mesh);
 			if (!mesh.empty())
 			{
-				((C_Mesh*)mesh[0])->CreateMaterial();
+				new_component = ((C_Mesh*)mesh[0])->CreateMaterial();
 			}
 		}
 	}
+	if (new_component)
+	{
+		components.push_back(new_component);
+	}
+	return new_component;
 }
 
 void GameObject::AddComponent(Component* component)
@@ -184,6 +200,15 @@ void GameObject::AddComponent(Component* component)
 			if (!HasComponent(Component::Type::Mesh))
 			{
 				components.push_back(component);
+			}
+		}
+	case(Component::Type::Material):
+		{
+			std::vector<Component*> mesh;
+			GetComponents(Component::Type::Mesh, mesh);
+			if (mesh.size() > 0)
+			{
+				((C_Mesh*)mesh[0])->AddMaterial((C_Material*)component);
 			}
 		}
 	default:

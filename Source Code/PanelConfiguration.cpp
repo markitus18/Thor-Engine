@@ -35,7 +35,6 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 			ImGui::MenuItem("Load", NULL, false, false);
 			ImGui::EndMenu();
 		}
-		ImGui::Text("Random text");
 		if (ImGui::CollapsingHeader("Application"))
 		{
 			//ImGui::InputText("Project Name", tmp_appName, IM_ARRAYSIZE(tmp_appName));

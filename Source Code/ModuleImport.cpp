@@ -90,7 +90,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	float3 scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 	
-	//Skipp all dummy modules. Assimp loads fbx nodes to stack all transformations
+	//Skipp all dummy modules. Assimp loads this fbx nodes to stack all transformations
 	std::string name = node->mName.C_Str();	
 	bool dummyFound = true;
 	while (dummyFound)
@@ -132,8 +132,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	//-----------------------------------------------
 
 	GameObject* gameObject = new GameObject(parent, name.c_str(), pos, scale, rot);
-	parent->childs.push_back(gameObject);
-	App->scene->tmp_goCount++;
+
 
 	// Loading node meshes ----------------------------------------
 
@@ -147,18 +146,15 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			name = newMesh->mName.C_Str();
 			if (name == "")
 				name = "No name";
-			child = new GameObject(parent, name.c_str());
-			App->scene->tmp_goCount++;
-			gameObject->childs.push_back(child);
+			child = new GameObject(gameObject, name.c_str());
 		}
 		else
 		{
 			child = gameObject;
 		}
 
-		C_Mesh* go_mesh = new C_Mesh(child);
-		LoadMesh(go_mesh, newMesh);
-		child->AddMesh(go_mesh);
+		C_Mesh* mesh = (C_Mesh*)child->CreateComponent(Component::Type::Mesh);
+		LoadMesh(mesh, newMesh);
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
@@ -174,7 +170,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			std::string file = file_path.C_Str();
 			CutPath(file);
 			C_Material* go_mat = App->moduleMaterials->LoadMaterial(mat_path.c_str(), file.c_str());
-			child->AddMaterial(go_mat);
+			child->AddComponent(go_mat);
 		}
 		//--------------------------------
 
@@ -183,12 +179,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
 		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject, path);
-		App->scene->tmp_goCount++;
-		//if (new_child)
-		//	gameObject->childs.push_back(new_child);
 	}
-
-	//GameObject* gameObject = new GameObject(*mesh);
 	return gameObject;
 }
 

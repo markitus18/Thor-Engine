@@ -121,12 +121,15 @@ void C_Mesh::AddMaterial(C_Material* material)
 		materials.push_back(material);
 }
 
-void C_Mesh::CreateMaterial()
+Component* C_Mesh::CreateMaterial()
 {
+	Component* component = NULL;
 	if (materials.empty())
 	{
-		materials.push_back(new C_Material(gameObject));
+		component = new C_Material(gameObject);
+		materials.push_back((C_Material*)component);
 	}
+	return component;
 }
 
 void C_Mesh::RemoveMaterial(C_Material* material)

@@ -89,9 +89,15 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 					gameObject->SetScale(scale);
 				}
 			}
-			if (gameObject->mesh)
+			std::vector<Component*> mesh_vector;
+			gameObject->GetComponents(Component::Type::Mesh, mesh_vector);
+			C_Mesh* mesh = NULL;
+			if (!mesh_vector.empty())
+				mesh = (C_Mesh*)mesh_vector[0];
+
+			if (mesh)
 			{
-				uint mat_size = gameObject->mesh->GetMaterialsSize();
+				uint mat_size = mesh->GetMaterialsSize();
 				if (ImGui::CollapsingHeader("Mesh", transform_header_flags))
 				{
 					ImGui::Text("Materials");
@@ -99,7 +105,7 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 					ImGui::Text("Size: %i", mat_size);
 					for (uint i = 0; i < mat_size; i++)
 					{
-						ImGui::Text("Element %i: %s", i, gameObject->mesh->GetMaterial(i)->texture_file.c_str());
+						ImGui::Text("Element %i: %s", i, mesh->GetMaterial(i)->texture_file.c_str());
 					}
 				}
 
@@ -107,7 +113,7 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				{
 					for (uint i = 0; i < mat_size; i++)
 					{
-						const C_Material* mat = gameObject->mesh->GetMaterial(i);
+						const C_Material* mat = mesh->GetMaterial(i);
 						if (ImGui::CollapsingHeader(mat->texture_file.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 						{
 							ImGui::Image((ImTextureID)mat->texture_id, ImVec2(128, 128));

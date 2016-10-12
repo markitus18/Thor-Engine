@@ -14,7 +14,7 @@ class GameObject
 public:
 	GameObject();
 	//GameObject(const GameObject* parent, const char* name);
-	GameObject(const GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
+	GameObject(GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
 	~GameObject();
 
 	void Draw();
@@ -42,7 +42,7 @@ public:
 	bool IsParentSelected() const;
 
 	//Component management
-	void CreateComponent(Component::Type type);
+	Component* CreateComponent(Component::Type type);
 	void AddComponent(Component* component);
 	bool HasComponent(Component::Type type);
 	void GetComponents(Component::Type type, std::vector<Component*>& vec);
@@ -53,7 +53,7 @@ public:
 public:
 	std::string					name;
 
-	const GameObject*			parent = NULL;
+	GameObject*			parent = NULL;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
 

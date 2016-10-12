@@ -56,7 +56,7 @@ void C_Mesh::Draw()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	//Removed temporaly: game objects will use buffers, not mesh itself
-	/*
+	
 	if (gameObject->IsSelected() || gameObject->IsParentSelected())
 	{
 		if (!gameObject->IsSelected())
@@ -77,7 +77,7 @@ void C_Mesh::Draw()
 		glLineWidth(1);
 		glColor4f(1, 1, 1, 1);
 	}
-	*/
+	
 	if (num_normals > 0)
 	{
 		//Removed temporaly: game objects will use buffers, not mesh itself
@@ -98,13 +98,46 @@ void C_Mesh::Draw()
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 	}
 
-	//glBindTexture(GL_TEXTURE_2D, 2);
+	if (!materials.empty())
+	{
+		(*materials.begin())->StackTexture();
+	}
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-	//glBindTexture(GL_TEXTURE_2D, 0);
 
-
+	if (!materials.empty())
+	{
+		(*materials.begin())->PopTexture();
+	}
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glFrontFace(GL_CCW);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void C_Mesh::AddMaterial(C_Material* material)
+{
+	if (materials.empty())
+		materials.push_back(material);
+}
+
+void C_Mesh::RemoveMaterial(C_Material* material)
+{
+	materials.remove(material);
+}
+
+const C_Material* C_Mesh::GetMaterial(uint position) const
+{
+	if (materials.empty())
+		return NULL;
+	std::list<C_Material*>::const_iterator it = materials.begin();
+	for (uint i = 0; i < position; i++)
+	{
+		it++;
+	}
+	return (*it);
+}
+
+uint C_Mesh::GetMaterialsSize() const
+{
+	return materials.size();
 }

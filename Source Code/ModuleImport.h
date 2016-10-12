@@ -25,7 +25,6 @@ public:
 	update_status Update(float dt);
 
 	void LoadMesh(C_Mesh* mesh, const aiMesh* from);
-	C_Material* LoadMaterial(const aiMaterial* from, const char* path);
 	//Tmp function, move to file system
 	void CutPath(std::string&);
 	std::string GetFileFolder(const std::string&);

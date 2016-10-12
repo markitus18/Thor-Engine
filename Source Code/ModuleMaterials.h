@@ -17,7 +17,7 @@ public:
 	bool CleanUp();
 
 	C_Material* Exists(const char* texture_path) const;
-	C_Material* LoadMaterial(const char* texture_path);
+	C_Material* LoadMaterial(const char* texture_path, const char* file);
 	uint LoadIMG(const char* path);
 
 private:

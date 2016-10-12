@@ -31,19 +31,9 @@ void GameObject::Draw()
 	glPushMatrix();
 	glMultMatrixf((float*)&transform);
 
-	if (material)
-	{
-		material->StackTexture();
-	}
-
 	if (mesh)
 	{
 		mesh->Draw();
-	}
-
-	if (material)
-	{
-		material->PopTexture();
 	}
 
 	for (uint i = 0; i < childs.size(); i++)
@@ -168,6 +158,8 @@ void GameObject::AddMesh(C_Mesh* new_mesh)
 
 void GameObject::AddMaterial(C_Material* new_material)
 {
-	material = new_material;
-	//material->gameObject = this;
+	if (mesh)
+	{
+		mesh->AddMaterial(new_material);
+	}
 }

@@ -52,7 +52,6 @@ public:
 	bool						active = true;
 
 	C_Mesh*		mesh = NULL;
-	C_Material* material = NULL;
 
 private:
 	float4x4	transform;
@@ -64,12 +63,6 @@ private:
 	bool		flipped_normals = false;
 
 	bool selected = false;
-
-
-
 };
-
-
-
 
 #endif

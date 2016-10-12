@@ -5,8 +5,10 @@
 #include "Component.h"
 
 #include <vector>
+#include <list>
 
 class GameObject;
+class C_Material;
 
 class C_Mesh : public Component
 {
@@ -17,6 +19,11 @@ public:
 	void LoadData(char* path);
 	void LoadBuffers();
 	void Draw();
+	
+	void AddMaterial(C_Material*);
+	void RemoveMaterial(C_Material*);
+	const C_Material* GetMaterial(uint position) const;
+	uint GetMaterialsSize() const;
 
 public:
 	//Vertices data
@@ -41,6 +48,8 @@ public:
 	uint	num_tex_coords = 0;
 	float*	tex_coords = NULL;
 
+private:
+	std::list<C_Material*> materials;
 };
 
 #endif

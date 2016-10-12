@@ -25,7 +25,7 @@ public:
 
 	//TMP: going to be public now to avoid some errors
 	//Removed temporaly. Is it really necessary?
-	//const GameObject* gameObject;
+	const GameObject* gameObject;
 
 protected:
 	bool active;

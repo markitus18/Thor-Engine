@@ -6,6 +6,7 @@
 #include "ModuleEditor.h"
 #include "PanelHierarchy.h"
 #include "GameObject.h"
+#include "OpenGL.h"
 
 PanelInspector::PanelInspector()
 {
@@ -55,7 +56,6 @@ void PanelInspector::Draw()
 			ImGuiTreeNodeFlags transform_header_flags = ImGuiTreeNodeFlags_DefaultOpen;
 			if (ImGui::CollapsingHeader("Transform", transform_header_flags))
 			{
-
 				if (ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[1])
 				{
 					ImGui::OpenPopup("reset");
@@ -89,6 +89,33 @@ void PanelInspector::Draw()
 					gameObject->SetScale(scale);
 				}
 			}
+			if (gameObject->mesh)
+			{
+				uint mat_size = gameObject->mesh->GetMaterialsSize();
+				if (ImGui::CollapsingHeader("Mesh", transform_header_flags))
+				{
+					ImGui::Text("Materials");
+					ImGui::Separator();
+					ImGui::Text("Size: %i", mat_size);
+					for (uint i = 0; i < mat_size; i++)
+					{
+						ImGui::Text("Element %i: %s", i, gameObject->mesh->GetMaterial(i)->texture_file.c_str());
+					}
+				}
+
+				if (mat_size > 0)
+				{
+					for (uint i = 0; i < mat_size; i++)
+					{
+						const C_Material* mat = gameObject->mesh->GetMaterial(i);
+						if (ImGui::CollapsingHeader(mat->texture_file.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							ImGui::Image((ImTextureID)mat->texture_id, ImVec2(128, 128));
+						}
+					}
+				}
+			}
+
 		}
 
 		ImGui::End();

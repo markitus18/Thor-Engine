@@ -164,14 +164,18 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
 		uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 
-		aiString file_path;
-		material->GetTexture(aiTextureType_DIFFUSE, 0, &file_path);
+		if (numTextures > 0)
+		{
+			aiString file_path;
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &file_path);
 
-		std::string mat_path(GetFileFolder(path));
-		mat_path += file_path.C_Str();
-		C_Material* go_mat = App->moduleMaterials->LoadMaterial(mat_path.c_str());
-		child->AddMaterial(go_mat);
-		//CutPath(path_string);
+			std::string mat_path(GetFileFolder(path));
+			mat_path += file_path.C_Str();
+			std::string file = file_path.C_Str();
+			CutPath(file);
+			C_Material* go_mat = App->moduleMaterials->LoadMaterial(mat_path.c_str(), file.c_str());
+			child->AddMaterial(go_mat);
+		}
 		//--------------------------------
 
 	}
@@ -239,16 +243,6 @@ void ModuleImport::LoadMesh(C_Mesh* mesh, const aiMesh* from)
 	//-------------------------------------------
 
 	mesh->LoadBuffers();
-}
-
-C_Material* ModuleImport::LoadMaterial(const aiMaterial* from, const char* path)
-{
-	C_Material* material = new C_Material(NULL);
-	material->texture_path = "Game/Models/3DModels/..\\Textures\\building03_c.tga";
-	material->texture_path = (char*)path;
-	material->texture_id = LoadIMG(material->texture_path.c_str());
-
-	return material;
 }
 
 uint ModuleImport::LoadIMG(const char* path)

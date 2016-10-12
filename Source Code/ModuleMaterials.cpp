@@ -43,7 +43,7 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 	return NULL;
 }
 
-C_Material* ModuleMaterials::LoadMaterial(const char* texture_path)
+C_Material* ModuleMaterials::LoadMaterial(const char* texture_path, const char* file)
 {
 	C_Material* material = NULL;
 	material = Exists(texture_path);
@@ -55,6 +55,7 @@ C_Material* ModuleMaterials::LoadMaterial(const char* texture_path)
 	{
 		material = new C_Material(NULL);
 		material->texture_path = texture_path;
+		material->texture_file = file;
 		material->texture_id = LoadIMG(material->texture_path.c_str());
 		materials.push_back(material);
 		materials_count++;

@@ -42,7 +42,7 @@ void C_Mesh::LoadBuffers()
 	{
 		glGenBuffers(1, (GLuint*)&id_tex_coords);
 		glBindBuffer(GL_ARRAY_BUFFER, id_tex_coords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_tex_coords, tex_coords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_tex_coords * 2, tex_coords, GL_STATIC_DRAW);
 	}
 }
 

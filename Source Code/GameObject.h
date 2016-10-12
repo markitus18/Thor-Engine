@@ -47,17 +47,12 @@ public:
 	bool HasComponent(Component::Type type);
 	void GetComponents(Component::Type type, std::vector<Component*>& vec);
 
-	void AddMesh(C_Mesh* mesh);
-	void AddMaterial(C_Material* material);
-
 public:
 	std::string					name;
 
 	GameObject*			parent = NULL;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
-
-	C_Mesh*		mesh = NULL;
 
 private:
 	float4x4	transform;

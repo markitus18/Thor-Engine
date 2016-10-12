@@ -9,7 +9,29 @@ C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObjec
 
 C_Mesh::~C_Mesh()
 {
+	for (uint i = 0; i < materials.size(); i++)
+	{
+		if (materials[i] != NULL)
+		{
+			delete materials[i];
+			materials[i] = NULL;
+		}
+	}
+}
 
+void C_Mesh::ReleaseBuffers()
+{
+	if (id_vertices != 0)
+		glDeleteBuffers(1, (GLuint*)&id_vertices);
+
+	if (id_indices != 0)
+		glDeleteBuffers(1, (GLuint*)&id_indices);
+
+	if (id_normals != 0)
+		glDeleteBuffers(1, (GLuint*)&id_normals);
+
+	if (id_tex_coords != 0)
+		glDeleteBuffers(1, (GLuint*)&id_tex_coords);
 }
 
 void C_Mesh::LoadData(char* path)
@@ -32,10 +54,6 @@ void C_Mesh::LoadBuffers()
 		glGenBuffers(1, (GLuint*)&id_normals);
 		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_normals * 3, normals, GL_STATIC_DRAW);
-
-		glGenBuffers(1, (GLuint*)&id_flipped_normals);
-		glBindBuffer(GL_ARRAY_BUFFER, id_flipped_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_normals * 3, flipped_normals, GL_STATIC_DRAW);
 	}
 
 	if (num_tex_coords > 0)
@@ -134,19 +152,16 @@ Component* C_Mesh::CreateMaterial()
 
 void C_Mesh::RemoveMaterial(C_Material* material)
 {
-	materials.remove(material);
+	std::vector<C_Material*>::iterator position = std::find(materials.begin(), materials.end(), material);
+	materials.erase(position);
 }
 
 const C_Material* C_Mesh::GetMaterial(uint position) const
 {
-	if (materials.empty())
+	if (materials.empty() || materials.size() <= position)
 		return NULL;
-	std::list<C_Material*>::const_iterator it = materials.begin();
-	for (uint i = 0; i < position; i++)
-	{
-		it++;
-	}
-	return (*it);
+
+	return materials[position];
 }
 
 uint C_Mesh::GetMaterialsSize() const

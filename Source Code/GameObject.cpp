@@ -25,9 +25,19 @@ GameObject::GameObject(GameObject* new_parent, const char* new_name, const float
 
 GameObject::~GameObject()
 {
+	for (uint i = 0; i < childs.size(); i++)
+	{
+		delete childs[i];
+		childs[i] = NULL;
+	}
+	childs.clear();
 
+	for (uint i = 0; i < components.size(); i++)
+	{
+		delete components[i];
+		components[i] = NULL;
+	}
 }
-
 
 void GameObject::Draw()
 {
@@ -236,19 +246,5 @@ void GameObject::GetComponents(Component::Type type, std::vector<Component*>& ve
 		{
 			vec.push_back(components[i]);
 		}
-	}
-}
-
-void GameObject::AddMesh(C_Mesh* new_mesh)
-{
-	mesh = new_mesh;
-	//mesh->gameObject = this;
-}
-
-void GameObject::AddMaterial(C_Material* new_material)
-{
-	if (mesh)
-	{
-		mesh->AddMaterial(new_material);
 	}
 }

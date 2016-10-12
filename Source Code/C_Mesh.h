@@ -15,9 +15,11 @@ class C_Mesh : public Component
 public:
 	C_Mesh(GameObject* new_GameObject);
 	~C_Mesh();
+	void ReleaseBuffers();
 
 	void LoadData(char* path);
 	void LoadBuffers();
+
 	void Draw();
 	
 	void AddMaterial(C_Material*);
@@ -39,10 +41,8 @@ public:
 
 	//Normals data
 	uint	id_normals = 0;
-	uint	id_flipped_normals;
 	uint	num_normals = 0;
 	float*	normals = NULL;
-	float*	flipped_normals = NULL;
 
 	//Texture coords
 	uint	id_tex_coords = 0;
@@ -50,7 +50,7 @@ public:
 	float*	tex_coords = NULL;
 
 private:
-	std::list<C_Material*> materials;
+	std::vector<C_Material*> materials;
 };
 
 #endif

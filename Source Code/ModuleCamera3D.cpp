@@ -82,6 +82,30 @@ update_status ModuleCamera3D::Update(float dt)
 		Position = Reference + Z * length(Position);
 	}
 	
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
+	{
+		int dx = -App->input->GetMouseXMotion();
+		int dy = App->input->GetMouseYMotion();
+
+		Reference += X * dx * dt * 2;
+		Reference += Y * dy * dt * 2;
+
+		Position += X * dx * dt * 2;
+		Position += Y * dy * dt * 2;
+	}
+
+	int mouseZ = App->input->GetMouseZ();
+
+	Position -= Z * mouseZ * dt * 150;
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	{
+		Position -= Z * 10 * dt;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+	{
+		Position += Z * 10 * dt;
+	}
+
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 

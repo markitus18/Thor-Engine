@@ -17,7 +17,7 @@ public:
 	GameObject(GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
 	~GameObject();
 
-	void Draw();
+	void Draw(bool shaded, bool wireframe);
 
 	float3	GetPosition() const;
 	float3	GetScale() const;
@@ -50,7 +50,7 @@ public:
 public:
 	std::string					name;
 
-	GameObject*			parent = NULL;
+	GameObject*					parent = NULL;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
 

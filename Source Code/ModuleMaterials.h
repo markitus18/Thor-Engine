@@ -4,6 +4,7 @@
 #include <list>
 #include "Globals.h"
 #include "Module.h"
+#include "Color.h"
 
 class C_Material;
 
@@ -17,7 +18,7 @@ public:
 	bool CleanUp();
 
 	C_Material* Exists(const char* texture_path) const;
-	C_Material* LoadMaterial(const char* texture_path, const char* file);
+	C_Material* LoadMaterial(const std::string& texture_path, const std::string& file, const Color& color);
 	uint LoadIMG(const char* path);
 
 private:

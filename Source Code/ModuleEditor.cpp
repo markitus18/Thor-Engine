@@ -76,6 +76,19 @@ update_status ModuleEditor::Update(float dt)
 	if (show_Settings_window)
 		ShowSettingsWindow();
 
+	//TODO: move into a new panel
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
+	ImGui::SetNextWindowPos(ImVec2(400, 50));
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	bool open = true;
+	if (ImGui::Begin("Wire window", &open, flags))
+	{
+		ImGui::Checkbox("Shaded", &shaded);
+		ImGui::Checkbox("Wireframe", &wireframe);
+
+		ImGui::End();
+	}
+	ImGui::PopStyleColor();
 	// -----------------------------
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -91,12 +104,19 @@ update_status ModuleEditor::Update(float dt)
 		}
 		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::MenuItem("Console          ", "1", &panelConsole->active))
+			if (ImGui::MenuItem("Inspector          ", "1", &panelInspector->active))
 			{
 			}
-			if (ImGui::MenuItem("Settings         ", "2", &show_Settings_window))
+			if (ImGui::MenuItem("Hierarchy          ", "2", &panelHierarchy->active))
 			{
 			}
+			if (ImGui::MenuItem("Console          ", "3", &panelConsole->active))
+			{
+			}
+			if (ImGui::MenuItem("Configuration         ", "4", &panelConfiguration->active))
+			{
+			}
+
 			ImGui::EndMenu();
 		}
 

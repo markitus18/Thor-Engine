@@ -43,10 +43,14 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 	return NULL;
 }
 
-C_Material* ModuleMaterials::LoadMaterial(const char* texture_path, const char* file)
+C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const std::string& file, const Color& color)
 {
 	C_Material* material = NULL;
-	material = Exists(texture_path);
+	if (texture_path != "" && file != "")
+	{
+		material = Exists(texture_path.c_str());
+	}
+
 	if (material != NULL)
 	{
 		return material;
@@ -54,9 +58,17 @@ C_Material* ModuleMaterials::LoadMaterial(const char* texture_path, const char* 
 	else
 	{
 		material = new C_Material(NULL);
-		material->texture_path = texture_path;
-		material->texture_file = file;
-		material->texture_id = LoadIMG(material->texture_path.c_str());
+		if (texture_path != "" && file != "")
+		{
+			material->texture_path = texture_path;
+			material->texture_file = file;
+			material->texture_id = LoadIMG(material->texture_path.c_str());
+		}
+		else
+		{
+			LOG("Material with no texture :)");
+		}
+		material->color = Color(color);
 		materials.push_back(material);
 		materials_count++;
 		LOG("Materials count: %i", materials_count);

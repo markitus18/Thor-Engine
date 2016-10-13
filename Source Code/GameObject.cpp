@@ -5,12 +5,6 @@
 GameObject::GameObject()
 {
 }
-//GameObject::GameObject(const GameObject* new_parent, const char* new_name) : position(float3::zero), scale(float3::one), rotation(Quat::identity), name(new_name)
-//{
-//	parent = new_parent;
-//	UpdateEulerAngles();
-//	UpdateTransformMatrix();
-//}
 
 GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), position(translation), scale(scale),
 						rotation(rotation)
@@ -39,7 +33,8 @@ GameObject::~GameObject()
 	}
 }
 
-void GameObject::Draw()
+
+void GameObject::Draw(bool shaded, bool wireframe)
 {
 	glPushMatrix();
 	glMultMatrixf((float*)&transform);
@@ -54,13 +49,13 @@ void GameObject::Draw()
 	}
 	if (_mesh)
 	{
-		_mesh->Draw();
+		_mesh->Draw(shaded, wireframe);
 	}
 
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)
-			childs[i]->Draw();	
+			childs[i]->Draw(shaded, wireframe);	
 	}
 	glPopMatrix();
 }

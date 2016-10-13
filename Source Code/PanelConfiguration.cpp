@@ -73,6 +73,6 @@ void PanelConfiguration::UpdatePosition(int screen_width, int screen_height)
 	position.x = screen_width * (0.80);
 	position.y = screen_height * (0.60);
 
-	size.x = screen_width - (screen_width * (0.20));
-	size.y = screen_height - (screen_height * (0.60));
+	size.x = screen_width - position.x;
+	size.y = screen_height - position.y;
 }

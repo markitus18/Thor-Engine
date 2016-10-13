@@ -40,6 +40,9 @@ public:
 	PanelConsole* panelConsole = NULL;
 	PanelInspector* panelInspector = NULL;
 	PanelConfiguration* panelConfiguration = NULL;
+
+	bool shaded = true;
+	bool wireframe = false;
 private:
 	char tmp_appName[26] = "Not working yet";
 	char tmp_orgName[26] = "Not working yet";

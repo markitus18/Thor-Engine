@@ -64,7 +64,7 @@ void C_Mesh::LoadBuffers()
 	}
 }
 
-void C_Mesh::Draw()
+void C_Mesh::Draw(bool shaded, bool wireframe)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -75,59 +75,72 @@ void C_Mesh::Draw()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	//Removed temporaly: game objects will use buffers, not mesh itself
 	
-	if (gameObject->IsSelected() || gameObject->IsParentSelected())
+	bool selected = gameObject->IsSelected();
+	bool parentSelected = gameObject->IsParentSelected();
+
+	if (selected || parentSelected || wireframe)
 	{
-		if (!gameObject->IsSelected())
+		if (selected)
 		{
-			glColor3f(0.51, 0.58, 0.68);
+			glColor3f(0.71, 0.78, 0.88);
 			glLineWidth(1);
 		}
 
-		else
+		else if (parentSelected)
 		{
-			glColor3f(0.81, 0.88, 0.98);
-			glLineWidth(2);
+			glColor3f(0.51, 0.58, 0.68);
+		}
+		
+		else if (wireframe)
+		{
+			glColor3f(0, 0, 0);
 		}
 
+		glDisable(GL_LIGHTING);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_LIGHTING);
 		glLineWidth(1);
 		glColor4f(1, 1, 1, 1);
 	}
 	
-	if (num_normals > 0)
+	if (shaded)
 	{
-		//Removed temporaly: game objects will use buffers, not mesh itself
-		
-		if (gameObject->HasFlippedNormals())
+		if (num_normals > 0)
 		{
-			glFrontFace(GL_CW);
+			//Removed temporaly: game objects will use buffers, not mesh itself
+
+			if (gameObject->HasFlippedNormals())
+			{
+				glFrontFace(GL_CW);
+			}
+
+			glBindBuffer(GL_ARRAY_BUFFER, id_normals);
+			glNormalPointer(GL_FLOAT, 0, NULL);
 		}
-		
-		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-		glNormalPointer(GL_FLOAT, 0, NULL);
+
+		if (num_tex_coords > 0)
+		{
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glBindBuffer(GL_ARRAY_BUFFER, id_tex_coords);
+			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+		}
+
+		if (!materials.empty())
+		{
+			(*materials.begin())->StackTexture();
+		}
+
+		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+		if (!materials.empty())
+		{
+			(*materials.begin())->PopTexture();
+		}
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glFrontFace(GL_CCW);
 	}
 
-	if (num_tex_coords > 0)
-	{
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, id_tex_coords);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-	}
-
-	if (!materials.empty())
-	{
-		(*materials.begin())->StackTexture();
-	}
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-
-	if (!materials.empty())
-	{
-		(*materials.begin())->PopTexture();
-	}
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glFrontFace(GL_CCW);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }

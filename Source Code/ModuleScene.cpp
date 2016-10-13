@@ -6,6 +6,8 @@
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
 #include "ModuleImport.h"
+#include "ModuleEditor.h"
+
 #include "GameObject.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -60,7 +62,7 @@ update_status ModuleScene::Update(float dt)
 		drawGrid = !drawGrid;
 	}
 
-	root->Draw();
+	root->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 
 	//LOG("GameObjects in scene: %i", tmp_goCount)
 	return UPDATE_CONTINUE;

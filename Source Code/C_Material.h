@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include <string>
+#include "Color.h"
 
 class GameObject;
 
@@ -19,6 +20,7 @@ public:
 	uint texture_id;
 	std::string texture_path;
 	std::string texture_file;
+	Color color;
 };
 
 #endif // __C_MATERIAL_H__

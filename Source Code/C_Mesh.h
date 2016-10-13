@@ -20,7 +20,7 @@ public:
 	void LoadData(char* path);
 	void LoadBuffers();
 
-	void Draw();
+	void Draw(bool shaded, bool wireframe);
 	
 	void AddMaterial(C_Material*);
 	Component* CreateMaterial();

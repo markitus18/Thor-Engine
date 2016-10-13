@@ -159,19 +159,25 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
 		uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
-
+		std::string mat_path = "";
+		std::string file = "";
 		if (numTextures > 0)
 		{
 			aiString file_path;
-			material->GetTexture(aiTextureType_DIFFUSE, 0, &file_path);
+			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &file_path);
 
-			std::string mat_path(GetFileFolder(path));
-			mat_path += file_path.C_Str();
-			std::string file = file_path.C_Str();
-			CutPath(file);
-			C_Material* go_mat = App->moduleMaterials->LoadMaterial(mat_path.c_str(), file.c_str());
-			child->AddComponent(go_mat);
+			std::string mat_path_str(GetFileFolder(path));
+			mat_path_str += file_path.C_Str();
+			mat_path = mat_path_str;
+			std::string file_str = file_path.C_Str();
+			CutPath(file_str);
+			file = (char*)file_str.c_str();
 		}
+		LOG("GameObject: %s, Material path: %s, Material file: %s", child->name.c_str(), mat_path.c_str(), file.c_str());
+		aiColor4D color;
+		material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+		C_Material* go_mat = App->moduleMaterials->LoadMaterial(mat_path, file, Color(color.r, color.g, color.b, color.a));
+		child->AddComponent(go_mat);
 		//--------------------------------
 
 	}

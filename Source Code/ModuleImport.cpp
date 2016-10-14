@@ -48,8 +48,8 @@ update_status ModuleImport::Update(float dt)
 		const aiScene* file = aiImportFile("Game/Models/3D Models/Street environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
 		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/Street environment_V01.FBX");
 
-		const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-		LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
+		//const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+		//LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
 
 	}
 	return UPDATE_CONTINUE;

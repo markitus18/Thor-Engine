@@ -5,7 +5,6 @@
 #include "p2DynArray.h"
 #include "Globals.h"
 #include "Primitive.h"
-#include "PhysBody3D.h"
 #include "Timer.h"
 
 #include "MathGeoLib/src/MathBuildConfig.h"

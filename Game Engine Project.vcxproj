@@ -173,7 +173,6 @@
     <ClInclude Include="Source Code\ModuleImport.h" />
     <ClInclude Include="Source Code\ModuleInput.h" />
     <ClInclude Include="Source Code\ModuleMaterials.h" />
-    <ClInclude Include="Source Code\ModulePhysics3D.h" />
     <ClInclude Include="Source Code\ModuleRenderer3D.h" />
     <ClInclude Include="Source Code\ModuleScene.h" />
     <ClInclude Include="Source Code\ModuleEditor.h" />
@@ -187,8 +186,6 @@
     <ClInclude Include="Source Code\PanelHierarchy.h" />
     <ClInclude Include="Source Code\PanelInspector.h" />
     <ClInclude Include="Source Code\PerfTimer.h" />
-    <ClInclude Include="Source Code\PhysBody3D.h" />
-    <ClInclude Include="Source Code\PhysVehicle3D.h" />
     <ClInclude Include="Source Code\Primitive.h" />
     <ClInclude Include="Source Code\Timer.h" />
     <ClInclude Include="Source Code\PanelConsole.h" />
@@ -253,7 +250,6 @@
     <ClCompile Include="Source Code\ModuleImport.cpp" />
     <ClCompile Include="Source Code\ModuleInput.cpp" />
     <ClCompile Include="Source Code\ModuleMaterials.cpp" />
-    <ClCompile Include="Source Code\ModulePhysics3D.cpp" />
     <ClCompile Include="Source Code\ModuleRenderer3D.cpp" />
     <ClCompile Include="Source Code\ModuleScene.cpp" />
     <ClCompile Include="Source Code\ModuleEditor.cpp" />
@@ -263,8 +259,6 @@
     <ClCompile Include="Source Code\PanelHierarchy.cpp" />
     <ClCompile Include="Source Code\PanelInspector.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />
-    <ClCompile Include="Source Code\PhysBody3D.cpp" />
-    <ClCompile Include="Source Code\PhysVehicle3D.cpp" />
     <ClCompile Include="Source Code\Primitive.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
     <ClCompile Include="Source Code\PanelConsole.cpp" />

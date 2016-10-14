@@ -1,8 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
-#include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
-#include "PhysVehicle3D.h"
 #include "ModuleInput.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -151,6 +149,13 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 	Reference += Movement;
 
 	CalculateViewMatrix();
+}
+
+void ModuleCamera3D::SetNewTarget(const vec3 &new_target)
+{
+	//vec3 difference = Reference - new_target;
+	//Position -= difference;
+	LookAt(new_target);
 }
 
 // -----------------------------------------------------------------

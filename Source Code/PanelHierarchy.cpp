@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
+#include "ModuleCamera3D.h"
 
 #include "ImGui\imgui.h"
 
@@ -70,6 +71,12 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 			SelectSingle(gameObject);
 		}
 	}
+	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+	{
+		float3 pos = gameObject->GetPosition();
+		App->camera->SetNewTarget(vec3(pos.x, pos.y, pos.z));
+	}
+
 	if (nodeOpen)
 	{
 		for (uint i = 0; i < gameObject->childs.size(); i++)

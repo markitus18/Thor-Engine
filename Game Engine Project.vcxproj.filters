@@ -145,9 +145,6 @@
     <ClCompile Include="Source Code\ModuleInput.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModulePhysics3D.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\ModuleRenderer3D.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -158,12 +155,6 @@
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Light.cpp">
-      <Filter>Source Code\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\PhysBody3D.cpp">
-      <Filter>Source Code\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\PhysVehicle3D.cpp">
       <Filter>Source Code\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Primitive.cpp">
@@ -450,9 +441,6 @@
     <ClInclude Include="Source Code\ModuleInput.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModulePhysics3D.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\ModuleRenderer3D.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
@@ -460,12 +448,6 @@
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Light.h">
-      <Filter>Source Code\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\PhysBody3D.h">
-      <Filter>Source Code\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\PhysVehicle3D.h">
       <Filter>Source Code\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Primitive.h">

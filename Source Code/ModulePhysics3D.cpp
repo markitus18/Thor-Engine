@@ -207,11 +207,6 @@ bool ModulePhysics3D::CleanUp()
 	for(p2List_item<PhysVehicle3D*>* item = vehicles.getFirst(); item; item = item->next)
 		delete item->data;
 
-	
-	//world->removeRigidBody(App->player->vehicle->body);
-	//world->removeRigidBody(App->player->vehicle->info.turret.canon->body);
-	//world->removeRigidBody(App->player->vehicle->info.turret.turret->body);
-
 	vehicles.clear();
 
 	delete vehicle_raycaster;

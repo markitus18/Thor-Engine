@@ -15,7 +15,6 @@ class ModuleScene;
 
 class ModuleRenderer3D;
 class ModuleCamera3D;
-class ModulePhysics3D;
 class ModuleEditor;
 class ModuleImport;
 class ModuleMaterials;
@@ -30,7 +29,6 @@ public:
 
 	ModuleRenderer3D* renderer3D = NULL;
 	ModuleCamera3D* camera = NULL;
-	ModulePhysics3D* physics = NULL;
 
 	ModuleEditor* moduleEditor = NULL;
 	ModuleImport* moduleImport = NULL;

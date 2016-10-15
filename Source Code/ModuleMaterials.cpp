@@ -46,11 +46,12 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const std::string& file, const Color& color)
 {
 	C_Material* material = NULL;
-	if (texture_path != "" && file != "")
-	{
-		material = Exists(texture_path.c_str());
-	}
-
+	//TODO START: if we avoid duplicating materials this causes the game to break
+	//if (texture_path != "" && file != "")
+	//{
+	//	material = Exists(texture_path.c_str());
+	//}
+	//TODO END
 	if (material != NULL)
 	{
 		return material;
@@ -64,14 +65,9 @@ C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const
 			material->texture_file = file;
 			material->texture_id = LoadIMG(material->texture_path.c_str());
 		}
-		else
-		{
-			LOG("Material with no texture :)");
-		}
+
 		material->color = Color(color);
 		materials.push_back(material);
-		materials_count++;
-		LOG("Materials count: %i", materials_count);
 	}
 	
 	return material;

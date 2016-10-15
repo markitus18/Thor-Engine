@@ -206,6 +206,7 @@ void GameObject::AddComponent(Component* component)
 			{
 				components.push_back(component);
 			}
+			break;
 		}
 	case(Component::Type::Material):
 		{
@@ -215,10 +216,12 @@ void GameObject::AddComponent(Component* component)
 			{
 				((C_Mesh*)mesh[0])->AddMaterial((C_Material*)component);
 			}
+			break;
 		}
 	default:
 		{
 			components.push_back(component);
+			break;
 		}
 	}
 }

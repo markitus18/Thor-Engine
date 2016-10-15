@@ -13,10 +13,10 @@ C_Mesh::~C_Mesh()
 	{
 		if (materials[i] != NULL)
 		{
-			delete materials[i];
-			materials[i] = NULL;
+			RELEASE(materials[i]);
 		}
 	}
+	materials.clear();
 }
 
 void C_Mesh::ReleaseBuffers()

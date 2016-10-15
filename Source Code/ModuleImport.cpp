@@ -47,7 +47,7 @@ update_status ModuleImport::Update(float dt)
 		fbx_loaded = true;
 		const aiScene* file = aiImportFile("Game/Models/3D Models/Street environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
 		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/Street environment_V01.FBX");
-
+		aiReleaseImport(file);
 		//const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
 		//LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
 
@@ -173,7 +173,6 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			CutPath(file_str);
 			file = (char*)file_str.c_str();
 		}
-		LOG("GameObject: %s, Material path: %s, Material file: %s", child->name.c_str(), mat_path.c_str(), file.c_str());
 		aiColor4D color;
 		material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 		C_Material* go_mat = App->moduleMaterials->LoadMaterial(mat_path, file, Color(color.r, color.g, color.b, color.a));

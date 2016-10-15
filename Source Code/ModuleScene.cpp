@@ -41,7 +41,10 @@ bool ModuleScene::Start()
 // Load assets
 bool ModuleScene::CleanUp()
 {
-	LOG("Unloading Intro scene");
+	LOG("Unloading scene");
+
+	delete root;
+	root = NULL;
 
 	return true;
 }

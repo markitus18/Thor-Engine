@@ -1,4 +1,6 @@
 #include "PanelConsole.h"
+#include "Globals.h"
+
 #include <stdlib.h>
 
 PanelConsole::PanelConsole()
@@ -16,7 +18,7 @@ PanelConsole::~PanelConsole()
 void PanelConsole::ClearLog()
 {
 	for (int i = 0; i < items.Size; i++)
-		free(items[i]);
+		RELEASE(items[i]);
 	items.clear();
 	scrollToBottom = true;
 }

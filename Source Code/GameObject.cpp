@@ -80,6 +80,20 @@ float3 GameObject::GetEulerRotation() const
 	return rotation_euler;
 }
 
+float4x4 GameObject::GetGlobalTransform() const
+{
+	float4x4 global_transform = transform.Transposed();
+	if (parent)
+		global_transform = parent->GetGlobalTransform() * transform.Transposed();
+	return global_transform;
+}
+
+float3 GameObject::GetGlobalPosition() const
+{
+	//Remember: transform matrix is transposed to send it to opengl directly
+	float4x4 global_transform = GetGlobalTransform();
+	return float3(global_transform[0][3], global_transform[1][3], global_transform[2][3]);
+}
 
 void GameObject::SetPosition(float3 new_position)
 {

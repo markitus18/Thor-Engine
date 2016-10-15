@@ -19,10 +19,12 @@ public:
 
 	void Draw(bool shaded, bool wireframe);
 
-	float3	GetPosition() const;
-	float3	GetScale() const;
-	Quat	GetQuatRotation() const;
-	float3	GetEulerRotation() const;
+	float3		GetPosition() const;
+	float3		GetScale() const;
+	Quat		GetQuatRotation() const;
+	float3		GetEulerRotation() const;
+	float4x4	GetGlobalTransform() const;
+	float3		GetGlobalPosition() const;
 
 	void SetPosition(float3 new_position);
 	void SetScale(float3 new_scale);

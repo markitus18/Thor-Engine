@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
+#include "MathGeoLib\src\MathGeoLib.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -93,8 +94,14 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	int mouseZ = App->input->GetMouseZ();
+	if (mouseZ != 0)
+	{
+		vec3 vec = Reference - Position;
+		float3 distanceToRef = float3(vec.x, vec.y, vec.z);
+		float distance = distanceToRef.Length();
+		Position -= Z * mouseZ * dt * 150 * (distance * 0.05);
+	}
 
-	Position -= Z * mouseZ * dt * 150;
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		Position -= Z * 10 * dt;
@@ -153,8 +160,8 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 
 void ModuleCamera3D::SetNewTarget(const vec3 &new_target)
 {
-	//vec3 difference = Reference - new_target;
-	//Position -= difference;
+	vec3 difference = Reference - new_target;
+	Position -= difference;
 	LookAt(new_target);
 }
 

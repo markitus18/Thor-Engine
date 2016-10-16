@@ -16,7 +16,7 @@ PanelConsole::~PanelConsole()
 void PanelConsole::ClearLog()
 {
 	for (int i = 0; i < items.Size; i++)
-		RELEASE(items[i]);
+		free(items[i]);
 	items.clear();
 	scrollToBottom = true;
 }

@@ -75,7 +75,7 @@ update_status ModuleEditor::Update(float dt)
 	if (show_About_window)
 		ShowAboutWindow();
 	if (show_Demo_window)
-		ImGui::ShowTestWindow();
+		ImGui::ShowTestWindow(&show_Demo_window);
 
 	// -----------------------------
 	if (ImGui::BeginMainMenuBar())
@@ -92,16 +92,16 @@ update_status ModuleEditor::Update(float dt)
 		}
 		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::MenuItem("Inspector          ", "1", &panelInspector->active))
+			if (ImGui::MenuItem("Inspector          ", NULL, &panelInspector->active))
 			{
 			}
-			if (ImGui::MenuItem("Hierarchy          ", "2", &panelHierarchy->active))
+			if (ImGui::MenuItem("Hierarchy          ", NULL, &panelHierarchy->active))
 			{
 			}
-			if (ImGui::MenuItem("Console          ", "3", &panelConsole->active))
+			if (ImGui::MenuItem("Console          ", NULL, &panelConsole->active))
 			{
 			}
-			if (ImGui::MenuItem("Configuration         ", "4", &panelConfiguration->active))
+			if (ImGui::MenuItem("Configuration         ", NULL, &panelConfiguration->active))
 			{
 			}
 
@@ -220,8 +220,9 @@ void ModuleEditor::DrawPanels()
 
 void ModuleEditor::ShowAboutWindow()
 {
-	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(400, 100), 1.0f);
-	ImGui::Text("v0.3-alpha");
+	ImGui::SetNextWindowSize(ImVec2(600, 100));
+	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(400, 100), 1.0f, ImGuiWindowFlags_NoResize);
+	ImGui::Text("v0.4-alpha");
 	ImGui::Separator();
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");

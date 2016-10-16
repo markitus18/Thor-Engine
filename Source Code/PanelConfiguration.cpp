@@ -44,15 +44,15 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 			ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
 		}
 
-		if (ImGui::CollapsingHeader("Window"))
-		{
+		//if (ImGui::CollapsingHeader("Window"))
+		//{
 
-		}
+		//}
 
-		if (ImGui::CollapsingHeader("File System"))
-		{
+		//if (ImGui::CollapsingHeader("File System"))
+		//{
 
-		}
+		//}
 
 		if (ImGui::CollapsingHeader("Input"))
 		{
@@ -61,10 +61,10 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 			ImGui::Text("Mouse wheel: %i", App->input->GetMouseZ());
 		}
 
-		if (ImGui::CollapsingHeader("Hardware"))
-		{
+		//if (ImGui::CollapsingHeader("Hardware"))
+		//{
 
-		}
+		//}
 
 		ImGui::End();
 	}
@@ -90,7 +90,7 @@ void PanelConfiguration::Init()
 
 void PanelConfiguration::UpdateFPSData(int fps, int ms)
 {
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 99; i++)
 	{
 		FPS_data[i] = FPS_data[i + 1];
 		ms_data[i] = ms_data[i + 1];

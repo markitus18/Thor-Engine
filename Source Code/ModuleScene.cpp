@@ -16,6 +16,7 @@
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	root = new GameObject(NULL, "root");
 }
 
 ModuleScene::~ModuleScene()
@@ -27,7 +28,7 @@ bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
 
-	root = new GameObject(NULL, "root");
+
 
 	bool ret = true;
 
@@ -53,9 +54,22 @@ update_status ModuleScene::Update(float dt)
 {
 	if (drawGrid)
 	{
-		P_Plane p(0, 0, 0, 1);
-		p.axis = true;
-		p.Render();
+		//TODO: Move this into a mesh "prefab"
+		glLineWidth(1.0f);
+		
+		glBegin(GL_LINES);
+		
+		float d = 20.0f;
+		
+		for(float i = -d; i <= d; i += 1.0f)
+		{
+			glVertex3f(i, 0.0f, -d);
+			glVertex3f(i, 0.0f, d);
+			glVertex3f(-d, 0.0f, i);
+			glVertex3f(d, 0.0f, i);
+		}
+		
+		glEnd();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)

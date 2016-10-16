@@ -61,13 +61,13 @@ public:
 	}
 
 private:
-	KEY_STATE* keyboard;
+	KEY_STATE* keyboard = NULL;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
-	int mouse_x;
-	int mouse_y;
-	int mouse_z;
-	int mouse_motion_x;
-	int mouse_motion_y;
+	int mouse_x  = 0;
+	int mouse_y = 0;
+	int mouse_z = 0;
+	int mouse_motion_x = 0;
+	int mouse_motion_y = 0;
 };
 
 #endif //__MODULE_INPUT_H__

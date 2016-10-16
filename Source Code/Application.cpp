@@ -7,7 +7,6 @@
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleEditor.h"
 #include "ModuleImport.h"
 #include "ModuleMaterials.h"
@@ -36,15 +35,13 @@ Application::Application()
 	AddModule(input);
 	AddModule(audio);
 
-	// Scenes
-	AddModule(scene);
-
-	// Renderer last!
 	AddModule(renderer3D);
 
-	AddModule(moduleEditor);
 	AddModule(moduleImport);
 	AddModule(moduleMaterials);
+
+	AddModule(scene);
+	AddModule(moduleEditor);
 }
 
 Application::~Application()
@@ -93,7 +90,7 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)frameTimer.ReadSec();
+	dt = frameTimer.ReadSec();
 	frameTimer.Start();
 }
 
@@ -141,6 +138,7 @@ update_status Application::Update()
 	{
 		if (item->data->IsEnabled())
 		{
+
 			ret = item->data->Update(dt);
 		}
 		item = item->next;

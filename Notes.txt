@@ -1,3 +1,0 @@
-ImGUI:
-
-Window between windows, to drag and change windows size

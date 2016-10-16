@@ -38,23 +38,27 @@ bool ModuleImport::Init()
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
+	LOG("Entering mesh load");
+	const aiScene* file = aiImportFile("Game/Models/3D_Models/Street_environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
+	if (file)
+	{
+		LOG("File found");
+		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/Street environment_V01.FBX");
+		aiReleaseImport(file);
+	}
+	else
+	{
+		LOG("File not found");
+	}
+	//const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
+	//LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
+
 	return true;
 }
 update_status ModuleImport::Update(float dt)
 {
-	if (!fbx_loaded)
-	{
-		fbx_loaded = true;
-		const aiScene* file = aiImportFile("Game/Models/3D Models/Street environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
-		if (file)
-		{
-			LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/Street environment_V01.FBX");
-			aiReleaseImport(file);
-		}
-		//const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
-		//LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
+	//LOG("Module Import update")
 
-	}
 	return UPDATE_CONTINUE;
 }
 

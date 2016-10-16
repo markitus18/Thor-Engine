@@ -43,8 +43,7 @@ bool ModuleScene::CleanUp()
 {
 	LOG("Unloading scene");
 
-	delete root;
-	root = NULL;
+	RELEASE(root);
 
 	return true;
 }

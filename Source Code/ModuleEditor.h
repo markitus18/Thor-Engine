@@ -8,6 +8,7 @@ class PanelConsole;
 class PanelHierarchy;
 class PanelInspector;
 class PanelConfiguration;
+class PanelButtons;
 
 class ModuleEditor : public Module
 {
@@ -30,16 +31,16 @@ private:
 
 	void DrawPanels();
 	void ShowAboutWindow();
-	void ShowSettingsWindow();
 
 	void InitFPSData();
 
 public:
 	//Panels
-	PanelHierarchy* panelHierarchy = NULL;
-	PanelConsole* panelConsole = NULL;
-	PanelInspector* panelInspector = NULL;
+	PanelHierarchy*		panelHierarchy = NULL;
+	PanelConsole*		panelConsole = NULL;
+	PanelInspector*		panelInspector = NULL;
 	PanelConfiguration* panelConfiguration = NULL;
+	PanelButtons*		panelButtons = NULL;
 
 	bool shaded = true;
 	bool wireframe = false;
@@ -50,7 +51,6 @@ private:
 	//Active window controllers
 	bool show_About_window = false;
 	bool show_Demo_window = false;
-	bool show_Settings_window = true;
 
 	//FPS data saving
 	float FPS_data [100];

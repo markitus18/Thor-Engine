@@ -2,11 +2,6 @@
 
 PanelConfiguration::PanelConfiguration()
 {
-	position.x = 0;
-	position.y = 0;
-
-	size.x = 340;
-	size.y = 380;
 }
 
 PanelConfiguration::~PanelConfiguration()

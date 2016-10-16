@@ -5,8 +5,6 @@
 
 PanelConsole::PanelConsole()
 {
-	position.x = 2;
-	position.y = 286;
 	ClearLog();
 }
 

@@ -8,11 +8,6 @@
 
 PanelHierarchy::PanelHierarchy()
 {
-	position.x = 0;
-	position.y = 0;
-
-	size.x = 390;
-	size.y = 630;
 }
 
 PanelHierarchy::~PanelHierarchy()

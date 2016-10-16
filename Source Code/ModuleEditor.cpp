@@ -9,6 +9,7 @@
 #include "PanelConsole.h"
 #include "PanelInspector.h"
 #include "PanelConfiguration.h"
+#include "PanelButtons.h"
 
 #include "OpenGL.h"
 
@@ -40,6 +41,7 @@ bool ModuleEditor::Init()
 	panelHierarchy = new PanelHierarchy();
 	panelInspector = new PanelInspector();
 	panelConfiguration = new PanelConfiguration();
+	panelButtons = new PanelButtons();
 
 	//Change background color, we use "test_color", controllable variable from UI
 	ImVec4 BgColor = ImColor(71, 71, 71);
@@ -73,22 +75,7 @@ update_status ModuleEditor::Update(float dt)
 		ShowAboutWindow();
 	if (show_Demo_window)
 		ImGui::ShowTestWindow();
-	if (show_Settings_window)
-		ShowSettingsWindow();
 
-	//TODO: move into a new panel
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
-	ImGui::SetNextWindowPos(ImVec2(400, 50));
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	bool open = true;
-	if (ImGui::Begin("Wire window", &open, flags))
-	{
-		ImGui::Checkbox("Shaded", &shaded);
-		ImGui::Checkbox("Wireframe", &wireframe);
-
-		ImGui::End();
-	}
-	ImGui::PopStyleColor();
 	// -----------------------------
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -180,6 +167,12 @@ bool ModuleEditor::CleanUp()
 		panelConfiguration = NULL;
 	}
 
+	if (panelButtons)
+	{
+		delete panelButtons;
+		panelButtons = NULL;
+	}
+
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
 }
@@ -217,6 +210,11 @@ void ModuleEditor::DrawPanels()
 	{
 		panelConfiguration->Draw(windowFlags);
 	}
+
+	if (panelButtons != NULL)
+	{
+		panelButtons->Draw(windowFlags);
+	}
 }
 
 void ModuleEditor::ShowAboutWindow()
@@ -227,12 +225,6 @@ void ModuleEditor::ShowAboutWindow()
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
 	ImGui::End();
-}
-
-void ModuleEditor::ShowSettingsWindow()
-{
-	//ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
-
 }
 
 void ModuleEditor::InitFPSData()
@@ -261,4 +253,5 @@ void ModuleEditor::OnResize(int screen_width, int screen_height)
 	panelHierarchy->UpdatePosition(screen_width, screen_height);
 	panelInspector->UpdatePosition(screen_width, screen_height);
 	panelConfiguration->UpdatePosition(screen_width, screen_height);
+	panelButtons->UpdatePosition(screen_width, screen_height);
 }

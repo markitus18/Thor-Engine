@@ -62,6 +62,9 @@ public:
 	void RequestBrowser(char* path);
 	void Log(const char* input);
 
+	const char* GetWindowTitle() const;
+	void SetWindowTitle(char* new_name);
+
 private:
 
 	void AddModule(Module* mod);

@@ -42,6 +42,7 @@ bool ModuleEditor::Init()
 	panelInspector = new PanelInspector();
 	panelConfiguration = new PanelConfiguration();
 	panelButtons = new PanelButtons();
+	panelConfiguration->Init();
 
 	//Change background color, we use "test_color", controllable variable from UI
 	ImVec4 BgColor = ImColor(71, 71, 71);
@@ -227,24 +228,10 @@ void ModuleEditor::ShowAboutWindow()
 	ImGui::End();
 }
 
-void ModuleEditor::InitFPSData()
-{
-	for (int i = 0; i < 100; i++)
-	{
-		FPS_data[i] = 0;
-		ms_data[i] = 0;
-	}
-}
-
 void ModuleEditor::UpdateFPSData(int fps, int ms)
 {
-	for (int i = 0; i < 100; i++)
-	{
-		FPS_data[i] = FPS_data[i + 1];
-		ms_data[i] = ms_data[i + 1];
-	}
-	FPS_data[100 - 1] = fps;
-	ms_data[100 - 1] = ms;
+	if (panelConfiguration)
+		panelConfiguration->UpdateFPSData(fps, ms);
 }
 
 void ModuleEditor::OnResize(int screen_width, int screen_height)

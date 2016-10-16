@@ -21,6 +21,7 @@ void PanelButtons::Draw(ImGuiWindowFlags default_flags)
 	bool open = true;
 	if (ImGui::Begin("Wire window", &open, flags))
 	{
+		//TODO: This will be moved into module editor and use listeners structure
 		ImGui::Checkbox("Shaded", &App->moduleEditor->shaded);
 		ImGui::Checkbox("Wireframe", &App->moduleEditor->wireframe);
 
@@ -38,7 +39,6 @@ void PanelButtons::UpdatePosition(int screen_width, int screen_height)
 
 	size.x = screen_width - position.x;
 	size.y = screen_height - position.y;
-
 }
 
 

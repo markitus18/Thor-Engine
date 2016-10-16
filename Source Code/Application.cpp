@@ -184,6 +184,15 @@ void Application::Log(const char* input)
 {
 	moduleEditor->Log(input);
 }
+const char* Application::GetWindowTitle() const
+{
+	return window->GetTitle();
+}
+
+void Application::SetWindowTitle(char* new_name)
+{
+	window->SetTitle(new_name);
+}
 
 void Application::AddModule(Module* mod)
 {

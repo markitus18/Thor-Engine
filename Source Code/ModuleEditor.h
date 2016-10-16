@@ -32,8 +32,6 @@ private:
 	void DrawPanels();
 	void ShowAboutWindow();
 
-	void InitFPSData();
-
 public:
 	//Panels
 	PanelHierarchy*		panelHierarchy = NULL;
@@ -45,16 +43,10 @@ public:
 	bool shaded = true;
 	bool wireframe = false;
 private:
-	char tmp_appName[26] = "Not working yet";
-	char tmp_orgName[26] = "Not working yet";
 
 	//Active window controllers
 	bool show_About_window = false;
 	bool show_Demo_window = false;
-
-	//FPS data saving
-	float FPS_data [100];
-	float ms_data[100];
 };
 
 #endif

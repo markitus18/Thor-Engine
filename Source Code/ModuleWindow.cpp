@@ -63,7 +63,7 @@ bool ModuleWindow::Init()
 		}
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-
+		title = TITLE;
 		if(window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s", SDL_GetError());
@@ -95,7 +95,13 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-void ModuleWindow::SetTitle(const char* title)
+void ModuleWindow::SetTitle(const char* new_title)
 {
-	SDL_SetWindowTitle(window, title);
+	title = new_title;
+	SDL_SetWindowTitle(window, new_title);
+}
+
+const char* ModuleWindow::GetTitle()
+{
+	return title.c_str();
 }

@@ -51,34 +51,36 @@ update_status ModuleCamera3D::Update(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float Sensitivity = 0.15f;
-
-		Position -= Reference;
-
-		if(dx != 0)
+		if (dx != 0 || dy != 0)
 		{
-			float DeltaX = (float)dx * Sensitivity;
+			float Sensitivity = 0.15f;
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		}
+			Position -= Reference;
 
-		if(dy != 0)
-		{
-			float DeltaY = (float)dy * Sensitivity;
-
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
-
-			if(Y.y < 0.0f)
+			if(dx != 0)
 			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
-		}
+				float DeltaX = (float)dx * Sensitivity;
 
-		Position = Reference + Z * length(Position);
+				X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+				Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			}
+
+			if(dy != 0)
+			{
+				float DeltaY = (float)dy * Sensitivity;
+
+				Y = rotate(Y, DeltaY, X);
+				Z = rotate(Z, DeltaY, X);
+
+				if(Y.y < 0.0f)
+				{
+					Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+					Y = cross(Z, X);
+				}
+			}
+			Position = Reference + Z * length(Position);
+		}
 	}
 	
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
@@ -86,11 +88,16 @@ update_status ModuleCamera3D::Update(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = App->input->GetMouseYMotion();
 
-		Reference += X * dx * dt * 2;
-		Reference += Y * dy * dt * 2;
+		//TODO: Move camera according to reference distance
+		vec3 vec = Reference - Position;
+		float3 distanceToRef = float3(vec.x, vec.y, vec.z);
+		float distance = distanceToRef.Length();
 
-		Position += X * dx * dt * 2;
-		Position += Y * dy * dt * 2;
+		Reference += X * dx * dt * (distance / 15);
+		Reference += Y * dy * dt * (distance / 15);
+
+		Position += X * dx * dt * (distance / 15);
+		Position += Y * dy * dt * (distance / 15);
 	}
 
 	int mouseZ = App->input->GetMouseZ();

@@ -143,6 +143,38 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	DrawAABB();
+}
+
+void C_Mesh::DrawAABB()
+{
+	float3 minPoint = float3(bounds.minPoint);
+	float3 maxPoint = float3(bounds.maxPoint);
+
+	int num_v = bounds.NumVerticesInEdgeList();
+	vec* vertices = new vec[num_v];
+	bounds.ToEdgeList((vec*)vertices);
+
+
+	glBegin(GL_LINES);
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	for (uint i = 0; i < bounds.NumVerticesInEdgeList(); i ++)
+	{
+		glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
+	}
+
+	RELEASE(vertices);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnd();
+
+}
+
+void C_Mesh::UpdateAABB()
+{
+	bounds.SetNegativeInfinity();
+	bounds.Enclose((math::vec*)vertices, num_vertices);
 }
 
 void C_Mesh::AddMaterial(C_Material* material)

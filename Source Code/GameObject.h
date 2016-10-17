@@ -33,6 +33,7 @@ public:
 	void ResetTransform();
 
 	void UpdateTransformMatrix();
+	void UpdateGlobalTransform();
 	void UpdateEulerAngles();
 
 	bool HasFlippedNormals() const;
@@ -58,6 +59,7 @@ public:
 
 private:
 	float4x4	transform;
+	float4x4	global_transform;
 
 	float3		position;
 	float3		scale;

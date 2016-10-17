@@ -141,6 +141,11 @@ void GameObject::UpdateTransformMatrix()
 	transform.Transpose();
 }
 
+void GameObject::UpdateGlobalTransform()
+{
+
+}
+
 void GameObject::UpdateEulerAngles()
 {
 	rotation_euler = rotation.ToEulerXYZ();

@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "Component.h"
+#include "MathGeoLib\src\MathGeoLib.h"
 
 #include <vector>
 #include <list>
@@ -21,7 +22,10 @@ public:
 	void LoadBuffers();
 
 	void Draw(bool shaded, bool wireframe);
-	
+	void DrawAABB();
+
+	void UpdateAABB();
+
 	void AddMaterial(C_Material*);
 	Component* CreateMaterial();
 	void RemoveMaterial(C_Material*);
@@ -51,6 +55,7 @@ public:
 
 private:
 	std::vector<C_Material*> materials;
+	AABB bounds;
 };
 
 #endif

@@ -29,6 +29,7 @@ public:
 	void SetPosition(float3 new_position);
 	void SetScale(float3 new_scale);
 	void SetRotation(float3 euler_angles);
+	void SetParent(GameObject* new_parent);
 
 	void ResetTransform();
 

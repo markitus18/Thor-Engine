@@ -10,7 +10,7 @@ GameObject::GameObject(GameObject* new_parent, const char* new_name, const float
 						rotation(rotation)
 {
 	parent = new_parent;
-
+	SetParent(new_parent);
 	UpdateEulerAngles();
 	UpdateTransformMatrix();
 	if (new_parent)
@@ -139,6 +139,7 @@ void GameObject::UpdateTransformMatrix()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
 	transform.Transpose();
+	global_transform = parent->global_transform * transform;
 }
 
 void GameObject::UpdateGlobalTransform()

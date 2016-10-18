@@ -144,7 +144,7 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	DrawAABB();
+//	DrawAABB();
 }
 
 void C_Mesh::DrawAABB()

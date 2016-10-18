@@ -9,12 +9,18 @@ GameObject::GameObject()
 GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), position(translation), scale(scale),
 						rotation(rotation)
 {
-	parent = new_parent;
-	SetParent(new_parent);
-	UpdateEulerAngles();
 	UpdateTransformMatrix();
+
+	//Hierarchy setup ---
+	parent = new_parent;
 	if (new_parent)
 		new_parent->childs.push_back(this);
+
+	//Matrix setup
+	global_transform = parent ? parent->global_transform * transform  : transform;
+	global_transformT = global_transform.Transposed();
+
+	UpdateEulerAngles();
 }
 
 GameObject::~GameObject()
@@ -37,7 +43,7 @@ GameObject::~GameObject()
 void GameObject::Draw(bool shaded, bool wireframe)
 {
 	glPushMatrix();
-	glMultMatrixf((float*)&transform);
+	glMultMatrixf((float*)&global_transformT);
 
 	C_Mesh* _mesh = NULL;
 	for(uint i = 0; i < components.size(); i++)
@@ -51,13 +57,16 @@ void GameObject::Draw(bool shaded, bool wireframe)
 	{
 		_mesh->Draw(shaded, wireframe);
 	}
-
+	glPopMatrix();
+	if (_mesh)
+	{
+		_mesh->DrawAABB();
+	}
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)
 			childs[i]->Draw(shaded, wireframe);	
 	}
-	glPopMatrix();
 }
 
 float3 GameObject::GetPosition() const
@@ -82,15 +91,11 @@ float3 GameObject::GetEulerRotation() const
 
 float4x4 GameObject::GetGlobalTransform() const
 {
-	float4x4 global_transform = transform.Transposed();
-	if (parent)
-		global_transform = parent->GetGlobalTransform() * transform.Transposed();
 	return global_transform;
 }
 
 float3 GameObject::GetGlobalPosition() const
 {
-	//Remember: transform matrix is transposed to send it to opengl directly
 	float4x4 global_transform = GetGlobalTransform();
 	return float3(global_transform[0][3], global_transform[1][3], global_transform[2][3]);
 }
@@ -138,13 +143,20 @@ void GameObject::ResetTransform()
 void GameObject::UpdateTransformMatrix()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
-	transform.Transpose();
-	global_transform = parent->global_transform * transform;
+	//transform.Transpose();
+	global_transform = parent ? parent->global_transform * transform : transform;
+	global_transformT = global_transform.Transposed();
 }
 
 void GameObject::UpdateGlobalTransform()
 {
+	global_transform = parent ? parent->global_transform * transform : transform;
+	global_transformT = global_transform.Transposed();
 
+	for (uint i = 0; i < childs.size(); i++)
+	{
+		childs[i]->UpdateGlobalTransform();
+	}
 }
 
 void GameObject::UpdateEulerAngles()

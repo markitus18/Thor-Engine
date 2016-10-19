@@ -35,7 +35,6 @@
 #include "Circle.h"
 #include "Triangle.h"
 #include "../Algorithm/Random/LCG.h"
-#include "../Algorithm/GJK.h"
 #include "../Math/assume.h"
 
 #ifdef MATH_ENABLE_STL_SUPPORT
@@ -49,7 +48,7 @@ Capsule::Capsule(const LineSegment &endPoints, float radius)
 {
 }
 
-Capsule::Capsule(const vec &bottomPoint, const vec &topPoint, float radius)
+Capsule::Capsule(const float3 &bottomPoint, const float3 &topPoint, float radius)
 :l(bottomPoint, topPoint), r(radius)
 {
 }
@@ -58,16 +57,6 @@ void Capsule::SetFrom(const Sphere &s)
 {
 	l = LineSegment(s.pos, s.pos);
 	r = s.r;
-}
-
-void Capsule::SetDegenerate()
-{
-	r = -1.f;
-}
-
-bool Capsule::IsDegenerate() const
-{
-	return r <= 0.f;
 }
 
 float Capsule::LineLength() const
@@ -80,31 +69,22 @@ float Capsule::Diameter() const
 	return 2.f * r;
 }
 
-vec Capsule::Bottom() const
+float3 Capsule::Bottom() const
 {
 	return l.a - UpDirection() * r;
 }
 
-vec Capsule::Center() const
+float3 Capsule::Center() const
 {
 	return l.CenterPoint();
 }
 
-vec Capsule::ExtremePoint(const vec &direction) const
+float3 Capsule::ExtremePoint(const float3 &direction) const
 {
-	float len = direction.Length();
-	assume(len > 0.f);
-	return (Dot(direction, l.b - l.a) >= 0.f ? l.b : l.a) + direction * (r / len);
+	return (Dot(direction, l.b - l.a) >= 0.f ? l.b : l.a) + direction.ScaledToLength(r);
 }
 
-vec Capsule::ExtremePoint(const vec &direction, float &projectionDistance) const
-{
-	vec extremePoint = ExtremePoint(direction);
-	projectionDistance = extremePoint.Dot(direction);
-	return extremePoint;
-}
-
-void Capsule::ProjectToAxis(const vec &direction, float &outMin, float &outMax) const
+void Capsule::ProjectToAxis(const float3 &direction, float &outMin, float &outMax) const
 {
 	outMin = Dot(direction, l.a);
 	outMax = Dot(direction, l.b);
@@ -118,14 +98,14 @@ void Capsule::ProjectToAxis(const vec &direction, float &outMin, float &outMax) 
 	outMax += r;
 }
 
-vec Capsule::Top() const
+float3 Capsule::Top() const
 {
 	return l.b + UpDirection() * r;
 }
 
-vec Capsule::UpDirection() const
+float3 Capsule::UpDirection() const
 {
-	vec d = l.b - l.a;
+	float3 d = l.b - l.a;
 	d.Normalize(); // Will always result in a normalized vector, even if l.a == l.b.
 	return d;
 }
@@ -150,8 +130,8 @@ Circle Capsule::CrossSection(float yPos) const
 	assume(yPos >= 0.f);
 	assume(yPos <= 1.f);
 	yPos *= Height();
-	vec up = UpDirection();
-	vec centerPos = Bottom() + up * yPos;
+	float3 up = UpDirection();
+	float3 centerPos = Bottom() + up * yPos;
 	if (yPos < r) // First section, between Bottom() and lower point.
 		return Circle(centerPos, up, Sqrt(r*r - (r-yPos)*(r-yPos)));
 	if (yPos < l.Length() + r) // Second section, between lower and upper points.
@@ -170,31 +150,20 @@ bool Capsule::IsFinite() const
 	return l.IsFinite() && MATH_NS::IsFinite(r);
 }
 
-vec Capsule::PointInside(float height, float angle, float dist) const
+float3 Capsule::PointInside(float l, float a, float d) const
 {
-	Circle c = CrossSection(height);
-	return c.GetPoint(angle*2.f*pi, dist);
+	Circle c = CrossSection(l);
+	return c.GetPoint(a*2.f*pi, d);
 }
 
-vec Capsule::UniformPointPerhapsInside(float height, float x, float y) const
+float3 Capsule::UniformPointPerhapsInside(float l, float x, float y) const
 {
-	return MinimalEnclosingOBB().PointInside(height, x, y);
-}
-
-Sphere Capsule::SphereA() const
-{
-	return Sphere(l.a, r);
-}
-
-Sphere Capsule::SphereB() const
-{
-	return Sphere(l.b, r);
+	return MinimalEnclosingOBB().PointInside(l, x, y);
 }
 
 AABB Capsule::MinimalEnclosingAABB() const
 {
-	vec d = DIR_VEC_SCALAR(r);
-	AABB aabb(Min(l.a, l.b) - d, Max(l.a, l.b) + d);
+	AABB aabb(Min(l.a, l.b) - float3(r, r, r), Max(l.a, l.b) + float3(r, r, r));
 	return aabb;
 }
 
@@ -202,7 +171,8 @@ OBB Capsule::MinimalEnclosingOBB() const
 {
 	OBB obb;
 	obb.axis[0] = UpDirection();
-	obb.axis[0].PerpendicularBasis(obb.axis[1], obb.axis[2]);
+	obb.axis[1] = obb.axis[0].Perpendicular();
+	obb.axis[2] = obb.axis[0].AnotherPerpendicular();
 	obb.pos = Center();
 	obb.r[0] = Height() * 0.5f;
 	obb.r[1] = r;
@@ -210,14 +180,14 @@ OBB Capsule::MinimalEnclosingOBB() const
 	return obb;
 }
 
-vec Capsule::RandomPointInside(LCG &rng) const
+float3 Capsule::RandomPointInside(LCG &rng) const
 {
 	assume(IsFinite());
 
 	OBB obb = MinimalEnclosingOBB();
 	for(int i = 0; i < 1000; ++i)
 	{
-		vec pt = obb.RandomPointInside(rng);
+		float3 pt = obb.RandomPointInside(rng);
 		if (Contains(pt))
 			return pt;
 	}
@@ -225,22 +195,20 @@ vec Capsule::RandomPointInside(LCG &rng) const
 	return Center(); // Just return some point that is known to be inside.
 }
 
-vec Capsule::RandomPointOnSurface(LCG &rng) const
+float3 Capsule::RandomPointOnSurface(LCG &rng) const
 {
-	float f1 = rng.Float();
-	float f2 = rng.Float();
-	return PointInside(f1, f2, 1.f);
+	return PointInside(rng.Float(), rng.Float(), 1.f);
 }
 
-void Capsule::Translate(const vec &offset)
+void Capsule::Translate(const float3 &offset)
 {
 	l.a += offset;
 	l.b += offset;
 }
 
-void Capsule::Scale(const vec &centerPoint, float scaleFactor)
+void Capsule::Scale(const float3 &centerPoint, float scaleFactor)
 {
-	float3x4 tm = float3x4::Scale(DIR_VEC_SCALAR(scaleFactor), centerPoint);
+	float3x4 tm = float3x4::Scale(float3::FromScalar(scaleFactor), centerPoint);
 	l.Transform(tm);
 	r *= scaleFactor;
 }
@@ -274,16 +242,16 @@ void Capsule::Transform(const Quat &transform)
 	l.Transform(transform);
 }
 
-vec Capsule::ClosestPoint(const vec &targetPoint) const
+float3 Capsule::ClosestPoint(const float3 &targetPoint) const
 {
-	vec ptOnLine = l.ClosestPoint(targetPoint);
+	float3 ptOnLine = l.ClosestPoint(targetPoint);
 	if (ptOnLine.DistanceSq(targetPoint) <= r*r)
 		return targetPoint;
 	else
 		return ptOnLine + (targetPoint - ptOnLine).ScaledToLength(r);
 }
 
-float Capsule::Distance(const vec &point) const
+float Capsule::Distance(const float3 &point) const
 {
 	return Max(0.f, l.Distance(point) - r);
 }
@@ -318,7 +286,7 @@ float Capsule::Distance(const LineSegment &lineSegment) const
 	return lineSegment.Distance(*this);
 }
 
-bool Capsule::Contains(const vec &point) const
+bool Capsule::Contains(const float3 &point) const
 {
 	return l.Distance(point) <= r;
 }
@@ -400,32 +368,32 @@ bool Capsule::Intersects(const Plane &plane) const
 
 bool Capsule::Intersects(const AABB &aabb) const
 {
-	return GJKIntersect(*this, aabb);
+	return Intersects(aabb.ToPolyhedron());
 }
 
 bool Capsule::Intersects(const OBB &obb) const
 {
-	return GJKIntersect(*this, obb);
+	return Intersects(obb.ToPolyhedron());
 }
 
 /// [groupSyntax]
 bool Capsule::Intersects(const Sphere &sphere) const
 {
-	float R = r + sphere.r;
-	return l.DistanceSq(sphere.pos) <= R*R;
+	///@todo Optimize to avoid square roots.
+	return l.Distance(sphere.pos) <= r + sphere.r;
 }
 
 /// [groupSyntax]
 bool Capsule::Intersects(const Capsule &capsule) const
 {
-	float R = r + capsule.r;
-	return l.DistanceSq(capsule.l) <= R*R;
+	///@todo Optimize to avoid square roots.
+	return l.Distance(capsule.l) <= r + capsule.r;
 }
 
 bool Capsule::Intersects(const Triangle &triangle) const
 {
-	vec thisPoint;
-	vec trianglePoint = triangle.ClosestPoint(l, &thisPoint);
+	float3 thisPoint;
+	float3 trianglePoint = triangle.ClosestPoint(l, &thisPoint);
 	return thisPoint.DistanceSq(trianglePoint) <= r*r;
 }
 
@@ -448,30 +416,8 @@ bool Capsule::Intersects(const Polyhedron &polyhedron) const
 std::string Capsule::ToString() const
 {
 	char str[256];
-	sprintf(str, "Capsule(a:(%.2f, %.2f, %.2f) b:(%.2f, %.2f, %.2f), r:%.2f)", l.a.x, l.a.y, l.a.z, l.b.x, l.b.y, l.b.z, r);
+	sprintf_s(str, 256, "Capsule(a:(%.2f, %.2f, %.2f) b:(%.2f, %.2f, %.2f), r:%.2f)", l.a.x, l.a.y, l.a.z, l.b.x, l.b.y, l.b.z, r);
 	return str;
-}
-
-std::string Capsule::SerializeToString() const
-{
-	char str[256];
-	char *s = SerializeFloat(l.a.x, str); *s = ','; ++s;
-	s = SerializeFloat(l.a.y, s); *s = ','; ++s;
-	s = SerializeFloat(l.a.z, s); *s = ','; ++s;
-	s = SerializeFloat(l.b.x, s); *s = ','; ++s;
-	s = SerializeFloat(l.b.y, s); *s = ','; ++s;
-	s = SerializeFloat(l.b.z, s); *s = ','; ++s;
-	s = SerializeFloat(r, s);
-	assert(s+1 - str < 256);
-	MARK_UNUSED(s);
-	return str;
-}
-
-std::string Capsule::SerializeToCodeString() const
-{
-	char str[256];
-	sprintf(str, "%.9g", r);
-	return "Capsule(" + l.SerializeToCodeString() + "," + str + ")";
 }
 
 std::ostream &operator <<(std::ostream &o, const Capsule &capsule)
@@ -481,32 +427,6 @@ std::ostream &operator <<(std::ostream &o, const Capsule &capsule)
 }
 
 #endif
-
-Capsule Capsule::FromString(const char *str, const char **outEndStr)
-{
-	assume(str);
-	if (!str)
-		return Capsule(vec::nan, vec::nan, FLOAT_NAN);
-	Capsule c;
-	MATH_SKIP_WORD(str, "Capsule(");
-	MATH_SKIP_WORD(str, "a:(");
-	MATH_SKIP_WORD(str, "LineSegment(");
-	c.l.a = PointVecFromString(str, &str);
-	MATH_SKIP_WORD(str, " b:");
-	c.l.b = PointVecFromString(str, &str);
-	MATH_SKIP_WORD(str, ")");
-	MATH_SKIP_WORD(str, ",");
-	MATH_SKIP_WORD(str, " r:");
-	c.r = DeserializeFloat(str, &str);
-	if (outEndStr)
-		*outEndStr = str;
-	return c;
-}
-
-bool Capsule::BitEquals(const Capsule &other) const
-{
-	return l.BitEquals(other.l) && ReinterpretAsU32(r) == ReinterpretAsU32(other.r);
-}
 
 Capsule operator *(const float3x3 &transform, const Capsule &capsule)
 {

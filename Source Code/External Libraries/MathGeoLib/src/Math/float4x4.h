@@ -19,22 +19,20 @@
 
 #include "../MathBuildConfig.h"
 #include "SSEMath.h"
-#include "float4.h"
 
 #ifdef MATH_ENABLE_STL_SUPPORT
 #include "myassert.h"
 #endif
 #include "../MathGeoLibFwd.h"
 #include "MatrixProxy.h"
+#include "CoordinateAxisConvention.h"
 
 #ifdef MATH_OGRE_INTEROP
 #include <OgreMatrix4.h>
 #endif
+
 #ifdef MATH_QT_INTEROP
 #include <QMatrix4x4>
-#endif
-#ifdef MATH_URHO3D_INTEROP
-#include <Urho3D/Math/Matrix4.h>
 #endif
 
 MATH_BEGIN_NAMESPACE
@@ -106,7 +104,7 @@ public:
 
 	/// A compile-time constant float4x4 which has NaN in each element.
 	/// For this constant, each element has the value of quiet NaN, or Not-A-Number.
-	/// @note Never compare a float4x4 to this value! Due to how IEEE floats work, "nan == nan" returns false!
+	/// @note Never compare a float4x4 to this value! Due to how IEEE floats work, for each float x, both the expression "x == nan" and "x != nan" returns false!
 	///	   That is, nothing is equal to NaN, not even NaN itself!
 	static const float4x4 nan;
 
@@ -289,35 +287,19 @@ public:
 
 	/// Identical to D3DXMatrixOrthoLH, except transposed to account for Matrix * vector convention used in MathGeoLib.
 	/// See http://msdn.microsoft.com/en-us/library/windows/desktop/bb205346(v=vs.85).aspx
-	/// @note Use the M*v multiplication order to project points with this matrix.
 	static float4x4 D3DOrthoProjLH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
 	/// Identical to D3DXMatrixOrthoRH, except transposed to account for Matrix * vector convention used in MathGeoLib.
 	/// See http://msdn.microsoft.com/en-us/library/windows/desktop/bb205349(v=vs.85).aspx
-	/// @note Use the M*v multiplication order to project points with this matrix.
 	static float4x4 D3DOrthoProjRH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
-
 	/// Identical to D3DXMatrixPerspectiveLH, except transposed to account for Matrix * vector convention used in MathGeoLib.
 	/// See http://msdn.microsoft.com/en-us/library/windows/desktop/bb205352(v=vs.85).aspx
-	/// @note Use the M*v multiplication order to project points with this matrix.
 	static float4x4 D3DPerspProjLH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
 	/// Identical to D3DXMatrixPerspectiveRH, except transposed to account for Matrix * vector convention used in MathGeoLib.
 	/// See http://msdn.microsoft.com/en-us/library/windows/desktop/bb205355(v=vs.85).aspx
-	/// @note Use the M*v multiplication order to project points with this matrix.
 	static float4x4 D3DPerspProjRH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
 
-	/// Computes a left-handled orthographic projection matrix for OpenGL.
-	/// @note Use the M*v multiplication order to project points with this matrix.
-	static float4x4 OpenGLOrthoProjLH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
-	/// Computes a right-handled orthographic projection matrix for OpenGL.
-	/// @note Use the M*v multiplication order to project points with this matrix.
-	static float4x4 OpenGLOrthoProjRH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
-
-	/// Computes a left-handed perspective projection matrix for OpenGL.
-	/// @note Use the M*v multiplication order to project points with this matrix.
-	static float4x4 OpenGLPerspProjLH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
 	/// Identical to http://www.opengl.org/sdk/docs/man/xhtml/gluPerspective.xml , except uses viewport sizes instead of FOV to set up the
 	/// projection matrix.
-	/// @note Use the M*v multiplication order to project points with this matrix.
 	static float4x4 OpenGLPerspProjRH(float nearPlaneDistance, float farPlaneDistance, float horizontalViewportSize, float verticalViewportSize);
 
 	/// Creates a new float4x4 that performs orthographic projection. [indexTitle: OrthographicProjection/YZ/XZ/XY]
@@ -432,8 +414,9 @@ public:
 	/// @return A pointer to the upper-left element. The data is contiguous in memory.
 	/// ptr[0] gives the element [0][0], ptr[1] is [0][1], ptr[2] is [0][2].
 	/// ptr[4] == [1][0], ptr[5] == [1][1], ..., and finally, ptr[15] == [3][3].
-	FORCE_INLINE float *ptr() { return &v[0][0]; }
-	FORCE_INLINE const float *ptr() const { return &v[0][0]; }
+	float *ptr();
+	/// @return A pointer to the upper-left element . The data is contiguous in memory.
+	const float *ptr() const;
 
 	/// Sets the three first elements of the given row. The fourth element is left unchanged.
 	/** @param row The index of the row to set, in the range [0-3].
@@ -506,7 +489,6 @@ public:
 		All other entries are left untouched. */
 	void SetTranslatePart(float tx, float ty, float tz);
 	void SetTranslatePart(const float3 &offset);
-	void SetTranslatePart(const float4 &offset);
 
 	/// Sets the 3-by-3 part of this matrix to perform rotation about the positive X axis which passes through
 	/// the origin. Leaves all other entries of this matrix untouched. [similarOverload: SetRotatePart] [hideIndex]
@@ -646,7 +628,7 @@ public:
 
 	/// Inverts this matrix using the generic Gauss's method.
 	/// @return Returns true on success, false otherwise.
-	bool Inverse(float epsilon = 1e-6f);
+	bool Inverse(float epsilon = 1e-3f);
 
 	/// Returns an inverted copy of this matrix.
 	/// If this matrix does not have an inverse, returns the matrix that was the result of running
@@ -733,44 +715,34 @@ public:
 	void Pivot();
 
 	/// Transforms the given point vector by this matrix M , i.e. returns M * (x, y, z, 1).
-	/** The suffix "Pos" in this function means that the w component of the input vector is assumed to be 1, i.e. the input
-		vector represents a point (a position). */
 	float3 TransformPos(const float3 &pointVector) const;
 	float3 TransformPos(float x, float y, float z) const;
-	float4 TransformPos(const float4 &vector) const { return Transform(vector); }
 
 	/// Transforms the given direction vector by this matrix M , i.e. returns M * (x, y, z, 0).
-	/** The suffix "Dir" in this function just means that the w component of the input vector is assumed to be 0, i.e. the
-		input vector represents a direction. The input vector does not need to be normalized. */
 	float3 TransformDir(const float3 &directionVector) const;
 	float3 TransformDir(float x, float y, float z) const;
-	float4 TransformDir(const float4 &vector) const { return Transform(vector); }
 
 	/// Transforms the given 4-vector by this matrix M, i.e. returns M * (x, y, z, w).
 	/// Does not perform a perspective divide afterwards, so remember to divide by w afterwards
 	/// at some point, if this matrix contained a projection.
 	float4 Transform(const float4 &vector) const;
 
-	/// Performs a batch transform of the given array of point vectors.
-	/** The suffix "Pos" in this function just means that the w components of each input vector are assumed to be 1, i.e. the
-		input vectors represent points (positions).
-		@param strideBytes If specified, represents the distance in bytes between subsequent vector elements. If stride is not
-			specified, the vectors are assumed to be tightly packed in memory. */
+	/// Performs a batch transform of the given point vector array.
 	void TransformPos(float3 *pointArray, int numPoints) const;
+
+	/// Performs a batch transform of the given point vector array.
 	void TransformPos(float3 *pointArray, int numPoints, int strideBytes) const;
 
-	/// Performs a batch transform of the given array of direction vectors.
-	/** The suffix "Dir" in this function just means that the w components of each input vector are assumed to be 0, i.e. the
-		input vectors represent directions. The input vectors do not need to be normalized.
-		@param strideBytes If specified, represents the distance in bytes between subsequent vector elements. If stride is not
-			specified, the vectors are assumed to be tightly packed in memory. */
+	/// Performs a batch transform of the given direction vector array.
 	void TransformDir(float3 *dirArray, int numVectors) const;
+
+	/// Performs a batch transform of the given direction vector array.
 	void TransformDir(float3 *dirArray, int numVectors, int strideBytes) const;
 
 	/// Performs a batch transform of the given float4 array.
-	/** @param strideBytes If specified, represents the distance in bytes between subsequent vector elements. If stride is not
-			specified, the vectors are assumed to be tightly packed in memory. */
 	void Transform(float4 *vectorArray, int numVectors) const;
+
+	/// Performs a batch transform of the given float4 array.
 	void Transform(float4 *vectorArray, int numVectors, int strideBytes) const;
 
 	/// Treats the float3x3 as a 4-by-4 matrix with the last row and column as identity, and multiplies the two matrices.
@@ -879,7 +851,6 @@ public:
 #ifdef MATH_ENABLE_STL_SUPPORT
 	/// Returns a string representation of form "(m00, m01, m02, m03; m10, m11, m12, m13; ... )".
 	std::string ToString() const;
-	std::string SerializeToString() const;
 
 	std::string ToString2() const;
 #endif
@@ -928,13 +899,11 @@ public:
 	void Decompose(float3 &translate, float3x4 &rotate, float3 &scale) const;
 	void Decompose(float3 &translate, float4x4 &rotate, float3 &scale) const;
 
-	/// Computes a new matrix with each element of this matrix replaced with their absolute value.
-	float4x4 Abs() const;
-
 #ifdef MATH_OGRE_INTEROP
 	float4x4(const Ogre::Matrix4 &m) { Set(&m[0][0]); }
 	operator Ogre::Matrix4() { return Ogre::Matrix4(v[0][0], v[0][1], v[0][2], v[0][3], v[1][0], v[1][1], v[1][2], v[1][3], v[2][0], v[2][1], v[2][2], v[2][3], v[3][0], v[3][1], v[3][2], v[3][3]); }
 #endif
+
 #ifdef MATH_QT_INTEROP
 	float4x4(const QMatrix4x4 &m) { Set(m(0,0), m(0,1), m(0,2), m(0,3), m(1,0), m(1,1), m(1,2), m(1,3), m(2,0), m(2,1), m(2,2), m(2,3), m(3,0), m(3,1), m(3,2), m(3,3)); }
 	operator QMatrix4x4() const { return QMatrix4x4(v[0][0], v[0][1], v[0][2], v[0][3], v[1][0], v[1][1], v[1][2], v[1][3], v[2][0], v[2][1], v[2][2], v[2][3], v[3][0], v[3][1], v[3][2], v[3][3]); }
@@ -943,19 +912,13 @@ public:
 	QMatrix4x4 ToQMatrix4x4() const { return (QMatrix4x4)*this; }
 	static float4x4 FromQMatrix4x4(const QMatrix4x4 &m) { return (float4x4)m; }
 #endif
-#ifdef MATH_URHO3D_INTEROP
-	float4x4(const Urho3D::Matrix4 &m) { Set(m.m00_, m.m01_, m.m02_, m.m03_, m.m10_, m.m11_, m.m12_, m.m13_, m.m20_, m.m21_, m.m22_, m.m23_, m.m30_, m.m31_, m.m32_, m.m33_); }
-	operator Urho3D::Matrix4() { return Urho3D::Matrix4(ptr()); }
-#endif
 
 	float4x4 Mul(const float3x3 &rhs) const;
 	float4x4 Mul(const float3x4 &rhs) const;
 	float4x4 Mul(const float4x4 &rhs) const;
 	float4x4 Mul(const Quat &rhs) const;
 	float3 MulPos(const float3 &pointVector) const;
-	inline float4 MulPos(const float4 &pointVector) const { assume(!EqualAbs(pointVector.w, 0.f)); return Mul(pointVector); }
 	float3 MulDir(const float3 &directionVector) const;
-	inline float4 MulDir(const float4 &directionVector) const { assume(EqualAbs(directionVector.w, 0.f)); return Mul(directionVector); }
 	float4 Mul(const float4 &vector) const;
 };
 

@@ -32,13 +32,14 @@ float TriangleMesh::IntersectRay_TriangleIndex_UV_AVX(const Ray &ray, int &outTr
 //	TRACESTART(RayTriMeshIntersectAVX);
 
 	assert(sizeof(float3) == 3*sizeof(float));
-	assert(sizeof(Triangle) == 3*sizeof(vec));
+	assert(sizeof(Triangle) == 3*sizeof(float3));
 #ifdef _DEBUG
 	assert(vertexDataLayout == 2); // Must be SoA8 structured!
 #endif
 
 //	hitTriangleIndex = -1;
 //	float3 pt;
+	const float inf = FLOAT_INF;
 	__m256 nearestD = _mm256_set1_ps(inf);
 #ifdef MATH_GEN_UV
 	__m256 nearestU = _mm256_set1_ps(inf);
@@ -174,32 +175,41 @@ float TriangleMesh::IntersectRay_TriangleIndex_UV_AVX(const Ray &ray, int &outTr
 		tris += 72;
 	}
 
-	float ds[8];
-	_mm256_store_ps(ds, nearestD);
+	float ds[32];
+	float *alignedDS = (float*)(((uintptr_t)ds + 0x1F) & ~0x1F);
+
 #ifdef MATH_GEN_UV
-	float su[8];
-	float sv[8];
-	_mm256_storeu_ps(su, nearestU);
-	_mm256_storeu_ps(sv, nearestV);
+	float su[32];
+	float *alignedU = (float*)(((uintptr_t)su + 0x1F) & ~0x1F);
+
+	float sv[32];
+	float *alignedV = (float*)(((uintptr_t)sv + 0x1F) & ~0x1F);
+
+	_mm256_store_ps(alignedU, nearestU);
+	_mm256_store_ps(alignedV, nearestV);
 #endif
 
 #ifdef MATH_GEN_TRIANGLEINDEX
-	u32 ds2[8];
-	_mm256_storeu_si256((__m256i*)ds2, nearestIndex);
+	u32 ds2[32];
+	u32 *alignedDS2 = (u32*)(((uintptr_t)ds2 + 0x1F) & ~0x1F);
+
+	_mm256_store_si256((__m256i*)alignedDS2, nearestIndex);
 #endif
+
+	_mm256_store_ps(alignedDS, nearestD);
 
 	float smallestT = FLOAT_INF;
 //	float u = FLOAT_NAN, v = FLOAT_NAN;
 	for(int i = 0; i < 8; ++i)
-		if (ds[i] < smallestT)
+		if (alignedDS[i] < smallestT)
 		{
-			smallestT = ds[i];
+			smallestT = alignedDS[i];
 #ifdef MATH_GEN_TRIANGLEINDEX
-			outTriangleIndex = ds2[i]+i;
+			outTriangleIndex = alignedDS2[i]+i;
 #endif
 #ifdef MATH_GEN_UV
-			outU = su[i];
-			outV = sv[i];
+			outU = alignedU[i];
+			outV = alignedV[i];
 #endif
 		}
 

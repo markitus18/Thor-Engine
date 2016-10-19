@@ -17,11 +17,12 @@
 	@brief Global compilation defines. */
 #pragma once
 
-#include <sstream>
 #include "../MathBuildConfig.h"
 #include "MathNamespace.h"
 #include <stdio.h>
+#ifdef WIN32
 #include "myassert.h"
+#endif
 #include "MathLog.h"
 
 #ifndef MARK_UNUSED
@@ -64,56 +65,6 @@ bool MathBreakOnAssume();
 /// Returns the current state of the math break-on-assume flag.
 bool AssumeFailed();
 
-template<typename T>
-inline std::string ObjToString(const T &obj)
-{
-	return obj.ToString();
-}
-/*
-template<>
-inline std::string ObjToString<const char*>(const char * const & obj)
-{
-	return obj;
-}
-*/
-template<>
-inline std::string ObjToString<std::string>(const std::string &obj)
-{
-	return obj;
-}
-
-template<>
-inline std::string ObjToString<float>(const float &obj)
-{
-	std::stringstream ss;
-	ss << obj;
-	return ss.str();
-}
-
-template<>
-inline std::string ObjToString<int>(const int &obj)
-{
-	std::stringstream ss;
-	ss << obj;
-	return ss.str();
-}
-
-template<>
-inline std::string ObjToString<bool>(const bool &obj)
-{
-	std::stringstream ss;
-	ss << obj;
-	return ss.str();
-}
-
-template<>
-inline std::string ObjToString<u32>(const u32 &obj)
-{
-	std::stringstream ss;
-	ss << obj;
-	return ss.str();
-}
-
 MATH_END_NAMESPACE
 
 // If MATH_ENABLE_INSECURE_OPTIMIZATIONS is defined, all input data is assumed to be correct and will
@@ -122,65 +73,38 @@ MATH_END_NAMESPACE
 // e.g. with out-of-bounds accesses.
 //#define MATH_ENABLE_INSECURE_OPTIMIZATIONS
 
-#ifdef FAIL_USING_EXCEPTIONS
-#include <stdexcept>
-#define assume_failed(message) throw std::runtime_error((message))
-#elif defined(MATH_ASSERT_ON_ASSUME)
+#ifdef MATH_ASSERT_ON_ASSUME
 #define assume(x) assert(x)
-#define assume_failed(message) assert(false && #message)
 #elif defined(MATH_SILENT_ASSUME)
 #define assume(x) ((void)0)
-#define assume_failed(message) ((void)0)
-#else
-#define assume_failed(message) LOGE("Assumption \"%s\" failed! in file %s, line %d!", message, __FILE__, __LINE__)
-#endif
+#elif defined(FAIL_USING_EXCEPTIONS)
 
-#ifndef assume
+#include <stdexcept>
+
 #define assume(x) \
 	MULTI_LINE_MACRO_BEGIN \
 		if (!(x)) \
-			assume_failed(#x " in " __FILE__ ":" STRINGIZE(__LINE__)); \
+			throw std::runtime_error(#x); \
 	MULTI_LINE_MACRO_END
+
+#elif defined(_MSC_VER)
+
+#define assume(x) (void)((!!(x)) || ( printf("Assumption \"%s\" failed! in file %s, line %d!\n", #x, __FILE__, __LINE__) && MATH_NS::AssumeFailed()) )
+
+#elif defined(ANDROID)
+
+#include <android/log.h>
+#define assume(x) do { if (!(x)) { __android_log_print(ANDROID_LOG_ERROR, "native-activity", "Assumption \"%s\" failed! in file %s, line %d!\n", #x, __FILE__, __LINE__); } } while(0)
+#ifdef assert
+#undef assert
 #endif
+#define assert(x) do { if (!(x)) { __android_log_print(ANDROID_LOG_ERROR, "native-activity", "Assertion \"%s\" failed! in file %s, line %d!\n", #x, __FILE__, __LINE__); } } while(0)
 
-// In assume1-assume4, print1-print4 are additional helper parameters that get printed out to log in case of failure.
-#define assume1(x, print1) \
-	MULTI_LINE_MACRO_BEGIN \
-		if (!(x)) \
-			assume_failed(((#x ", " #print1 ": ") + MATH_NS::ObjToString(print1) + \
-			                  (" in " __FILE__ ":" STRINGIZE(__LINE__))).c_str()); \
-	MULTI_LINE_MACRO_END
-#define assert1 assume1
+#else // All other platforms
 
-#define assume2(x, print1, print2) \
-	MULTI_LINE_MACRO_BEGIN \
-		if (!(x)) \
-			assume_failed(((#x ", " #print1 ": ") + MATH_NS::ObjToString(print1) + \
-			                  (", " #print2 ": ") + MATH_NS::ObjToString(print2) + \
-			                  (" in " __FILE__ ":" STRINGIZE(__LINE__))).c_str()); \
-	MULTI_LINE_MACRO_END
-#define assert2 assume2
+#define assume(x) do { if (!(x)) { printf("Assumption \"%s\" failed! in file %s, line %d!\n", #x, __FILE__, __LINE__); } } while(0)
 
-#define assume3(x, print1, print2, print3) \
-	MULTI_LINE_MACRO_BEGIN \
-		if (!(x)) \
-			assume_failed(((#x ", " #print1 ": ") + MATH_NS::ObjToString(print1) + \
-			                  (", " #print2 ": ") + MATH_NS::ObjToString(print2) + \
-			                  (", " #print3 ": ") + MATH_NS::ObjToString(print3) + \
-			                  (" in " __FILE__ ":" STRINGIZE(__LINE__))).c_str()); \
-	MULTI_LINE_MACRO_END
-#define assert3 assume3
-
-#define assume4(x, print1, print2, print3, print4) \
-	MULTI_LINE_MACRO_BEGIN \
-		if (!(x)) \
-			assume_failed(((#x ", " #print1 ": ") + MATH_NS::ObjToString(print1) + \
-			                  (", " #print2 ": ") + MATH_NS::ObjToString(print2) + \
-			                  (", " #print3 ": ") + MATH_NS::ObjToString(print3) + \
-			                  (", " #print4 ": ") + MATH_NS::ObjToString(print4) + \
-			                  (" in " __FILE__ ":" STRINGIZE(__LINE__))).c_str()); \
-	MULTI_LINE_MACRO_END
-#define assert4 assume4
+#endif
 
 // If MATH_ASSERT_CORRECTNESS is defined, the function mathassert() is enabled to test
 // that all forms of optimizations inside the math library produce proper results.

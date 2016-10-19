@@ -18,16 +18,14 @@
 #include "Circle.h"
 #include "Plane.h"
 #include "../Math/MathFunc.h"
-#include "../Math/float2.h"
 #include "../Math/float3x3.h"
-#include "../Math/float3x4.h"
-#include "../Math/float4x4.h"
 #include "../Math/Quat.h"
 #include "Ray.h"
 #include "AABB.h"
 #include "OBB.h"
 #include "LineSegment.h"
 #include "Line.h"
+#include "../Algorithm/Random/LCG.h"
 
 #ifdef MATH_ENABLE_STL_SUPPORT
 #include <iostream>
@@ -35,40 +33,36 @@
 
 MATH_BEGIN_NAMESPACE
 
-Circle::Circle(const vec &center, const vec &n, float radius)
+Circle::Circle(const float3 &center, const float3 &n, float radius)
 :pos(center),
 normal(n),
 r(radius)
 {
 }
 
-vec Circle::BasisU() const
+float3 Circle::BasisU() const
 {
 	return normal.Perpendicular();
 }
 
-vec Circle::BasisV() const
+float3 Circle::BasisV() const
 {
 	return normal.AnotherPerpendicular();
 }
 
-vec Circle::GetPoint(float angleRadians) const
+float3 Circle::GetPoint(float angleRadians) const
 {
-	float sin, cos;
-	SinCos(angleRadians, sin, cos);
-	return pos + r * (sin * BasisU() + cos * BasisV());
+	return pos + r * (Cos(angleRadians) * BasisU() + Sin(angleRadians) * BasisV());
 }
 
-vec Circle::GetPoint(float angleRadians, float d) const
+float3 Circle::GetPoint(float angleRadians, float d) const
 {
-	float sin, cos;
-	SinCos(angleRadians, sin, cos);
-	return pos + r * d * (cos * BasisU() + sin * BasisV());
+	return pos + r * d * (Cos(angleRadians) * BasisU() + Sin(angleRadians) * BasisV());
 }
 
-vec Circle::ExtremePoint(const vec &direction) const
+float3 Circle::ExtremePoint(const float3 &direction) const
 {
-	vec d = direction - direction.ProjectToNorm(normal);
+	float3 d = direction - direction.ProjectToNorm(normal);
 	if (d.IsZero())
 		return pos;
 	else
@@ -80,7 +74,13 @@ Plane Circle::ContainingPlane() const
 	return Plane(pos, normal);
 }
 
-void Circle::Translate(const vec &offset)
+float3 Circle::RandomPointInside(LCG & rng) const
+{
+	assume(r > 1e-3f);
+	return GetPoint(rng.Float(-pi, pi));
+}
+
+void Circle::Translate(const float3 &offset)
 {
 	pos += offset;
 }
@@ -118,26 +118,26 @@ void Circle::Transform(const Quat &transform)
 	normal = transform.Mul(normal);
 }
 
-bool Circle::EdgeContains(const vec &point, float maxDistance) const
+bool Circle::EdgeContains(const float3 &point, float maxDistance) const
 {
 	return DistanceToEdge(point) <= maxDistance;
 }
 /*
-bool Circle::DiscContains(const vec &point, float maxDistance) const
+bool Circle::DiscContains(const float3 &point, float maxDistance) const
 {
 	return DistanceToDisc(point) <= maxDistance;
 }
 
 */
-float Circle::DistanceToEdge(const vec &point) const
+float Circle::DistanceToEdge(const float3 &point) const
 {
 	return ClosestPointToEdge(point).Distance(point);
 }
 /*
-float Circle::DistanceToEdge(const Ray &ray, float *d, vec *closestPoint) const
+float Circle::DistanceToEdge(const Ray &ray, float *d, float3 *closestPoint) const
 {
 	float t;
-	vec cp = ClosestPointToEdge(ray, &t);
+	float3 cp = ClosestPointToEdge(ray, &t);
 	if (closestPoint)
 		*closestPoint = cp;
 	if (d)
@@ -145,10 +145,10 @@ float Circle::DistanceToEdge(const Ray &ray, float *d, vec *closestPoint) const
 	return cp.Distance(ray.GetPoint(t));
 }
 
-float Circle::DistanceToEdge(const LineSegment &lineSegment, float *d, vec *closestPoint) const
+float Circle::DistanceToEdge(const LineSegment &lineSegment, float *d, float3 *closestPoint) const
 {
 	float t;
-	vec cp = ClosestPointToEdge(lineSegment, &t);
+	float3 cp = ClosestPointToEdge(lineSegment, &t);
 	if (closestPoint)
 		*closestPoint = cp;
 	if (d)
@@ -156,10 +156,10 @@ float Circle::DistanceToEdge(const LineSegment &lineSegment, float *d, vec *clos
 	return cp.Distance(lineSegment.GetPoint(t));
 }
 
-float Circle::DistanceToEdge(const Line &line, float *d, vec *closestPoint) const
+float Circle::DistanceToEdge(const Line &line, float *d, float3 *closestPoint) const
 {
 	float t;
-	vec cp = ClosestPointToEdge(line, &t);
+	float3 cp = ClosestPointToEdge(line, &t);
 	if (closestPoint)
 		*closestPoint = cp;
 	if (d)
@@ -167,24 +167,24 @@ float Circle::DistanceToEdge(const Line &line, float *d, vec *closestPoint) cons
 	return cp.Distance(line.GetPoint(t));
 }
 */
-float Circle::DistanceToDisc(const vec &point) const
+float Circle::DistanceToDisc(const float3 &point) const
 {
 	return ClosestPointToDisc(point).Distance(point);
 }
 
-vec Circle::ClosestPointToEdge(const vec &point) const
+float3 Circle::ClosestPointToEdge(const float3 &point) const
 {
-	vec pointOnPlane = ContainingPlane().Project(point);
-	vec diff = pointOnPlane - pos;
+	float3 pointOnPlane = ContainingPlane().Project(point);
+	float3 diff = pointOnPlane - pos;
 	if (diff.IsZero())
 		return GetPoint(0); // The point is in the center of the circle, all points are equally close.
 	return pos + diff.ScaledToLength(r);
 }
 
-vec Circle::ClosestPointToDisc(const vec &point) const
+float3 Circle::ClosestPointToDisc(const float3 &point) const
 {
-	vec pointOnPlane = ContainingPlane().Project(point);
-	vec diff = pointOnPlane - pos;
+	float3 pointOnPlane = ContainingPlane().Project(point);
+	float3 diff = pointOnPlane - pos;
 	float dist = diff.LengthSq();
 	if (dist > r*r)
 		diff = diff * (r / Sqrt(dist));
@@ -192,7 +192,7 @@ vec Circle::ClosestPointToDisc(const vec &point) const
 	return pos + diff;
 }
 
-int Circle::Intersects(const Plane &plane, vec *pt1, vec *pt2) const
+int Circle::Intersects(const Plane &plane, float3 *pt1, float3 *pt2) const
 {
 	return plane.Intersects(*this, pt1, pt2);
 }
@@ -230,18 +230,18 @@ bool Circle::IntersectsDisc(const Ray &ray) const
 }
 
 #ifdef MATH_ENABLE_STL_SUPPORT
-VecArray Circle::IntersectsFaces(const AABB &aabb) const
+std::vector<float3> Circle::IntersectsFaces(const AABB &aabb) const
 {
     return IntersectsFaces(aabb.ToOBB());
 }
 
-VecArray Circle::IntersectsFaces(const OBB &obb) const
+std::vector<float3> Circle::IntersectsFaces(const OBB &obb) const
 {
-	VecArray intersectionPoints;
+	std::vector<float3> intersectionPoints;
 	for(int i = 0; i < 6; ++i)
 	{		
 		Plane p = obb.FacePlane(i);
-		vec pt1, pt2;
+		float3 pt1, pt2;
 		int numIntersections = Intersects(p, &pt1, &pt2);
 		if (numIntersections >= 1 && obb.Contains(pt1))
 			intersectionPoints.push_back(pt1);
@@ -254,7 +254,7 @@ VecArray Circle::IntersectsFaces(const OBB &obb) const
 std::string Circle::ToString() const
 {
 	char str[256];
-	sprintf(str, "Circle(pos:(%.2f, %.2f, %.2f) normal:(%.2f, %.2f, %.2f), r:%.2f)",
+	sprintf_s(str, 256, "Circle(pos:(%.2f, %.2f, %.2f) normal:(%.2f, %.2f, %.2f), r:%.2f)",
 		pos.x, pos.y, pos.z, normal.x, normal.y, normal.z, r);
 	return str;
 }

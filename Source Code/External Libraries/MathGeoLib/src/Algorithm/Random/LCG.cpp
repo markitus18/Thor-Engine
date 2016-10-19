@@ -48,28 +48,20 @@ LCG::LCG()
 	- RANDU                               mul = 65539                   mod = 2^31  */
 void LCG::Seed(u32 seed, u32 mul, u32 inc, u32 mod)
 {
-	if (seed == 0 && inc == 0) seed = 1; // If we have a pure multiplicative LCG, then can't have 0 starting seed, since that would generate a stream of all zeros.
-#ifndef MATH_SILENT_ASSUME
-	if (inc == 0 && (mul % mod == 0 || mod % mul == 0))
-		LOGW("Warning: Multiplier %u and modulus %u are not compatible since one is a multiple of the other and the increment == 0!", mul, mod);
-#endif
-	assume(mul != 0);
-	assume(mod > 1);
+	assume((seed != 0 || inc != 0) && "Initializing LCG with seed=0 && inc=0 results in an infinite series of 0s!");
 
 	lastNumber = seed;
 	multiplier = mul;
 	increment = inc;
 	modulus = mod;
+	assert(modulus != 0);
 }
 
 u32 LCG::IntFast()
 {
-	assert(increment == 0);
-	assert(multiplier % 2 == 1 && "Multiplier should be odd for LCG::IntFast(), since modulus==2^32 is even!");
 // The configurable modulus and increment are not used by this function.
 	u32 mul = lastNumber * multiplier;
-	lastNumber = mul + (mul <= lastNumber?1:0); // Whenever we overflow, flip by one to avoid even multiplier always producing even results, since modulus is even.
-	assert(lastNumber != 0); // We don't use an adder in IntFast(), so must never degenerate to zero.
+	lastNumber = mul - (mul <= lastNumber?1:0); // Whenever we overflow, flip by one to avoid even multiplier always producing even results, since modulus is even.
 	return lastNumber;
 }
 
@@ -94,7 +86,6 @@ u32 LCG::Int()
 //#endif
 	// Save the newly generated random number to use as seed for the next one.
 //	lastNumber = m;//(u32)newNum;
-	assert4((((u32)newNum) != 0 || increment != 0) && "LCG degenerated to producing a stream of zeroes!", lastNumber, multiplier, increment, modulus);
 	lastNumber = (u32)newNum;
 	return lastNumber;
 }
@@ -120,8 +111,6 @@ float LCG::Float()
 	u32 i = ((u32)Int() & 0x007FFFFF /* random mantissa */) | 0x3F800000 /* fixed exponent */;
 	float f = ReinterpretAsFloat(i); // f is now in range [1, 2[
 	f -= 1.f; // Map to range [0, 1[
-	assert1(f >= 0.f, f);
-	assert1(f < 1.f, f);
 	return f;
 }
 
@@ -137,10 +126,7 @@ float LCG::Float01Incl()
 		else
 		{
 			val |= 0x3F800000;
-			float f = ReinterpretAsFloat(val) - 1.f;
-			assert1(f >= 0.f, f);
-			assert1(f <= 1.f, f);
-			return f;
+			return ReinterpretAsFloat(val) - 1.f;
 		}
 	}
 	return Float();
@@ -153,40 +139,14 @@ float LCG::FloatNeg1_1()
 	i = one | (i & 0x007FFFFF) /* random mantissa */;
 	float f = ReinterpretAsFloat(i); // f is now in range ]-2, -1[ union [1, 2].
 	float fone = ReinterpretAsFloat(one); // +/- 1, of same sign as f.
-	f -= fone;
-	assert1(f > -1.f, f);
-	assert1(f < 1.f, f);
-	return f;
+	return f - fone;
 }
 
 float LCG::Float(float a, float b)
 {
 	assume(a <= b && "LCG::Float(a,b): Error in range: b < a!");
 
-	if (a == b)
-		return a;
-
-	for(int i = 0; i < 10; ++i)
-	{
-		float f = a + Float() * (b-a);
-		if (f != b)
-		{
-			assume2(a <= f, a, b);
-			assume2(f < b || a == b, f, b);
-			return f;
-		}
-	}
-	return a;
-}
-
-float LCG::FloatIncl(float a, float b)
-{
-	assume(a <= b && "LCG::Float(a,b): Error in range: b < a!");
-
-	float f = a + Float() * (b-a);
-	assume2(a <= f, a, b);
-	assume2(f <= b, f, b);
-	return f;
+	return Float()*(b-a)+a;
 }
 
 MATH_END_NAMESPACE

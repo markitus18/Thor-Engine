@@ -40,6 +40,7 @@ float TriangleMesh::IntersectRay_TriangleIndex_UV_SSE41(const Ray &ray, int &out
 	assert(vertexDataLayout == 1); // Must be SoA4 structured!
 #endif
 	
+	const float inf = FLOAT_INF;
 	__m128 nearestD = _mm_set1_ps(inf);
 #ifdef MATH_GEN_UV
 	__m128 nearestU = _mm_set1_ps(inf);
@@ -206,26 +207,41 @@ float TriangleMesh::IntersectRay_TriangleIndex_UV_SSE41(const Ray &ray, int &out
 		tris += 36;
 	}
 
-	float4 d = nearestD;
+	float ds[16];
+	float *alignedDS = (float*)(((uintptr_t)ds + 0xF) & ~0xF);
+
 #ifdef MATH_GEN_UV
-	float4 u = nearestU;
-	float4 v = nearestV;
+	float su[16];
+	float *alignedU = (float*)(((uintptr_t)su + 0xF) & ~0xF);
+
+	float sv[16];
+	float *alignedV = (float*)(((uintptr_t)sv + 0xF) & ~0xF);
+
+	_mm_store_ps(alignedU, nearestU);
+	_mm_store_ps(alignedV, nearestV);
 #endif
+
 #ifdef MATH_GEN_TRIANGLEINDEX
-	u32 idx[4];
-	_mm_store_si128((__m128i*)idx, nearestIndex);
+	u32 ds2[16];
+	u32 *alignedDS2 = (u32*)(((uintptr_t)ds2 + 0xF) & ~0xF);
+
+	_mm_store_si128((__m128i*)alignedDS2, nearestIndex);
 #endif
+
+	_mm_store_ps(alignedDS, nearestD);
+
 	float smallestT = FLOAT_INF;
+//	float u = FLOAT_NAN, v = FLOAT_NAN;
 	for(int i = 0; i < 4; ++i)
-		if (d[i] < smallestT)
+		if (alignedDS[i] < smallestT)
 		{
-			smallestT = d[i];
+			smallestT = alignedDS[i];
 #ifdef MATH_GEN_TRIANGLEINDEX
-			outTriangleIndex = idx[i]+i;
+			outTriangleIndex = alignedDS2[i]+i;
 #endif
 #ifdef MATH_GEN_UV
-			outU = u[i];
-			outV = v[i];
+			outU = alignedU[i];
+			outV = alignedV[i];
 #endif
 		}
 

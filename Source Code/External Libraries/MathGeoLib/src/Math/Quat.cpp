@@ -30,10 +30,6 @@
 #include "quat_simd.h"
 #include "float4_neon.h"
 
-#ifdef MATH_AUTOMATIC_SSE
-#include "sse_mathfun.h"
-#endif
-
 #ifdef MATH_ENABLE_STL_SUPPORT
 #include <iostream>
 #endif
@@ -41,81 +37,71 @@
 MATH_BEGIN_NAMESPACE
 
 Quat::Quat(const float *data)
+:x(data[0]),
+y(data[1]),
+z(data[2]),
+w(data[3])
 {
-	assume(data);
-#ifndef MATH_ENABLE_INSECURE_OPTIMIZATIONS
-	if (!data)
-		return;
-#endif
-#if defined(MATH_AUTOMATIC_SSE)
-	q = loadu_ps(data);
-#else
-	x = data[0];
-	y = data[1];
-	z = data[2];
-	w = data[3];
-#endif
+}
+
+Quat::Quat(const float3x3 &rotationMatrix)
+{
+	Set(rotationMatrix);
+}
+
+Quat::Quat(const float3x4 &rotationMatrix)
+{
+	Set(rotationMatrix);
+}
+
+Quat::Quat(const float4x4 &rotationMatrix)
+{
+	Set(rotationMatrix);
 }
 
 Quat::Quat(float x_, float y_, float z_, float w_)
-#if !defined(MATH_AUTOMATIC_SSE)
 :x(x_), y(y_), z(z_), w(w_)
-#endif
 {
-#if defined(MATH_AUTOMATIC_SSE)
-	q = set_ps(w_, z_, y_, x_);
-#endif
 }
 
-vec Quat::WorldX() const
+Quat::Quat(const float3 &rotationAxis, float rotationAngle)
 {
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SIMD)
-	return FLOAT4_TO_DIR(quat_transform_vec4(q, float4::unitX));
-#else
-	return DIR_VEC(this->Transform(1.f, 0.f, 0.f));
-#endif
+	SetFromAxisAngle(rotationAxis, rotationAngle);
 }
 
-vec Quat::WorldY() const
+float3 Quat::WorldX() const
 {
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SIMD)
-	return FLOAT4_TO_DIR(quat_transform_vec4(q, float4::unitY));
-#else
-	return DIR_VEC(this->Transform(0.f, 1.f, 0.f));
-#endif
-}
-
-vec Quat::WorldZ() const
-{
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SIMD)
-	return FLOAT4_TO_DIR(quat_transform_vec4(q, float4::unitZ));
-#else
-	return DIR_VEC(this->Transform(0.f, 0.f, 1.f));
-#endif
-}
-
-vec Quat::Axis() const
-{
-	assume2(this->IsNormalized(), *this, this->Length());
 #if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
-	// Best: 6.145 nsecs / 16.88 ticks, Avg: 6.367 nsecs, Worst: 6.529 nsecs
-	assume2(this->IsNormalized(), *this, this->Length());
-	simd4f cosAngle = wwww_ps(q);
-	simd4f rcpSinAngle = rsqrt_ps(sub_ps(set1_ps(1.f), mul_ps(cosAngle, cosAngle)));
-	simd4f a = mul_ps(q, rcpSinAngle);
-
-	// Set the w component to zero.
-	simd4f highPart = _mm_unpackhi_ps(a, zero_ps()); // [_ _ 0 z]
-	a = _mm_movelh_ps(a, highPart); // [0 z y x]
-	return FLOAT4_TO_DIR(a);
+	return float4(quat_transform_vec4(q, float4::unitX)).xyz();
 #else
-	// Best: 6.529 nsecs / 18.152 ticks, Avg: 6.851 nsecs, Worst: 8.065 nsecs
-
-	// Convert cos to sin via the identity sin^2 + cos^2 = 1, and fuse reciprocal and square root to the same instruction,
-	// since we are about to divide by it.
-	float rcpSinAngle = RSqrt(1.f - w*w);
-	return DIR_VEC(x, y, z) * rcpSinAngle;
+	return this->Transform(1.f, 0.f, 0.f);
 #endif
+}
+
+float3 Quat::WorldY() const
+{
+#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
+	return float4(quat_transform_vec4(q, float4::unitY)).xyz();
+#else
+	return this->Transform(0.f, 1.f, 0.f);
+#endif
+}
+
+float3 Quat::WorldZ() const
+{
+#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
+	return float4(quat_transform_vec4(q, float4::unitZ)).xyz();
+#else
+	return this->Transform(0.f, 0.f, 1.f);
+#endif
+}
+
+float3 Quat::Axis() const
+{
+	float3 axis;
+	float angle;
+	ToAxisAngle(axis, angle);
+	return axis;
 }
 
 float Quat::Angle() const
@@ -152,15 +138,7 @@ float Quat::Length() const
 
 float Quat::Normalize()
 {
-#ifdef MATH_AUTOMATIC_SSE
-	simd4f lenSq = vec4_length_sq_ps(q);
-	simd4f len = rsqrt_ps(lenSq);
-	simd4f isZero = cmplt_ps(lenSq, simd4fEpsilon); // Was the length zero?
-	simd4f normalized = mul_ps(q, len); // Normalize.
-	q = cmov_ps(normalized, float4::unitX.v, isZero); // If length == 0, output the vector (1,0,0,0).
-	len = cmov_ps(len, zero_ps(), isZero); // If length == 0, output zero as length.
-	return s4f_x(len);
-#else
+	///\todo SSE.
 	float length = Length();
 	if (length < 1e-4f)
 		return 0.f;
@@ -170,25 +148,20 @@ float Quat::Normalize()
 	z *= rcpLength;
 	w *= rcpLength;
 	return length;
-#endif
 }
 
 Quat Quat::Normalized() const
 {
-#ifdef MATH_AUTOMATIC_SSE
-	return Quat(vec4_normalize(q));
-#else
 	Quat copy = *this;
 	float success = copy.Normalize();
 	assume(success > 0 && "Quat::Normalized failed!");
 	MARK_UNUSED(success);
 	return copy;
-#endif
 }
 
-bool Quat::IsNormalized(float epsilonSq) const
+bool Quat::IsNormalized(float epsilon) const
 {
-	return EqualAbs(LengthSq(), 1.f, epsilonSq);
+	return EqualAbs(LengthSq(), 1.f, epsilon);
 }
 
 bool Quat::IsInvertible(float epsilon) const
@@ -206,12 +179,14 @@ bool Quat::Equals(const Quat &rhs, float epsilon) const
 	return EqualAbs(x, rhs.x, epsilon) && EqualAbs(y, rhs.y, epsilon) && EqualAbs(z, rhs.z, epsilon) && EqualAbs(w, rhs.w, epsilon);
 }
 
-bool Quat::BitEquals(const Quat &other) const
+float *Quat::ptr()
 {
-	return ReinterpretAsU32(x) == ReinterpretAsU32(other.x) &&
-		ReinterpretAsU32(y) == ReinterpretAsU32(other.y) &&
-		ReinterpretAsU32(z) == ReinterpretAsU32(other.z) &&
-		ReinterpretAsU32(w) == ReinterpretAsU32(other.w);
+	return &x;
+}
+
+const float *Quat::ptr() const
+{
+	return &x;
 }
 
 void Quat::Inverse()
@@ -237,7 +212,7 @@ float Quat::InverseAndNormalize()
 void Quat::Conjugate()
 {
 #ifdef MATH_AUTOMATIC_SSE
-	q = neg3_ps(q);
+	q = negate3_ps(q);
 #else
 	x = -x;
 	y = -y;
@@ -248,7 +223,7 @@ void Quat::Conjugate()
 Quat MUST_USE_RESULT Quat::Conjugated() const
 {
 #ifdef MATH_AUTOMATIC_SSE
-	return neg3_ps(q);
+	return negate3_ps(q);
 #else
 	return Quat(-x, -y, -z, w);
 #endif
@@ -256,9 +231,10 @@ Quat MUST_USE_RESULT Quat::Conjugated() const
 
 float3 MUST_USE_RESULT Quat::Transform(const float3 &vec) const
 {
-	assume2(this->IsNormalized(), *this, this->LengthSq());
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SIMD)
-	return float4(quat_transform_vec4(q, load_vec3(vec.ptr(), 0.f))).xyz();
+	assume(this->IsNormalized());
+#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
+	///\todo Check the generation of temporaries here!
+	return float4(quat_transform_vec4(q, float4(vec,0.f).v)).xyz();
 #else
 	///\todo Optimize/benchmark the scalar path not to generate a matrix!
 	float3x3 mat = this->ToFloat3x3();
@@ -266,12 +242,13 @@ float3 MUST_USE_RESULT Quat::Transform(const float3 &vec) const
 #endif
 }
 
-float3 MUST_USE_RESULT Quat::Transform(float X, float Y, float Z) const
+float3 MUST_USE_RESULT Quat::Transform(float x, float y, float z) const
 {
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SIMD)
-	return float4(quat_transform_vec4(q, set_ps(0.f, Z, Y, X))).xyz();
+#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
+	///\todo Check the generation of temporaries here!
+	return float4(quat_transform_vec4(q, float4(x,y,z,0.f).v)).xyz();
 #else
-	return Transform(float3(X, Y, Z));
+	return Transform(float3(x, y, z));
 #endif
 }
 
@@ -279,7 +256,7 @@ float4 MUST_USE_RESULT Quat::Transform(const float4 &vec) const
 {
 	assume(vec.IsWZeroOrOne());
 
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SIMD)
+#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
 	return quat_transform_vec4(q, vec);
 #else
 	return float4(Transform(vec.x, vec.y, vec.z), vec.w);
@@ -290,55 +267,26 @@ Quat MUST_USE_RESULT Quat::Lerp(const Quat &b, float t) const
 {
 	assume(0.f <= t && t <= 1.f);
 
-	// TODO: SSE
-	float angle = this->Dot(b);
-	if (angle >= 0.f) // Make sure we rotate the shorter arc.
-		return (*this * (1.f - t) + b * t).Normalized();
-	else
-		return (*this * (t - 1.f) + b * t).Normalized();
+#ifdef MATH_AUTOMATIC_SSE
+	return vec4_lerp(q, b.q, t);
+#else
+	return *this * (1.f - t) + b * t;
+#endif
 }
 
+Quat MUST_USE_RESULT Quat::Lerp(const Quat &a, const Quat &b, float t)
+{
+	return a.Lerp(b, t);
+}
+
+/** Implementation based on the math in the book Watt, Policarpo. 3D Games: Real-time rendering and Software Technology, pp. 383-386. */
 Quat MUST_USE_RESULT Quat::Slerp(const Quat &q2, float t) const
 {
+	///\todo SSE.
 	assume(0.f <= t && t <= 1.f);
 	assume(IsNormalized());
 	assume(q2.IsNormalized());
 
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
-	simd4f angle = dot4_ps(q, q2.q); // <q, q2.q>
-	simd4f neg = cmplt_ps(angle, zero_ps()); // angle < 0?
-	neg = and_ps(neg, set1_ps_hex(0x80000000)); // Convert 0/0xFFFFFFFF mask to a 0x/0x80000000 mask.
-//	neg = s4i_to_s4f(_mm_slli_epi32(s4f_to_s4i(neg), 31)); // A SSE2-esque way to achieve the above would be this, but this seems to clock slower (12.04 clocks vs 11.97 clocks)
-	angle = xor_ps(angle, neg); // if angle was negative, make it positive.
-	simd4f one = set1_ps(1.f);
-	angle = min_ps(angle, one); // If user passed t > 1 or t < -1, clamp the range.
-
-	// Compute a fast polynomial approximation to arccos(angle).
-	// arccos(x): (-0.69813170079773212f * x * x - 0.87266462599716477f) * x + 1.5707963267948966f;
-	angle = madd_ps(msub_ps(mul_ps(set1_ps(-0.69813170079773212f), angle), angle, set1_ps(0.87266462599716477f)), angle, set1_ps(1.5707963267948966f));
-
-	// Shuffle an appropriate vector from 't' and 'angle' for computing two sines in one go.
-	simd4f T = _mm_set_ss(t); // (.., t)
-	simd4f oneSubT = sub_ps(one, T); // (.., 1-t)
-	T = _mm_movelh_ps(T, oneSubT); // (.., 1-t, .., t)
-	angle = mul_ps(angle, T); // (.., (1-t)*angle, .., t*angle)
-
-	// Compute a fast polynomial approximation to sin(t*angle) and sin((1-t)*angle).
-	// Here could use "angle = sin_ps(angle);" for precision, but favor speed instead with the following polynomial expansion:
-	// sin(x): ((5.64311797634681035370e-03 * x * x - 1.55271410633428644799e-01) * x * x + 9.87862135574673806965e-01) * x
-	simd4f angle2 = mul_ps(angle, angle);
-	angle = mul_ps(angle, madd_ps(madd_ps(angle2, set1_ps(5.64311797634681035370e-03f), set1_ps(-1.55271410633428644799e-01f)), angle2, set1_ps(9.87862135574673806965e-01f)));
-
-	// Compute the final lerp factors a and b to scale q and q2.
-	simd4f a = zzzz_ps(angle);
-	simd4f b = xxxx_ps(angle);
-	a = xor_ps(a, neg);
-	a = mul_ps(q, a);
-	a = madd_ps(q2, b, a);
-
-	// The lerp above generates an unnormalized quaternion which needs to be renormalized.
-	return mul_ps(a, rsqrt_ps(dot4_ps(a, a)));
-#else
 	float angle = this->Dot(q2);
 	float sign = 1.f; // Multiply by a sign of +/-1 to guarantee we rotate the shorter arc.
 	if (angle < 0.f)
@@ -349,33 +297,36 @@ Quat MUST_USE_RESULT Quat::Slerp(const Quat &q2, float t) const
 
 	float a;
 	float b;
-	if (angle < 0.999) // perform spherical linear interpolation.
+	if (angle <= 0.97f) // perform spherical linear interpolation.
 	{
-		// angle = Acos(angle); // After this, angle is in the range pi/2 -> 0 as the original angle variable ranged from 0 -> 1.
-		angle = (-0.69813170079773212f * angle * angle - 0.87266462599716477f) * angle + 1.5707963267948966f;
+		angle = Acos(angle); // After this, angle is in the range pi/2 -> 0 as the original angle variable ranged from 0 -> 1.
 
-		float ta = t*angle;
-#ifdef MATH_USE_SINCOS_LOOKUPTABLE
-		// If Sin() is based on a lookup table, prefer that over polynomial approximation.
-		a = Sin(angle - ta);
-		b = Sin(ta);
-#else
-		// Not using a lookup table, manually compute the two sines by using a very rough approximation.
-		float ta2 = ta*ta;
-		b = ((5.64311797634681035370e-03f * ta2 - 1.55271410633428644799e-01f) * ta2 + 9.87862135574673806965e-01f) * ta;
-		a = angle - ta;
-		float a2 = a*a;
-		a = ((5.64311797634681035370e-03f * a2 - 1.55271410633428644799e-01f) * a2 + 9.87862135574673806965e-01f) * a;
-#endif
+		float c = 1.f / Sin(angle);
+		a = Sin((1.f - t) * angle) * c;
+		b = Sin(angle * t) * c;
 	}
 	else // If angle is close to taking the denominator to zero, resort to linear interpolation (and normalization).
 	{
 		a = 1.f - t;
 		b = t;
 	}
-	// Lerp and renormalize.
+	
 	return (*this * (a * sign) + q2 * b).Normalized();
-#endif
+}
+
+Quat MUST_USE_RESULT Quat::Slerp(const Quat &a, const Quat &b, float t)
+{
+	return a.Slerp(b, t);
+}
+
+Quat Lerp(const Quat &a, const Quat &b, float t)
+{
+	return a.Lerp(b, t);
+}
+
+Quat Slerp(const Quat &a, const Quat &b, float t)
+{
+	return a.Slerp(b, t);
 }
 
 float3 MUST_USE_RESULT Quat::SlerpVector(const float3 &from, const float3 &to, float t)
@@ -406,89 +357,45 @@ float3 MUST_USE_RESULT Quat::SlerpVectorAbs(const float3 &from, const float3 &to
 float MUST_USE_RESULT Quat::AngleBetween(const Quat &target) const
 {
 	assume(this->IsInvertible());
-	Quat delta = target / *this;
-	delta.Normalize();
-	return delta.Angle();
+	Quat q = target / *this;
+	return q.Angle();
 }
 
-vec MUST_USE_RESULT Quat::AxisFromTo(const Quat &target) const
+float3 MUST_USE_RESULT Quat::AxisFromTo(const Quat &target) const
 {
 	assume(this->IsInvertible());
-	Quat delta = target / *this;
-	delta.Normalize();
-	return delta.Axis();
+	Quat q = target / *this;
+	return q.Axis();
 }
 
 void Quat::ToAxisAngle(float3 &axis, float &angle) const
 {
-	// Best: 36.868 nsecs / 98.752 ticks, Avg: 37.095 nsecs, Worst: 37.636 nsecs
-	assume2(this->IsNormalized(), *this, this->Length());
-	float halfAngle = Acos(w);
-	angle = halfAngle * 2.f;
-	// Convert cos to sin via the identity sin^2 + cos^2 = 1, and fuse reciprocal and square root to the same instruction,
-	// since we are about to divide by it.
-	float rcpSinAngle = RSqrt(1.f - w*w);
-	axis.x = x * rcpSinAngle;
-	axis.y = y * rcpSinAngle;
-	axis.z = z * rcpSinAngle;
-}
-
-void Quat::ToAxisAngle(float4 &axis, float &angle) const
-{
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
-	// Best: 35.332 nsecs / 94.328 ticks, Avg: 35.870 nsecs, Worst: 57.607 nsecs
-	assume2(this->IsNormalized(), *this, this->Length());
-	simd4f cosAngle = wwww_ps(q);
-	simd4f rcpSinAngle = rsqrt_ps(sub_ps(set1_ps(1.f), mul_ps(cosAngle, cosAngle)));
-	angle = Acos(s4f_x(cosAngle)) * 2.f;
-	simd4f a = mul_ps(q, rcpSinAngle);
-
-	// Set the w component to zero.
-	simd4f highPart = _mm_unpackhi_ps(a, zero_ps()); // [_ _ 0 z]
-	axis.v = _mm_movelh_ps(a, highPart); // [0 z y x]
-#else
-	// Best: 85.258 nsecs / 227.656 ticks, Avg: 85.492 nsecs, Worst: 86.410 nsecs
-	ToAxisAngle(reinterpret_cast<float3&>(axis), angle);
-	axis.w = 0.f;
-#endif
+	angle = Acos(w) * 2.f;
+	float sinz = Sin(angle/2.f);
+	if (fabs(sinz) > 1e-4f)
+	{
+		sinz = 1.f / sinz;
+		axis = float3(x * sinz, y * sinz, z * sinz);
+	}
+	else
+	{
+		// The quaternion does not produce any rotation. Still, explicitly
+		// set the axis so that the user gets a valid normalized vector back.
+		angle = 0.f;
+		axis = float3(1.f, 0.f, 0.f);
+	}
 }
 
 void Quat::SetFromAxisAngle(const float3 &axis, float angle)
 {
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE2)
-	SetFromAxisAngle(load_vec3(axis.ptr(), 0.f), angle);
-#else
-	assume1(axis.IsNormalized(), axis);
-	assume1(MATH_NS::IsFinite(angle), angle);
-	float sinz, cosz;
-	SinCos(angle*0.5f, sinz, cosz);
+	assume(axis.IsNormalized());
+	assume(MATH_NS::IsFinite(angle));
+	float cosz = Cos(angle/2.f);
+	float sinz = Sin(angle/2.f);
 	x = axis.x * sinz;
 	y = axis.y * sinz;
 	z = axis.z * sinz;
 	w = cosz;
-#endif
-}
-
-void Quat::SetFromAxisAngle(const float4 &axis, float angle)
-{
-	assume1(EqualAbs(axis.w, 0.f), axis);
-	assume2(axis.IsNormalized(1e-4f), axis, axis.Length4());
-	assume1(MATH_NS::IsFinite(angle), angle);
-
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE2)
-	// Best: 26.499 nsecs / 71.024 ticks, Avg: 26.856 nsecs, Worst: 27.651 nsecs
-	simd4f halfAngle = set1_ps(0.5f*angle);
-	simd4f sinAngle, cosAngle;
-	sincos_ps(halfAngle, &sinAngle, &cosAngle);
-	simd4f quat = mul_ps(axis, sinAngle);
-
-	// Set the w component to cosAngle.
-	simd4f highPart = _mm_unpackhi_ps(quat, cosAngle); // [_ _ 1 z]
-	q = _mm_movelh_ps(quat, highPart); // [1 z y x]
-#else
-	// Best: 36.868 nsecs / 98.312 ticks, Avg: 36.980 nsecs, Worst: 41.477 nsecs
-	SetFromAxisAngle(axis.xyz(), angle);
-#endif
 }
 
 /// See Schneider, Eberly. Geometric Tools for Computer Graphics, p. 861.
@@ -581,14 +488,10 @@ void Quat::Set(const float4x4 &m)
 
 void Quat::Set(float x_, float y_, float z_, float w_)
 {
-#ifdef MATH_AUTOMATIC_SSE
-	q = set_ps(w_, z_, y_, x_);
-#else
 	x = x_;
 	y = y_;
 	z = z_;
 	w = w_;
-#endif
 }
 
 Quat MUST_USE_RESULT Quat::LookAt(const float3 &localForward, const float3 &targetDirection, const float3 &localUp, const float3 &worldUp)
@@ -620,47 +523,14 @@ Quat MUST_USE_RESULT Quat::RotateFromTo(const float3 &sourceDirection, const flo
 {
 	assume(sourceDirection.IsNormalized());
 	assume(targetDirection.IsNormalized());
+	float angle = sourceDirection.AngleBetweenNorm(targetDirection);
+	assume(angle >= 0.f);
 	// If sourceDirection == targetDirection, the cross product comes out zero, and normalization would fail. In that case, pick an arbitrary axis.
 	float3 axis = sourceDirection.Cross(targetDirection);
 	float oldLength = axis.Normalize();
-	if (oldLength != 0.f)
-	{
-		float halfCosAngle = 0.5f*sourceDirection.Dot(targetDirection);
-		float cosHalfAngle = Sqrt(0.5f + halfCosAngle);
-		float sinHalfAngle = Sqrt(0.5f - halfCosAngle);
-		return Quat(axis.x * sinHalfAngle, axis.y * sinHalfAngle, axis.z * sinHalfAngle, cosHalfAngle);
-	}
-	else
-		return Quat(1.f, 0.f, 0.f, 0.f);
-
-}
-
-Quat MUST_USE_RESULT Quat::RotateFromTo(const float4 &sourceDirection, const float4 &targetDirection)
-{
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
-	// Best: 12.289 nsecs / 33.144 ticks, Avg: 12.489 nsecs, Worst: 14.210 nsecs
-	simd4f cosAngle = dot4_ps(sourceDirection.v, targetDirection.v);
-	cosAngle = neg3_ps(cosAngle); // [+ - - -]
-	// XYZ channels use the trigonometric formula sin(x/2) = +/-sqrt(0.5-0.5*cosx))
-	// The W channel uses the trigonometric formula cos(x/2) = +/-sqrt(0.5+0.5*cosx))
-	simd4f half = set1_ps(0.5f);
-	simd4f cosSinHalfAngle = sqrt_ps(madd_ps(half, cosAngle, half)); // [cos(x/2), sin(x/2), sin(x/2), sin(x/2)]
-	simd4f axis = cross_ps(sourceDirection.v, targetDirection.v);
-	simd4f recipLen = rsqrt_ps(dot4_ps(axis, axis));
-	axis = mul_ps(axis, recipLen); // [0 z y x]
-	// Set the w component to one.
-	simd4f one = add_ps(half, half); // [1 1 1 1]
-	simd4f highPart = _mm_unpackhi_ps(axis, one); // [_ _ 1 z]
-	axis = _mm_movelh_ps(axis, highPart); // [1 z y x]
-	Quat q;
-	q.q = mul_ps(axis, cosSinHalfAngle);
-	return q;
-#else
-	// Best: 19.970 nsecs / 53.632 ticks, Avg: 20.197 nsecs, Worst: 21.122 nsecs
-	assume(EqualAbs(sourceDirection.w, 0.f));
-	assume(EqualAbs(targetDirection.w, 0.f));
-	return Quat::RotateFromTo(sourceDirection.xyz(), targetDirection.xyz());
-#endif
+	if (oldLength == 0)
+		axis = float3(1, 0, 0);
+	return Quat(axis, angle);
 }
 
 Quat MUST_USE_RESULT Quat::RotateFromTo(const float3 &sourceDirection, const float3 &targetDirection,
@@ -742,15 +612,6 @@ float4x4 MUST_USE_RESULT Quat::ToFloat4x4() const
 #endif
 }
 
-float4x4 MUST_USE_RESULT Quat::ToFloat4x4(const float3 &translation) const
-{
-#if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
-	return ToFloat4x4(float4(translation, 1.f));
-#else
-	return float4x4(*this, translation);
-#endif
-}
-
 float4x4 MUST_USE_RESULT Quat::ToFloat4x4(const float4 &translation) const
 {
 	assume(IsNormalized());
@@ -769,7 +630,7 @@ bool IsNeutralCLocale();
 std::string MUST_USE_RESULT Quat::ToString() const
 {
 	char str[256];
-	sprintf(str, "(%.3f, %.3f, %.3f, %.3f)", x, y, z, w);
+	sprintf_s(str,256, "(%.3f, %.3f, %.3f, %.3f)", x, y, z, w);
 	return str;
 }
 
@@ -779,48 +640,45 @@ std::string MUST_USE_RESULT Quat::ToString2() const
 	float angle;
 	ToAxisAngle(axis, angle);
 	char str[256];
-	sprintf(str, "Quat(axis:(%.2f,%.2f,%.2f) angle:%2.f)", axis.x, axis.y, axis.z, RadToDeg(angle));
+	sprintf_s(str, 256,"Quat(axis:(%.2f,%.2f,%.2f) angle:%2.f)", axis.x, axis.y, axis.z, RadToDeg(angle));
 	return str;
 }
 
 std::string MUST_USE_RESULT Quat::SerializeToString() const
 {
+	assert(IsNeutralCLocale());
 	char str[256];
-	char *s = SerializeFloat(x, str); *s = ','; ++s;
-	s = SerializeFloat(y, s); *s = ','; ++s;
-	s = SerializeFloat(z, s); *s = ','; ++s;
-	s = SerializeFloat(w, s);
-	assert(s+1 - str < 256);
-	MARK_UNUSED(s);
-	return str;
-}
-
-std::string Quat::SerializeToCodeString() const
-{
-	return "Quat(" + SerializeToString() + ")";
+	sprintf_s(str, 256,"%f %f %f %f", x, y, z, w);
+	return std::string(str);
 }
 #endif
 
-Quat MUST_USE_RESULT Quat::FromString(const char *str, const char **outEndStr)
+Quat MUST_USE_RESULT Quat::FromString(const char *str)
 {
 	assert(IsNeutralCLocale());
 	assume(str);
 	if (!str)
-		return Quat::nan;
-	MATH_SKIP_WORD(str, "Quat");
-	MATH_SKIP_WORD(str, "(");
-	Quat f;
-	f.x = DeserializeFloat(str, &str);
-	f.y = DeserializeFloat(str, &str);
-	f.z = DeserializeFloat(str, &str);
-	f.w = DeserializeFloat(str, &str);
-	if (*str == ')')
+		return Quat();
+	if (*str == '(')
 		++str;
-	if (*str == ',')
+	Quat q;
+	q.x = (float)strtod(str, const_cast<char**>(&str));
+	while(*str == ' ' || *str == '\t') ///\todo Propagate this to other FromString functions.
 		++str;
-	if (outEndStr)
-		*outEndStr = str;
-	return f;
+	if (*str == ',' || *str == ';')
+		++str;
+	q.y = (float)strtod(str, const_cast<char**>(&str));
+	while(*str == ' ' || *str == '\t')
+		++str;
+	if (*str == ',' || *str == ';')
+		++str;
+	q.z = (float)strtod(str, const_cast<char**>(&str));
+	while(*str == ' ' || *str == '\t')
+		++str;
+	if (*str == ',' || *str == ';')
+		++str;
+	q.w = (float)strtod(str, const_cast<char**>(&str));
+	return q;
 }
 
 Quat Quat::operator +(const Quat &rhs) const
@@ -844,7 +702,7 @@ Quat Quat::operator -(const Quat &rhs) const
 Quat Quat::operator -() const
 {
 #ifdef MATH_AUTOMATIC_SSE
-	return neg_ps(q);
+	return negate_ps(q);
 #else
 	return Quat(-x, -y, -z, -w);
 #endif
@@ -853,7 +711,7 @@ Quat Quat::operator -() const
 Quat Quat::operator *(float scalar) const
 {
 #ifdef MATH_AUTOMATIC_SSE
-	return muls_ps(q, scalar);
+	return vec4_mul_float(q, scalar);
 #else
 	return Quat(x * scalar, y * scalar, z * scalar, w * scalar);
 #endif
@@ -882,7 +740,7 @@ Quat Quat::operator /(float scalar) const
 	assume(!EqualAbs(scalar, 0.f));
 
 #ifdef MATH_AUTOMATIC_SSE
-	return div_ps(q, set1_ps(scalar));
+	return vec4_div_float(q, scalar);
 #else
 	return *this * (1.f / scalar);
 #endif
@@ -891,10 +749,8 @@ Quat Quat::operator /(float scalar) const
 Quat Quat::operator *(const Quat &r) const
 {
 #if defined(MATH_AUTOMATIC_SSE) && defined(MATH_SSE)
-	// Best: 3.456 nsecs / 9.752 ticks, Avg: 3.721 nsecs, Worst: 3.840 nsecs
 	return quat_mul_quat(q, r.q);
 #else
-	// Best: 12.289 nsecs / 33.216 ticks, Avg: 12.585 nsecs, Worst: 13.442 nsecs
 	return Quat(x*r.w + y*r.z - z*r.y + w*r.x,
 	           -x*r.z + y*r.w + z*r.x + w*r.y,
 	            x*r.y - y*r.x + z*r.w + w*r.z,

@@ -29,11 +29,9 @@
 #ifdef MATH_QT_INTEROP
 #include <QVector2D>
 #endif
+
 #ifdef MATH_OGRE_INTEROP
 #include <OgreVector2.h>
-#endif
-#ifdef MATH_URHO3D_INTEROP
-#include <Urho3D/Math/Vector2.h>
 #endif
 
 MATH_BEGIN_NAMESPACE
@@ -90,8 +88,8 @@ public:
 			or the At() function to access the elements of this vector by index.
 		@return A pointer to the first float element of this class. The data is contiguous in memory.
 		@see operator [](), At(). */
-	FORCE_INLINE float *ptr() { return &x; }
-	FORCE_INLINE const float *ptr() const { return &x; }
+	float *ptr();
+	const float *ptr() const;
 
 	/// Accesses an element of this vector using array notation.
 	/** @param index The element to get. Pass in 0 for x and 1 for y.
@@ -146,12 +144,6 @@ public:
 	float2 &operator /=(float scalar);
 
 #ifdef MATH_ENABLE_UNCOMMON_OPERATIONS
-	// In math textbooks, pointwise multiplication of vectors is not defined within a linear space.
-	// However, in programming it is often useful for e.g. modulating colors via pointwise multiplication.
-	// If you #define MATH_ENABLE_UNCOMMON_OPERATIONS, you'll get these operations upgraded to handy
-	// operator * and / notation and can use vec * vec and vec / vec. Otherwise, use the notation
-	// vec.Mul(vec) and vec.Div(vec) for pointwise notation. MATH_ENABLE_UNCOMMON_OPERATIONS also enables
-	// the operation scalar / vec.
 	float2 operator *(const float2 &vector) const { return this->Mul(vector); }
 	float2 operator /(const float2 &vector) const { return this->Div(vector); }
 	float2 &operator *=(const float2 &vector) { *this = this->Mul(vector); return *this; }
@@ -318,7 +310,7 @@ public:
 
 	/// Tests if the length of this vector is one, up to the given epsilon.
 	/** @see IsZero(), IsFinite(), IsPerpendicular(). */
-	bool IsNormalized(float epsilonSq = 1e-5f) const;
+	bool IsNormalized(float epsilonSq = 1e-6f) const;
 
 	/// Tests if this is the null vector, up to the given epsilon.
 	/** @see IsNormalized(), IsFinite(), IsPerpendicular(). */
@@ -330,30 +322,23 @@ public:
 
 	/// Tests if two vectors are perpendicular to each other.
 	/** @see IsNormalized(), IsZero(), IsPerpendicular(), Equals(). */
-	bool IsPerpendicular(const float2 &other, float epsilonSq = 1e-5f) const;
+	bool IsPerpendicular(const float2 &other, float epsilon = 1e-3f) const;
 
 	/// Tests if two vectors are equal, up to the given epsilon.
 	/** @see IsPerpendicular(). */
 	bool Equals(const float2 &other, float epsilon = 1e-3f) const;
 	bool Equals(float x, float y, float epsilon = 1e-3f) const;
 
-	/// Compares whether this float2 and the given float2 are identical bit-by-bit in the underlying representation.
-	/** @note Prefer using this over e.g. memcmp, since there can be SSE-related padding in the structures. */
-	bool BitEquals(const float2 &other) const;
-
 #ifdef MATH_ENABLE_STL_SUPPORT
 	/// Returns "(x, y)".
 	std::string ToString() const;
 
-	/// Returns "x,y". This is the preferred format for the float2 if it has to be serialized to a string for machine transfer.
+	/// Returns "x y". This is the preferred format for the float2 if it has to be serialized to a string for machine transfer.
 	std::string SerializeToString() const;
-
-	/// Returns a string of C++ code that can be used to construct this object. Useful for generating test cases from badly behaving objects.
-	std::string SerializeToCodeString() const;
 #endif
 
 	/// Parses a string that is of form "x,y" or "(x,y)" or "(x;y)" or "x y" to a new float2.
-	static float2 FromString(const char *str, const char **outEndStr = 0);
+	static float2 FromString(const char *str);
 #ifdef MATH_ENABLE_STL_SUPPORT
 	static float2 FromString(const std::string &str) { return FromString(str.c_str()); }
 #endif
@@ -549,21 +534,9 @@ public:
 	/// Computes the 2D convex hull of the given point set, in-place.
 	/** This version of the algorithm works in-place, meaning that when the algorithm finishes,
 		pointArray will contain the list of the points on the convex hull.
-		@note As a convention, the convex hull winds counter-clockwise when graphed in the xy plane where
-			+x points to the right and +y points up. That is, walking along the polylist
-			intArray[0] -> pointArray[1] -> pointArray[2] -> ... -> pointArray[numPoints-1] -> pointArray[0] performs
-			a counter-clockwise tour.
-		@param pointArray [in, out] A pointer to an array of numPoints float2 points that represent a point cloud. This
-			array will be rewritten to contain the convex hull of the original point set.
 		@return The number of points on the convex hull, i.e. the number of elements used in pointArray after the operation.
 		@see ConvexHull(). */
 	static int ConvexHullInPlace(float2 *pointArray, int numPoints);
-
-	/// Tests whether a 2D convex hull contains the given point.
-	/** @param convexHull [in] A pointer to an array of points in the convex hull.
-		@param numPointsInConvexHull The number of elements in the array convexHull.
-		@param point The target point to test. */
-	static bool ConvexHullContains(const float2 *convexHull, int numPointsInConvexHull, const float2 &point);
 #endif
 
 	/// Computes the minimum-area rectangle that bounds the given point set. [noscript]
@@ -581,13 +554,20 @@ public:
 		@note For best performance, the input point array should contain only the points in the convex hull of the point set. This algorithm
 			does not compute the convex hull for you.
 		@return The area of the resulting rectangle. */
-	static float MinAreaRectInPlace(float2 *pointArray, int numPoints, float2 &center, float2 &uDir, float2 &vDir, float &minU, float &maxU, float &minV, float &maxV);
+	static float MinAreaRect(const float2 *pointArray, int numPoints, float2 &center, float2 &uDir, float2 &vDir, float &minU, float &maxU, float &minV, float &maxV);
 
 	/// Generates a direction vector of the given length pointing at a uniformly random direction.
 	static float2 RandomDir(LCG &lcg, float length = 1.f);
 
 	/// Returns a random float3 with each entry randomized between the range [minElem, maxElem].
 	static MUST_USE_RESULT float2 RandomBox(LCG &lcg, float minElem, float maxElem);
+
+#ifdef MATH_ENABLE_UNCOMMON_OPERATIONS
+	float2 operator *(const float2 &rhs) const { return this->Mul(rhs); }
+	float2 operator /(const float2 &rhs) const { return this->Div(rhs); }
+	float2 &operator *=(const float2 &rhs) { *this = this->Mul(rhs); return *this; }
+	float2 &operator /=(const float2 &rhs) { *this = this->Div(rhs); return *this; }
+#endif
 
 	/// Specifies a compile-time constant float2 with value (0, 0).
 	/** @note Due to static data initialization order being undefined in C++, do NOT use this
@@ -607,7 +587,7 @@ public:
 	static const float2 unitY;
 	/// A compile-time constant float2 with value (NaN, NaN).
 	/** For this constant, each element has the value of quiet NaN, or Not-A-Number.
-		@note Never compare a float2 to this value! Due to how IEEE floats work, "nan == nan" returns false!
+		@note Never compare a float2 to this value! Due to how IEEE floats work, for each float x, both expressions "x == nan" and "x != nan" return false!
 			  That is, nothing is equal to NaN, not even NaN itself!
 		@note Due to static data initialization order being undefined in C++, do NOT use this
 			member to initialize other static data in other compilation units! */
@@ -618,21 +598,17 @@ public:
 	static const float2 inf;
 
 #ifdef MATH_OGRE_INTEROP
-	float2(const Ogre::Vector2 &other):x(other.x), y(other.y) {}
+	float2(const Ogre::Vector2 &other) { x = other.x; y = other.y; }
 	operator Ogre::Vector2() const { return Ogre::Vector2(x, y); }
 #endif
 #ifdef MATH_QT_INTEROP
-	float2(const QVector2D &other):x(other.x()), y(other.y()) {}
+	float2(const QVector2D &other) { x = other.x(); y = other.y(); }
 	operator QVector2D() const { return QVector2D(x, y); }
 	operator QString() const { return "float2(" + QString::number(x) + "," + QString::number(y) + ")"; }
 	QString toString() const { return (QString)*this; }
 	QVector2D ToQVector2D() const { return QVector2D(x, y); }
 	static float2 FromQVector2D(const QVector2D &v) { return (float2)v; }
 	static float2 FromString(const QString &str) { return FromString(str.toStdString()); }
-#endif
-#ifdef MATH_URHO3D_INTEROP
-	float2(const Urho3D::Vector2 &other) : x(other.x_), y(other.y_) {}
-	operator Urho3D::Vector2() const { return Urho3D::Vector2(x, y); }
 #endif
 };
 
@@ -662,8 +638,5 @@ inline float2 Lerp(const float2 &a, const float2 &b, float t) { return a.Lerp(b,
 Q_DECLARE_METATYPE(float2)
 Q_DECLARE_METATYPE(float2*)
 #endif
-
-template<typename T>
-int float2_ConvexHullInPlace(T *p, int n);
 
 MATH_END_NAMESPACE

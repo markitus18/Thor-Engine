@@ -45,14 +45,11 @@ public:
 		/// the normal of this face points to.
 		void FlipWindingOrder();
 
-		/// Returns a string of form "0,1,2,3,4" that refers to the indices of the vertices that this face uses.
 		std::string ToString() const;
-
-		static Face FromString(const char *str);
 	};
 
 	/// Specifies the vertices of this polyhedron.
-	VecArray v;
+	std::vector<float3> v;
 
 	/// Specifies the individual faces of this polyhedron.  [similarOverload: v]
 	/** Each face is described by a list of indices to the vertex array. The indices define a
@@ -82,13 +79,13 @@ public:
 
 	/// Returns a pointer to an array of vertices of this polyhedron. The array contains NumVertices() elements.
 	/// @note Do NOT hold on to this pointer, since it is an alias to the underlying std::vector owned by this polyhedron. Calling any non-const Polyhedron member function may invalidate the pointer!
-	vec *VertexArrayPtr() { return !v.empty() ? (vec*)&v[0] : 0; }
-	const vec *VertexArrayPtr() const { return !v.empty() ? (vec*)&v[0] : 0; }
+	float3 *VertexArrayPtr() { return !v.empty() ? &v[0] : 0; }
+	const float3 *VertexArrayPtr() const { return !v.empty() ? &v[0] : 0; }
 
 	/// Returns the <i>i</i>th vertex of this polyhedron.
 	/** @param vertexIndex The vertex to get, in the range [0, NumVertices()-1].
 		@see NumVertices(). */
-	vec Vertex(int vertexIndex) const;
+	float3 Vertex(int vertexIndex) const;
 
 	/// Returns the <i>i</i>th edge of this polyhedron.
 	/** Performance warning: Use this function only if you are interested in a single edge of this Polyhedron.
@@ -102,7 +99,7 @@ public:
 	/** Has complexity of O(|V|log|V|), where |V| is the number of vertices in the polyhedron.
 		@todo Support this in linear time.
 		@see NumEdges(), Edge(), EdgeIndices(). */
-	LineSegmentArray Edges() const;
+	std::vector<LineSegment> Edges() const;
 
 	std::vector<Polygon> Faces() const;
 
@@ -130,8 +127,7 @@ public:
 		@see NumFaces(), FacePolygon(). */
 	Plane FacePlane(int faceIndex) const;
 
-	/// Returns the normalized normal vector of the given face.
-	vec FaceNormal(int faceIndex) const;
+	float3 FaceNormal(int faceIndex) const;
 
 	/// Returns the index of the vertex of this polyhedron that reaches farthest in the given direction.
 	/** @param direction The direction vector to query for. This vector can be unnormalized.
@@ -139,8 +135,8 @@ public:
 			The supporting point for a given direction is not necessarily unique, but this function
 			will always return one of the vertices of this polyhedron.
 		@see v, NumVertices(), Vertex(). */
-	int ExtremeVertex(const vec &direction) const;
-	// vec SupportingPoint(const vec &dir) const;
+	int ExtremeVertex(const float3 &direction) const;
+	// float3 SupportingPoint(const float3 &dir) const;
 	// bool IsSupportingPlane(const Plane &plane) const;
 
 	/// Computes an extreme point of this Polyhedron in the given direction.
@@ -151,32 +147,7 @@ public:
 		@return An extreme point of this Polyhedron in the given direction. The returned point is always a
 			corner point of this Polyhedron.
 		@see CornerPoint(). */
-	vec ExtremePoint(const vec &direction) const;
-	vec ExtremePoint(const vec &direction, float &projectionDistance) const;
-
-	/// Quickly returns an arbitrary point inside this AABB. Used in GJK intersection test.
-	vec AnyPointFast() const { return v[0]; }
-
-	// Computes the most extreme point of this convex Polyhedron into the given direction.
-	/** @param adjacencyData A precomputed data structure that specifies the adjacency information between the vertices of this Polyhedron.
-			Call GenerateVertexAdjacencyData() to compute this structure.
-		@param direction The direction vector of the direction to find the extreme point. This vector may
-			be unnormalized, but may not be null.
-		@param floodFillVisited A temporary structure to an array of size |V| where each element specifies whether the extreme
-			vertex search has visited that vertex or not. If floodFillVisited[i] == floodFillVisitColor, then the vertex i
-			has been visited, otherwise not.
-		@param mostExtremeDistance [out] Receives the 1D projection distance of the most extreme vertex onto the direction vector.
-		@param startingVertex [optional] Specifies a hint vertex from where to start the search. Specifying a know vertex that is close
-			to being the most extreme vertex in the given direction may speed up the search.
-		@return The index of the most extreme vertex into the specified direction. */
-
-#define MATH_NUMSTEPS_STATS
-
-#ifdef MATH_NUMSTEPS_STATS
-	mutable int numSearchStepsDone, numImprovementsMade;
-#endif
-	int ExtremeVertexConvex(const std::vector<std::vector<int> > &adjacencyData, const vec &direction,
-		std::vector<unsigned int> &floodFillVisited, unsigned int floodFillVisitColor, float &mostExtremeDistance, int startingVertex = 0) const;
+	float3 ExtremePoint(const float3 &direction) const;
 
 	/// Projects this Polyhedron onto the given 1D axis direction vector.
 	/** This function collapses this Polyhedron onto an 1D axis for the purposes of e.g. separate axis test computations.
@@ -185,27 +156,19 @@ public:
 			of this function gets scaled by the length of this vector.
 		@param outMin [out] Returns the minimum extent of this object along the projection axis.
 		@param outMax [out] Returns the maximum extent of this object along the projection axis. */
-	void ProjectToAxis(const vec &direction, float &outMin, float &outMax) const;
+	void ProjectToAxis(const float3 &direction, float &outMin, float &outMax) const;
 
-	/// Returns the exact center of mass of the convex hull of this polyhedron.
-	/** @see SurfaceArea(), Volume(), ApproximateConvexCentroid(). */
-	vec ConvexCentroid() const;
-
-	// Computes the average of all vertices of this Polyhedron.
-	/** If this Polyhedron is a tetrahedron, this is the center of mass for the Polyhedron. Otherwise it
-		is a kind of an approximate enter of mass, biased towards the direction where there are lots of
-		vertices in the Polyhedron.
-		@note This function is considerably faster than ConvexCentroid().
-		@see SurfaceArea(), Volume(), ConvexCentroid(). */
-	vec ApproximateConvexCentroid() const;
+	/// Returns the arithmetic mean of all the corner vertices.
+	/** @bug This is not the proper centroid of the polyhedron! */
+	/** @see SurfaceArea(), Volume(). */
+	float3 Centroid() const;
 
 	/// Computes the total surface area of the faces of this polyhedron.
-	/** @note When you call this function, none of the faces of this polyhedron may be self-intersecting.
-		@see ConvexCentroid(), Volume(). */
+	/** @see Centroid(), Volume(). */
 	float SurfaceArea() const;
 
 	/// Computes the internal volume of this polyhedron.
-	/** @see ConvexCentroid(), SurfaceArea(). */
+	/** @see Centroid(), SurfaceArea(). */
 	float Volume() const;
 
 	/// Returns the smallest AABB that encloses this polyhedron.
@@ -216,10 +179,7 @@ public:
 	OBB MinimalEnclosingOBB() const;
 #endif
 
-	/// Computes a data structure that specifies adjacent vertices for each vertex.
-	/** In the returned vector of vectors V, the vector V[i] specifies all the vertex indices that vertex i
-		is connected to. */
-	std::vector<std::vector<int> > GenerateVertexAdjacencyData() const;
+	void MergeAdjacentPlanarFaces();
 
 	/// Tests if the faces in this polyhedron refer to valid existing vertices.
 	/** This function performs sanity checks on the face indices array.
@@ -246,22 +206,12 @@ public:
 	/// Removes from the vertex array all vertices that are not referred to by any of the faces of this polyhedron.
 	void RemoveRedundantVertices();
 
-	/// Removes all faces from this polyhedron which have two or less vertices in them.
-	void RemoveDegenerateFaces();
-
-	/// Finds all neighboring faces that have identical face normals and merges them together.
-	/// Warning: this introduces T-junctions to the polyhedron, as well as increases the vertex count on the merged faces.
-	/// Use this only as preprocessing when needed.
-	/// @return The number of faces that were removed by merging.
-	int MergeAdjacentPlanarFaces(bool snapVerticesToMergedPlanes, bool conservativeEnclose = true, float angleEpsilon = 1e-16f, float distanceEpsilon = 1e-8f);
-
 	/// Returns true if this polyhedron has 0 vertices and 0 faces.
 	/** @see FaceIndicesValid(), IsClosed(), IsConvex(). */
 	bool IsNull() const { return v.empty() && f.empty(); }
 
 	/// Returns true if this polyhedron is closed and does not have any gaps.
 	/** \note This function performs a quick check, which might not be complete.
-		The running time is O(FlogE) ~ O(VlogV).
 		@see FaceIndicesValid(), IsClosed(), IsConvex(). */
 	bool IsClosed() const;
 
@@ -274,13 +224,11 @@ public:
 	bool IsConvex() const;
 
 	/// Returns true if the Euler formula (V + F - E == 2) holds for this Polyhedron.
-	/** The running time is O(E) ~ O(V).
-		@see NumVertices(), NumEdges(), NumFaces(). */
+	/** @see NumVertices(), NumEdges(), NumFaces(). */
 	bool EulerFormulaHolds() const;
 
 	/// Tests whether all the faces of this polyhedron are non-degenerate (have at least 3 vertices)
 	/// and in case they have more than 3 vertices, tests that the faces are planar.
-	/** The running time is O(F) ~ O(V). */
 	bool FacesAreNondegeneratePlanar(float epsilon = 1e-2f) const;
 
 	/// Clips the line/ray/line segment specified by L(t) = ptA + t * dir, tFirst <= t <= tLast,
@@ -299,19 +247,14 @@ public:
 		@return True if the outputted range [tFirst, tLast] did not become degenerate, and these two variables contain
 			valid data. If false, the whole line segment was clipped away (it was completely outside this polyhedron).
 		@see FLOAT_INF. */
-	bool ClipLineSegmentToConvexPolyhedron(const vec &ptA, const vec &dir, float &tFirst, float &tLast) const;
+	bool ClipLineSegmentToConvexPolyhedron(const float3 &ptA, const float3 &dir, float &tFirst, float &tLast) const;
 
-	/// Returns the index of the nearest vertex to the given point.
-	/** @note In the degenerate case when this Polyhedron is null and does not contain any vertices, this function returns -1. */
-	int NearestVertex(const vec &point) const;
-
-	/// Tests if the given object is fully contained inside this closed polyhedron.
+	/// Tests if the given object is fully contained inside this polyhedron.
 	/** This function treats this polyhedron as a non-convex object. If you know this polyhedron
 		to be convex, you can use the faster ContainsConvex() function.
-		@note This function assumes that this polyhedron is closed and its edges are not self-intersecting.
 		@see ContainsConvex(), ClosestPoint(), ClosestPointConvex(), Distance(), Intersects(), IntersectsConvex().
 		@todo Add Contains(Circle/Disc/Sphere/Capsule). */
-	bool Contains(const vec &point) const;
+	bool Contains(const float3 &point) const;
 	bool Contains(const LineSegment &lineSegment) const;
 	bool Contains(const Triangle &triangle) const;
 	bool Contains(const Polygon &polygon) const;
@@ -321,21 +264,14 @@ public:
 	bool Contains(const Polyhedron &polyhedron) const;
 
 	/// Tests if the given face of this Polyhedron contains the given point.
-	bool FaceContains(int faceIndex, const vec &worldSpacePoint, float polygonThickness = 1e-3f) const;
-
-	/// A helper for Contains() and FaceContains() tests: Returns a positive value if the given point is contained in the given face,
-	/// and a negative value if the given point is outside the face. The magnitude of the return value reports a pseudo-distance
-	/// from the point to the nearest edge of the face polygon. This is used as a robustness/stability criterion to estimate how
-	/// numerically believable the result is.
-	float FaceContainmentDistance2D(int faceIndex, const vec &worldSpacePoint, float polygonThickness = 1e-3f) const;
+	bool FaceContains(int faceIndex, const float3 &worldSpacePoint, float polygonThickness = 1e-3f) const;
 
 	/// Tests if the given object is fully contained inside this <b>convex</b> polyhedron.
 	/** This function behaves exactly like Contains(), except this version of the containment test
 		assumes this polyhedron is convex, and uses a faster method of testing containment.
-		@note This function assumes that this polyhedron is closed and its edges are not self-intersecting.
 		@see Contains(), ClosestPoint(), ClosestPointConvex(), Distance(), Intersects(), IntersectsConvex().
 		@todo Add ContainsConvex(Polygon/AABB/OBB/Frustum/Polyhedron/Circle/Disc/Sphere/Capsule). */
-	bool ContainsConvex(const vec &point, float epsilon = 1e-4f) const;
+	bool ContainsConvex(const float3 &point) const;
 	bool ContainsConvex(const LineSegment &lineSegment) const;
 	bool ContainsConvex(const Triangle &triangle) const;
 
@@ -346,36 +282,32 @@ public:
 		@param lineSegmentPt [out] If specified, returns the closest point on the line segment to this
 		polyhedron. This pointer may be null.
 		@todo Make lineSegmentPt an out-reference instead of an out-pointer.
-		@note This function assumes that this polyhedron is closed and the edges are not self-intersecting.
 		@see Contains(), ContainsConvex(), ClosestPointConvex(), Distance(), Intersects(), IntersectsConvex().
 		@todo Add ClosestPoint(Line/Ray/Plane/Triangle/Polygon/Circle/Disc/AABB/OBB/Sphere/Capsule/Frustum/Polyhedron). */
-	vec ClosestPoint(const LineSegment &lineSegment, vec *lineSegmentPt) const;
-	vec ClosestPoint(const LineSegment &lineSegment) const;
+	float3 ClosestPoint(const LineSegment &lineSegment, float3 *lineSegmentPt) const;
+	float3 ClosestPoint(const LineSegment &lineSegment) const;
 	/** @param point The point to find the closest point to. */
-	vec ClosestPoint(const vec &point) const;
+	float3 ClosestPoint(const float3 &point) const;
 
 	/// Returns the closest point on this <b>convex</b> polyhedron to the given point.
 	/** This function behaves exactly like ClosestPoint(), except this version of the test assumes
 		this polyhedron is convex, and uses a faster method of finding the closest point.
-		@note This function assumes that this polyhedron is closed and the edges are not self-intersecting.
 		@see Contains(), ContainsConvex(), ClosestPoint(), Distance(), Intersects(), IntersectsConvex().
 		@todo Add ClosestPointConvex(Line/LineSegment/Ray/Plane/Triangle/Polygon/Circle/Disc/AABB/OBB/Sphere/Capsule/Frustum/Polyhedron). */
-	vec ClosestPointConvex(const vec &point) const;
+	float3 ClosestPointConvex(const float3 &point) const;
 
 	/// Returns the distance between this polyhedron and the given object.
 	/** This function finds the nearest pair of points on this and the given object, and computes their distance.
 		If the two objects intersect, or one object is contained inside the other, the returned distance is zero.
-		@note This function assumes that this polyhedron is closed and the edges are not self-intersecting.
 		@see Contains(), ContainsConvex(), ClosestPoint(), ClosestPointConvex(), Intersects(), IntersectsConvex().
 		@todo Add Distance(Line/LineSegment/Ray/Plane/Triangle/Polygon/Circle/Disc/AABB/OBB/Sphere/Capsule/Frustum/Polyhedron). */
-	float Distance(const vec &point) const;
+	float Distance(const float3 &point) const;
 
 	/// Tests whether this polyhedron and the given object intersect.
 	/** Both objects are treated as "solid", meaning that if one of the objects is fully contained inside
 		another, this function still returns true. (e.g. in case a line segment is contained inside this polyhedron,
 		or this polyhedron is contained inside a sphere, etc.)
 		@return True if an intersection occurs or one of the objects is contained inside the other, false otherwise.
-		@note This function assumes that this polyhedron is closed and the edges are not self-intersecting.
 		@see Contains(), ContainsConvex(), ClosestPoint(), ClosestPointConvex(), Distance(), IntersectsConvex().
 		@todo Add Intersects(Circle/Disc). */
 	bool Intersects(const LineSegment &lineSegment) const;
@@ -395,19 +327,18 @@ public:
 	/** This function is exactly like Intersects(), but this version assumes that this polyhedron is convex,
 		and uses a faster method of testing the intersection.
 		@return True if an intersection occurs or one of the objects is contained inside the other, false otherwise.
-		@note This function assumes that this polyhedron is closed and the edges are not self-intersecting.
 		@see Contains(), ContainsConvex(), ClosestPoint(), ClosestPointConvex(), Distance(), Intersects().
 		@todo Add Intersects(Circle/Disc). */
 	bool IntersectsConvex(const Line &line) const;
 	bool IntersectsConvex(const Ray &ray) const;
 	bool IntersectsConvex(const LineSegment &lineSegment) const;
 
-	void MergeConvex(const vec &point);
+	void MergeConvex(const float3 &point);
 
 	/// Translates this Polyhedron in world space.
 	/** @param offset The amount of displacement to apply to this Polyhedron, in world space coordinates.
 		@see Transform(). */
-	void Translate(const vec &offset);
+	void Translate(const float3 &offset);
 
 	/// Applies a transformation to this Polyhedron.
 	/** This function operates in-place.
@@ -419,49 +350,18 @@ public:
 
 	/// Creates a Polyhedron object that represents the convex hull of the given point array.
 	/// \todo This function is strongly WIP!
-	static Polyhedron ConvexHull(const VecArray &points) { return !points.empty() ? ConvexHull((const vec*)&points[0], (int)points.size()) : Polyhedron(); }
-	static Polyhedron ConvexHull(const VecArray &points, LCG &rng) { return !points.empty() ? ConvexHull((const vec*)&points[0], (int)points.size(), rng) : Polyhedron(); }
-	static Polyhedron ConvexHull(const vec *pointArray, int numPoints);
-	static Polyhedron ConvexHull(const vec *pointArray, int numPoints, LCG &rng);
+	static Polyhedron ConvexHull(const float3 *pointArray, int numPoints);
 
-	static Polyhedron Tetrahedron(const vec &centerPos = POINT_VEC_SCALAR(0.f), float scale = 1.f, bool ccwIsFrontFacing = true);
-	static Polyhedron Octahedron(const vec &centerPos = POINT_VEC_SCALAR(0.f), float scale = 1.f, bool ccwIsFrontFacing = true);
-	static Polyhedron Hexahedron(const vec &centerPos = POINT_VEC_SCALAR(0.f), float scale = 1.f, bool ccwIsFrontFacing = true);
-	static Polyhedron Icosahedron(const vec &centerPos = POINT_VEC_SCALAR(0.f), float scale = 1.f, bool ccwIsFrontFacing = true);
-	static Polyhedron Dodecahedron(const vec &centerPos = POINT_VEC_SCALAR(0.f), float scale = 1.f, bool ccwIsFrontFacing = true);
+	static Polyhedron Tetrahedron(const float3 &centerPos = float3(0,0,0), float scale = 1.f, bool ccwIsFrontFacing = true);
+	static Polyhedron Octahedron(const float3 &centerPos = float3(0,0,0), float scale = 1.f, bool ccwIsFrontFacing = true);
+	static Polyhedron Hexahedron(const float3 &centerPos = float3(0,0,0), float scale = 1.f, bool ccwIsFrontFacing = true);
+	static Polyhedron Icosahedron(const float3 &centerPos = float3(0,0,0), float scale = 1.f, bool ccwIsFrontFacing = true);
+	static Polyhedron Dodecahedron(const float3 &centerPos = float3(0,0,0), float scale = 1.f, bool ccwIsFrontFacing = true);
 
-	static Polyhedron CreateCapsule(const vec &a, const vec &b, float r, int verticesPerCap, bool ccwIsFrontFacing = true);
-	static Polyhedron CreateSharpCapsule(const vec &a, const vec &b, float r, float capPointDistance, int verticesPerCap, bool ccwIsFrontFacing = true);
-
-	/// Tests if these two polyhedrons represent the same set of points.
-	/// @note This function is very slow, and should be used only for debugging purposes.
-	/// @note This function mutates this and the given polyhedron in order to make the test more feasible. The set of space represented
-	///       by the polyhedrons will not change.
-	bool SetEquals(Polyhedron &p2);
-
-	/// Swaps two vertices in the vertex array and updates all faces of this polyhedron so that the volume represented by this polyhedron
-	/// stays the same.
-	void SwapVertices(int i, int j);
-
-	/// Converts the list of faces into a canonical order for easier comparison.
-	void CanonicalizeFaceArray();
-
-	/// Returns true if one of the faces of this Polyhedron has the same ordered of indices as the given Face.
-	bool ContainsFace(const Face &face) const;
-
-	/// Searches each vertex of this polyhedron to find the closest vertex to the given target point.
-	/// @param outDistanceSq [out] Outputs the distance between the target point and the closest vertex, or FLOAT_INF if no such point was found.
-	/// @return An index to the vertex array of this polyhedron denoting the closest vertex to the target point.
-	///         Returns -1 if no such point is found. (no vertices in polyhedron, or all of them contained NaNs/Infs)
-	int FindClosestVertex(const vec &pt, float &outDistanceSq) const;
-
-	TriangleArray Triangulate() const;
-
-	std::string ToString() const;
-	void DumpStructure() const;
+	std::vector<Triangle> Triangulate() const;
 
 #ifdef MATH_GRAPHICSENGINE_INTEROP
-	void Triangulate(VertexBuffer &vb, bool ccwIsFrontFacing, int faceStart = 0, int faceEnd = 0x7FFFFFFF) const;
+	void Triangulate(VertexBuffer &vb, bool ccwIsFrontFacing) const;
 	void ToLineList(VertexBuffer &vb) const;
 #endif
 };

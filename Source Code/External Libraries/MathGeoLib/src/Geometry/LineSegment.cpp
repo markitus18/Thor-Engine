@@ -44,7 +44,7 @@
 
 MATH_BEGIN_NAMESPACE
 
-LineSegment::LineSegment(const vec &a_, const vec &b_)
+LineSegment::LineSegment(const float3 &a_, const float3 &b_)
 :a(a_), b(b_)
 {
 }
@@ -59,12 +59,12 @@ LineSegment::LineSegment(const Line &line, float d)
 {
 }
 
-vec LineSegment::GetPoint(float d) const
+float3 LineSegment::GetPoint(float d) const
 {
 	return (1.f - d) * a + d * b;
 }
 
-vec LineSegment::CenterPoint() const
+float3 LineSegment::CenterPoint() const
 {
 	return (a + b) * 0.5f;
 }
@@ -74,24 +74,17 @@ void LineSegment::Reverse()
 	Swap(a, b);
 }
 
-vec LineSegment::Dir() const
+float3 LineSegment::Dir() const
 {
 	return (b - a).Normalized();
 }
 
-vec LineSegment::ExtremePoint(const vec &direction) const
+float3 LineSegment::ExtremePoint(const float3 &direction) const
 {
 	return Dot(direction, b-a) >= 0.f ? b : a;
 }
 
-vec LineSegment::ExtremePoint(const vec &direction, float &projectionDistance) const
-{
-	vec extremePoint = ExtremePoint(direction);
-	projectionDistance = extremePoint.Dot(direction);
-	return extremePoint;
-}
-
-void LineSegment::Translate(const vec &offset)
+void LineSegment::Translate(const float3 &offset)
 {
 	a += offset;
 	b += offset;
@@ -136,7 +129,7 @@ bool LineSegment::IsFinite() const
 	return a.IsFinite() && b.IsFinite();
 }
 
-bool LineSegment::Contains(const vec &point, float distanceThreshold) const
+bool LineSegment::Contains(const float3 &point, float distanceThreshold) const
 {
 	return ClosestPoint(point).DistanceSq(point) <= distanceThreshold;
 }
@@ -151,158 +144,195 @@ bool LineSegment::Equals(const LineSegment &rhs, float e) const
 	return (a.Equals(rhs.a, e) && b.Equals(rhs.b, e)) || (a.Equals(rhs.b, e) && b.Equals(rhs.a, e));
 }
 
-vec LineSegment::ClosestPoint(const vec &point, float &d) const
+float3 LineSegment::ClosestPoint(const float3 &point, float *d) const
 {
-	vec dir = b - a;
-	d = Clamp01(Dot(point - a, dir) / dir.LengthSq());
-	return a + d * dir;
+	float3 dir = b - a;
+	float u = Clamp01(Dot(point - a, dir) / dir.LengthSq());
+	if (d)
+		*d = u;
+	return a + u * dir;
 }
 
-vec LineSegment::ClosestPoint(const Ray &other, float &d, float &d2) const
+float3 LineSegment::ClosestPoint(const Ray &other, float *d, float *d2) const
 {
-	other.ClosestPoint(*this, d2, d);
-	return GetPoint(d);
+	float u, u2;
+	other.ClosestPoint(*this, &u, &u2);
+	if (d)
+		*d = u2;
+	if (d2)
+		*d2 = u;
+	return GetPoint(u2);
 }
 
-vec LineSegment::ClosestPoint(const Line &other, float &d, float &d2) const
+float3 LineSegment::ClosestPoint(const Line &other, float *d, float *d2) const
 {
-	Line::ClosestPointLineLine(other.pos, other.dir, a, b - a, d2, d);
-	if (d < 0.f)
+	float t;
+	Line::ClosestPointLineLine(other.pos, other.pos + other.dir, a, b, d2, &t);
+	if (t <= 0.f)
 	{
-		d = 0.f;
-		other.ClosestPoint(a, d2);
+		if (d)
+			*d = 0.f;
+		if (d2)
+			other.ClosestPoint(a, d2);
 		return a;
 	}
-	else if (d > 1.f)
+	else if (t >= 1.f)
 	{
-		d = 1.f;
-		other.ClosestPoint(b, d2);
+		if (d)
+			*d = 1.f;
+		if (d2)
+			other.ClosestPoint(b, d2);
 		return b;
 	}
 	else
-		return GetPoint(d);
+	{
+		if (d)
+			*d = t;
+		return GetPoint(t);
+	}
 }
 
-vec LineSegment::ClosestPoint(const LineSegment &other, float &d, float &d2) const
+float3 LineSegment::ClosestPoint(const LineSegment &other, float *d, float *d2) const
 {
-	vec dir = b - a;
-	Line::ClosestPointLineLine(a, b - a, other.a, other.b - other.a, d, d2);
-	if (d >= 0.f && d <= 1.f && d2 >= 0.f && d2 <= 1.f)
-		return a + d * dir;
-	else if (d >= 0.f && d <= 1.f) // Only d2 is out of bounds.
+	float u, u2;
+	float3 closestPoint = Line::ClosestPointLineLine(a, b, other.a, other.b, &u, &u2);
+	if (u >= 0.f && u <= 1.f && u2 >= 0.f && u2 <= 1.f)
 	{
-		vec p;
-		if (d2 < 0.f)
-		{
-			d2 = 0.f;
-			p = other.a;
-		}
-		else
-		{
-			d2 = 1.f;
-			p = other.b;
-		}
-		return ClosestPoint(p, d);
+		if (d)
+			*d = u;
+		if (d2)
+			*d2 = u2;
+		return closestPoint;
 	}
-	else if (d2 >= 0.f && d2 <= 1.f) // Only d is out of bounds.
+	else if (u >= 0.f && u <= 1.f) // Only u2 is out of bounds.
 	{
-		vec p;
-		if (d < 0.f)
+		float3 p;
+		if (u2 < 0.f)
 		{
-			d = 0.f;
-			p = a;
+			p = other.a;
+			if (d2)
+				*d2 = 0.f;
 		}
 		else
 		{
-			d = 1.f;
-			p = b;
+			p = other.b;
+			if (d2)
+				*d2 = 1.f;
 		}
 
-		other.ClosestPoint(p, d2);
+		return ClosestPoint(p, d);
+	}
+	else if (u2 >= 0.f && u2 <= 1.f) // Only u is out of bounds.
+	{
+		float3 p;
+		if (u < 0.f)
+		{
+			p = a;
+			if (d)
+				*d = 0.f;
+		}
+		else
+		{
+			p = b;
+			if (d)
+				*d = 1.f;
+		}
+
+		if (d2)
+			other.ClosestPoint(p, d2);
 		return p;
 	}
 	else // Both u and u2 are out of bounds.
 	{
-		vec p;
-		if (d < 0.f)
+		float3 p;
+		float t;
+		if (u < 0.f)
 		{
 			p = a;
-			d = 0.f;
+			t = 0.f;
 		}
 		else
 		{
 			p = b;
-			d = 1.f;
+			t = 1.f;
 		}
 
-		vec p2;
-		if (d2 < 0.f)
+		float3 p2;
+		float t2;
+		if (u2 < 0.f)
 		{
 			p2 = other.a;
-			d2 = 0.f;
+			t2 = 0.f;
 		}
 		else
 		{
 			p2 = other.b;
-			d2 = 1.f;
+			t2 = 1.f;
 		}
 
 		float T, T2;
-		vec closestPoint = ClosestPoint(p2, T);
-		vec closestPoint2 = other.ClosestPoint(p, T2);
+		closestPoint = ClosestPoint(p2, &T);
+		float3 closestPoint2 = other.ClosestPoint(p, &T2);
 
 		if (closestPoint.DistanceSq(p2) <= closestPoint2.DistanceSq(p))
 		{
-			d = T;
+			if (d)
+				*d = T;
+			if (d2)
+				*d2 = t2;
 			return closestPoint;
 		}
 		else
 		{
-			d2 = T2;
+			if (d)
+				*d = t;
+			if (d2)
+				*d2 = T2;
 			return p;
 		}
 	}
 }
 
-float LineSegment::Distance(const vec &point, float &d) const
+float LineSegment::Distance(const float3 &point, float *d) const
 {
+	///@todo This function could be slightly optimized.
 	/// See Christer Ericson's Real-Time Collision Detection, p.130.
-	vec closestPoint = ClosestPoint(point, d);
+	float3 closestPoint = ClosestPoint(point, d);
 	return closestPoint.Distance(point);
 }
 
-float LineSegment::DistanceSq(const vec &point) const
+float LineSegment::Distance(const Ray &other, float *d, float *d2) const
 {
-	float d;
-	/// See Christer Ericson's Real-Time Collision Detection, p.130.
-	vec closestPoint = ClosestPoint(point, d);
-	return closestPoint.DistanceSq(point);
+	float u, u2;
+	ClosestPoint(other, &u, &u2);
+	if (d)
+		*d = u;
+	if (d2)
+		*d2 = u2;
+	return GetPoint(u).Distance(other.GetPoint(u2));
 }
 
-float LineSegment::Distance(const Ray &other, float &d, float &d2) const
+float LineSegment::Distance(const Line &other, float *d, float *d2) const
 {
-	ClosestPoint(other, d, d2);
-	return GetPoint(d).Distance(other.GetPoint(d2));
-}
-
-float LineSegment::Distance(const Line &other, float &d, float &d2) const
-{
-	vec closestPoint2 = other.ClosestPoint(*this, d, d2);
-	vec closestPoint = GetPoint(d2);
+	float u, u2;
+	float3 closestPoint2 = other.ClosestPoint(*this, &u, &u2);
+	if (d)
+		*d = u2;
+	if (d2)
+		*d2 = u;
+	float3 closestPoint = GetPoint(u2);
 	return closestPoint.Distance(closestPoint2);
 }
 
-float LineSegment::Distance(const LineSegment &other, float &d, float &d2) const
+float LineSegment::Distance(const LineSegment &other, float *d, float *d2) const
 {
-	ClosestPoint(other, d, d2);
-	return GetPoint(d).Distance(other.GetPoint(d2));
-}
-
-float LineSegment::DistanceSq(const LineSegment &other) const
-{
-	float d, d2;
-	ClosestPoint(other, d, d2);
-	return GetPoint(d).DistanceSq(other.GetPoint(d2));
+	float u, u2;
+	ClosestPoint(other, &u, &u2);
+	if (d)
+		*d = u;
+	if (d2)
+		*d2 = u2;
+	return GetPoint(u).Distance(other.GetPoint(u2));
 }
 
 float LineSegment::Distance(const Plane &other) const
@@ -341,12 +371,12 @@ bool LineSegment::Intersects(const Plane &plane, float *d) const
 	return plane.Intersects(*this, d);
 }
 
-bool LineSegment::Intersects(const Triangle &triangle, float *d, vec *intersectionPoint) const
+bool LineSegment::Intersects(const Triangle &triangle, float *d, float3 *intersectionPoint) const
 {
 	return triangle.Intersects(*this, d, intersectionPoint);
 }
 
-bool LineSegment::Intersects(const Sphere &s, vec *intersectionPoint, vec *intersectionNormal, float *d) const
+bool LineSegment::Intersects(const Sphere &s, float3 *intersectionPoint, float3 *intersectionNormal, float *d) const
 {
 	return s.Intersects(*this, intersectionPoint, intersectionNormal, d) > 0;
 }
@@ -406,7 +436,7 @@ Line LineSegment::ToLine() const
 	return Line(a, Dir());
 }
 
-void LineSegment::ProjectToAxis(const vec &direction, float &outMin, float &outMax) const
+void LineSegment::ProjectToAxis(const float3 &direction, float &outMin, float &outMax) const
 {
 	outMin = Dot(direction, a);
 	outMax = Dot(direction, b);
@@ -438,28 +468,9 @@ LineSegment operator *(const Quat &transform, const LineSegment &l)
 std::string LineSegment::ToString() const
 {
 	char str[256];
-	sprintf(str, "LineSegment(a:(%.2f, %.2f, %.2f) b:(%.2f, %.2f, %.2f))",
+	sprintf_s(str, 256, "LineSegment(a:(%.2f, %.2f, %.2f) b:(%.2f, %.2f, %.2f))",
 		a.x, a.y, a.z, b.x, b.y, b.z);
 	return str;
-}
-
-std::string LineSegment::SerializeToString() const
-{
-	char str[256];
-	char *s = SerializeFloat(a.x, str); *s = ','; ++s;
-	s = SerializeFloat(a.y, s); *s = ','; ++s;
-	s = SerializeFloat(a.z, s); *s = ','; ++s;
-	s = SerializeFloat(b.x, s); *s = ','; ++s;
-	s = SerializeFloat(b.y, s); *s = ','; ++s;
-	s = SerializeFloat(b.z, s);
-	assert(s+1 - str < 256);
-	MARK_UNUSED(s);
-	return str;
-}
-
-std::string LineSegment::SerializeToCodeString() const
-{
-	return "LineSegment(" + a.SerializeToCodeString() + "," + b.SerializeToCodeString() + ")";
 }
 
 std::ostream &operator <<(std::ostream &o, const LineSegment &lineSegment)
@@ -470,29 +481,13 @@ std::ostream &operator <<(std::ostream &o, const LineSegment &lineSegment)
 
 #endif
 
-LineSegment LineSegment::FromString(const char *str, const char **outEndStr)
-{
-	assume(str);
-	if (!str)
-		return LineSegment(vec::nan, vec::nan);
-	LineSegment l;
-	MATH_SKIP_WORD(str, "LineSegment(");
-	MATH_SKIP_WORD(str, "a:(");
-	l.a = PointVecFromString(str, &str);
-	MATH_SKIP_WORD(str, " b:(");
-	l.b = PointVecFromString(str, &str);
-	if (outEndStr)
-		*outEndStr = str;
-	return l;
-}
-
 #ifdef MATH_GRAPHICSENGINE_INTEROP
 
 void LineSegment::ToLineList(VertexBuffer &vb) const
 {
 	int startIndex = vb.AppendVertices(2);
-	vb.Set(startIndex, VDPosition, POINT_TO_FLOAT4(a));
-	vb.Set(startIndex+1, VDPosition, POINT_TO_FLOAT4(b));
+	vb.Set(startIndex, VDPosition, float4(a, 1.f));
+	vb.Set(startIndex+1, VDPosition, float4(b, 1.f));
 }
 
 #endif

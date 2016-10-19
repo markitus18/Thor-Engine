@@ -82,7 +82,7 @@ SIMDCapability DetectSIMDCapability()
 #endif
 //	bool    bMOVOptimization = false;
 
-	CpuId(CPUInfo, 0);
+	__cpuid(CPUInfo, 0);
 	nIds = CPUInfo[0];
 
 	// Get the information associated with each valid Id
@@ -91,7 +91,7 @@ SIMDCapability DetectSIMDCapability()
 	{
 	//	__cpuid(CPUInfo, i);
 
-		CpuId(CPUInfo, 1);
+		__cpuid(CPUInfo, 1);
 		// Interpret CPU feature information.
 //		if  (i == 1)
 		{
@@ -167,10 +167,7 @@ SIMDCapability DetectSIMDCapability()
 const int simdCapability = DetectSIMDCapability();
 
 TriangleMesh::TriangleMesh()
-:data(0), numTriangles(0), vertexSizeBytes(0)
-#ifdef _DEBUG
-, vertexDataLayout(0)
-#endif
+:data(0), numTriangles(0)
 {
 
 }
@@ -180,58 +177,32 @@ TriangleMesh::~TriangleMesh()
 	AlignedFree(data);
 }
 
-TriangleMesh::TriangleMesh(const TriangleMesh &rhs)
-:data(0), numTriangles(0), vertexSizeBytes(0)
-#ifdef _DEBUG
-, vertexDataLayout(0)
-#endif
-{
-	*this = rhs;
-}
-
-TriangleMesh &TriangleMesh::operator =(const TriangleMesh &rhs)
-{
-	if (this == &rhs)
-		return *this;
-
-#ifdef _DEBUG
-	vertexDataLayout = rhs.vertexDataLayout;
-#endif
-	ReallocVertexBuffer(rhs.numTriangles, rhs.vertexSizeBytes);
-	memcpy(data, rhs.data, numTriangles*3*vertexSizeBytes);
-
-	return *this;
-}
-
 void TriangleMesh::Set(const Polyhedron &polyhedron)
 {
-	TriangleArray tris = polyhedron.Triangulate();
+	std::vector<Triangle> tris = polyhedron.Triangulate();
 	if (!tris.empty())
 	{
 		int alignment = (simdCapability == SIMD_AVX) ? 8 : ((simdCapability == SIMD_SSE41 || simdCapability == SIMD_SSE2) ? 4 : 1);
-		vec degen = POINT_VEC_SCALAR(-FLOAT_INF);
+		float3 degen(-FLOAT_INF, -FLOAT_INF, -FLOAT_INF);
 		Triangle degent(degen, degen, degen);
 		while(tris.size() % alignment != 0)
 			tris.push_back(degent);
-		Set((Triangle*)&tris[0], (int)tris.size());
+		Set(&tris[0], tris.size());
 	}
 }
 
-void TriangleMesh::Set(const float *triangleMesh, int numTris, int vtxSizeBytes)
+void TriangleMesh::Set(const float *triangleMesh, int numTriangles)
 {
-#ifndef MATH_AUTOMATIC_SSE // TODO: Restore support for this when MATH_AUTOMATIC_SSE is defined!
 	if (simdCapability == SIMD_AVX)
-		SetSoA8(triangleMesh, numTriangles, vertexSizeBytes);
+		SetSoA8(triangleMesh, numTriangles);
 	else if (simdCapability == SIMD_SSE41 || simdCapability == SIMD_SSE2)
-		SetSoA4(triangleMesh, numTriangles, vertexSizeBytes);
+		SetSoA4(triangleMesh, numTriangles);
 	else
-#endif
-		SetAoS(triangleMesh, numTris, vtxSizeBytes);
+		SetAoS(triangleMesh, numTriangles);
 }
 
 float TriangleMesh::IntersectRay(const Ray &ray) const
 {
-#ifndef MATH_AUTOMATIC_SSE // TODO: Restore support for this when MATH_AUTOMATIC_SSE is defined!
 #ifdef MATH_AVX
 	if (simdCapability == SIMD_AVX)
 		return IntersectRay_AVX(ray);
@@ -244,7 +215,7 @@ float TriangleMesh::IntersectRay(const Ray &ray) const
 	if (simdCapability == SIMD_SSE2)
 		return IntersectRay_SSE2(ray);
 #endif
-#endif
+
 	int triangleIndex;
 	float u, v;
 	return IntersectRay_TriangleIndex_UV_CPP(ray, triangleIndex, u, v);
@@ -252,7 +223,6 @@ float TriangleMesh::IntersectRay(const Ray &ray) const
 
 float TriangleMesh::IntersectRay_TriangleIndex(const Ray &ray, int &outTriangleIndex) const
 {
-#ifndef MATH_AUTOMATIC_SSE // TODO: Restore support for this when MATH_AUTOMATIC_SSE is defined!
 #ifdef MATH_AVX
 	if (simdCapability == SIMD_AVX)
 		return IntersectRay_TriangleIndex_AVX(ray, outTriangleIndex);
@@ -265,14 +235,13 @@ float TriangleMesh::IntersectRay_TriangleIndex(const Ray &ray, int &outTriangleI
 	if (simdCapability == SIMD_SSE2)
 		return IntersectRay_TriangleIndex_SSE2(ray, outTriangleIndex);
 #endif
-#endif
+
 	float u, v;
 	return IntersectRay_TriangleIndex_UV_CPP(ray, outTriangleIndex, u, v);
 }
 
 float TriangleMesh::IntersectRay_TriangleIndex_UV(const Ray &ray, int &outTriangleIndex, float &outU, float &outV) const
 {
-#ifndef MATH_AUTOMATIC_SSE // TODO: Restore support for this when MATH_AUTOMATIC_SSE is defined!
 #ifdef MATH_AVX
 	if (simdCapability == SIMD_AVX)
 		return IntersectRay_TriangleIndex_UV_AVX(ray, outTriangleIndex, outU, outV);
@@ -285,66 +254,56 @@ float TriangleMesh::IntersectRay_TriangleIndex_UV(const Ray &ray, int &outTriang
 	if (simdCapability == SIMD_SSE2)
 		return IntersectRay_TriangleIndex_UV_SSE2(ray, outTriangleIndex, outU, outV);
 #endif
-#endif
 
 	return IntersectRay_TriangleIndex_UV_CPP(ray, outTriangleIndex, outU, outV);
 }
 
-void TriangleMesh::ReallocVertexBuffer(int numTris, int vertexSizeBytes_)
+void TriangleMesh::ReallocVertexBuffer(int numTris)
 {
 	AlignedFree(data);
-	vertexSizeBytes = vertexSizeBytes_;
-	data = (float*)AlignedMalloc(numTris * 3 * vertexSizeBytes, 32);
+	data = (float*)AlignedMalloc(numTris*3*3*sizeof(float), 32);
 	numTriangles = numTris;
 }
 
-void TriangleMesh::SetAoS(const float *vertexData, int numTris, int vtxSizeBytes)
+void TriangleMesh::SetAoS(const float *vertexData, int numTriangles)
 {
-	ReallocVertexBuffer(numTris, vtxSizeBytes);
+	ReallocVertexBuffer(numTriangles);
 #ifdef _DEBUG
 	vertexDataLayout = 0; // AoS
 #endif
 
-	memcpy(data, vertexData, numTris * 3 * vtxSizeBytes);
+	memcpy(data, vertexData, numTriangles*3*3*4);
 }
 
-void TriangleMesh::SetSoA4(const float *vertexData, int numTris, int vtxSizeBytes)
+void TriangleMesh::SetSoA4(const float *vertexData, int numTriangles)
 {
-	ReallocVertexBuffer(numTris, 3*sizeof(float));
+	ReallocVertexBuffer(numTriangles);
 #ifdef _DEBUG
 	vertexDataLayout = 1; // SoA4
 #endif
 
-	assert(vtxSizeBytes % 4 == 0);
-	int vertexSizeFloats = vtxSizeBytes / 4;
-	int triangleSizeFloats = vertexSizeFloats * 3;
-	assert(numTris % 4 == 0); // We must have an evenly divisible amount of triangles, so that the SoA swizzling succeeds.
+	assert(numTriangles % 4 == 0); // We must have an evenly divisible amount of triangles, so that the SoA swizzling succeeds.
 
 	// From (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz)
 	// To xxxx yyyy zzzz xxxx yyyy zzzz xxxx yyyy zzzz
 
 	float *o = data;
-	for(int i = 0; i + 4 <= numTris; i += 4) // 4 triangles at a time
+	for(int i = 0; i + 4 <= numTriangles; i += 4)
 	{
-		for (int j = 0; j < 3; ++j) // v0,v1,v2
+		for(int j = 0; j < 9; ++j)
 		{
-			const float *src = vertexData;
-			for (int k = 0; k < 3; ++k) // x,y,z
-			{
-				*o++ = src[0];
-				*o++ = src[triangleSizeFloats];
-				*o++ = src[2 * triangleSizeFloats];
-				*o++ = src[3 * triangleSizeFloats];
-				++src;
-			}
-			vertexData += vertexSizeFloats;
+			*o++ = vertexData[0];
+			*o++ = vertexData[9];
+			*o++ = vertexData[18];
+			*o++ = vertexData[27];
+			++vertexData;
 		}
-		vertexData += 3 * triangleSizeFloats;
+		vertexData += 9 * 3;
 	}
 
 #ifdef SOA_HAS_EDGES
 	o = data;
-	for(int i = 0; i + 4 <= numTris; i += 4)
+	for(int i = 0; i + 4 <= numTriangles; i += 4)
 	{
 		for(int j = 12; j < 24; ++j)
 			o[j] -= o[j-12];
@@ -355,47 +314,39 @@ void TriangleMesh::SetSoA4(const float *vertexData, int numTris, int vtxSizeByte
 #endif
 }
 
-void TriangleMesh::SetSoA8(const float *vertexData, int numTris, int vtxSizeBytes)
+void TriangleMesh::SetSoA8(const float *vertexData, int numTriangles)
 {
-	ReallocVertexBuffer(numTris, 3*sizeof(float));
+	ReallocVertexBuffer(numTriangles);
 #ifdef _DEBUG
 	vertexDataLayout = 2; // SoA8
 #endif
 
-	assert(vtxSizeBytes % 4 == 0);
-	int vertexSizeFloats = vtxSizeBytes / 4;
-	int triangleSizeFloats = vertexSizeFloats * 3;
-	assert(numTris % 8 == 0); // We must have an evenly divisible amount of triangles, so that the SoA swizzling succeeds.
+	assert(numTriangles % 8 == 0); // We must have an evenly divisible amount of triangles, so that the SoA swizzling succeeds.
 
-	// From (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz)
+	// From (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz) (xyz xyz xyz)
 	// To xxxxxxxx yyyyyyyy zzzzzzzz xxxxxxxx yyyyyyyy zzzzzzzz xxxxxxxx yyyyyyyy zzzzzzzz
 
 	float *o = data;
-	for(int i = 0; i + 8 <= numTris; i += 8) // 8 triangles at a time.
+	for(int i = 0; i + 8 <= numTriangles; i += 8)
 	{
-		for (int j = 0; j < 3; ++j) // v0, v1, v2
+		for(int j = 0; j < 9; ++j)
 		{
-			const float *src = vertexData;
-			for (int k = 0; k < 3; ++k) // x,y,z
-			{
-				*o++ = src[0];
-				*o++ = src[triangleSizeFloats];
-				*o++ = src[2 * triangleSizeFloats];
-				*o++ = src[3 * triangleSizeFloats];
-				*o++ = src[4 * triangleSizeFloats];
-				*o++ = src[5 * triangleSizeFloats];
-				*o++ = src[6 * triangleSizeFloats];
-				*o++ = src[7 * triangleSizeFloats];
-				++src;
-			}
-			vertexData += vertexSizeFloats;
+			*o++ = vertexData[0];
+			*o++ = vertexData[9];
+			*o++ = vertexData[18];
+			*o++ = vertexData[27];
+			*o++ = vertexData[36];
+			*o++ = vertexData[45];
+			*o++ = vertexData[54];
+			*o++ = vertexData[63];
+			++vertexData;
 		}
-		vertexData += 7 * triangleSizeFloats;
+		vertexData += 9 * 7;
 	}
 
 #ifdef SOA_HAS_EDGES
 	o = data;
-	for(int i = 0; i + 8 <= numTris; i += 8)
+	for(int i = 0; i + 8 <= numTriangles; i += 8)
 	{
 		for(int j = 24; j < 48; ++j)
 			o[j] -= o[j-24];
@@ -409,18 +360,18 @@ void TriangleMesh::SetSoA8(const float *vertexData, int numTris, int vtxSizeByte
 float TriangleMesh::IntersectRay_TriangleIndex_UV_CPP(const Ray &ray, int &outTriangleIndex, float &outU, float &outV) const
 {
 	assert(sizeof(float3) == 3*sizeof(float));
-	assert(sizeof(Triangle) == 3*sizeof(vec));
+	assert(sizeof(Triangle) == 3*sizeof(float3));
 #ifdef _DEBUG
 	assert(vertexDataLayout == 0); // Must be AoS structured!
 #endif
 
 	float nearestD = FLOAT_INF;
+	float u, v, d;
 
 	const Triangle *tris = reinterpret_cast<const Triangle*>(data);
 	for(int i = 0; i < numTriangles; ++i)
 	{
-		float u, v;
-		float d = Triangle::IntersectLineTri(ray.pos, ray.dir, tris->a, tris->b, tris->c, u, v);
+		d = Triangle::IntersectLineTri(ray.pos, ray.dir, tris->a, tris->b, tris->c, u, v);
 		if (d >= 0.f && d < nearestD)
 		{
 			nearestD = d;

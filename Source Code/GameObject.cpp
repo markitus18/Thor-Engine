@@ -67,12 +67,12 @@ void GameObject::DrawAABB()
 {
 	glDisable(GL_LIGHTING);
 	int num_v_aabb = global_AABB.NumVerticesInEdgeList();
-	vec* vertices_aabb = new vec[num_v_aabb];
-	global_AABB.ToEdgeList((vec*)vertices_aabb);
+	float3* vertices_aabb = new float3[num_v_aabb];
+	global_AABB.ToEdgeList(vertices_aabb);
 
 	int num_v_obb = global_OBB.NumVerticesInEdgeList();
-	vec* vertices_obb = new vec[num_v_obb];
-	global_OBB.ToEdgeList((vec*)vertices_obb);
+	float3* vertices_obb = new float3[num_v_obb];
+	global_OBB.ToEdgeList(vertices_obb);
 
 	glBegin(GL_LINES);
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
@@ -168,8 +168,8 @@ void GameObject::ResetTransform()
 
 void GameObject::UpdateTransformMatrix()
 {
-	transform = float4x4::FromTRS(position, rotation, scale);
-	UpdateGlobalTransform();
+	//transform = float4x4::FromTRS(position, rotation, scale);
+	//UpdateGlobalTransform();
 }
 
 void GameObject::UpdateGlobalTransform()

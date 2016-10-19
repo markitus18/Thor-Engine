@@ -18,8 +18,6 @@
 #pragma once
 
 #include "../MathGeoLibFwd.h"
-#include "../Math/float3.h"
-#include "Triangle.h"
 
 MATH_BEGIN_NAMESPACE
 
@@ -31,15 +29,11 @@ public:
 	TriangleMesh();
 	~TriangleMesh();
 
-	TriangleMesh(const TriangleMesh &rhs);
-	TriangleMesh &operator =(const TriangleMesh &rhs);
-
 	/// Specifies the vertex data of this triangle mesh. Replaces any old
 	/// specified geometry.
-	/// @param vertexSizeBytes The size (stride) of a single vertex in memory.
-	void Set(const float *triangleMesh, int numTriangles, int vertexSizeBytes);
-	void Set(const float3 *triangleMesh, int numTris) { Set(reinterpret_cast<const float *>(triangleMesh), numTris, sizeof(float3)); }
-	void Set(const Triangle *triangleMesh, int numTris) { Set(reinterpret_cast<const float *>(triangleMesh), numTris, sizeof(Triangle)/3); }
+	void Set(const float *triangleMesh, int numTriangles);
+	void Set(const float3 *triangleMesh, int numTriangles) { Set(reinterpret_cast<const float *>(triangleMesh), numTriangles); }
+	void Set(const Triangle *triangleMesh, int numTriangles) { Set(reinterpret_cast<const float *>(triangleMesh), numTriangles); }
 
 	void Set(const Polyhedron &polyhedron);
 
@@ -47,9 +41,9 @@ public:
 	float IntersectRay_TriangleIndex(const Ray &ray, int &outTriangleIndex) const;
 	float IntersectRay_TriangleIndex_UV(const Ray &ray, int &outTriangleIndex, float &outU, float &outV) const;
 
-	void SetAoS(const float *vertexData, int numTriangles, int vertexSizeBytes);
-	void SetSoA4(const float *vertexData, int numTriangles, int vertexSizeBytes);
-	void SetSoA8(const float *vertexData, int numTriangles, int vertexSizeBytes);
+	void SetAoS(const float *vertexData, int numTriangles);
+	void SetSoA4(const float *vertexData, int numTriangles);
+	void SetSoA8(const float *vertexData, int numTriangles);
 
 	float IntersectRay_TriangleIndex_UV_CPP(const Ray &ray, int &outTriangleIndex, float &outU, float &outV) const;
 
@@ -72,13 +66,12 @@ public:
 #endif
 
 private:
-	float *data; // This is always allocated to tightly-packed numTriangles*3*vertexSizeBytes bytes.
-	int numTriangles;
-	int vertexSizeBytes;
+	float *data;
 #ifdef _DEBUG
 	int vertexDataLayout; // 0 - AoS, 1 - SoA4, 2 - SoA8
 #endif
-	void ReallocVertexBuffer(int numTriangles, int vertexSizeBytes);
+	int numTriangles;
+	void ReallocVertexBuffer(int numTriangles);
 };
 
 MATH_END_NAMESPACE

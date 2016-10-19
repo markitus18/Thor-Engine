@@ -157,8 +157,8 @@ void C_Mesh::DrawAABB()
 	float3 maxPoint = float3(bounds.maxPoint);
 
 	int num_v = bounds.NumVerticesInEdgeList();
-	vec* vertices = new vec[num_v];
-	bounds.ToEdgeList((vec*)vertices);
+	float3* vertices = new float3[num_v];
+	bounds.ToEdgeList(vertices);
 
 
 	glBegin(GL_LINES);
@@ -178,7 +178,7 @@ void C_Mesh::DrawAABB()
 void C_Mesh::UpdateAABB()
 {
 	bounds.SetNegativeInfinity();
-	bounds.Enclose((math::vec*)vertices, num_vertices);
+	bounds.Enclose((float3*)vertices, num_vertices);
 }
 
 void C_Mesh::AddMaterial(C_Material* material)

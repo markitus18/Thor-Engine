@@ -21,15 +21,21 @@
 #include <cstdarg>
 #include <stdio.h>
 
-#include "Callstack.h"
-
-#if defined(WIN32) || defined(WIN8PHONE)
-#include "../Math/InclWindows.h"
+#if defined(WIN32) && !defined(WIN8RT)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #endif
 
 #if defined(ANDROID)
 /// This will require you to pass '-llog' on the command line to link against the Android logging libraries.
 #include <android/log.h>
+#endif
+
+#ifdef WIN8PHONE
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <Windows.h>
 #endif
 
 #ifdef _MSC_VER
@@ -82,29 +88,17 @@ void PrintToConsole(MathLogChannel channel, const char *str)
 
 void PrintToConsole(MathLogChannel channel, const char *str)
 {
-	if (channel == MathLogError || channel == MathLogErrorNoCallstack)
+	if (channel == MathLogError)
 	{
-		SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY); // Red
+		SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
 		fprintf(stderr, "Error: %s\n", str);
-		SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_INTENSITY); // Dark gray
-		if (channel != MathLogErrorNoCallstack)
-		{
-			std::string callstack = GetCallstack("  ", "PrintToConsole");
-			fprintf(stderr, "%s", callstack.c_str());
-		}
-		SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Light gray/default
+		SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
-	else if (channel == MathLogWarning || channel == MathLogWarningNoCallstack)
+	else if (channel == MathLogWarning)
 	{
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY); // Yellow
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
 		printf("Warning: %s\n", str);
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY); // Dark gray
-		if (channel != MathLogWarningNoCallstack)
-		{
-			std::string callstack = GetCallstack("  ", "PrintToConsole");
-			printf("%s", callstack.c_str());
-		}
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Light gray/default
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
 	else
 		printf("%s\n", str);
@@ -114,27 +108,10 @@ void PrintToConsole(MathLogChannel channel, const char *str)
 
 void PrintToConsole(MathLogChannel channel, const char *str)
 {
-#ifdef WIN8RT
-	OutputDebugStringA(str);
-#endif
-	if (channel == MathLogError || channel == MathLogErrorNoCallstack)
-	{
+	if (channel == MathLogError)
 		fprintf(stderr, "Error: %s\n", str);
-		if (channel != MathLogErrorNoCallstack)
-		{
-			std::string callstack = GetCallstack("  ", "PrintToConsole");
-			fprintf(stderr, "%s", callstack.c_str());
-		}
-	}
-	else if (channel == MathLogWarning || channel == MathLogWarningNoCallstack)
-	{
+	else if (channel == MathLogWarning)
 		printf("Warning: %s\n", str);
-		if (channel != MathLogWarningNoCallstack)
-		{
-			std::string callstack = GetCallstack("  ", "PrintToConsole");
-			printf("%s", callstack.c_str());
-		}
-	}
 	else
 		printf("%s\n", str);
 }
@@ -143,7 +120,7 @@ void PrintToConsole(MathLogChannel channel, const char *str)
 
 void PrintToConsoleVariadic(MathLogChannel channel, const char *format, ...)
 {
-	const int capacity = 2048;
+	const int capacity = 512;
 	char str[capacity];
 
 	va_list args;
@@ -152,8 +129,6 @@ void PrintToConsoleVariadic(MathLogChannel channel, const char *format, ...)
 	vsnprintf((char *)str, capacity, format, args);
 	str[capacity-1] = 0; // We only support logging a fixed-length string so don't care if we fail/truncate, just make sure we zero-terminate so there won't be any issues.
 	PrintToConsole(channel, str);
-
-	va_end(args);
 }
 
 MATH_END_NAMESPACE

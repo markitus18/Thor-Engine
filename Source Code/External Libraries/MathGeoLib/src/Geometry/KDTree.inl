@@ -28,7 +28,7 @@ MATH_BEGIN_NAMESPACE
 template<typename T>
 int KdTree<T>::AllocateNodePair()
 {
-	int index = (int)nodes.size();
+	int index = nodes.size();
 	KdTreeNode n;
 	n.splitAxis = AxisNone; // The newly allocated nodes will be leaves.
 	n.bucketIndex = 0;
@@ -54,7 +54,7 @@ AABB KdTree<T>::BoundingAABB(const u32 *bucket) const
 	a.SetNegativeInfinity();
 
 	while(*bucket != BUCKET_SENTINEL)
-		a.Enclose(Object(*bucket++).BoundingAABB());
+		a.Enclose(objects[*bucket++].BoundingAABB());
 
 	return a;
 }
@@ -90,7 +90,7 @@ void KdTree<T>::SplitLeaf(int nodeIndex, const AABB &nodeAABB, int numObjectsInB
 	int numObjectsRight = 0;
 	while(*curObject != BUCKET_SENTINEL)
 	{
-		AABB aabb = Object(*curObject).BoundingAABB();
+		AABB aabb = objects[*curObject].BoundingAABB();
 		bool left = leftAABB.Intersects(aabb);
 		bool right = rightAABB.Intersects(aabb);
 		if (!left && !right)
@@ -139,7 +139,7 @@ void KdTree<T>::SplitLeaf(int nodeIndex, const AABB &nodeAABB, int numObjectsInB
 
 	// For the right child, allocate a new bucket.
 	KdTreeNode *rightChild = &nodes[childIndex+1];
-	rightChild->bucketIndex = (u32)buckets.size();
+	rightChild->bucketIndex = buckets.size();
 	buckets.push_back(rightBucket);
 
 	assert(numObjectsLeft < numObjectsInBucket && numObjectsRight < numObjectsInBucket);
@@ -172,13 +172,13 @@ const u32 *KdTree<T>::Bucket(int bucketIndex) const
 template<typename T>
 T &KdTree<T>::Object(int objectIndex)
 {
-	return (T&)objects[sizeof(T)*objectIndex];
+	return objects[objectIndex];
 }
 
 template<typename T>
 const T &KdTree<T>::Object(int objectIndex) const
 {
-	return (const T&)objects[sizeof(T)*objectIndex];
+	return objects[objectIndex];
 }
 
 /// Returns the total number of nodes (all nodes, i.e. inner nodes + leaves) in the tree.
@@ -198,12 +198,6 @@ int KdTree<T>::NumLeaves() const
 			++numLeaves;
 
 	return numLeaves;
-}
-
-template<typename T>
-int KdTree<T>::NumObjects() const
-{
-	return (int)(objects.size() / sizeof(T));
 }
 
 /// Returns the total number of inner nodes in the tree.
@@ -236,7 +230,7 @@ int KdTree<T>::TreeHeight() const
 template<typename T>
 void KdTree<T>::AddObjects(const T *objects_, int numObjects)
 {
-	objects.insert(objects.end(), (const u8*)objects_, (const u8*)(objects_ + numObjects));
+	objects.insert(objects.end(), objects_, objects_ + numObjects);
 #ifdef _DEBUG
 	needsBuilding = true;
 #endif
@@ -266,17 +260,17 @@ void KdTree<T>::Build()
 	nodes.push_back(rootNode);
 
 	// Initially, add all objects to the root node.
-	u32 *rootBucket = new u32[NumObjects()+1];
-	for(int i = 0; i < NumObjects(); ++i)
-		rootBucket[i] = (u32)i;
-	rootBucket[NumObjects()] = BUCKET_SENTINEL;
+	u32 *rootBucket = new u32[objects.size()+1];
+	for(size_t i = 0; i < objects.size(); ++i)
+		rootBucket[i] = i;
+	rootBucket[objects.size()] = BUCKET_SENTINEL;
 	buckets.push_back(rootBucket);
 
 	rootAABB = BoundingAABB(rootBucket);
 
 	// We now have a single root leaf node which is unsplit and contains all the objects
 	// in the kD-tree. Now recursively subdivide until the whole tree is built.
-	SplitLeaf(1, rootAABB, NumObjects(), 1);
+	SplitLeaf(1, rootAABB, objects.size(), 1);
 
 #ifdef _DEBUG
 	needsBuilding = false;
@@ -352,7 +346,7 @@ inline void KdTree<T>::RayQuery(const Ray &r, Func &nodeProcessFunc)
 	{
 		KdTreeNode *node;
 		float t;
-		vec pos; // entry/exit point coordinates
+		float3 pos; // entry/exit point coordinates
 		StackPtr prev; // index (pointer) to the previous item in stack.
 	};
 
@@ -678,7 +672,7 @@ struct NearestObjectsTraversalNode
 
 template<typename T>
 template<typename Func>
-inline void KdTree<T>::NearestObjects(const vec &point, Func &leafCallback)
+inline void KdTree<T>::NearestObjects(const float3 &point, Func &leafCallback)
 {
 	MaxHeap<NearestObjectsTraversalNode> queue;
 	NearestObjectsTraversalNode t;

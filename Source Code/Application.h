@@ -14,7 +14,7 @@ class ModuleAudio;
 class ModuleScene;
 
 class ModuleRenderer3D;
-class ModuleCamera3D;
+class ModuleCamera;
 class ModuleEditor;
 class ModuleImport;
 class ModuleMaterials;
@@ -28,7 +28,7 @@ public:
 	ModuleScene* scene = NULL;
 
 	ModuleRenderer3D* renderer3D = NULL;
-	ModuleCamera3D* camera = NULL;
+	ModuleCamera* camera = NULL;
 
 	ModuleEditor* moduleEditor = NULL;
 	ModuleImport* moduleImport = NULL;

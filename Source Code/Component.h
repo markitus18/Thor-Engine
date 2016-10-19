@@ -14,6 +14,7 @@ public:
 		Transform, //?
 		Mesh,
 		Material,
+		Camera,
 	};
 
 public:

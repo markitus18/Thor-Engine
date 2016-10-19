@@ -139,9 +139,6 @@
     <ClCompile Include="Source Code\ModuleAudio.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleCamera3D.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\ModuleInput.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -210,6 +207,9 @@
     </ClCompile>
     <ClCompile Include="Source Code\C_Camera.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ModuleCamera.cpp">
+      <Filter>Source Code\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -441,9 +441,6 @@
     <ClInclude Include="Source Code\ModuleAudio.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleCamera3D.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\ModuleInput.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
@@ -548,6 +545,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\C_Camera.h">
       <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ModuleCamera.h">
+      <Filter>Source Code\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

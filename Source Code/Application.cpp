@@ -6,7 +6,7 @@
 #include "ModuleAudio.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
+#include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleImport.h"
 #include "ModuleMaterials.h"
@@ -20,7 +20,7 @@ Application::Application()
 	scene = new ModuleScene(this, true);
 
 	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
+	camera = new ModuleCamera(this);
 
 	moduleEditor = new ModuleEditor(this);
 	moduleImport = new ModuleImport(this);

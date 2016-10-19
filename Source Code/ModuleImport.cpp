@@ -160,8 +160,11 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			child = gameObject;
 		}
 
-		C_Mesh* mesh = (C_Mesh*)child->CreateComponent(Component::Type::Mesh);
+		//WARNING: we need to add the mesh after its loaded so gameObject loads AABB
+		C_Mesh* mesh = new C_Mesh();
 		LoadMesh(mesh, newMesh);
+		child->AddComponent(mesh);
+
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];

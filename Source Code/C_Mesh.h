@@ -14,6 +14,7 @@ class C_Material;
 class C_Mesh : public Component
 {
 public:
+	C_Mesh();
 	C_Mesh(GameObject* new_GameObject);
 	~C_Mesh();
 	void ReleaseBuffers();
@@ -29,8 +30,11 @@ public:
 	void AddMaterial(C_Material*);
 	Component* CreateMaterial();
 	void RemoveMaterial(C_Material*);
+
 	const C_Material* GetMaterial(uint position) const;
 	uint GetMaterialsSize() const;
+
+	const AABB& GetAABB() const;
 
 public:
 	//Vertices data

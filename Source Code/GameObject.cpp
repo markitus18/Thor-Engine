@@ -9,17 +9,13 @@ GameObject::GameObject()
 GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), position(translation), scale(scale),
 						rotation(rotation)
 {
-	UpdateTransformMatrix();
-
 	//Hierarchy setup ---
 	parent = new_parent;
 	if (new_parent)
 		new_parent->childs.push_back(this);
 
 	//Matrix setup
-	global_transform = parent ? parent->global_transform * transform  : transform;
-	global_transformT = global_transform.Transposed();
-
+	UpdateTransformMatrix();
 	UpdateEulerAngles();
 }
 
@@ -42,9 +38,6 @@ GameObject::~GameObject()
 
 void GameObject::Draw(bool shaded, bool wireframe)
 {
-	glPushMatrix();
-	glMultMatrixf((float*)&global_transformT);
-
 	C_Mesh* _mesh = NULL;
 	for(uint i = 0; i < components.size(); i++)
 	{
@@ -55,18 +48,51 @@ void GameObject::Draw(bool shaded, bool wireframe)
 	}
 	if (_mesh)
 	{
+		glPushMatrix();
+		glMultMatrixf((float*)&global_transformT);
 		_mesh->Draw(shaded, wireframe);
+		glPopMatrix();
+		if (selected || IsParentSelected())
+			DrawAABB();
 	}
-	glPopMatrix();
-	if (_mesh)
-	{
-		_mesh->DrawAABB();
-	}
+
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)
 			childs[i]->Draw(shaded, wireframe);	
 	}
+}
+
+void GameObject::DrawAABB()
+{
+	glDisable(GL_LIGHTING);
+	int num_v_aabb = global_AABB.NumVerticesInEdgeList();
+	vec* vertices_aabb = new vec[num_v_aabb];
+	global_AABB.ToEdgeList((vec*)vertices_aabb);
+
+	int num_v_obb = global_OBB.NumVerticesInEdgeList();
+	vec* vertices_obb = new vec[num_v_obb];
+	global_OBB.ToEdgeList((vec*)vertices_obb);
+
+	glBegin(GL_LINES);
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	for (uint i = 0; i < global_AABB.NumVerticesInEdgeList(); i++)
+	{
+		glVertex3f(vertices_aabb[i].x, vertices_aabb[i].y, vertices_aabb[i].z);
+	}
+
+	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+	for (uint i = 0; i < global_OBB.NumVerticesInEdgeList(); i++)
+	{
+		glVertex3f(vertices_obb[i].x, vertices_obb[i].y, vertices_obb[i].z);
+	}
+
+	RELEASE(vertices_aabb);
+	RELEASE(vertices_obb);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnd();
+	glEnable(GL_LIGHTING);
 }
 
 float3 GameObject::GetPosition() const
@@ -143,15 +169,15 @@ void GameObject::ResetTransform()
 void GameObject::UpdateTransformMatrix()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
-	//transform.Transpose();
-	global_transform = parent ? parent->global_transform * transform : transform;
-	global_transformT = global_transform.Transposed();
+	UpdateGlobalTransform();
 }
 
 void GameObject::UpdateGlobalTransform()
 {
 	global_transform = parent ? parent->global_transform * transform : transform;
 	global_transformT = global_transform.Transposed();
+
+	UpdateAABB();
 
 	for (uint i = 0; i < childs.size(); i++)
 	{
@@ -163,6 +189,21 @@ void GameObject::UpdateEulerAngles()
 {
 	rotation_euler = rotation.ToEulerXYZ();
 	rotation_euler *= RADTODEG;
+}
+
+void GameObject::UpdateAABB()
+{
+	std::vector<Component*> meshes;
+	GetComponents(Component::Type::Mesh, meshes);
+	if (meshes.size())
+	{
+		const AABB aabb = ((C_Mesh*)meshes[0])->GetAABB();
+		global_OBB = aabb;
+		global_OBB.Transform(global_transform);
+
+		global_AABB.SetNegativeInfinity();
+		global_AABB.Enclose(global_OBB);
+	}
 }
 
 bool GameObject::HasFlippedNormals() const
@@ -237,6 +278,8 @@ void GameObject::AddComponent(Component* component)
 			if (!HasComponent(Component::Type::Mesh))
 			{
 				components.push_back(component);
+				component->gameObject = this;
+				UpdateAABB();
 			}
 			break;
 		}

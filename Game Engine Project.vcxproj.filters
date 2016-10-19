@@ -208,6 +208,9 @@
     <ClCompile Include="Source Code\PanelButtons.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\C_Camera.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -542,6 +545,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\PanelButtons.h">
       <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\C_Camera.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

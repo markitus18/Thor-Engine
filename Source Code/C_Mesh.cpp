@@ -2,6 +2,10 @@
 #include "OpenGL.h"
 #include "GameObject.h"
 
+C_Mesh::C_Mesh() : Component(Type::Mesh, NULL)
+{
+}
+
 C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObject)
 {
 
@@ -212,4 +216,9 @@ const C_Material* C_Mesh::GetMaterial(uint position) const
 uint C_Mesh::GetMaterialsSize() const
 {
 	return materials.size();
+}
+
+const AABB& C_Mesh::GetAABB() const
+{
+	return bounds;
 }

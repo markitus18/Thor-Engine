@@ -18,7 +18,8 @@ public:
 	~GameObject();
 
 	void Draw(bool shaded, bool wireframe);
-
+	void DrawAABB();
+	
 	float3		GetPosition() const;
 	float3		GetScale() const;
 	Quat		GetQuatRotation() const;
@@ -35,6 +36,7 @@ public:
 	void UpdateTransformMatrix();
 	void UpdateGlobalTransform();
 	void UpdateEulerAngles();
+	void UpdateAABB();
 
 	bool HasFlippedNormals() const;
 
@@ -56,6 +58,8 @@ public:
 	GameObject*					parent = NULL;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
+	AABB						global_AABB;
+	OBB							global_OBB;
 
 private:
 	float4x4	transform;

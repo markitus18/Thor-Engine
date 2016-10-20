@@ -444,16 +444,6 @@ float3 float3x3::WorldZ() const
 	return Col(2);
 }
 
-float *float3x3::ptr()
-{
-	return &v[0][0];
-}
-
-const float *float3x3::ptr() const
-{
-	return &v[0][0];
-}
-
 void float3x3::SetRow(int row, float x, float y, float z)
 {
 	assume(row >= 0);
@@ -615,7 +605,7 @@ void float3x3::SetRotatePartZ(float angle)
 
 void float3x3::SetRotatePart(const float3 &axisDirection, float angle)
 {
-	SetRotatePart(Quat(axisDirection, angle));
+	SetRotationAxis3x3(*this, axisDirection, angle);
 }
 
 void float3x3::SetRotatePart(const Quat &q)
@@ -633,6 +623,9 @@ float3x3 float3x3::LookAt(const float3 &localForward, const float3 &targetDirect
 
 	// In the local space, the forward and up directions must be perpendicular to be well-formed.
 	assume(localForward.IsPerpendicular(localUp));
+
+	// In the world space, the targetDirection and worldUp cannot be degenerate (collinear)
+	assume(!targetDirection.Cross(worldUp).IsZero() && "Passed a degenerate coordinate frame to look towards in float3x3::LookAt!");
 
 	// Generate the third basis vector in the local space.
 	float3 localRight = localUp.Cross(localForward).Normalized();
@@ -788,10 +781,6 @@ float3x3 float3x3::Adjugate() const
 
 bool float3x3::Inverse(float epsilon)
 {
-#ifdef MATH_ASSERT_CORRECTNESS
-	float3x3 orig = *this;
-#endif
-
 	// There exists a generic matrix inverse calculator that uses Gaussian elimination.
 	// It would be invoked by calling
 	// return InverseMatrix(*this, epsilon);
@@ -800,13 +789,6 @@ bool float3x3::Inverse(float epsilon)
 	bool success = InverseMatrix(i, epsilon);
 	if (!success)
 		return false;
-
-#ifdef MATH_ASSERT_CORRECTNESS
-	float3x3 id = orig * i;
-	float3x3 id2 = i * orig;
-	mathassert(id.IsIdentity(0.5f));
-	mathassert(id2.IsIdentity(0.5f));
-#endif
 
 	*this = i;
 	return true;
@@ -876,7 +858,7 @@ bool float3x3::SolveAxb(float3 b, float3 &x) const
 		Swap(v02, v12);
 		Swap(b[0], b[1]);
 	}
-	else if (v20 >= v00)
+	else if (av20 >= av00)
 	{
 		Swap(v00, v20);
 		Swap(v01, v21);
@@ -1182,8 +1164,8 @@ void float3x3::BatchTransform(float3 *pointArray, int numPoints, int stride) con
 	u8 *data = reinterpret_cast<u8*>(pointArray);
 	for(int i = 0; i < numPoints; ++i)
 	{
-		float3 *v = reinterpret_cast<float3*>(data + stride*i);
-		*v = *this * *v;
+		float3 *vtx = reinterpret_cast<float3*>(data + stride*i);
+		*vtx = *this * *vtx;
 	}
 }
 
@@ -1209,8 +1191,8 @@ void float3x3::BatchTransform(float4 *vectorArray, int numVectors, int stride) c
 	u8 *data = reinterpret_cast<u8*>(vectorArray);
 	for(int i = 0; i < numVectors; ++i)
 	{
-		float4 *v = reinterpret_cast<float4*>(data + stride*i);
-		*v = *this * *v;
+		float4 *vtx = reinterpret_cast<float4*>(data + stride*i);
+		*vtx = *this * *vtx;
 	}
 }
 
@@ -1444,7 +1426,7 @@ bool float3x3::Equals(const float3x3 &other, float epsilon) const
 std::string float3x3::ToString() const
 {
 	char str[256];
-	sprintf_s(str, 256,"(%.2f, %.2f, %.2f) (%.2f, %.2f, %.2f) (%.2f, %.2f, %.2f)",
+	sprintf(str, "(%.2f, %.2f, %.2f) (%.2f, %.2f, %.2f) (%.2f, %.2f, %.2f)",
 		v[0][0], v[0][1], v[0][2],
 		v[1][0], v[1][1], v[1][2],
 		v[2][0], v[2][1], v[2][2]);
@@ -1452,10 +1434,27 @@ std::string float3x3::ToString() const
 	return std::string(str);
 }
 
+std::string float3x3::SerializeToString() const
+{
+	char str[256];
+	char *s = SerializeFloat(v[0][0], str); *s = ','; ++s;
+	s = SerializeFloat(v[0][1], s); *s = ','; ++s;
+	s = SerializeFloat(v[0][2], s); *s = ','; ++s;
+	s = SerializeFloat(v[1][0], s); *s = ','; ++s;
+	s = SerializeFloat(v[1][1], s); *s = ','; ++s;
+	s = SerializeFloat(v[1][2], s); *s = ','; ++s;
+	s = SerializeFloat(v[2][0], s); *s = ','; ++s;
+	s = SerializeFloat(v[2][1], s); *s = ','; ++s;
+	s = SerializeFloat(v[2][2], s);
+	assert(s+1 - str < 256);
+	MARK_UNUSED(s);
+	return str;
+}
+
 std::string float3x3::ToString2() const
 {
 	char str[256];
-	sprintf_s(str, 256,"float3x3(X:(%.2f,%.2f,%.2f) Y:(%.2f,%.2f,%.2f) Z:(%.2f,%.2f,%.2f)",
+	sprintf(str, "float3x3(X:(%.2f,%.2f,%.2f) Y:(%.2f,%.2f,%.2f) Z:(%.2f,%.2f,%.2f)",
 		v[0][0], v[1][0], v[2][0],
 		v[0][1], v[1][1], v[2][1],
 		v[0][2], v[1][2], v[2][2]);

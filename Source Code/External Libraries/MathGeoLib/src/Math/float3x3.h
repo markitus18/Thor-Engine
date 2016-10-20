@@ -25,14 +25,15 @@
 #include "../MathGeoLibFwd.h"
 #include "MatrixProxy.h"
 #include "../Math/float3.h"
-#include "CoordinateAxisConvention.h"
 
 #ifdef MATH_OGRE_INTEROP
 #include <OgreMatrix3.h>
 #endif
-
 #ifdef MATH_BULLET_INTEROP
-#include "Bullet/src/LinearMath/btMatrix3x3.h"
+#include <LinearMath/btMatrix3x3.h>
+#endif
+#ifdef MATH_URHO3D_INTEROP
+#include <Urho3D/Math/Matrix3.h>
 #endif
 
 MATH_BEGIN_NAMESPACE
@@ -91,8 +92,8 @@ public:
 
 	/// A compile-time constant float3x3 which has NaN in each element.
 	/// For this constant, each element has the value of quiet NaN, or Not-A-Number.
-	/// @note Never compare a float3x3 to this value! Due to how IEEE floats work, for each float x, both the expression "x == nan" and "x != nan" returns false!
-	///	   That is, nothing is equal to NaN, not even NaN itself!
+	/// @note Never compare a float3x3 to this value! Due to how IEEE floats work, "nan == nan" returns false!
+	///    That is, nothing is equal to NaN, not even NaN itself!
 	static const float3x3 nan;
 
 	/// Creates a new float3x3 with uninitialized member values.
@@ -329,9 +330,8 @@ public:
 	/// @return A pointer to the upper-left element. The data is contiguous in memory.
 	/// ptr[0] gives the element [0][0], ptr[1] is [0][1], ptr[2] is [0][2].
 	/// ptr[4] == [1][0], ptr[5] == [1][1], ..., and finally, ptr[15] == [3][3].
-	float *ptr();
-	/// @return A pointer to the upper-left element . The data is contiguous in memory.
-	const float *ptr() const;
+	FORCE_INLINE float *ptr() { return &v[0][0]; }
+	FORCE_INLINE const float *ptr() const { return &v[0][0]; }
 
 	/// Sets the values of the given row.
 	/** @param row The index of the row to set, in the range [0-2].
@@ -411,11 +411,13 @@ public:
 	/// Returns the adjugate of this matrix.
 //	float3x3 Adjugate() const;
 
+	/// Inverts this matrix using numerically stable Gaussian elimination.
+	/// @return Returns true on success, false otherwise.
+	bool Inverse(float epsilon = 1e-6f);
+
 	/// Inverts this matrix using Cramer's rule.
 	/// @return Returns true on success, false otherwise.
-	bool Inverse(float epsilon = 1e-3f);
-
-	bool InverseFast(float epsilon = 1e-3f);
+	bool InverseFast(float epsilon = 1e-6f);
 
 	/// Solves the linear equation Ax=b.
 	/** The matrix A in the equations is this matrix. */
@@ -614,6 +616,7 @@ public:
 #ifdef MATH_ENABLE_STL_SUPPORT
 	/// Returns "(m00, m01, m02; m10, m11, m12; m20, m21, m22)".
 	std::string ToString() const;
+	std::string SerializeToString() const;
 
 	std::string ToString2() const;
 #endif
@@ -663,24 +666,39 @@ public:
 	float4x4 Mul(const float4x4 &rhs) const;
 	float3x3 Mul(const Quat &rhs) const;
 	float3 Mul(const float3 &rhs) const;
+	float4 Mul(const float4 &rhs) const
+	{
+		return float4(Mul(rhs.xyz()), rhs.w);
+	}
 	float3 MulPos(const float3 &rhs) const { return Mul(rhs); }
+	float4 MulPos(const float4 &rhs) const
+	{
+		assume(!EqualAbs(rhs.w, 0.f));
+		return Mul(rhs);
+	}
 	float3 MulDir(const float3 &rhs) const { return Mul(rhs); }
+	float4 MulDir(const float4 &rhs) const
+	{
+		assume(EqualAbs(rhs.w, 0.f));
+		return Mul(rhs);
+	}
 
 #ifdef MATH_OGRE_INTEROP
 	float3x3(const Ogre::Matrix3 &m) { Set(&m[0][0]); }
 	operator Ogre::Matrix3() { return Ogre::Matrix3(v[0][0], v[0][1], v[0][2], v[1][0], v[1][1], v[1][2], v[2][0], v[2][1], v[2][2]); }
 #endif
-
 #ifdef MATH_BULLET_INTEROP
 	float3x3(const btMatrix3x3 &m) { Set(m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2]); }
-	operator btMatrix3x3() const { return btMatrix3x3(v[0][0], v[0][1], v[0][2], v[1][0], v[1][1], v[1][2], v[2][0], v[2][1], v[2][2]); }
+	operator btMatrix3x3() { return btMatrix3x3(v[0][0], v[0][1], v[0][2], v[1][0], v[1][1], v[1][2], v[2][0], v[2][1], v[2][2]); }
 #endif
-
 #ifdef MATH_QT_INTEROP
 	operator QString() const { return toString(); }
 	QString toString() const { return ToString2().c_str(); }
 #endif
-
+#ifdef MATH_URHO3D_INTEROP
+	float3x3(const Urho3D::Matrix3 &m) { Set(m.m00_, m.m01_, m.m02_, m.m10_, m.m11_, m.m12_, m.m20_, m.m21_, m.m22_); }
+	operator Urho3D::Matrix3() { return Urho3D::Matrix3(ptr()); }
+#endif
 };
 
 #ifdef MATH_ENABLE_STL_SUPPORT

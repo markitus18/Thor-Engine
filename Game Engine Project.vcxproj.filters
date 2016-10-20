@@ -208,7 +208,7 @@
     <ClCompile Include="Source Code\C_Camera.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleCamera.cpp">
+    <ClCompile Include="Source Code\ModuleCamera3D.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
   </ItemGroup>
@@ -546,7 +546,7 @@
     <ClInclude Include="Source Code\C_Camera.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleCamera.h">
+    <ClInclude Include="Source Code\ModuleCamera3D.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
   </ItemGroup>

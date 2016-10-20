@@ -5,7 +5,6 @@
 #include "Light.h"
 
 #define MAX_LIGHTS 8
-class C_Camera;
 
 class ModuleRenderer3D : public Module
 {
@@ -19,34 +18,32 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height);
-	void UpdateProjectionMatrix();
 
 public:
 
-	C_Camera* camera;
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
+	mat3x3 NormalMatrix;
+	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-#pragma region Cubes
-	//uint	image_texture;
-	//uint	array_cube_id;
-	//uint	index_cube_index_id;
-	//uint	index_cube_vertex_id;
+	uint	image_texture;
+	uint	array_cube_id;
+	uint	index_cube_index_id;
+	uint	index_cube_vertex_id;
 
-	//float cube_vertices[24];
-	//uint cube_indices[36];
+	float cube_vertices[24];
+	uint cube_indices[36];
 
-	//uint	texture_vertex_id;
-	//uint	texture_UV_id;
-	//uint	texture_index_id;
+	uint	texture_vertex_id;
+	uint	texture_UV_id;
+	uint	texture_index_id;
 
-	//float	texture_vertices[16 * 3];
-	//float	texture_UV[16 * 2];
-	//uint	texture_indices[36];
+	float	texture_vertices[16 * 3];
+	float	texture_UV[16 * 2];
+	uint	texture_indices[36];
 
-	//uint	lenna_texture;
-	//bool	lenaON = false;
+	uint	lenna_texture;
+	bool	lenaON = false;
 
-	//bool BuffersON = false;
-#pragma endregion
+	bool BuffersON = false;
 };

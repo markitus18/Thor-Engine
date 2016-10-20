@@ -63,18 +63,12 @@ bool ModuleEditor::Init()
 
 update_status ModuleEditor::PreUpdate(float dt)
 {
-	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-	ImGuiIO& io = ImGui::GetIO();
-
-	capture_keyboard = io.WantCaptureKeyboard;
-	capture_mouse = io.WantCaptureMouse;
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::Update(float dt)
 {
-
+	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	DrawPanels();
 
 	//Showing all windows ----------
@@ -248,14 +242,4 @@ void ModuleEditor::OnResize(int screen_width, int screen_height)
 	panelInspector->UpdatePosition(screen_width, screen_height);
 	panelConfiguration->UpdatePosition(screen_width, screen_height);
 	panelButtons->UpdatePosition(screen_width, screen_height);
-}
-
-bool ModuleEditor::UsingMouse()
-{
-	return capture_mouse;
-}
-
-bool ModuleEditor::UsingKeyboard()
-{
-	return capture_keyboard;
 }

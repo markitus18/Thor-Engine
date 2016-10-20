@@ -32,6 +32,7 @@ bool ModuleScene::Start()
 
 	bool ret = true;
 
+	App->camera->LookAt(vec3(0, 0, 0));
 	timer.Start();
 	timer.Stop();
 	reset = false;

@@ -3,7 +3,6 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
-#include "C_Camera.h"
 
 #include "OpenGL.h"
 #include "ModuleImport.h"
@@ -68,6 +67,9 @@ bool ModuleRenderer3D::Init()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+		ProjectionMatrix = perspective(60.0f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.125f, 512.0f);
+		glLoadMatrixf(&ProjectionMatrix);
+
 		//Check for error
 		error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -76,6 +78,17 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 		
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		//Check for error
+		error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			ret = false;
+		}
+
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glClearDepth(1.0f);
 		
@@ -363,18 +376,14 @@ bool ModuleRenderer3D::Init()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
-
-
-	if (camera->update_projection)
-	{
-		UpdateProjectionMatrix();
-		camera->update_projection = false;
-	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->camera->GetViewMatrix());
+
 	// light 0 on cam pos
-	lights[0].position = (vec3)(camera->frustum.pos.x, camera->frustum.pos.y, camera->frustum.pos.z);
+	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -559,15 +568,11 @@ bool ModuleRenderer3D::CleanUp()
 void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
-	camera->SetAspectRatio((float)width / (float)height);
-	UpdateProjectionMatrix();
-}
 
-void ModuleRenderer3D::UpdateProjectionMatrix()
-{
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf((GLfloat*)camera->GetOpenGLProjectionMatrix());
+	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	glLoadMatrixf(&ProjectionMatrix);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

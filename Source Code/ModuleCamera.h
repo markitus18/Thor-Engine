@@ -3,9 +3,7 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "MathGeoLib\src\MathGeoLib.h"
-
-class C_Camera;
+#include "glmath.h"
 
 class ModuleCamera : public Module
 {
@@ -13,29 +11,28 @@ public:
 	ModuleCamera(Application* app, bool start_enabled = true);
 	~ModuleCamera();
 
-	bool Init();
 	bool Start();
 	update_status Update(float dt);
-	bool CleanUp() override;
+	bool CleanUp();
 
-	float3 GetPosition() const;
-	void Look(const float3& position);
-	void CenterOn(const float3& position, float distance);
+	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
+	void LookAt(const vec3 &Spot);
+	void Move(const vec3 &Movement);
+	void SetNewTarget(const vec3 &new_target);
 
-	C_Camera* GetCamera() const;
-
-private:
-
-	void Move_Keyboard(float dt);
-	void Move_Mouse();
-
-	void Orbit(float motion_x, float motion_y);
-	void Zoom(float zoom);
+	float* GetViewMatrix();
 
 private:
 
-	float3 reference;
-	C_Camera* camera = NULL;
+	void CalculateViewMatrix();
+
+public:
+	
+	vec3 X, Y, Z, Position, Reference;
+
+private:
+
+	mat4x4 ViewMatrix, ViewMatrixInverse;
 };
 
 #endif //__MODULE_CAMERA_H__

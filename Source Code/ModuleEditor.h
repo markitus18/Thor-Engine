@@ -27,10 +27,6 @@ public:
 	void UpdateFPSData(int fps, int ms);
 
 	void OnResize(int screen_width, int screen_height);
-
-	bool UsingMouse();
-	bool UsingKeyboard();
-
 private:
 
 	void DrawPanels();
@@ -51,9 +47,6 @@ private:
 	//Active window controllers
 	bool show_About_window = false;
 	bool show_Demo_window = false;
-
-	bool capture_keyboard = false;
-	bool capture_mouse = false;
 };
 
 #endif

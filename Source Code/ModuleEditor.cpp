@@ -243,3 +243,13 @@ void ModuleEditor::OnResize(int screen_width, int screen_height)
 	panelConfiguration->UpdatePosition(screen_width, screen_height);
 	panelButtons->UpdatePosition(screen_width, screen_height);
 }
+
+bool ModuleEditor::UsingKeyboard() const
+{
+	return using_keyboard;
+}
+
+bool ModuleEditor::UsingMouse() const
+{
+	return using_mouse;
+}

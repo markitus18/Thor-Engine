@@ -23,6 +23,9 @@ public:
 	void UpdateProjectionMatrix();
 
 public:
+	//TODO: should it be moved into window module? SDL method maybe?
+	int window_width;
+	int window_height;
 
 	C_Camera* camera;
 	Light lights[MAX_LIGHTS];

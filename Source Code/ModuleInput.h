@@ -25,6 +25,9 @@ public:
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
+	void SetMouseX(int x);
+	void SetMouseY(int y);
+
 	KEY_STATE GetKey(int id) const
 	{
 		return keyboard[id];

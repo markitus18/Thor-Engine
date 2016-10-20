@@ -16,10 +16,10 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	camera->frustum.SetViewPlaneDistances(0.1f, 1000.0f);
 	camera->frustum.SetPerspective(1.0f, 1.0f);
 
-	camera->frustum.SetPos(float3(10, 10, 0));
+	camera->frustum.SetPos(float3(10, 100, 0));
 	camera->frustum.SetFront(float3::unitZ);
 	camera->frustum.SetUp(float3::unitY);
-
+	Look(float3(0, 0, 0));
 	camera->update_projection = true;
 }
 
@@ -77,6 +77,7 @@ float3 ModuleCamera3D::GetPosition() const
 void ModuleCamera3D::Look(const float3& position)
 {
 	camera->Look(position);
+	reference = position;
 }
 
 // -----------------------------------------------------------------
@@ -104,19 +105,25 @@ void ModuleCamera3D::Move_Mouse()
 {
 	// Check motion for lookat / Orbit cameras
 	int motion_x, motion_y;
-	motion_x = App->input->GetMouseXMotion();
-	motion_y = App->input->GetMouseYMotion(); 
+	motion_x = -App->input->GetMouseXMotion();
+	motion_y = App->input->GetMouseYMotion();
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
 	{
-		float dx = (float)-motion_x;
-		float dy = (float)-motion_y;
+		Orbit(motion_x, -motion_y);
+	}
 
-		//	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-		//		Orbit(dx, dy);
-		//	else
-		//		LookAt(dx, dy);
-		//}
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
+	{
+		//TODO: Kind of magic number. Consider other options?
+		float distance = reference.Distance(camera->frustum.Pos());
+		float3 Y_add = camera->frustum.Up() * motion_y * (distance / 1800);
+		float3 X_add = camera->frustum.WorldRight() * motion_x * (distance / 1800);
+
+		reference += X_add;
+		reference += Y_add;
+
+		camera->frustum.SetPos(camera->frustum.Pos() + X_add + Y_add);
 	}
 	// Mouse wheel for zoom
 	int wheel = App->input->GetMouseZ();
@@ -135,26 +142,27 @@ void ModuleCamera3D::Move_Mouse()
 // -----------------------------------------------------------------
 void ModuleCamera3D::Orbit(float dx, float dy)
 {
-	//float3 point = reference;
+	//Procedure: create a vector from camera position to reference position
+	//Rotate that vector according to our mouse motion
+	//Move the camera to where that vector ended up
 
-	//float3 focus = camera->frustum.pos - point;
+	//TODO: this causes issues when rotating when frustrum Z = world +/- Y
+	float3 vector = camera->frustum.Pos() - reference;
 
-	//Quat quat_y(camera->frustum.up, dx);
-	//Quat quat_x(camera->frustum.WorldRight(), dy);
+	Quat quat_y(camera->frustum.Up(), dx * 0.003);
+	Quat quat_x(camera->frustum.WorldRight(), dy * 0.003);
 
-	//focus = quat_x.Transform(focus);
-	//focus = quat_y.Transform(focus);
+	vector = quat_x.Transform(vector);
+	vector = quat_y.Transform(vector);
 
-	//camera->frustum.pos = focus + point;
-
-	//Look(point);
+	camera->frustum.SetPos(vector + reference);
+	Look(reference);
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::Zoom(float zoom)
 {
 	float distance = reference.Distance(camera->frustum.Pos());
-	vec vector = camera->frustum.Front();
-	camera->frustum.Translate(vector);
-	//camera->frustum.
+	vec newPos = camera->frustum.Pos() + camera->frustum.Front() * zoom * distance * 0.05f;
+	camera->frustum.SetPos(newPos);
 }

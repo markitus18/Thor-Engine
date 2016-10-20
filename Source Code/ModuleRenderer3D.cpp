@@ -558,6 +558,9 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
+	window_width = width;
+	window_height = height;
+
 	glViewport(0, 0, width, height);
 	camera->SetAspectRatio((float)width / (float)height);
 	UpdateProjectionMatrix();

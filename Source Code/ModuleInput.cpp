@@ -3,6 +3,9 @@
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleEditor.h"
+#include "ModuleWindow.h"
+
+#include "SDL/include/SDL_mouse.h"
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
 #define MAX_KEYS 300
@@ -134,4 +137,14 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+void ModuleInput::SetMouseX(int x)
+{
+	SDL_WarpMouseInWindow(App->window->window, x, mouse_y);
+}
+
+void ModuleInput::SetMouseY(int y)
+{
+	SDL_WarpMouseInWindow(App->window->window, mouse_x, y);
 }

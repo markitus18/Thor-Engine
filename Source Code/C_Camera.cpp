@@ -21,21 +21,18 @@ C_Camera::~C_Camera()
 //Frustum variable management ----
 float C_Camera::GetNearPlane() const
 {
-	//return frustum.nearPlaneDistance;
-	return 0;
+	return frustum.NearPlaneDistance();
 }
 
 float C_Camera::GetFarPlane() const
 {
-	//return frustum.farPlaneDistance;
-	return 0;
+	return frustum.FarPlaneDistance();
 }
 
 //Returns FOV in degrees
 float C_Camera::GetFOV() const
 {
-	//return frustum.verticalFov * RADTODEG;
-	return 0;
+	return frustum.VerticalFov() * RADTODEG;
 }
 
 float C_Camera::GetAspectRatio() const
@@ -45,37 +42,39 @@ float C_Camera::GetAspectRatio() const
 
 void C_Camera::SetNearPlane(float distance)
 {
-	//if (distance > 0 && distance < frustum.farPlaneDistance)
-	//	frustum.nearPlaneDistance = distance;
+	if (distance > 0 && distance < frustum.FarPlaneDistance())
+		frustum.SetViewPlaneDistances(distance, frustum.FarPlaneDistance());
 }
 
 void C_Camera::SetFarPlane(float distance)
 {
-	//if (distance > 0 && distance > frustum.nearPlaneDistance)
-	//	frustum.nearPlaneDistance = distance;
+	if (distance > 0 && distance > frustum.NearPlaneDistance())
+		frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), distance);
 }
 
+//Setting vertical FOV in degrees 
 void C_Camera::SetFOV(float fov)
 {
-	//float ar = frustum.AspectRatio();
-	//frustum.verticalFov = fov;
-	//SetAspectRatio(ar);
+	fov *= DEGTORAD;
+	frustum.SetVerticalFovAndAspectRatio(fov, frustum.AspectRatio());
 }
 
 void C_Camera::SetAspectRatio(float ar)
 {
+	float horizontalFov = frustum.HorizontalFov();
+	frustum.SetHorizontalFovAndAspectRatio(horizontalFov, ar);
 	//frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ar);
 }
 //--------------------------------
 
 void C_Camera::Look(const float3& position)
 {
-	//float3 vector = position - frustum.pos;
+	float3 vector = position - frustum.Pos();
 
-	//float3x3 matrix = float3x3::LookAt(frustum.front, vector.Normalized(), frustum.up, float3::unitY);
+	float3x3 matrix = float3x3::LookAt(frustum.Front(), vector.Normalized(), frustum.Up(), float3::unitY);
 
-	//frustum.front = matrix.MulDir(frustum.front).Normalized();
-	//frustum.up = matrix.MulDir(frustum.up).Normalized();
+	frustum.SetFront(matrix.MulDir(frustum.Front()).Normalized());
+	frustum.SetUp(matrix.MulDir(frustum.Up()).Normalized());
 }
 
 float * C_Camera::GetOpenGLViewMatrix()

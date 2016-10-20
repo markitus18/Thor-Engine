@@ -103,11 +103,33 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 			case SDL_MOUSEMOTION:
-			mouse_x = event.motion.x / SCREEN_SIZE;
-			mouse_y = event.motion.y / SCREEN_SIZE;
+				mouse_x = event.motion.x / SCREEN_SIZE;
+				mouse_y = event.motion.y / SCREEN_SIZE;
 
-			mouse_motion_x = event.motion.xrel / SCREEN_SIZE;
-			mouse_motion_y = event.motion.yrel / SCREEN_SIZE;
+				mouse_motion_x = (event.motion.xrel / SCREEN_SIZE) - last_mouse_swap;
+				mouse_motion_y = event.motion.yrel / SCREEN_SIZE;
+				//TODO: more polite way to to this?
+				if (infiniteHorizontal)
+				{
+					if (mouse_x > App->renderer3D->window_width - 10)
+					{
+						int last_x = mouse_x;
+						App->input->SetMouseX(10);
+						last_mouse_swap = mouse_x - last_x;
+					}
+					else if (mouse_x < 10)
+					{
+						int last_x = mouse_x;
+						App->input->SetMouseX(App->renderer3D->window_width - 10);
+						last_mouse_swap = mouse_x - last_x;
+					}
+					else
+						last_mouse_swap = 0;
+				}
+				else
+				{
+					last_mouse_swap = 0;
+				}
 			break;
 
 			case SDL_QUIT:
@@ -128,6 +150,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;
 
+	infiniteHorizontal = false;
 	return UPDATE_CONTINUE;
 }
 
@@ -142,9 +165,16 @@ bool ModuleInput::CleanUp()
 void ModuleInput::SetMouseX(int x)
 {
 	SDL_WarpMouseInWindow(App->window->window, x, mouse_y);
+	mouse_x = x;
 }
 
 void ModuleInput::SetMouseY(int y)
 {
 	SDL_WarpMouseInWindow(App->window->window, mouse_x, y);
+	mouse_y = y;
+}
+
+void ModuleInput::InfiniteHorizontal()
+{
+	infiniteHorizontal = true;
 }

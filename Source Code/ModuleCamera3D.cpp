@@ -111,6 +111,7 @@ void ModuleCamera3D::Move_Mouse()
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
 	{
 		Orbit(motion_x, -motion_y);
+		App->input->InfiniteHorizontal();
 	}
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))

@@ -28,6 +28,8 @@ public:
 	void SetMouseX(int x);
 	void SetMouseY(int y);
 
+	void InfiniteHorizontal();
+
 	KEY_STATE GetKey(int id) const
 	{
 		return keyboard[id];
@@ -71,6 +73,10 @@ private:
 	int mouse_z = 0;
 	int mouse_motion_x = 0;
 	int mouse_motion_y = 0;
+
+	//TODO: change "ifinite mouse" functionality in a more polite way
+	int last_mouse_swap = 0;
+	bool infiniteHorizontal = false;
 };
 
 #endif //__MODULE_INPUT_H__

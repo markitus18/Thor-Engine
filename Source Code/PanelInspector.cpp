@@ -1,11 +1,10 @@
 #include "PanelInspector.h"
 
-
-
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "PanelHierarchy.h"
 #include "GameObject.h"
+#include "ModuleInput.h"
 #include "OpenGL.h"
 
 PanelInspector::PanelInspector()
@@ -71,16 +70,19 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				float3 rotation = gameObject->GetEulerRotation();
 				if (ImGui::DragFloat3("Position", (float*)&pos, 0.15f))
 				{
+					App->input->InfiniteHorizontal();
 					gameObject->SetPosition(pos);
 				}
 
 				if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.5f))
 				{
+					App->input->InfiniteHorizontal();
 					gameObject->SetRotation(rotation);
 				}
 
 				if (ImGui::DragFloat3("Scale", (float*)&scale, 0.15f))
 				{
+					App->input->InfiniteHorizontal();
 					gameObject->SetScale(scale);
 				}
 			}

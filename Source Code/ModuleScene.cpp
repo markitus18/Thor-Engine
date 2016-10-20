@@ -52,30 +52,6 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
-	int mouseX = App->input->GetMouseX();
-	int mouseY = App->input->GetMouseY();
-
-	if (mouseX > App->renderer3D->window_width - 10)
-	{
-		App->input->SetMouseX(10);
-	}
-	if (mouseX < 10)
-	{
-		App->input->SetMouseX(App->renderer3D->window_width - 10);
-	}
-
-	if (mouseY > App->renderer3D->window_height - 10)
-	{
-		App->input->SetMouseY(10);
-	}
-	if (mouseY < 10)
-	{
-		App->input->SetMouseY(App->renderer3D->window_height - 10);
-	}
-
-
-
-
 	if (drawGrid)
 	{
 		//TODO: Move this into a mesh "prefab"

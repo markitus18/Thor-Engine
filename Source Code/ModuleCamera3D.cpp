@@ -16,7 +16,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	camera->frustum.SetViewPlaneDistances(0.1f, 1000.0f);
 	camera->frustum.SetPerspective(1.0f, 1.0f);
 
-	camera->frustum.SetPos(float3(10, 50, 0));
+	camera->frustum.SetPos(float3(10, 10, 0));
 	camera->frustum.SetFront(float3::unitZ);
 	camera->frustum.SetUp(float3::unitY);
 
@@ -57,7 +57,7 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	//if (App->moduleEditor->UsingKeyboard() == false)
+	if (App->moduleEditor->UsingKeyboard() == false)
 		Move_Keyboard(dt);
 
 	if (App->moduleEditor->UsingMouse() == false)
@@ -82,9 +82,9 @@ void ModuleCamera3D::Look(const float3& position)
 // -----------------------------------------------------------------
 void ModuleCamera3D::CenterOn(const float3& position, float distance)
 {
-	//float3 v = camera->frustum.front.Neg();
-	//camera->frustum.pos = position + (v * distance);
-	//reference = position;
+	float3 v = camera->frustum.Front().Neg();
+	camera->frustum.SetPos(position + (v * distance));
+	reference = position;
 }
 
 // -----------------------------------------------------------------
@@ -102,27 +102,26 @@ void ModuleCamera3D::Move_Keyboard(float dt)
 
 void ModuleCamera3D::Move_Mouse()
 {
-	//// Check motion for lookat / Orbit cameras
-	//int motion_x, motion_y;
-	//motion_x = App->input->GetMouseXMotion;
-	//motion_y = App->input->GetMouseYMotion; 
-	//GetMouseMotion(motion_x, motion_y);
+	// Check motion for lookat / Orbit cameras
+	int motion_x, motion_y;
+	motion_x = App->input->GetMouseXMotion();
+	motion_y = App->input->GetMouseYMotion(); 
 
-	//if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
-	//{
-	//	float dx = (float)-motion_x * rot_speed * dt;
-	//	float dy = (float)-motion_y * rot_speed * dt;
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
+	{
+		float dx = (float)-motion_x;
+		float dy = (float)-motion_y;
 
-	//	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
-	//		Orbit(dx, dy);
-	//	else
-	//		LookAt(dx, dy);
-	//}
-
-	//// Mouse wheel for zoom
-	//int wheel = App->input->GetMouseWheel();
-	//if (wheel != 0)
-	//	Zoom(wheel * zoom_speed * dt);
+		//	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
+		//		Orbit(dx, dy);
+		//	else
+		//		LookAt(dx, dy);
+		//}
+	}
+	// Mouse wheel for zoom
+	int wheel = App->input->GetMouseZ();
+	if (wheel != 0)
+		Zoom(wheel);
 
 	//// Mouse Picking
 	//if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
@@ -155,5 +154,7 @@ void ModuleCamera3D::Orbit(float dx, float dy)
 void ModuleCamera3D::Zoom(float zoom)
 {
 	float distance = reference.Distance(camera->frustum.Pos());
-	camera->frustum.Translate(camera->frustum.Front());
+	vec vector = camera->frustum.Front();
+	camera->frustum.Translate(vector);
+	//camera->frustum.
 }

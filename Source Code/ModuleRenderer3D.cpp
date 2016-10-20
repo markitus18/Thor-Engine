@@ -371,7 +371,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(camera->GetOpenGLViewMatrix());
 	// light 0 on cam pos
 	//lights[0].SetPos(App->camera->GetCamera()->frustum.pos.x, App->camera->GetCamera()->frustum.pos.y, App->camera->GetCamera()->frustum.pos.z);
 

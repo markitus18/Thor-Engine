@@ -63,12 +63,18 @@ bool ModuleEditor::Init()
 
 update_status ModuleEditor::PreUpdate(float dt)
 {
+	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	ImGuiIO& io = ImGui::GetIO();
+
+	using_keyboard = io.WantCaptureKeyboard;
+	using_mouse = io.WantCaptureMouse;
+
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleEditor::Update(float dt)
 {
-	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+
 	DrawPanels();
 
 	//Showing all windows ----------

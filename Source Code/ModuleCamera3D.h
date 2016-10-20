@@ -5,11 +5,11 @@
 #include "Globals.h"
 #include "glmath.h"
 
-class ModuleCamera : public Module
+class ModuleCamera3D : public Module
 {
 public:
-	ModuleCamera(Application* app, bool start_enabled = true);
-	~ModuleCamera();
+	ModuleCamera3D(Application* app, bool start_enabled = true);
+	~ModuleCamera3D();
 
 	bool Start();
 	update_status Update(float dt);

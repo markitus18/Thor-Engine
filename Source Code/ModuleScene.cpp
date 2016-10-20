@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "Primitive.h"
-#include "ModuleCamera.h"
+#include "ModuleCamera3D.h"
 #include "ModuleInput.h"
 #include "ModuleImport.h"
 #include "ModuleEditor.h"

@@ -1,6 +1,7 @@
 #include "PanelConfiguration.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleCamera3D.h"
 
 PanelConfiguration::PanelConfiguration()
 {
@@ -44,10 +45,14 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 			ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
 		}
 
-		//if (ImGui::CollapsingHeader("Window"))
-		//{
-
-		//}
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+			float3 camera_pos = App->camera->GetPosition();
+			if (ImGui::DragFloat3("Position", (float*)&camera_pos))
+			{
+				App->camera->SetPosition(camera_pos);
+			}
+		}
 
 		//if (ImGui::CollapsingHeader("File System"))
 		//{

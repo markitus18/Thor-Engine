@@ -19,9 +19,13 @@ public:
 	bool CleanUp() override;
 
 	float3 GetPosition() const;
+	float3 GetReference() const;
+
 	void Look(const float3& position);
 	void CenterOn(const float3& position, float distance);
 	void SetNewTarget(const float3& new_target);
+
+	void SetPosition(float3 position);
 
 	C_Camera* GetCamera() const;
 

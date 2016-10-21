@@ -69,8 +69,12 @@ update_status ModuleCamera3D::Update(float dt)
 // -----------------------------------------------------------------
 float3 ModuleCamera3D::GetPosition() const
 {
-	//return camera->frustum.;
-	return float3(0, 0, 0);
+	return camera->frustum.Pos();
+}
+
+float3 ModuleCamera3D::GetReference() const
+{
+	return reference;
 }
 
 // -----------------------------------------------------------------
@@ -92,6 +96,13 @@ void ModuleCamera3D::SetNewTarget(const float3& new_target)
 {
 	float distance = reference.Distance(new_target);
 	CenterOn(new_target, distance);
+}
+
+void ModuleCamera3D::SetPosition(float3 position)
+{
+	float3 difference = position - camera->frustum.Pos();
+	camera->frustum.SetPos(position);
+	reference += difference;
 }
 
 // -----------------------------------------------------------------
@@ -136,14 +147,6 @@ void ModuleCamera3D::Move_Mouse()
 	int wheel = App->input->GetMouseZ();
 	if (wheel != 0)
 		Zoom(wheel);
-
-	//// Mouse Picking
-	//if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
-	//{
-	//	GameObject* pick = Pick();
-	//	if (pick != nullptr)
-	//		App->editor->SetSelected(pick, (App->editor->selected == pick));
-	//}
 }
 
 // -----------------------------------------------------------------

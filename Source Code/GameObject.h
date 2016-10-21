@@ -9,6 +9,8 @@
 
 #include <vector>
 
+class C_Camera;
+
 class GameObject
 {
 public:
@@ -19,7 +21,9 @@ public:
 
 	void Draw(bool shaded, bool wireframe);
 	void DrawAABB();
-	
+	//TODO: move into camera compoment or debug comp
+	void DrawCamera(C_Camera* camera);
+
 	float3		GetPosition() const;
 	float3		GetScale() const;
 	Quat		GetQuatRotation() const;

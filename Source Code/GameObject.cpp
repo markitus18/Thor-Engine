@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "OpenGL.h"
 #include "Globals.h"
+#include "C_Camera.h"
 
 GameObject::GameObject()
 {
@@ -56,6 +57,22 @@ void GameObject::Draw(bool shaded, bool wireframe)
 			DrawAABB();
 	}
 
+	C_Camera* camera = NULL;
+	for (uint i = 0; i < components.size(); i++)
+	{
+		if (components[i]->GetType() == Component::Type::Camera)
+		{
+			camera = (C_Camera*)components[i];
+		}
+	}
+	if (camera)
+	{
+		glPushMatrix();
+		glMultMatrixf((float*)&global_transformT);
+		DrawCamera(camera);
+		glPopMatrix();
+	}
+
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)
@@ -89,6 +106,53 @@ void GameObject::DrawAABB()
 
 	RELEASE(vertices_aabb);
 	RELEASE(vertices_obb);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnd();
+	glEnable(GL_LIGHTING);
+}
+
+void GameObject::DrawCamera(C_Camera* camera)
+{
+	float3 vertex[8];
+	camera->frustum.GetCornerPoints(vertex);
+
+	glDisable(GL_LIGHTING);
+	glColor3f(0, 0, 1.0);
+
+	glBegin(GL_LINES);
+
+	//glVertex3fv((GLfloat*)&vertex[1]);
+	//glVertex3fv((GLfloat*)&vertex[5]);
+	//glVertex3fv((GLfloat*)&vertex[7]);
+	//glVertex3fv((GLfloat*)&vertex[3]);
+
+	glVertex3fv((GLfloat*)&vertex[4]);
+	glVertex3fv((GLfloat*)&vertex[0]);
+	glVertex3fv((GLfloat*)&vertex[2]);
+	glVertex3fv((GLfloat*)&vertex[6]);
+
+	glVertex3fv((GLfloat*)&vertex[5]);
+	glVertex3fv((GLfloat*)&vertex[4]);
+	glVertex3fv((GLfloat*)&vertex[6]);
+	glVertex3fv((GLfloat*)&vertex[7]);
+
+	glVertex3fv((GLfloat*)&vertex[0]);
+	glVertex3fv((GLfloat*)&vertex[1]);
+	glVertex3fv((GLfloat*)&vertex[3]);
+	glVertex3fv((GLfloat*)&vertex[2]);
+
+	glVertex3fv((GLfloat*)&vertex[1]);
+	glVertex3fv((GLfloat*)&vertex[3]);
+	glVertex3fv((GLfloat*)&vertex[0]);
+	glVertex3fv((GLfloat*)&vertex[2]);
+
+	glVertex3fv((GLfloat*)&vertex[5]);
+	glVertex3fv((GLfloat*)&vertex[7]);
+	glVertex3fv((GLfloat*)&vertex[4]);
+	glVertex3fv((GLfloat*)&vertex[6]);
+
+	glEnd();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnd();
@@ -293,6 +357,11 @@ void GameObject::AddComponent(Component* component)
 			}
 			break;
 		}
+	case(Component::Type::Camera):
+	{
+		components.push_back((Component*)component);
+		break;
+	}
 	default:
 		{
 			components.push_back(component);

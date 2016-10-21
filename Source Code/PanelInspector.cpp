@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "ModuleInput.h"
 #include "OpenGL.h"
+#include "C_Camera.h"
 
 PanelInspector::PanelInspector()
 {
@@ -118,6 +119,23 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 					}
 				}
 			}
+
+			std::vector<Component*> camera_vector;
+			gameObject->GetComponents(Component::Type::Camera, camera_vector);
+			if (!camera_vector.empty())
+			{
+				C_Camera* camera = (C_Camera*)camera_vector[0];
+				if (ImGui::CollapsingHeader("Camera", transform_header_flags))
+				{
+					//TODO: move this into private, more polite way?
+					float3 camera_pos = camera->frustum.Pos();
+					if (ImGui::DragFloat3("##Position", (float*)&camera_pos))
+					{
+						camera->frustum.SetPos(camera_pos);
+					}
+				}
+			}
+
 
 		}
 

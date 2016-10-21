@@ -4,7 +4,7 @@
 C_Camera::C_Camera(GameObject* gameObject) : Component(Component::Type::Camera, gameObject)
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-	frustum.SetPos(float3(10, 50, 0));
+	frustum.SetPos(float3(0, 0, 0));
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
 

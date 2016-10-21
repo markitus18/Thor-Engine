@@ -12,12 +12,20 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 //#include <stdio.h>
+#include "C_Camera.h"
 
 //#include <GLFW/glfw3.h>
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	root = new GameObject(NULL, "root");
+
+	//TMP camera for testing purposes
+	GameObject* camera = new GameObject(root, "Camera");
+	camera->SetPosition(float3(10, 10, 0));
+
+	C_Camera* cam = new C_Camera(root);
+	camera->AddComponent(cam);
 }
 
 ModuleScene::~ModuleScene()
@@ -28,7 +36,6 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
-
 
 
 	bool ret = true;

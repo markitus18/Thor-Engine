@@ -52,6 +52,12 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 			{
 				App->camera->SetPosition(camera_pos);
 			}
+
+			float3 camera_ref = App->camera->GetReference();
+			if (ImGui::DragFloat3("Reference", (float*)&camera_ref))
+			{
+				App->camera->Look(camera_ref);
+			}
 		}
 
 		//if (ImGui::CollapsingHeader("File System"))

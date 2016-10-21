@@ -42,6 +42,7 @@ public:
 private:
 	bool drawGrid = true;
 	GameObject* root = NULL;
+	GameObject* camera = NULL;
 
 };
 

@@ -128,10 +128,22 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				if (ImGui::CollapsingHeader("Camera", transform_header_flags))
 				{
 					//TODO: move this into private, more polite way?
-					float3 camera_pos = camera->frustum.Pos();
-					if (ImGui::DragFloat3("##Position", (float*)&camera_pos))
+					float camera_fov = camera->GetFOV();
+					if (ImGui::DragFloat("Field of View", (float*)&camera_fov))
 					{
-						camera->frustum.SetPos(camera_pos);
+						camera->SetFOV(camera_fov);
+					}
+
+					float camera_near_plane = camera->GetNearPlane();
+					if (ImGui::DragFloat("Near plane", &camera_near_plane))
+					{
+						camera->SetNearPlane(camera_near_plane);
+					}
+
+					float camera_far_plane = camera->GetFarPlane();
+					if (ImGui::DragFloat("Far plane", &camera_far_plane))
+					{
+						camera->SetFarPlane(camera_far_plane);
 					}
 				}
 			}

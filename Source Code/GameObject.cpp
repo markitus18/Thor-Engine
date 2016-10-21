@@ -122,31 +122,37 @@ void GameObject::DrawCamera(C_Camera* camera)
 
 	glBegin(GL_LINES);
 
-	//glVertex3fv((GLfloat*)&vertex[1]);
-	//glVertex3fv((GLfloat*)&vertex[5]);
-	//glVertex3fv((GLfloat*)&vertex[7]);
-	//glVertex3fv((GLfloat*)&vertex[3]);
+	//Between-planes right
+	glVertex3fv((GLfloat*)&vertex[1]);
+	glVertex3fv((GLfloat*)&vertex[5]);
+	glVertex3fv((GLfloat*)&vertex[7]);
+	glVertex3fv((GLfloat*)&vertex[3]);
 
+	//Between-planes left
 	glVertex3fv((GLfloat*)&vertex[4]);
 	glVertex3fv((GLfloat*)&vertex[0]);
 	glVertex3fv((GLfloat*)&vertex[2]);
 	glVertex3fv((GLfloat*)&vertex[6]);
 
+	//Far plane horizontal
 	glVertex3fv((GLfloat*)&vertex[5]);
 	glVertex3fv((GLfloat*)&vertex[4]);
 	glVertex3fv((GLfloat*)&vertex[6]);
 	glVertex3fv((GLfloat*)&vertex[7]);
 
+	//Near plane horizontal
 	glVertex3fv((GLfloat*)&vertex[0]);
 	glVertex3fv((GLfloat*)&vertex[1]);
 	glVertex3fv((GLfloat*)&vertex[3]);
 	glVertex3fv((GLfloat*)&vertex[2]);
 
+	//Near plane vertical
 	glVertex3fv((GLfloat*)&vertex[1]);
 	glVertex3fv((GLfloat*)&vertex[3]);
 	glVertex3fv((GLfloat*)&vertex[0]);
 	glVertex3fv((GLfloat*)&vertex[2]);
 
+	//Far plane vertical
 	glVertex3fv((GLfloat*)&vertex[5]);
 	glVertex3fv((GLfloat*)&vertex[7]);
 	glVertex3fv((GLfloat*)&vertex[4]);

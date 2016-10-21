@@ -48,7 +48,7 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 		if (ImGui::CollapsingHeader("Camera"))
 		{
 			float3 camera_pos = App->camera->GetPosition();
-			if (ImGui::DragFloat3("Position", (float*)&camera_pos))
+			if (ImGui::DragFloat("Position", (float*)&camera_pos))
 			{
 				App->camera->SetPosition(camera_pos);
 			}

@@ -13,7 +13,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 {
 	camera = new C_Camera(NULL);
 
-	camera->frustum.SetViewPlaneDistances(0.1f, 1000.0f);
+	camera->frustum.SetViewPlaneDistances(0.1f, 2000.0f);
 	camera->frustum.SetPerspective(1.0f, 1.0f);
 
 	camera->frustum.SetPos(float3(10, 100, 0));
@@ -86,6 +86,12 @@ void ModuleCamera3D::CenterOn(const float3& position, float distance)
 	float3 v = camera->frustum.Front().Neg();
 	camera->frustum.SetPos(position + (v * distance));
 	reference = position;
+}
+
+void ModuleCamera3D::SetNewTarget(const float3& new_target)
+{
+	float distance = reference.Distance(new_target);
+	CenterOn(new_target, distance);
 }
 
 // -----------------------------------------------------------------

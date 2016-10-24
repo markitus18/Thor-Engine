@@ -92,6 +92,14 @@ float * C_Camera::GetOpenGLProjectionMatrix()
 	static float4x4 m;
 
 	m = frustum.ProjectionMatrix();
+
+	if (gameObject)
+	{
+		float4x4 parent_global = float4x4::identity;
+		parent_global = gameObject->GetGlobalTransform();
+		m = parent_global * m;
+	}
+
 	m.Transpose();
 
 	return (float*)m.v;

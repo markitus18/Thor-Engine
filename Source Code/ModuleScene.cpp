@@ -24,7 +24,7 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, sta
 	GameObject* camera = new GameObject(root, "Camera");
 	camera->SetPosition(float3(10, 10, 0));
 
-	C_Camera* cam = new C_Camera(root);
+	C_Camera* cam = new C_Camera(nullptr);
 	camera->AddComponent(cam);
 }
 

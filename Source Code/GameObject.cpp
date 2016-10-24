@@ -113,14 +113,14 @@ void GameObject::DrawAABB()
 }
 
 void GameObject::DrawCamera(C_Camera* camera)
-{
+{	
 	float3 vertex[8];
 	camera->frustum.GetCornerPoints(vertex);
 
 	glDisable(GL_LIGHTING);
-	glColor3f(0, 0, 1.0);
-
 	glBegin(GL_LINES);
+
+	glColor4f(0, 0, 1, 1);
 
 	//Between-planes right
 	glVertex3fv((GLfloat*)&vertex[1]);
@@ -159,10 +159,10 @@ void GameObject::DrawCamera(C_Camera* camera)
 	glVertex3fv((GLfloat*)&vertex[6]);
 
 	glEnd();
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnd();
 	glEnable(GL_LIGHTING);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+
 }
 
 float3 GameObject::GetPosition() const
@@ -366,6 +366,7 @@ void GameObject::AddComponent(Component* component)
 	case(Component::Type::Camera):
 	{
 		components.push_back((Component*)component);
+		component->gameObject = this;
 		break;
 	}
 	default:

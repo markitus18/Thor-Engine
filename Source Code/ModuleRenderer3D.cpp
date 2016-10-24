@@ -570,6 +570,7 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
 	glLoadMatrixf((GLfloat*)camera->GetOpenGLProjectionMatrix());
 
 	glMatrixMode(GL_MODELVIEW);

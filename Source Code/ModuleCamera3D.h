@@ -40,7 +40,7 @@ private:
 private:
 
 	float3 reference;
-	C_Camera* camera = NULL;
+	C_Camera* camera = nullptr;
 };
 
 #endif //__MODULE_CAMERA_H__

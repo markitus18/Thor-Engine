@@ -18,7 +18,7 @@
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	root = new GameObject(NULL, "root");
+	root = new GameObject(nullptr, "root");
 
 	//TMP camera for testing purposes
 	GameObject* camera = new GameObject(root, "Camera");

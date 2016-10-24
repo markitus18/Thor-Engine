@@ -22,17 +22,17 @@ class ModuleMaterials;
 class Application
 {
 public:
-	ModuleWindow* window = NULL;
-	ModuleInput* input = NULL;
-	ModuleAudio* audio = NULL;
-	ModuleScene* scene = NULL;
+	ModuleWindow* window = nullptr;
+	ModuleInput* input = nullptr;
+	ModuleAudio* audio = nullptr;
+	ModuleScene* scene = nullptr;
 
-	ModuleRenderer3D* renderer3D = NULL;
-	ModuleCamera3D* camera = NULL;
+	ModuleRenderer3D* renderer3D = nullptr;
+	ModuleCamera3D* camera = nullptr;
 
-	ModuleEditor* moduleEditor = NULL;
-	ModuleImport* moduleImport = NULL;
-	ModuleMaterials* moduleMaterials = NULL;
+	ModuleEditor* moduleEditor = nullptr;
+	ModuleImport* moduleImport = nullptr;
+	ModuleMaterials* moduleMaterials = nullptr;
 
 private:
 

@@ -146,7 +146,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	for (uint i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
-		GameObject* child = NULL;
+		GameObject* child = nullptr;
 
 		if (node->mNumMeshes > 1)
 		{

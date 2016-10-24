@@ -11,7 +11,7 @@
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	camera = new C_Camera(NULL);
+	camera = new C_Camera(nullptr);
 
 	camera->frustum.SetViewPlaneDistances(0.1f, 2000.0f);
 	camera->frustum.SetPerspective(1.0f, 1.0f);
@@ -50,7 +50,7 @@ bool ModuleCamera3D::CleanUp()
 {
 	LOG("Cleaning camera");
 
-	App->renderer3D->camera = NULL;
+	App->renderer3D->camera = nullptr;
 	return true;
 }
 

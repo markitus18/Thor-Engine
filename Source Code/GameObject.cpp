@@ -25,21 +25,21 @@ GameObject::~GameObject()
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		delete childs[i];
-		childs[i] = NULL;
+		childs[i] = nullptr;
 	}
 	childs.clear();
 
 	for (uint i = 0; i < components.size(); i++)
 	{
 		delete components[i];
-		components[i] = NULL;
+		components[i] = nullptr;
 	}
 }
 
 
 void GameObject::Draw(bool shaded, bool wireframe)
 {
-	C_Mesh* _mesh = NULL;
+	C_Mesh* _mesh = nullptr;
 	for(uint i = 0; i < components.size(); i++)
 	{
 		if (components[i]->GetType() == Component::Type::Mesh)
@@ -57,7 +57,7 @@ void GameObject::Draw(bool shaded, bool wireframe)
 			DrawAABB();
 	}
 
-	C_Camera* camera = NULL;
+	C_Camera* camera = nullptr;
 	for (uint i = 0; i < components.size(); i++)
 	{
 		if (components[i]->GetType() == Component::Type::Camera)
@@ -311,7 +311,7 @@ bool GameObject::IsParentSelected() const
 
 Component* GameObject::CreateComponent(Component::Type type)
 {
-	Component* new_component = NULL;
+	Component* new_component = nullptr;
 	switch (type)
 	{
 	case(Component::Type::Mesh):

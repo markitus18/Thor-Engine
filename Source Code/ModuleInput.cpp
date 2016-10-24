@@ -46,7 +46,7 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	mouse_motion_x = mouse_motion_y = 0;
 
-	const Uint8* keys = SDL_GetKeyboardState(NULL);
+	const Uint8* keys = SDL_GetKeyboardState(nullptr);
 	bool quit = false;
 
 	for(int i = 0; i < MAX_KEYS; ++i)

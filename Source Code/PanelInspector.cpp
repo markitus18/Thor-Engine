@@ -7,6 +7,7 @@
 #include "ModuleInput.h"
 #include "OpenGL.h"
 #include "C_Camera.h"
+#include "ModuleRenderer3D.h"
 
 PanelInspector::PanelInspector()
 {
@@ -127,6 +128,11 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				C_Camera* camera = (C_Camera*)camera_vector[0];
 				if (ImGui::CollapsingHeader("Camera", transform_header_flags))
 				{
+					bool b = false;
+					if (ImGui::Checkbox("Render Camera", &b))
+					{
+						App->renderer3D->SetActiveCamera(camera);
+					}
 					//TODO: move this into private, more polite way?
 					float camera_fov = camera->GetFOV();
 					if (ImGui::DragFloat("Field of View", (float*)&camera_fov))

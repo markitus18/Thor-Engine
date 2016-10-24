@@ -22,6 +22,8 @@ public:
 	void OnResize(int width, int height);
 	void UpdateProjectionMatrix();
 
+	void SetActiveCamera(C_Camera* camera);
+
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
 	int window_width;

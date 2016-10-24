@@ -30,7 +30,7 @@ bool ModuleMaterials::CleanUp()
 
 /*Search for a material with same texture path
 if a material is found, returns the material
-otherwise returns NULL*/
+otherwise returns nullptr*/
 C_Material* ModuleMaterials::Exists(const char* texture_path) const
 {
 	std::list<C_Material*>::const_iterator it = materials.begin();
@@ -40,25 +40,25 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 			return (*it);
 		it++;
 	}
-	return NULL;
+	return nullptr;
 }
 
 C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const std::string& file, const Color& color)
 {
-	C_Material* material = NULL;
+	C_Material* material = nullptr;
 	//TODO START: if we avoid duplicating materials this causes the game to break
 	//if (texture_path != "" && file != "")
 	//{
 	//	material = Exists(texture_path.c_str());
 	//}
 	//TODO END
-	if (material != NULL)
+	if (material != nullptr)
 	{
 		return material;
 	}
 	else
 	{
-		material = new C_Material(NULL);
+		material = new C_Material(nullptr);
 		if (texture_path != "" && file != "")
 		{
 			material->texture_path = texture_path;

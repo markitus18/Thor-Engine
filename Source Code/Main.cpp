@@ -15,7 +15,7 @@ enum main_states
 	MAIN_EXIT
 };
 
-Application* App = NULL;
+Application* App = nullptr;
 
 int main(int argc, char ** argv)
 {

@@ -28,7 +28,7 @@ bool ModuleRenderer3D::Init()
 	
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
-	if(context == NULL)
+	if(context == nullptr)
 	{
 		LOG("OpenGL context could not be created! SDL_Error: %s", SDL_GetError());
 		ret = false;
@@ -483,7 +483,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 //#pragma region Array Cube
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, array_cube_id);
-//	glVertexPointer(3, GL_FLOAT, 0, NULL);
+//	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 //
 //	glColor4f(0.0, 1, 0, 1);
 //	glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -496,12 +496,12 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 //
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, index_cube_vertex_id);
-//	glVertexPointer(3, GL_FLOAT, 0, NULL);
+//	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 //
 //	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_cube_index_id);
 //
 //	glColor4f(0.0, 0, 1, 1);
-//	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+//	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 //	glColor4f(1, 1, 1, 1);
 //
 //	glDisableClientState(GL_VERTEX_ARRAY);
@@ -518,16 +518,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 //
 //	glEnableClientState(GL_VERTEX_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, texture_vertex_id);
-//	glVertexPointer(3, GL_FLOAT, 0, NULL);
+//	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 //
 //	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, texture_UV_id);
-//	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+//	glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
 //
 //	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture_index_id);
 //
 //	glBindTexture(GL_TEXTURE_2D, lenna_texture);
-//	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+//	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 //
 //	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 //	glDisableClientState(GL_VERTEX_ARRAY);
@@ -574,4 +574,10 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::SetActiveCamera(C_Camera* _camera)
+{
+	camera = _camera;
+	UpdateProjectionMatrix();
 }

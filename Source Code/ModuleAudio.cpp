@@ -4,7 +4,7 @@
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
-ModuleAudio::ModuleAudio(Application* app, bool start_enabled) : Module(app, start_enabled), music(NULL)
+ModuleAudio::ModuleAudio(Application* app, bool start_enabled) : Module(app, start_enabled), music(nullptr)
 {}
 
 // Destructor
@@ -49,14 +49,14 @@ bool ModuleAudio::CleanUp()
 {
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music != NULL)
+	if(music != nullptr)
 	{
 		Mix_FreeMusic(music);
 	}
 
 	p2List_item<Mix_Chunk*>* item;
 
-	for(item = fx.getFirst(); item != NULL; item = item->next)
+	for(item = fx.getFirst(); item != nullptr; item = item->next)
 	{
 		Mix_FreeChunk(item->data);
 	}
@@ -73,7 +73,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
 	
-	if(music != NULL)
+	if(music != nullptr)
 	{
 		if(fade_time > 0.0f)
 		{
@@ -90,7 +90,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 
 	music = Mix_LoadMUS(path);
 
-	if(music == NULL)
+	if(music == nullptr)
 	{
 		LOG("Cannot load music %s. Mix_GetError(): %s", path, Mix_GetError());
 		ret = false;
@@ -126,7 +126,7 @@ unsigned int ModuleAudio::LoadFx(const char* path)
 
 	Mix_Chunk* chunk = Mix_LoadWAV(path);
 
-	if(chunk == NULL)
+	if(chunk == nullptr)
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
 	}
@@ -144,7 +144,7 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	Mix_Chunk* chunk = NULL;
+	Mix_Chunk* chunk = nullptr;
 	
 	if(fx.at(id-1, chunk) == true)
 	{

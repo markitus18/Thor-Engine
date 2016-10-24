@@ -38,11 +38,11 @@ private:
 
 public:
 	//Panels
-	PanelHierarchy*		panelHierarchy = NULL;
-	PanelConsole*		panelConsole = NULL;
-	PanelInspector*		panelInspector = NULL;
-	PanelConfiguration* panelConfiguration = NULL;
-	PanelButtons*		panelButtons = NULL;
+	PanelHierarchy*		panelHierarchy = nullptr;
+	PanelConsole*		panelConsole = nullptr;
+	PanelInspector*		panelInspector = nullptr;
+	PanelConfiguration* panelConfiguration = nullptr;
+	PanelButtons*		panelButtons = nullptr;
 
 	bool shaded = true;
 	bool wireframe = false;

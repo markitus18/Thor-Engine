@@ -29,7 +29,7 @@ bool ModuleEditor::Init()
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.IniFilename = NULL;
+	io.IniFilename = nullptr;
 	io.MouseDrawCursor = true;
 
 
@@ -98,16 +98,16 @@ update_status ModuleEditor::Update(float dt)
 		}
 		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::MenuItem("Inspector          ", NULL, &panelInspector->active))
+			if (ImGui::MenuItem("Inspector          ", nullptr, &panelInspector->active))
 			{
 			}
-			if (ImGui::MenuItem("Hierarchy          ", NULL, &panelHierarchy->active))
+			if (ImGui::MenuItem("Hierarchy          ", nullptr, &panelHierarchy->active))
 			{
 			}
-			if (ImGui::MenuItem("Console          ", NULL, &panelConsole->active))
+			if (ImGui::MenuItem("Console          ", nullptr, &panelConsole->active))
 			{
 			}
-			if (ImGui::MenuItem("Configuration         ", NULL, &panelConfiguration->active))
+			if (ImGui::MenuItem("Configuration         ", nullptr, &panelConfiguration->active))
 			{
 			}
 
@@ -116,7 +116,7 @@ update_status ModuleEditor::Update(float dt)
 
 		if (ImGui::BeginMenu("Help"))
 		{
-			ImGui::MenuItem("About Thor Engine   ", NULL, &show_About_window);
+			ImGui::MenuItem("About Thor Engine   ", nullptr, &show_About_window);
 			ImGui::Separator();
 			if (ImGui::MenuItem("Documentation       "))
 			{
@@ -136,7 +136,7 @@ update_status ModuleEditor::Update(float dt)
 
 		if (ImGui::BeginMenu("Debugging Tools"))
 		{
-			ImGui::MenuItem("ImGui Demo", NULL, &show_Demo_window);
+			ImGui::MenuItem("ImGui Demo", nullptr, &show_Demo_window);
 			ImGui::EndMenu();
 		}
 
@@ -153,31 +153,31 @@ bool ModuleEditor::CleanUp()
 	if (panelConsole)
 	{
 		delete panelConsole;
-		panelConsole = NULL;
+		panelConsole = nullptr;
 	}
 
 	if (panelHierarchy)
 	{
 		delete panelHierarchy;
-		panelHierarchy = NULL;
+		panelHierarchy = nullptr;
 	}
 
 	if (panelInspector)
 	{
 		delete panelInspector;
-		panelInspector = NULL;
+		panelInspector = nullptr;
 	}
 
 	if (panelConfiguration)
 	{
 		delete panelConfiguration;
-		panelConfiguration = NULL;
+		panelConfiguration = nullptr;
 	}
 
 	if (panelButtons)
 	{
 		delete panelButtons;
-		panelButtons = NULL;
+		panelButtons = nullptr;
 	}
 
 	ImGui_ImplSdlGL3_Shutdown();
@@ -186,7 +186,7 @@ bool ModuleEditor::CleanUp()
 
 void ModuleEditor::Log(const char* input)
 {
-	if (panelConsole != NULL)
+	if (panelConsole != nullptr)
 		panelConsole->AddLog(input);
 }
 
@@ -198,27 +198,27 @@ void ModuleEditor::GetEvent(SDL_Event* event)
 void ModuleEditor::DrawPanels()
 {
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize;
-	if (panelHierarchy != NULL)
+	if (panelHierarchy != nullptr)
 	{
 		panelHierarchy->Draw(windowFlags);
 	}
 
-	if (panelConsole != NULL)
+	if (panelConsole != nullptr)
 	{
 		panelConsole->Draw(windowFlags);
 	}
 
-	if (panelInspector != NULL)
+	if (panelInspector != nullptr)
 	{
 		panelInspector->Draw(windowFlags);
 	}
 
-	if (panelConfiguration != NULL)
+	if (panelConfiguration != nullptr)
 	{
 		panelConfiguration->Draw(windowFlags);
 	}
 
-	if (panelButtons != NULL)
+	if (panelButtons != nullptr)
 	{
 		panelButtons->Draw(windowFlags);
 	}

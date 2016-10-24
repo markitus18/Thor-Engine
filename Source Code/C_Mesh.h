@@ -40,22 +40,22 @@ public:
 	//Vertices data
 	uint	id_vertices = 0;
 	uint	num_vertices = 0;
-	uint*	indices = NULL;
+	uint*	indices = nullptr;
 
 	//Indices data
 	uint	id_indices = 0;
 	uint	num_indices = 0;
-	float*	vertices = NULL;
+	float*	vertices = nullptr;
 
 	//Normals data
 	uint	id_normals = 0;
 	uint	num_normals = 0;
-	float*	normals = NULL;
+	float*	normals = nullptr;
 
 	//Texture coords
 	uint	id_tex_coords = 0;
 	uint	num_tex_coords = 0;
-	float*	tex_coords = NULL;
+	float*	tex_coords = nullptr;
 
 private:
 	std::vector<C_Material*> materials;

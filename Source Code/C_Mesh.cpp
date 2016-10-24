@@ -2,7 +2,7 @@
 #include "OpenGL.h"
 #include "GameObject.h"
 
-C_Mesh::C_Mesh() : Component(Type::Mesh, NULL)
+C_Mesh::C_Mesh() : Component(Type::Mesh, nullptr)
 {
 }
 
@@ -15,7 +15,7 @@ C_Mesh::~C_Mesh()
 {
 	for (uint i = 0; i < materials.size(); i++)
 	{
-		if (materials[i] != NULL)
+		if (materials[i] != nullptr)
 		{
 			RELEASE(materials[i]);
 		}
@@ -74,7 +74,7 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 	glEnableClientState(GL_NORMAL_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_indices);
 	//Removed temporaly: game objects will use buffers, not mesh itself
@@ -102,7 +102,7 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 
 		glDisable(GL_LIGHTING);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, nullptr);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_LIGHTING);
 		glLineWidth(1);
@@ -121,14 +121,14 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 			}
 
 			glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-			glNormalPointer(GL_FLOAT, 0, NULL);
+			glNormalPointer(GL_FLOAT, 0, nullptr);
 		}
 
 		if (num_tex_coords > 0)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glBindBuffer(GL_ARRAY_BUFFER, id_tex_coords);
-			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+			glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
 		}
 
 		if (!materials.empty())
@@ -136,7 +136,7 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 			(*materials.begin())->StackTexture();
 		}
 
-		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, nullptr);
 		if (!materials.empty())
 		{
 			(*materials.begin())->PopTexture();
@@ -190,7 +190,7 @@ void C_Mesh::AddMaterial(C_Material* material)
 
 Component* C_Mesh::CreateMaterial()
 {
-	Component* component = NULL;
+	Component* component = nullptr;
 	if (materials.empty())
 	{
 		component = new C_Material(gameObject);
@@ -208,7 +208,7 @@ void C_Mesh::RemoveMaterial(C_Material* material)
 const C_Material* C_Mesh::GetMaterial(uint position) const
 {
 	if (materials.empty() || materials.size() <= position)
-		return NULL;
+		return nullptr;
 
 	return materials[position];
 }

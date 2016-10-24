@@ -59,7 +59,7 @@ public:
 public:
 	std::string					name;
 
-	GameObject*					parent = NULL;
+	GameObject*					parent = nullptr;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
 	AABB						global_AABB;

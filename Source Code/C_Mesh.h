@@ -36,6 +36,8 @@ public:
 
 	const AABB& GetAABB() const;
 
+	static Component::Type GetType();
+
 public:
 	//Vertices data
 	uint	id_vertices = 0;

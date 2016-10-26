@@ -33,3 +33,8 @@ void C_Material::PopTexture()
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
+
+Component::Type C_Material::GetType()
+{
+	return Component::Type::Material;
+}

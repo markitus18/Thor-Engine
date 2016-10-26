@@ -63,7 +63,6 @@ void C_Camera::SetAspectRatio(float ar)
 {
 	float horizontalFov = frustum.HorizontalFov();
 	frustum.SetHorizontalFovAndAspectRatio(horizontalFov, ar);
-	//frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * ar);
 }
 //--------------------------------
 
@@ -82,6 +81,7 @@ float * C_Camera::GetOpenGLViewMatrix()
 	static float4x4 m;
 
 	m = frustum.ViewMatrix();
+
 	m.Transpose();
 
 	return (float*)m.v;
@@ -92,15 +92,12 @@ float * C_Camera::GetOpenGLProjectionMatrix()
 	static float4x4 m;
 
 	m = frustum.ProjectionMatrix();
-
-	if (gameObject)
-	{
-		float4x4 parent_global = float4x4::identity;
-		parent_global = gameObject->GetGlobalTransform();
-		m = parent_global * m;
-	}
-
 	m.Transpose();
 
 	return (float*)m.v;
+}
+
+Component::Type C_Camera::GetType()
+{
+	return Component::Type::Camera;
 }

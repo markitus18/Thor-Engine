@@ -16,6 +16,8 @@ public:
 	void StackTexture();
 	void PopTexture();
 
+	static Component::Type GetType();
+
 public:
 	uint texture_id;
 	std::string texture_path;

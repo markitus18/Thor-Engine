@@ -88,12 +88,8 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 					gameObject->SetScale(scale);
 				}
 			}
-			std::vector<Component*> mesh_vector;
-			gameObject->GetComponents(Component::Type::Mesh, mesh_vector);
-			C_Mesh* mesh = NULL;
-			if (!mesh_vector.empty())
-				mesh = (C_Mesh*)mesh_vector[0];
-
+			
+			C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
 			if (mesh)
 			{
 				uint mat_size = mesh->GetMaterialsSize();
@@ -121,11 +117,9 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				}
 			}
 
-			std::vector<Component*> camera_vector;
-			gameObject->GetComponents(Component::Type::Camera, camera_vector);
-			if (!camera_vector.empty())
+			C_Camera* camera = gameObject->GetComponent<C_Camera>();
+			if (camera)
 			{
-				C_Camera* camera = (C_Camera*)camera_vector[0];
 				if (ImGui::CollapsingHeader("Camera", transform_header_flags))
 				{
 					bool b = false;
@@ -133,6 +127,12 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 					{
 						App->renderer3D->SetActiveCamera(camera);
 					}
+
+					if (ImGui::Checkbox("Camera Culling", &b))
+					{
+						//App->renderer3D->SetActiveCamera(camera);
+					}
+
 					//TODO: move this into private, more polite way?
 					float camera_fov = camera->GetFOV();
 					if (ImGui::DragFloat("Field of View", (float*)&camera_fov))
@@ -153,10 +153,7 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 					}
 				}
 			}
-
-
 		}
-
 		ImGui::End();
 	}
 

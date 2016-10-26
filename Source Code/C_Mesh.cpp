@@ -222,3 +222,8 @@ const AABB& C_Mesh::GetAABB() const
 {
 	return bounds;
 }
+
+Component::Type C_Mesh::GetType()
+{
+	return Component::Type::Mesh;
+}

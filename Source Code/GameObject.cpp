@@ -67,10 +67,10 @@ void GameObject::Draw(bool shaded, bool wireframe)
 	}
 	if (camera)
 	{
-		glPushMatrix();
-		glMultMatrixf((float*)&global_transformT);
+		//glPushMatrix();
+		//glMultMatrixf((float*)&global_transformT);
 		DrawCamera(camera);
-		glPopMatrix();
+		//glPopMatrix();
 	}
 
 	for (uint i = 0; i < childs.size(); i++)
@@ -240,6 +240,7 @@ void GameObject::UpdateTransformMatrix()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
 	UpdateGlobalTransform();
+	UpdateCamera();
 }
 
 void GameObject::UpdateGlobalTransform()
@@ -263,16 +264,29 @@ void GameObject::UpdateEulerAngles()
 
 void GameObject::UpdateAABB()
 {
-	std::vector<Component*> meshes;
-	GetComponents(Component::Type::Mesh, meshes);
-	if (meshes.size())
+	C_Mesh* mesh = GetComponent<C_Mesh>();
+	if (mesh)
 	{
-		const AABB aabb = ((C_Mesh*)meshes[0])->GetAABB();
-		global_OBB = aabb;
+		global_OBB = mesh->GetAABB();
 		global_OBB.Transform(global_transform);
 
 		global_AABB.SetNegativeInfinity();
 		global_AABB.Enclose(global_OBB);
+	}
+}
+void GameObject::UpdateCamera()
+{
+	C_Camera* camera = GetComponent<C_Camera>();
+	if (camera)
+	{
+		camera->frustum.SetFront(global_transform.WorldZ());
+		camera->frustum.SetUp(global_transform.WorldY());
+
+		float3 position = float3::zero;
+		float3 scale = float3::one;
+		Quat quat = Quat::identity;
+		global_transform.Decompose(position, quat, scale);
+		camera->frustum.SetPos(position);
 	}
 }
 
@@ -387,13 +401,13 @@ bool GameObject::HasComponent(Component::Type type)
 	return false;
 }
 
-void GameObject::GetComponents(Component::Type type, std::vector<Component*>& vec)
-{
-	for (uint i = 0; i < components.size(); i++)
-	{
-		if (components[i]->GetType() == type)
-		{
-			vec.push_back(components[i]);
-		}
-	}
-}
+//void GameObject::GetComponents(Component::Type type, std::vector<Component*>& vec)
+//{
+//	for (uint i = 0; i < components.size(); i++)
+//	{
+//		if (components[i]->GetType() == type)
+//		{
+//			vec.push_back(components[i]);
+//		}
+//	}
+//}

@@ -1,21 +1,21 @@
 #ifndef __GAMEOBJECT_H__
 #define __GAMEOBJECT_H__
 
-#include "C_Mesh.h"
-#include "C_Material.h"
-
 #include "MathGeoLib/src/MathBuildConfig.h"
 #include "MathGeoLib/src/MathGeoLib.h"
 
 #include <vector>
 
-class C_Camera;
+#include "C_Mesh.h"
+#include "C_Material.h"
+#include "C_Camera.h"
+#include "Component.h"
+
 
 class GameObject
 {
 public:
 	GameObject();
-	//GameObject(const GameObject* parent, const char* name);
 	GameObject(GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
 	~GameObject();
 
@@ -41,6 +41,8 @@ public:
 	void UpdateGlobalTransform();
 	void UpdateEulerAngles();
 	void UpdateAABB();
+	//TODO: TMP
+	void UpdateCamera();
 
 	bool HasFlippedNormals() const;
 
@@ -54,7 +56,24 @@ public:
 	Component* CreateComponent(Component::Type type);
 	void AddComponent(Component* component);
 	bool HasComponent(Component::Type type);
-	void GetComponents(Component::Type type, std::vector<Component*>& vec);
+
+	//void GameObject::GetComponents(Component::Type type, std::vector<Component*>& vec);
+
+	template<typename RetComponent>
+	RetComponent* GetComponent()
+	{
+		Component::Type type = RetComponent::GetType();
+		for (uint i = 0; i < components.size(); i++)
+		{
+			if (components[i]->GetType() == type)
+			{
+				return (RetComponent*(components[i]));
+			}
+		}
+		return NULL;
+	}
+
+
 
 public:
 	std::string					name;

@@ -30,6 +30,8 @@ public:
 	float* GetOpenGLViewMatrix();
 	float* GetOpenGLProjectionMatrix();
 
+	static Component::Type GetType();
+
 public:
 	Frustum frustum;
 	bool update_projection = true;

@@ -53,20 +53,15 @@ void GameObject::Draw(bool shaded, bool wireframe)
 		App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, mesh->materials[0], shaded, wireframe, selected, IsParentSelected());
 		if (selected || IsParentSelected())
 		{
-			App->renderer3D->AddAABB(&mesh->GetGlobalAABB());
+			App->renderer3D->AddAABB(mesh->GetGlobalAABB(), Green);
+			App->renderer3D->AddOBB(mesh->GetGlobalOBB(), Yellow);
 		}
-		//glPushMatrix();
-		//glMultMatrixf((float*)&transform->GetGlobalTransform().Transposed());
-		//mesh->Draw(shaded, wireframe);
-		//glPopMatrix();
-		if (selected || IsParentSelected())
-			DrawAABB();
 	}
 
 	C_Camera* camera = GetComponent<C_Camera>();
 	if (camera)
 	{
-		DrawCamera(camera);
+		App->renderer3D->AddFrustum(camera->frustum, Blue);
 	}
 
 	for (uint i = 0; i < childs.size(); i++)
@@ -74,92 +69,6 @@ void GameObject::Draw(bool shaded, bool wireframe)
 		if (childs[i]->active)
 			childs[i]->Draw(shaded, wireframe);	
 	}
-}
-
-void GameObject::DrawAABB()
-{/*
-	AABB global_AABB = GetComponent<C_Mesh>()->GetGlobalAABB();
-	OBB global_OBB = GetComponent<C_Mesh>()->GetGlobalOBB();
-
-	glDisable(GL_LIGHTING);
-	int num_v_aabb = global_AABB.NumVerticesInEdgeList();
-	vec* vertices_aabb = new vec[num_v_aabb];
-	global_AABB.ToEdgeList((vec*)vertices_aabb);
-
-	int num_v_obb = global_OBB.NumVerticesInEdgeList();
-	vec* vertices_obb = new vec[num_v_obb];
-	global_OBB.ToEdgeList((vec*)vertices_obb);
-
-	glBegin(GL_LINES);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	for (uint i = 0; i < global_AABB.NumVerticesInEdgeList(); i++)
-	{
-		glVertex3f(vertices_aabb[i].x, vertices_aabb[i].y, vertices_aabb[i].z);
-	}
-
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-	for (uint i = 0; i < global_OBB.NumVerticesInEdgeList(); i++)
-	{
-		glVertex3f(vertices_obb[i].x, vertices_obb[i].y, vertices_obb[i].z);
-	}
-
-	RELEASE(vertices_aabb);
-	RELEASE(vertices_obb);
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnd();
-	glEnable(GL_LIGHTING);*/
-}
-
-void GameObject::DrawCamera(C_Camera* camera)
-{	
-	float3 vertex[8];
-	camera->frustum.GetCornerPoints(vertex);
-
-	glDisable(GL_LIGHTING);
-	glBegin(GL_LINES);
-
-	glColor4f(0, 0, 1, 1);
-
-	//Between-planes right
-	glVertex3fv((GLfloat*)&vertex[1]);
-	glVertex3fv((GLfloat*)&vertex[5]);
-	glVertex3fv((GLfloat*)&vertex[7]);
-	glVertex3fv((GLfloat*)&vertex[3]);
-
-	//Between-planes left
-	glVertex3fv((GLfloat*)&vertex[4]);
-	glVertex3fv((GLfloat*)&vertex[0]);
-	glVertex3fv((GLfloat*)&vertex[2]);
-	glVertex3fv((GLfloat*)&vertex[6]);
-
-	//Far plane horizontal
-	glVertex3fv((GLfloat*)&vertex[5]);
-	glVertex3fv((GLfloat*)&vertex[4]);
-	glVertex3fv((GLfloat*)&vertex[6]);
-	glVertex3fv((GLfloat*)&vertex[7]);
-
-	//Near plane horizontal
-	glVertex3fv((GLfloat*)&vertex[0]);
-	glVertex3fv((GLfloat*)&vertex[1]);
-	glVertex3fv((GLfloat*)&vertex[3]);
-	glVertex3fv((GLfloat*)&vertex[2]);
-
-	//Near plane vertical
-	glVertex3fv((GLfloat*)&vertex[1]);
-	glVertex3fv((GLfloat*)&vertex[3]);
-	glVertex3fv((GLfloat*)&vertex[0]);
-	glVertex3fv((GLfloat*)&vertex[2]);
-
-	//Far plane vertical
-	glVertex3fv((GLfloat*)&vertex[5]);
-	glVertex3fv((GLfloat*)&vertex[7]);
-	glVertex3fv((GLfloat*)&vertex[4]);
-	glVertex3fv((GLfloat*)&vertex[6]);
-
-	glEnd();
-	glEnable(GL_LIGHTING);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void GameObject::OnUpdateTransform()

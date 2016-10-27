@@ -17,13 +17,24 @@ struct RenderMesh
 	{
 	}
 	float4x4 transform;
-	C_Mesh* mesh;
-	C_Material* material;
+	const C_Mesh* mesh;
+	const C_Material* material;
 	bool shaded;
 	bool wireframe;
 	bool selected;
 	bool parentSelected;
 
+};
+
+template <typename Box>
+struct RenderBox
+{
+	RenderBox(const Box* box, const Color& color) : box(box), color(color)
+	{
+	}
+
+	const Box* box;
+	Color color;
 };
 
 class ModuleRenderer3D : public Module
@@ -48,8 +59,10 @@ public:
 	void DrawAllMeshes();
 	void DrawMesh(const RenderMesh& mesh);
 
-	void AddAABB(const AABB* obb);
-	void DrawAllAABB();
+	void AddAABB(const AABB& box, const Color& color);
+	void AddOBB(const OBB& box, const Color& color);
+	void AddFrustum(const Frustum& box, const Color& color);
+	void DrawAllBox();
 
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
@@ -85,5 +98,8 @@ public:
 
 private:
 	std::vector<RenderMesh> meshes;
-	std::vector<const AABB*> aabbs;
+	
+	std::vector<RenderBox<AABB>> aabb;
+	std::vector<RenderBox<OBB>> obb;
+	std::vector<RenderBox<Frustum>> frustum;
 };

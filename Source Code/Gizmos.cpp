@@ -1,27 +1,16 @@
 #include "Gizmos.h"
 
-//TODO: templatizate this 3 functions? -----------------------
-void Gizmos::DrawWireBox(const AABB& aabb, Color color)
-{
-	float3 corners[8];
-	aabb.GetCornerPoints(corners);
-	DrawWireCube(corners, color);
-}
-
-void Gizmos::DrawWireBox(const OBB& obb, Color color)
-{
-	float3 corners[8];
-	obb.GetCornerPoints(corners);
-	DrawWireCube(corners, color);
-}
-
-void Gizmos::DrawWireFrustum(const Frustum& frustum, Color color)
-{
-	float3 corners[8];
-	frustum.GetCornerPoints(corners);
-	DrawWireCube(corners, color);
-}
-//TODO END ---------------------------------------------------
+//template<typename Box>
+//void Gizmos::DrawWireBox(const Box& box, Color color)
+//{
+//	float3 corners[8];
+//	box.GetCornerPoints(corners);
+//	DrawWireCube(corners, color);
+//}
+//This allows us to declarate a templatized function in .cpp file
+//template void Gizmos::DrawWireBox<AABB>(const AABB& aabb, Color color);
+//template void Gizmos::DrawWireBox<OBB>(const OBB& obb, Color color);
+//template void Gizmos::DrawWireBox<Frustum>(const Frustum& frustum, Color color);
 
 void Gizmos::DrawWireCube(const float3* corners, Color color)
 {

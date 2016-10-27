@@ -21,7 +21,6 @@ public:
 	~GameObject();
 
 	void Draw(bool shaded, bool wireframe);
-	void DrawAABB();
 	//TODO: move into camera compoment or debug comp
 	void DrawCamera(C_Camera* camera);
 

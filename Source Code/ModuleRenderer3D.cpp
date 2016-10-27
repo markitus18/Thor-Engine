@@ -589,7 +589,7 @@ void ModuleRenderer3D::SetActiveCamera(C_Camera* _camera)
 void ModuleRenderer3D::DrawAll()
 {
 	DrawAllMeshes();
-	DrawAllAABB();
+	DrawAllBox();
 }
 
 void ModuleRenderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected)
@@ -689,23 +689,44 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 	glPopMatrix();
 }
 
-void ModuleRenderer3D::AddAABB(const AABB* aabb)
+void ModuleRenderer3D::AddAABB(const AABB& box, const Color& color)
 {
-	aabbs.push_back(aabb);
+	aabb.push_back(RenderBox<AABB>(&box, color));
 }
 
-void ModuleRenderer3D::DrawAllAABB()
+void ModuleRenderer3D::AddOBB(const OBB& box, const Color& color)
+{
+	obb.push_back(RenderBox<OBB>(&box, color));
+}
+
+void ModuleRenderer3D::AddFrustum(const Frustum& box, const Color& color)
+{
+	frustum.push_back(RenderBox<Frustum>(&box, color));
+}
+
+void ModuleRenderer3D::DrawAllBox()
 {
 	glDisable(GL_LIGHTING);
 	glBegin(GL_LINES);
 
-	for (uint i = 0; i < aabbs.size(); i++)
+	for (uint i = 0; i < aabb.size(); i++)
 	{
-		Gizmos::DrawWireBox(*aabbs[i], Green);
+		Gizmos::DrawWireBox(*aabb[i].box, Green);
 	}
+	aabb.clear();
+
+	for (uint i = 0; i < obb.size(); i++)
+	{
+		Gizmos::DrawWireBox(*obb[i].box, Yellow);
+	}
+	obb.clear();
+
+	for (uint i = 0; i < frustum.size(); i++)
+	{
+		Gizmos::DrawWireBox(*frustum[i].box, Blue);
+	}
+	frustum.clear();
 
 	glEnd();
 	glEnable(GL_LIGHTING);
-
-	aabbs.clear();
 }

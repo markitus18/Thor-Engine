@@ -5,6 +5,7 @@
 C_Transform::C_Transform(GameObject* new_GameObject, float3 position, Quat rotation, float3 scale) : Component(Component::Type::Transform, gameObject), position(position), rotation(rotation), scale(scale)
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
+	UpdateEulerAngles();
 }
 
 C_Transform::~C_Transform()
@@ -103,6 +104,8 @@ Component::Type C_Transform::GetType()
 void C_Transform::UpdateLocalTransform()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
+	//UpdateEulerAngles();
+
 	transform_updated = true;
 }
 

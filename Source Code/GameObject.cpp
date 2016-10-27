@@ -47,7 +47,6 @@ void GameObject::Draw(bool shaded, bool wireframe)
 		}
 	}
 
-
 	C_Mesh* mesh = GetComponent<C_Mesh>();
 	if (mesh)
 	{

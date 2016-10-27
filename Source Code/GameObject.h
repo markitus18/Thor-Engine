@@ -21,8 +21,6 @@ public:
 	~GameObject();
 
 	void Draw(bool shaded, bool wireframe);
-	//TODO: move into camera compoment or debug comp
-	void DrawCamera(C_Camera* camera);
 
 	void OnUpdateTransform();
 

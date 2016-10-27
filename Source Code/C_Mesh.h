@@ -64,6 +64,8 @@ public:
 	uint	num_tex_coords = 0;
 	float*	tex_coords = nullptr;
 
+	bool flipped_normals;
+
 private:
 	std::vector<C_Material*> materials;
 

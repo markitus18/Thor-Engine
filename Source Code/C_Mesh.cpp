@@ -114,7 +114,7 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 		{
 			//Removed temporaly: game objects will use buffers, not mesh itself
 
-			if (gameObject->HasFlippedNormals())
+			if (flipped_normals)
 			{
 				glFrontFace(GL_CW);
 			}

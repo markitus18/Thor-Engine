@@ -3,10 +3,27 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "MathGeoLib\src\MathGeoLib.h"
 
 #define MAX_LIGHTS 8
 
 class C_Camera;
+class C_Mesh;
+class C_Material;
+
+struct RenderMesh
+{
+	RenderMesh(float4x4 trans, C_Mesh* m, C_Material* mat, bool sh, bool wire, bool selected) : transform(trans), mesh(m), material(mat), shaded(sh), wireframe(wire), selected(selected)
+	{
+	}
+	float4x4 transform;
+	C_Mesh* mesh;
+	C_Material* material;
+	bool shaded;
+	bool wireframe;
+	bool selected
+
+};
 
 class ModuleRenderer3D : public Module
 {
@@ -23,6 +40,9 @@ public:
 	void UpdateProjectionMatrix();
 
 	void SetActiveCamera(C_Camera* camera);
+
+	void AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected);
+	void DrawMesh(const RenderMesh& mesh);
 
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
@@ -55,4 +75,7 @@ public:
 
 	//bool BuffersON = false;
 #pragma endregion
+
+private:
+	std::vector<RenderMesh> meshes;
 };

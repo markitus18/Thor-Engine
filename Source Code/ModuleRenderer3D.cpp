@@ -582,3 +582,90 @@ void ModuleRenderer3D::SetActiveCamera(C_Camera* _camera)
 	camera = _camera;
 	UpdateProjectionMatrix();
 }
+
+void ModuleRenderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected)
+{
+	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected));
+}
+
+void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_vertices);
+	glVertexPointer(3, GL_FLOAT, 0, nullptr);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.mesh->id_indices);
+	//Removed temporaly: game objects will use buffers, not mesh itself
+
+	//bool selected = gameObject->IsSelected();
+	//bool parentSelected = gameObject->IsParentSelected();
+	/*
+	if (selected || parentSelected || wireframe)
+	{
+		if (selected)
+		{
+			glColor3f(0.71, 0.78, 0.88);
+			glLineWidth(1);
+		}
+
+		else if (parentSelected)
+		{
+			glColor3f(0.51, 0.58, 0.68);
+		}
+
+		else if (wireframe)
+		{
+			glColor3f(0, 0, 0);
+		}
+
+		glDisable(GL_LIGHTING);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, nullptr);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_LIGHTING);
+		glLineWidth(1);
+		glColor4f(1, 1, 1, 1);
+	}
+
+	if (shaded)
+	{
+		if (num_normals > 0)
+		{
+			//Removed temporaly: game objects will use buffers, not mesh itself
+
+			if (flipped_normals)
+			{
+				glFrontFace(GL_CW);
+			}
+
+			glBindBuffer(GL_ARRAY_BUFFER, id_normals);
+			glNormalPointer(GL_FLOAT, 0, nullptr);
+		}
+
+		if (num_tex_coords > 0)
+		{
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glBindBuffer(GL_ARRAY_BUFFER, id_tex_coords);
+			glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
+		}
+
+		if (!materials.empty())
+		{
+			(*materials.begin())->StackTexture();
+		}
+
+		glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, nullptr);
+		if (!materials.empty())
+		{
+			(*materials.begin())->PopTexture();
+		}
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glFrontFace(GL_CCW);
+	}
+
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
+}

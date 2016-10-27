@@ -158,6 +158,7 @@ void GameObject::DrawCamera(C_Camera* camera)
 void GameObject::OnUpdateTransform()
 {
 	flipped_normals = transform->flipped_normals;
+	GetComponent<C_Mesh>()->flipped_normals = HasFlippedNormals();
 
 	//Updating components
 	for (uint i = 0; i < components.size(); i++)

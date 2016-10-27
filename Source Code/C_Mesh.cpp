@@ -8,7 +8,6 @@ C_Mesh::C_Mesh() : Component(Type::Mesh, nullptr)
 
 C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObject)
 {
-
 }
 
 C_Mesh::~C_Mesh()
@@ -177,8 +176,8 @@ void C_Mesh::DrawAABB()
 
 void C_Mesh::UpdateAABB()
 {
-	global_bounds.SetNegativeInfinity();
-	global_bounds.Enclose((math::vec*)vertices, num_vertices);
+	local_bounds.SetNegativeInfinity();
+	local_bounds.Enclose((math::vec*)vertices, num_vertices);
 }
 
 void C_Mesh::AddMaterial(C_Material* material)
@@ -223,6 +222,15 @@ const AABB& C_Mesh::GetAABB() const
 	return local_bounds;
 }
 
+const AABB& C_Mesh::GetGlobalAABB() const
+{
+	return global_bounds;
+}
+const OBB& C_Mesh::GetGlobalOBB() const
+{
+	return obb;
+}
+
 Component::Type C_Mesh::GetType()
 {
 	return Component::Type::Mesh;
@@ -233,6 +241,6 @@ void C_Mesh::OnUpdateTransform(const float4x4& global, const float4x4& parent_gl
 	obb = local_bounds;
 	obb.Transform(global);
 
-	obb.SetNegativeInfinity();
+	global_bounds.SetNegativeInfinity();
 	global_bounds.Enclose(obb);
 }

@@ -97,6 +97,22 @@ float * C_Camera::GetOpenGLProjectionMatrix()
 	return (float*)m.v;
 }
 
+void C_Camera::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
+{
+	frustum.SetFront(global.WorldZ());
+	frustum.SetUp(global.WorldY());
+
+	float3 position = float3::zero;
+	float3 scale = float3::one;
+	Quat quat = Quat::identity;
+	global.Decompose(position, quat, scale);
+
+	frustum.SetPos(position);
+
+	update_projection = true;
+}
+
+
 Component::Type C_Camera::GetType()
 {
 	return Component::Type::Camera;

@@ -36,10 +36,12 @@ public:
 	uint GetMaterialsSize() const;
 
 	const AABB& GetAABB() const;
+	const AABB& GetGlobalAABB() const;
+	const OBB& GetGlobalOBB() const;
 
 	static Component::Type GetType();
 
-	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global);
+	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 public:
 	//Vertices data

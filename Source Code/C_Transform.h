@@ -31,7 +31,7 @@ public:
 
 	void Reset();
 
-	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global);
+	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	static Component::Type GetType();
 

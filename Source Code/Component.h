@@ -27,7 +27,7 @@ public:
 	bool IsActive() const;
 	Type GetType() const;
 
-	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global);
+	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	//TMP: going to be public now to avoid some errors
 	//zIs it really necessary?

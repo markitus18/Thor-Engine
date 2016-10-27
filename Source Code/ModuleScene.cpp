@@ -22,10 +22,8 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, sta
 
 	//TMP camera for testing purposes
 	GameObject* camera = new GameObject(root, "Camera");
-	camera->SetPosition(float3(10, 10, 0));
-
-	C_Camera* cam = new C_Camera(nullptr);
-	camera->AddComponent(cam);
+	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
+	camera->CreateComponent(Component::Type::Camera);
 }
 
 ModuleScene::~ModuleScene()
@@ -98,11 +96,6 @@ update_status ModuleScene::PostUpdate(float dt)
 		reset = false;
 	}
 	return UPDATE_CONTINUE;
-}
-
-void ModuleScene::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-{
-
 }
 
 void ModuleScene::ResetScene()

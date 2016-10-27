@@ -138,9 +138,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	}
 	//-----------------------------------------------
 
-	C_Transform* transform = new C_Transform(nullptr, pos, rot, scale);
 	GameObject* gameObject = new GameObject(parent, name.c_str(), pos, scale, rot);
-	gameObject->AddComponent(transform);
 
 	// Loading node meshes ----------------------------------------
 
@@ -154,9 +152,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			name = newMesh->mName.C_Str();
 			if (name == "")
 				name = "No name";
-			C_Transform* trans = new C_Transform(nullptr);
 			child = new GameObject(gameObject, name.c_str());
-			child->AddComponent(trans);
 		}
 		else
 		{

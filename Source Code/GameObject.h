@@ -25,24 +25,7 @@ public:
 	//TODO: move into camera compoment or debug comp
 	void DrawCamera(C_Camera* camera);
 
-	float3		GetPosition() const;
-	float3		GetScale() const;
-	Quat		GetQuatRotation() const;
-	float3		GetEulerRotation() const;
-	float4x4	GetGlobalTransform() const;
-	float3		GetGlobalPosition() const;
-
-	void SetPosition(float3 new_position);
-	void SetScale(float3 new_scale);
-	void SetRotation(float3 euler_angles);
-
 	void OnUpdateTransform();
-
-	void ResetTransform();
-
-	void UpdateTransformMatrix();
-	void UpdateGlobalTransform();
-	void UpdateEulerAngles();
 
 	//TODO: TMP
 	void UpdateCamera();
@@ -84,17 +67,9 @@ public:
 	bool						active = true;
 
 private:
-	float4x4	transform;
-	float4x4	global_transform;
-	float4x4	global_transformT;
-
-	float3		position;
-	float3		scale;
-	Quat		rotation;
-	float3		rotation_euler;
 	bool		flipped_normals = false;
 
-	C_Transform* transform_2 = nullptr;
+	C_Transform* transform = nullptr;
 	std::vector<Component*> components;
 
 	bool selected = false;

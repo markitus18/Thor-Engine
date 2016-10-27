@@ -68,7 +68,7 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 	}
 	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
 	{
-		float3 pos = gameObject->GetGlobalPosition();
+		float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
 		App->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
 		LOG("New camera look position: %f x, %f y, %f z", pos.x, pos.y, pos.z);
 	}

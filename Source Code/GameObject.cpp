@@ -7,17 +7,15 @@ GameObject::GameObject()
 {
 }
 
-GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), position(translation), scale(scale),
-						rotation(rotation)
+GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name)
 {
 	//Hierarchy setup ---
 	parent = new_parent;
 	if (new_parent)
 		new_parent->childs.push_back(this);
 
-	//Matrix setup
-	UpdateTransformMatrix();
-	UpdateEulerAngles();
+	AddComponent(new C_Transform(this, translation, rotation, scale));
+	
 }
 
 GameObject::~GameObject()
@@ -39,9 +37,9 @@ GameObject::~GameObject()
 
 void GameObject::Draw(bool shaded, bool wireframe)
 {
-	if (transform_2)
+	if (transform)
 	{
-		if (transform_2->transform_updated)
+		if (transform->transform_updated)
 		{
 			OnUpdateTransform();
 		}
@@ -51,7 +49,7 @@ void GameObject::Draw(bool shaded, bool wireframe)
 	if (mesh)
 	{
 		glPushMatrix();
-		glMultMatrixf((float*)&transform_2->GetGlobalTransform().Transposed());
+		glMultMatrixf((float*)&transform->GetGlobalTransform().Transposed());
 		mesh->Draw(shaded, wireframe);
 		glPopMatrix();
 		if (selected || IsParentSelected())
@@ -73,34 +71,37 @@ void GameObject::Draw(bool shaded, bool wireframe)
 
 void GameObject::DrawAABB()
 {
-	//glDisable(GL_LIGHTING);
-	//int num_v_aabb = global_AABB.NumVerticesInEdgeList();
-	//vec* vertices_aabb = new vec[num_v_aabb];
-	//global_AABB.ToEdgeList((vec*)vertices_aabb);
+	AABB global_AABB = GetComponent<C_Mesh>()->GetGlobalAABB();
+	OBB global_OBB = GetComponent<C_Mesh>()->GetGlobalOBB();
 
-	//int num_v_obb = global_OBB.NumVerticesInEdgeList();
-	//vec* vertices_obb = new vec[num_v_obb];
-	//global_OBB.ToEdgeList((vec*)vertices_obb);
+	glDisable(GL_LIGHTING);
+	int num_v_aabb = global_AABB.NumVerticesInEdgeList();
+	vec* vertices_aabb = new vec[num_v_aabb];
+	global_AABB.ToEdgeList((vec*)vertices_aabb);
 
-	//glBegin(GL_LINES);
-	//glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	//for (uint i = 0; i < global_AABB.NumVerticesInEdgeList(); i++)
-	//{
-	//	glVertex3f(vertices_aabb[i].x, vertices_aabb[i].y, vertices_aabb[i].z);
-	//}
+	int num_v_obb = global_OBB.NumVerticesInEdgeList();
+	vec* vertices_obb = new vec[num_v_obb];
+	global_OBB.ToEdgeList((vec*)vertices_obb);
 
-	//glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-	//for (uint i = 0; i < global_OBB.NumVerticesInEdgeList(); i++)
-	//{
-	//	glVertex3f(vertices_obb[i].x, vertices_obb[i].y, vertices_obb[i].z);
-	//}
+	glBegin(GL_LINES);
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	for (uint i = 0; i < global_AABB.NumVerticesInEdgeList(); i++)
+	{
+		glVertex3f(vertices_aabb[i].x, vertices_aabb[i].y, vertices_aabb[i].z);
+	}
 
-	//RELEASE(vertices_aabb);
-	//RELEASE(vertices_obb);
+	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+	for (uint i = 0; i < global_OBB.NumVerticesInEdgeList(); i++)
+	{
+		glVertex3f(vertices_obb[i].x, vertices_obb[i].y, vertices_obb[i].z);
+	}
 
-	//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	//glEnd();
-	//glEnable(GL_LIGHTING);
+	RELEASE(vertices_aabb);
+	RELEASE(vertices_obb);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnd();
+	glEnable(GL_LIGHTING);
 }
 
 void GameObject::DrawCamera(C_Camera* camera)
@@ -152,75 +153,21 @@ void GameObject::DrawCamera(C_Camera* camera)
 	glEnd();
 	glEnable(GL_LIGHTING);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-
-}
-
-float3 GameObject::GetPosition() const
-{
-	return position;
-}
-
-float3 GameObject::GetScale() const
-{
-	return scale;
-}
-
-Quat GameObject::GetQuatRotation() const
-{
-	return rotation;
-}
-
-float3 GameObject::GetEulerRotation() const
-{
-	return rotation_euler;
-}
-
-float4x4 GameObject::GetGlobalTransform() const
-{
-	return global_transform;
-}
-
-float3 GameObject::GetGlobalPosition() const
-{
-	float4x4 global_transform = GetGlobalTransform();
-	return float3(global_transform[0][3], global_transform[1][3], global_transform[2][3]);
-}
-
-void GameObject::SetPosition(float3 new_position)
-{
-	position = new_position;
-	UpdateTransformMatrix();
-}
-
-void GameObject::SetScale(float3 new_scale)
-{
-	scale = new_scale;
-	UpdateTransformMatrix();
-
-	//Getting normals sign
-	float result = scale.x * scale.y * scale.z;
-	flipped_normals = result >= 0 ? false : true;
-}
-
-void GameObject::SetRotation(float3 euler_angles)
-{
-	float3 delta = (euler_angles - rotation_euler) * DEGTORAD;
-	Quat quaternion_rotation = Quat::FromEulerXYZ(delta.x, delta.y, delta.z);
-	rotation = rotation * quaternion_rotation;
-	rotation_euler = euler_angles;
-	//rotation_euler *= RADTODEG;
-	UpdateTransformMatrix();
 }
 
 void GameObject::OnUpdateTransform()
 {
-	flipped_normals = transform_2->flipped_normals;
+	flipped_normals = transform->flipped_normals;
 
 	//Updating components
 	for (uint i = 0; i < components.size(); i++)
 	{
-		components[i]->OnUpdateTransform(global_transform, parent->GetGlobalTransform());
+		float4x4 global_parent = float4x4::identity;
+		if (parent)
+		{
+			global_parent = parent->GetComponent<C_Transform>()->GetGlobalTransform();
+		}
+		components[i]->OnUpdateTransform(transform->GetGlobalTransform(), global_parent);
 	}
 
 	//Updating childs transform
@@ -230,58 +177,19 @@ void GameObject::OnUpdateTransform()
 	}
 }
 
-void GameObject::ResetTransform()
-{
-	position = float3::zero;
-	scale = float3::one;
-	rotation = Quat::identity;
-
-	UpdateEulerAngles();
-	UpdateTransformMatrix();
-
-	//Getting normals sign
-	float result = scale.x * scale.y * scale.z;
-	flipped_normals = result >= 0 ? false : true;
-}
-
-void GameObject::UpdateTransformMatrix()
-{
-	transform = float4x4::FromTRS(position, rotation, scale);
-	UpdateGlobalTransform();
-	UpdateCamera();
-}
-
-void GameObject::UpdateGlobalTransform()
-{
-	global_transform = parent ? parent->global_transform * transform : transform;
-	global_transformT = global_transform.Transposed();
-
-	//UpdateAABB();
-
-	for (uint i = 0; i < childs.size(); i++)
-	{
-		childs[i]->UpdateGlobalTransform();
-	}
-}
-
-void GameObject::UpdateEulerAngles()
-{
-	rotation_euler = rotation.ToEulerXYZ();
-	rotation_euler *= RADTODEG;
-}
-
 void GameObject::UpdateCamera()
 {
 	C_Camera* camera = GetComponent<C_Camera>();
 	if (camera)
 	{
-		camera->frustum.SetFront(global_transform.WorldZ());
-		camera->frustum.SetUp(global_transform.WorldY());
+		float4x4 trans = transform->GetGlobalTransform();
+		camera->frustum.SetFront(trans.WorldZ());
+		camera->frustum.SetUp(trans.WorldY());
 
 		float3 position = float3::zero;
 		float3 scale = float3::one;
 		Quat quat = Quat::identity;
-		global_transform.Decompose(position, quat, scale);
+		trans.Decompose(position, quat, scale);
 		camera->frustum.SetPos(position);
 	}
 }
@@ -324,19 +232,26 @@ Component* GameObject::CreateComponent(Component::Type type)
 	Component* new_component = nullptr;
 	switch (type)
 	{
-	case(Component::Type::Mesh):
+		case(Component::Type::Mesh):
 		{
 			if (!HasComponent(Component::Type::Mesh))
 			{
 				new_component = new C_Mesh(this);
 			}
 		}
-	case(Component::Type::Material):
+		case(Component::Type::Material):
 		{
 			C_Mesh* mesh = GetComponent<C_Mesh>();
 			if (mesh)
 			{
 				new_component = mesh->CreateMaterial();
+			}
+		}
+		case(Component::Type::Camera):
+		{
+			if (!HasComponent(Component::Type::Camera))
+			{
+				new_component = new C_Camera(this);
 			}
 		}
 	}
@@ -352,26 +267,28 @@ void GameObject::AddComponent(Component* component)
 	//Check if single component types already exist
 	switch (component->GetType())
 	{
-	case(Component::Type::Transform):
+		case(Component::Type::Transform):
 		{
 			if (!HasComponent(Component::Type::Transform))
 			{
 				components.push_back(component);
+				transform = (C_Transform*)component;
 				component->gameObject = this;
-				transform_2 = (C_Transform*)component;
+				OnUpdateTransform();
 			}
+			break;
 		}
-	case(Component::Type::Mesh):
+		case(Component::Type::Mesh):
 		{
 			if (!HasComponent(Component::Type::Mesh))
 			{
 				components.push_back(component);
 				component->gameObject = this;
-				//UpdateAABB();
+				component->OnUpdateTransform(GetComponent<C_Transform>()->GetGlobalTransform());
 			}
 			break;
 		}
-	case(Component::Type::Material):
+		case(Component::Type::Material):
 		{
 			C_Mesh* mesh = GetComponent<C_Mesh>();
 			if (mesh > 0)
@@ -380,15 +297,10 @@ void GameObject::AddComponent(Component* component)
 			}
 			break;
 		}
-	case(Component::Type::Camera):
-	{
-		components.push_back((Component*)component);
-		component->gameObject = this;
-		break;
-	}
-	default:
+		case(Component::Type::Camera):
 		{
-			components.push_back(component);
+			components.push_back((Component*)component);
+			component->gameObject = this;
 			break;
 		}
 	}

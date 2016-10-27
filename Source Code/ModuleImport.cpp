@@ -159,6 +159,10 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			child = gameObject;
 		}
 
+		if (name == "Line002")
+		{
+			int i = 0;
+		}
 		//WARNING: we need to add the mesh after its loaded so gameObject loads AABB
 		C_Mesh* mesh = new C_Mesh();
 		LoadMesh(mesh, newMesh);

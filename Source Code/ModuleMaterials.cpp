@@ -65,6 +65,10 @@ C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const
 			material->texture_file = file;
 			material->texture_id = LoadIMG(material->texture_path.c_str());
 		}
+		else
+		{
+			material->texture_id = 0;
+		}
 
 		material->color = Color(color);
 		materials.push_back(material);

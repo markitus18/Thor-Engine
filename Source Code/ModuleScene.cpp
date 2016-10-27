@@ -13,6 +13,7 @@
 #include <gl/GLU.h>
 //#include <stdio.h>
 #include "C_Camera.h"
+#include "Intersections.h"
 
 //#include <GLFW/glfw3.h>
 
@@ -21,9 +22,10 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, sta
 	root = new GameObject(nullptr, "root");
 
 	//TMP camera for testing purposes
-	GameObject* camera = new GameObject(root, "Camera");
+	camera = new GameObject(root, "Camera");
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
 	camera->CreateComponent(Component::Type::Camera);
+	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
 }
 
 ModuleScene::~ModuleScene()
@@ -82,7 +84,27 @@ update_status ModuleScene::Update(float dt)
 		drawGrid = !drawGrid;
 	}
 
-	root->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+	root->Update();
+
+	std::vector<GameObject*> gameObjects;
+	TestGameObjectsCulling(gameObjects, root);
+
+	for (uint i = 0; i < gameObjects.size(); i++)
+	{
+		if (i == 0)
+		{
+			gameObjects[1]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		}
+		else if (i == 1)
+		{
+			gameObjects[0]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		}
+		else
+			gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+	}
+	gameObjects.clear();
+	camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+	//root->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 
 	//LOG("GameObjects in scene: %i", tmp_goCount)
 	return UPDATE_CONTINUE;
@@ -113,4 +135,18 @@ GameObject* ModuleScene::getRoot()
 const GameObject* ModuleScene::getRoot() const
 {
 	return root;
+}
+
+void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject)
+{
+	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
+	if (mesh && Intersects(camera->GetComponent<C_Camera>()->frustum, mesh->GetGlobalAABB()))
+	{
+		vector.push_back(gameObject);
+	}
+
+	for (uint i = 0; i < gameObject->childs.size(); i++)
+	{
+		TestGameObjectsCulling(vector, gameObject->childs[i]);
+	}
 }

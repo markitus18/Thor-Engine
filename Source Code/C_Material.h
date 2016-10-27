@@ -13,13 +13,13 @@ public:
 	C_Material(const GameObject* gameObject);
 	~C_Material();
 
-	void StackTexture();
-	void PopTexture();
+	void StackTexture() const;
+	void PopTexture() const;
 
 	static Component::Type GetType();
 
 public:
-	uint texture_id;
+	uint texture_id = 0;
 	std::string texture_path;
 	std::string texture_file;
 	Color color;

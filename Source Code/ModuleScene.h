@@ -32,6 +32,8 @@ public:
 	GameObject* getRoot();
 	const GameObject* getRoot() const;
 
+	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject);
+
 public:
 	bool reset = false;
 	Timer timer;

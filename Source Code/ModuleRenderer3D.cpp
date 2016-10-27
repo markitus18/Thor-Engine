@@ -4,6 +4,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
 #include "C_Camera.h"
+#include "C_Material.h"
 #include "Gizmos.h"
 
 #include "OpenGL.h"
@@ -616,13 +617,28 @@ void ModuleRenderer3D::DrawAllMeshes()
 
 void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 {
+	GLenum err;
+
 	glPushMatrix();
 	glMultMatrixf((float*)&mesh.transform);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_vertices);
+	err = glGetError();
+	if (err!= GL_NO_ERROR)
+		LOG(SDL_GetError());
+
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
+	err = glGetError();
+	if (err != GL_NO_ERROR)
+		LOG(SDL_GetError());
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.mesh->id_indices);
+
+	err = glGetError();
+	if (err != GL_NO_ERROR)
+		LOG(SDL_GetError());
+
 	//Removed temporaly: game objects will use buffers, not mesh itself
 
 	if (mesh.selected || mesh.parentSelected || mesh.wireframe)
@@ -664,24 +680,42 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 			}
 
 			glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_normals);
+
+			err = glGetError();
+			if (err != GL_NO_ERROR)
+				LOG(SDL_GetError());
 			glNormalPointer(GL_FLOAT, 0, nullptr);
+
+			err = glGetError();
+			if (err != GL_NO_ERROR)
+				LOG(SDL_GetError());
+
 		}
 
 		if (mesh.mesh->num_tex_coords > 0)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_tex_coords);
+
+			err = glGetError();
+			if (err != GL_NO_ERROR)
+				LOG(SDL_GetError());
 			glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
+
+			err = glGetError();
+			if (err != GL_NO_ERROR)
+				LOG(SDL_GetError());
+
 		}
 
-		if (!mesh.mesh->materials.empty())
+		if (mesh.material)
 		{
-			(*(mesh.mesh->materials.begin()))->StackTexture();
+			mesh.material->StackTexture();
 		}
 
 		glDrawElements(GL_TRIANGLES, mesh.mesh->num_indices, GL_UNSIGNED_INT, nullptr);
-		if (!mesh.mesh->materials.empty())
+		if (mesh.material)
 		{
-			(*(mesh.mesh->materials.begin()))->PopTexture();
+			mesh.material->PopTexture();
 		}
 		glFrontFace(GL_CCW);
 	}

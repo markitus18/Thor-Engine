@@ -20,22 +20,21 @@ public:
 	GameObject(GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
 	~GameObject();
 
+	void Update();
 	void Draw(bool shaded, bool wireframe);
 
 	void OnUpdateTransform();
 
-	//TODO: TMP
-	void UpdateCamera();
-
 	bool HasFlippedNormals() const;
 
-	//Selection methods
+	//Selection methods -----------------------------------
 	void Select();
 	void Unselect();
 	bool IsSelected() const;
 	bool IsParentSelected() const;
+	//EndOf Selection methods -----------------------------
 
-	//Component management
+	//Component management --------------------------------
 	Component* CreateComponent(Component::Type type);
 	void AddComponent(Component* component);
 	bool HasComponent(Component::Type type);
@@ -53,8 +52,7 @@ public:
 		}
 		return NULL;
 	}
-
-
+	//EndOf Component management -------------------------
 
 public:
 	std::string					name;
@@ -64,12 +62,12 @@ public:
 	bool						active = true;
 
 private:
-	bool		flipped_normals = false;
+	bool						flipped_normals = false;
 
-	C_Transform* transform = nullptr;
-	std::vector<Component*> components;
+	C_Transform*				transform = nullptr;
+	std::vector<Component*>		components;
 
-	bool selected = false;
+	bool						selected = false;
 };
 
 #endif

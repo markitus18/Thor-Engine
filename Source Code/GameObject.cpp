@@ -36,8 +36,7 @@ GameObject::~GameObject()
 	}
 }
 
-
-void GameObject::Draw(bool shaded, bool wireframe)
+void GameObject::Update()
 {
 	if (transform)
 	{
@@ -47,10 +46,26 @@ void GameObject::Draw(bool shaded, bool wireframe)
 		}
 	}
 
+	for (uint i = 0; i < childs.size(); i++)
+	{
+		if (childs[i]->active)
+			childs[i]->Update();
+	}
+}
+
+void GameObject::Draw(bool shaded, bool wireframe)
+{
+	if (name == "Line002")
+	{
+		int i = 0;
+	}
 	C_Mesh* mesh = GetComponent<C_Mesh>();
 	if (mesh)
 	{
-		App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, mesh->materials[0], shaded, wireframe, selected, IsParentSelected());
+		//if (name == "Line002")
+		//{
+			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected());
+		//}
 		if (selected || IsParentSelected())
 		{
 			App->renderer3D->AddAABB(mesh->GetGlobalAABB(), Green);
@@ -95,23 +110,6 @@ void GameObject::OnUpdateTransform()
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		childs[i]->OnUpdateTransform();
-	}
-}
-
-void GameObject::UpdateCamera()
-{
-	C_Camera* camera = GetComponent<C_Camera>();
-	if (camera)
-	{
-		float4x4 trans = transform->GetGlobalTransform();
-		camera->frustum.SetFront(trans.WorldZ());
-		camera->frustum.SetUp(trans.WorldY());
-
-		float3 position = float3::zero;
-		float3 scale = float3::one;
-		Quat quat = Quat::identity;
-		trans.Decompose(position, quat, scale);
-		camera->frustum.SetPos(position);
 	}
 }
 
@@ -212,11 +210,12 @@ void GameObject::AddComponent(Component* component)
 		}
 		case(Component::Type::Material):
 		{
-			C_Mesh* mesh = GetComponent<C_Mesh>();
-			if (mesh > 0)
+			if (HasComponent(Component::Type::Mesh) && !HasComponent(Component::Type::Material))
 			{
-				mesh->AddMaterial((C_Material*)component);
+				components.push_back(component);
+				component->gameObject = this;
 			}
+
 			break;
 		}
 		case(Component::Type::Camera):

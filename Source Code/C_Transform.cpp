@@ -104,8 +104,6 @@ Component::Type C_Transform::GetType()
 void C_Transform::UpdateLocalTransform()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
-	//UpdateEulerAngles();
-
 	transform_updated = true;
 }
 

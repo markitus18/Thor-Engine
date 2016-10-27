@@ -39,11 +39,20 @@ GameObject::~GameObject()
 
 void GameObject::Draw(bool shaded, bool wireframe)
 {
+	if (transform_2)
+	{
+		if (transform_2->transform_updated)
+		{
+			OnUpdateTransform();
+		}
+	}
+
+
 	C_Mesh* mesh = GetComponent<C_Mesh>();
 	if (mesh)
 	{
 		glPushMatrix();
-		glMultMatrixf((float*)&global_transformT);
+		glMultMatrixf((float*)&transform_2->GetGlobalTransform().Transposed());
 		mesh->Draw(shaded, wireframe);
 		glPopMatrix();
 		if (selected || IsParentSelected())
@@ -65,34 +74,34 @@ void GameObject::Draw(bool shaded, bool wireframe)
 
 void GameObject::DrawAABB()
 {
-	glDisable(GL_LIGHTING);
-	int num_v_aabb = global_AABB.NumVerticesInEdgeList();
-	vec* vertices_aabb = new vec[num_v_aabb];
-	global_AABB.ToEdgeList((vec*)vertices_aabb);
+	//glDisable(GL_LIGHTING);
+	//int num_v_aabb = global_AABB.NumVerticesInEdgeList();
+	//vec* vertices_aabb = new vec[num_v_aabb];
+	//global_AABB.ToEdgeList((vec*)vertices_aabb);
 
-	int num_v_obb = global_OBB.NumVerticesInEdgeList();
-	vec* vertices_obb = new vec[num_v_obb];
-	global_OBB.ToEdgeList((vec*)vertices_obb);
+	//int num_v_obb = global_OBB.NumVerticesInEdgeList();
+	//vec* vertices_obb = new vec[num_v_obb];
+	//global_OBB.ToEdgeList((vec*)vertices_obb);
 
-	glBegin(GL_LINES);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	for (uint i = 0; i < global_AABB.NumVerticesInEdgeList(); i++)
-	{
-		glVertex3f(vertices_aabb[i].x, vertices_aabb[i].y, vertices_aabb[i].z);
-	}
+	//glBegin(GL_LINES);
+	//glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	//for (uint i = 0; i < global_AABB.NumVerticesInEdgeList(); i++)
+	//{
+	//	glVertex3f(vertices_aabb[i].x, vertices_aabb[i].y, vertices_aabb[i].z);
+	//}
 
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-	for (uint i = 0; i < global_OBB.NumVerticesInEdgeList(); i++)
-	{
-		glVertex3f(vertices_obb[i].x, vertices_obb[i].y, vertices_obb[i].z);
-	}
+	//glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+	//for (uint i = 0; i < global_OBB.NumVerticesInEdgeList(); i++)
+	//{
+	//	glVertex3f(vertices_obb[i].x, vertices_obb[i].y, vertices_obb[i].z);
+	//}
 
-	RELEASE(vertices_aabb);
-	RELEASE(vertices_obb);
+	//RELEASE(vertices_aabb);
+	//RELEASE(vertices_obb);
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnd();
-	glEnable(GL_LIGHTING);
+	//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	//glEnd();
+	//glEnable(GL_LIGHTING);
 }
 
 void GameObject::DrawCamera(C_Camera* camera)
@@ -205,6 +214,23 @@ void GameObject::SetRotation(float3 euler_angles)
 	UpdateTransformMatrix();
 }
 
+void GameObject::OnUpdateTransform()
+{
+	flipped_normals = transform_2->flipped_normals;
+
+	//Updating components
+	for (uint i = 0; i < components.size(); i++)
+	{
+		components[i]->OnUpdateTransform(global_transform, parent->GetGlobalTransform());
+	}
+
+	//Updating childs transform
+	for (uint i = 0; i < childs.size(); i++)
+	{
+		childs[i]->OnUpdateTransform();
+	}
+}
+
 void GameObject::ResetTransform()
 {
 	position = float3::zero;
@@ -231,7 +257,7 @@ void GameObject::UpdateGlobalTransform()
 	global_transform = parent ? parent->global_transform * transform : transform;
 	global_transformT = global_transform.Transposed();
 
-	UpdateAABB();
+	//UpdateAABB();
 
 	for (uint i = 0; i < childs.size(); i++)
 	{
@@ -245,18 +271,6 @@ void GameObject::UpdateEulerAngles()
 	rotation_euler *= RADTODEG;
 }
 
-void GameObject::UpdateAABB()
-{
-	C_Mesh* mesh = GetComponent<C_Mesh>();
-	if (mesh)
-	{
-		global_OBB = mesh->GetAABB();
-		global_OBB.Transform(global_transform);
-
-		global_AABB.SetNegativeInfinity();
-		global_AABB.Enclose(global_OBB);
-	}
-}
 void GameObject::UpdateCamera()
 {
 	C_Camera* camera = GetComponent<C_Camera>();
@@ -339,13 +353,22 @@ void GameObject::AddComponent(Component* component)
 	//Check if single component types already exist
 	switch (component->GetType())
 	{
+	case(Component::Type::Transform):
+		{
+			if (!HasComponent(Component::Type::Transform))
+			{
+				components.push_back(component);
+				component->gameObject = this;
+				transform_2 = (C_Transform*)component;
+			}
+		}
 	case(Component::Type::Mesh):
 		{
 			if (!HasComponent(Component::Type::Mesh))
 			{
 				components.push_back(component);
 				component->gameObject = this;
-				UpdateAABB();
+				//UpdateAABB();
 			}
 			break;
 		}

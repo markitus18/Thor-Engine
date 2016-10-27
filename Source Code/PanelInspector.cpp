@@ -50,6 +50,7 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 			ImGui::Separator();
 
 			ImGuiTreeNodeFlags transform_header_flags = ImGuiTreeNodeFlags_DefaultOpen;
+			C_Transform* transform = gameObject->GetComponent<C_Transform>();
 			if (ImGui::CollapsingHeader("Transform", transform_header_flags))
 			{
 				if (ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[1])
@@ -61,31 +62,31 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				{
 					if (ImGui::Button("Reset"))
 					{
-						gameObject->ResetTransform();
+						transform->Reset();
 						ImGui::CloseCurrentPopup();
 					}
 					ImGui::EndPopup();
 				}
 
-				float3 pos = gameObject->GetPosition();
-				float3 scale = gameObject->GetScale();
-				float3 rotation = gameObject->GetEulerRotation();
+				float3 pos = transform->GetPosition();
+				float3 scale = transform->GetScale();
+				float3 rotation = transform->GetEulerRotation();
 				if (ImGui::DragFloat3("Position", (float*)&pos, 0.15f))
 				{
 					App->input->InfiniteHorizontal();
-					gameObject->SetPosition(pos);
+					transform->SetPosition(pos);
 				}
 
 				if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.5f))
 				{
 					App->input->InfiniteHorizontal();
-					gameObject->SetRotation(rotation);
+					transform->SetEulerRotation(rotation);
 				}
 
 				if (ImGui::DragFloat3("Scale", (float*)&scale, 0.15f))
 				{
 					App->input->InfiniteHorizontal();
-					gameObject->SetScale(scale);
+					transform->SetScale(scale);
 				}
 			}
 			

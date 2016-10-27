@@ -153,17 +153,17 @@ void C_Mesh::Draw(bool shaded, bool wireframe)
 
 void C_Mesh::DrawAABB()
 {
-	float3 minPoint = float3(bounds.minPoint);
-	float3 maxPoint = float3(bounds.maxPoint);
+	float3 minPoint = float3(global_bounds.minPoint);
+	float3 maxPoint = float3(global_bounds.maxPoint);
 
-	int num_v = bounds.NumVerticesInEdgeList();
+	int num_v = global_bounds.NumVerticesInEdgeList();
 	vec* vertices = new vec[num_v];
-	bounds.ToEdgeList((vec*)vertices);
+	global_bounds.ToEdgeList((vec*)vertices);
 
 
 	glBegin(GL_LINES);
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	for (uint i = 0; i < bounds.NumVerticesInEdgeList(); i ++)
+	for (uint i = 0; i < global_bounds.NumVerticesInEdgeList(); i ++)
 	{
 		glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
 	}
@@ -177,8 +177,8 @@ void C_Mesh::DrawAABB()
 
 void C_Mesh::UpdateAABB()
 {
-	bounds.SetNegativeInfinity();
-	bounds.Enclose((math::vec*)vertices, num_vertices);
+	global_bounds.SetNegativeInfinity();
+	global_bounds.Enclose((math::vec*)vertices, num_vertices);
 }
 
 void C_Mesh::AddMaterial(C_Material* material)
@@ -220,10 +220,19 @@ uint C_Mesh::GetMaterialsSize() const
 
 const AABB& C_Mesh::GetAABB() const
 {
-	return bounds;
+	return local_bounds;
 }
 
 Component::Type C_Mesh::GetType()
 {
 	return Component::Type::Mesh;
+}
+
+void C_Mesh::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
+{
+	obb = local_bounds;
+	obb.Transform(global);
+
+	obb.SetNegativeInfinity();
+	global_bounds.Enclose(obb);
 }

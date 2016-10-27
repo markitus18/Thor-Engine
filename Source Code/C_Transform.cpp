@@ -60,8 +60,8 @@ void C_Transform::SetScale(float3 new_scale)
 	UpdateLocalTransform();
 
 	//Getting normals sign
-	//float result = scale.x * scale.y * scale.z;
-	//flipped_normals = result >= 0 ? false : true;
+	float result = scale.x * scale.y * scale.z;
+	flipped_normals = result >= 0 ? false : true;
 }
 
 void C_Transform::SetEulerRotation(float3 euler_angles)
@@ -74,8 +74,40 @@ void C_Transform::SetEulerRotation(float3 euler_angles)
 	UpdateLocalTransform();
 }
 
+void C_Transform::Reset()
+{
+	position = float3::zero;
+	scale = float3::one;
+	rotation = Quat::identity;
+
+	UpdateEulerAngles();
+	UpdateLocalTransform();
+
+	//Getting normals sign
+	float result = scale.x * scale.y * scale.z;
+	flipped_normals = result >= 0 ? false : true;
+}
+
+void C_Transform::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
+{
+	global_transform = parent_global * transform;
+	global_transformT = global_transform.Transposed();
+	transform_updated = false;
+}
+
+Component::Type C_Transform::GetType()
+{
+	return Component::Type::Transform;
+}
+
 void C_Transform::UpdateLocalTransform()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
+	transform_updated = true;
+}
 
+void C_Transform::UpdateEulerAngles()
+{
+	rotation_euler = rotation.ToEulerXYZ();
+	rotation_euler *= RADTODEG;
 }

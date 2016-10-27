@@ -36,12 +36,14 @@ public:
 	void SetScale(float3 new_scale);
 	void SetRotation(float3 euler_angles);
 
+	void OnUpdateTransform();
+
 	void ResetTransform();
 
 	void UpdateTransformMatrix();
 	void UpdateGlobalTransform();
 	void UpdateEulerAngles();
-	void UpdateAABB();
+
 	//TODO: TMP
 	void UpdateCamera();
 
@@ -80,8 +82,6 @@ public:
 	GameObject*					parent = nullptr;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
-	AABB						global_AABB;
-	OBB							global_OBB;
 
 private:
 	float4x4	transform;
@@ -94,7 +94,7 @@ private:
 	float3		rotation_euler;
 	bool		flipped_normals = false;
 
-	C_Transform* transform_2;
+	C_Transform* transform_2 = nullptr;
 	std::vector<Component*> components;
 
 	bool selected = false;

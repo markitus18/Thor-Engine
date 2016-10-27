@@ -3,8 +3,10 @@
 
 #include "Globals.h"
 
-class GameObject;
+//TODO: move into .cpp?
+#include "MathGeoLib\src\MathGeoLib.h"
 
+class GameObject;
 class Component
 {
 public:
@@ -24,6 +26,8 @@ public:
 	void SetActive(bool set);
 	bool IsActive() const;
 	Type GetType() const;
+
+	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global);
 
 	//TMP: going to be public now to avoid some errors
 	//zIs it really necessary?

@@ -29,8 +29,15 @@ public:
 	void SetScale(float3 scale);
 	void SetEulerRotation(float3 euler_angles);
 
+	void Reset();
+
+	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global);
+
+	static Component::Type GetType();
+
 private:
 	void UpdateLocalTransform();
+	void UpdateEulerAngles();
 
 private:
 	float4x4	transform;
@@ -41,6 +48,10 @@ private:
 	float3		scale;
 	Quat		rotation;
 	float3		rotation_euler;
+
+public:
+	bool		flipped_normals = false;
+	bool		transform_updated = true;
 };
 
 #endif //C_TRANSFORM_H__

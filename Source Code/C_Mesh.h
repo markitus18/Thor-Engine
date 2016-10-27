@@ -14,6 +14,7 @@ class C_Material;
 class C_Mesh : public Component
 {
 public:
+	//TODO: organize functions order
 	C_Mesh();
 	C_Mesh(GameObject* new_GameObject);
 	~C_Mesh();
@@ -38,6 +39,8 @@ public:
 
 	static Component::Type GetType();
 
+	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global);
+
 public:
 	//Vertices data
 	uint	id_vertices = 0;
@@ -61,7 +64,10 @@ public:
 
 private:
 	std::vector<C_Material*> materials;
-	AABB bounds;
+
+	AABB	local_bounds;
+	OBB		obb;
+	AABB	global_bounds;
 };
 
 #endif

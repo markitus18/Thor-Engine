@@ -67,7 +67,7 @@ public:
 		{
 			if (components[i]->GetType() == type)
 			{
-				return (RetComponent*(components[i]));
+				return ((RetComponent*)(components[i]));
 			}
 		}
 		return NULL;

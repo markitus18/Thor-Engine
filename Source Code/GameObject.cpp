@@ -39,32 +39,18 @@ GameObject::~GameObject()
 
 void GameObject::Draw(bool shaded, bool wireframe)
 {
-	C_Mesh* _mesh = nullptr;
-	for(uint i = 0; i < components.size(); i++)
-	{
-		if (components[i]->GetType() == Component::Type::Mesh)
-		{
-			_mesh = (C_Mesh*)components[i];
-		}
-	}
-	if (_mesh)
+	C_Mesh* mesh = GetComponent<C_Mesh>();
+	if (mesh)
 	{
 		glPushMatrix();
 		glMultMatrixf((float*)&global_transformT);
-		_mesh->Draw(shaded, wireframe);
+		mesh->Draw(shaded, wireframe);
 		glPopMatrix();
 		if (selected || IsParentSelected())
 			DrawAABB();
 	}
 
-	C_Camera* camera = nullptr;
-	for (uint i = 0; i < components.size(); i++)
-	{
-		if (components[i]->GetType() == Component::Type::Camera)
-		{
-			camera = (C_Camera*)components[i];
-		}
-	}
+	C_Camera* camera = GetComponent<C_Camera>();
 	if (camera)
 	{
 		//glPushMatrix();
@@ -337,11 +323,10 @@ Component* GameObject::CreateComponent(Component::Type type)
 		}
 	case(Component::Type::Material):
 		{
-			std::vector<Component*> mesh;
-			GetComponents(Component::Type::Mesh, mesh);
-			if (!mesh.empty())
+			C_Mesh* mesh = GetComponent<C_Mesh>();
+			if (mesh)
 			{
-				new_component = ((C_Mesh*)mesh[0])->CreateMaterial();
+				new_component = mesh->CreateMaterial();
 			}
 		}
 	}
@@ -369,11 +354,10 @@ void GameObject::AddComponent(Component* component)
 		}
 	case(Component::Type::Material):
 		{
-			std::vector<Component*> mesh;
-			GetComponents(Component::Type::Mesh, mesh);
-			if (mesh.size() > 0)
+			C_Mesh* mesh = GetComponent<C_Mesh>();
+			if (mesh > 0)
 			{
-				((C_Mesh*)mesh[0])->AddMaterial((C_Material*)component);
+				mesh->AddMaterial((C_Material*)component);
 			}
 			break;
 		}

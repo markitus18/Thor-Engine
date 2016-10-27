@@ -1,9 +1,8 @@
 #include "Component.h"
 
-Component::Component(Type type, const GameObject* _gameObject) : type(type)
+Component::Component(Type type, const GameObject* gameObject) : type(type)
 {
-	//Removed temporaly. Is it really necessary?
-	gameObject = _gameObject;
+	this->gameObject = gameObject;
 }
 
 Component::~Component()

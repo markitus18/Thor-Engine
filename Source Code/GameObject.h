@@ -9,6 +9,7 @@
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
+#include "C_Transform.h"
 #include "Component.h"
 
 
@@ -57,8 +58,6 @@ public:
 	void AddComponent(Component* component);
 	bool HasComponent(Component::Type type);
 
-	//void GameObject::GetComponents(Component::Type type, std::vector<Component*>& vec);
-
 	template<typename RetComponent>
 	RetComponent* GetComponent()
 	{
@@ -95,6 +94,7 @@ private:
 	float3		rotation_euler;
 	bool		flipped_normals = false;
 
+	C_Transform* transform_2;
 	std::vector<Component*> components;
 
 	bool selected = false;

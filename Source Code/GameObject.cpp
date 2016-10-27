@@ -53,10 +53,7 @@ void GameObject::Draw(bool shaded, bool wireframe)
 	C_Camera* camera = GetComponent<C_Camera>();
 	if (camera)
 	{
-		//glPushMatrix();
-		//glMultMatrixf((float*)&global_transformT);
 		DrawCamera(camera);
-		//glPopMatrix();
 	}
 
 	for (uint i = 0; i < childs.size(); i++)

@@ -211,6 +211,9 @@
     <ClCompile Include="Source Code\ModuleCamera3D.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\C_Transform.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -548,6 +551,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\ModuleCamera3D.h">
       <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\C_Transform.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
 #
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
 #include "Light.h"
 #include "MathGeoLib\src\MathGeoLib.h"
 
@@ -43,8 +42,14 @@ public:
 
 	void SetActiveCamera(C_Camera* camera);
 
+	void DrawAll();
+
 	void AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected);
+	void DrawAllMeshes();
 	void DrawMesh(const RenderMesh& mesh);
+
+	void AddAABB(const AABB* obb);
+	void DrawAllAABB();
 
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
@@ -80,4 +85,5 @@ public:
 
 private:
 	std::vector<RenderMesh> meshes;
+	std::vector<const AABB*> aabbs;
 };

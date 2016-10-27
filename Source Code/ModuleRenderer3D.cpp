@@ -4,6 +4,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
 #include "C_Camera.h"
+#include "Gizmos.h"
 
 #include "OpenGL.h"
 #include "ModuleImport.h"
@@ -535,11 +536,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 //#pragma endregion
 #pragma endregion
 
-	for (uint i = 0; i < meshes.size(); i++)
-	{
-		DrawMesh(meshes[i]);
-	}
-	meshes.clear();
+	DrawAll();
 
 	return UPDATE_CONTINUE;
 }
@@ -589,18 +586,38 @@ void ModuleRenderer3D::SetActiveCamera(C_Camera* _camera)
 	UpdateProjectionMatrix();
 }
 
+void ModuleRenderer3D::DrawAll()
+{
+	DrawAllMeshes();
+	DrawAllAABB();
+}
+
 void ModuleRenderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected)
 {
 	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected));
+}
+
+void ModuleRenderer3D::DrawAllMeshes()
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	for (uint i = 0; i < meshes.size(); i++)
+	{
+		DrawMesh(meshes[i]);
+	}
+	meshes.clear();
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 {
 	glPushMatrix();
 	glMultMatrixf((float*)&mesh.transform);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);
@@ -652,7 +669,6 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 
 		if (mesh.mesh->num_tex_coords > 0)
 		{
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_tex_coords);
 			glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
 		}
@@ -667,12 +683,29 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 		{
 			(*(mesh.mesh->materials.begin()))->PopTexture();
 		}
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glFrontFace(GL_CCW);
 	}
 
 	glPopMatrix();
+}
 
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
+void ModuleRenderer3D::AddAABB(const AABB* aabb)
+{
+	aabbs.push_back(aabb);
+}
+
+void ModuleRenderer3D::DrawAllAABB()
+{
+	glDisable(GL_LIGHTING);
+	glBegin(GL_LINES);
+
+	for (uint i = 0; i < aabbs.size(); i++)
+	{
+		Gizmos::DrawWireBox(*aabbs[i], Green);
+	}
+
+	glEnd();
+	glEnable(GL_LIGHTING);
+
+	aabbs.clear();
 }

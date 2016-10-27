@@ -23,9 +23,6 @@ public:
 	void LoadData(char* path);
 	void LoadBuffers();
 
-	void Draw(bool shaded, bool wireframe);
-	void DrawAABB();
-
 	void UpdateAABB();
 
 	void AddMaterial(C_Material*);

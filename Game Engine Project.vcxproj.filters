@@ -214,6 +214,9 @@
     <ClCompile Include="Source Code\C_Transform.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\Gizmos.cpp">
+      <Filter>Source Code\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -554,6 +557,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\C_Transform.h">
       <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Gizmos.h">
+      <Filter>Source Code\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

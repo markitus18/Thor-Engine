@@ -164,6 +164,7 @@
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.h" />
     <ClInclude Include="Source Code\GameObject.h" />
+    <ClInclude Include="Source Code\Gizmos.h" />
     <ClInclude Include="Source Code\glmath.h" />
     <ClInclude Include="Source Code\Globals.h" />
     <ClInclude Include="Source Code\Light.h" />
@@ -244,6 +245,7 @@
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.cpp" />
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.cpp" />
     <ClCompile Include="Source Code\GameObject.cpp" />
+    <ClCompile Include="Source Code\Gizmos.cpp" />
     <ClCompile Include="Source Code\glmath.cpp" />
     <ClCompile Include="Source Code\Light.cpp" />
     <ClCompile Include="Source Code\log.cpp" />

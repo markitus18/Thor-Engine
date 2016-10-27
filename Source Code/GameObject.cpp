@@ -51,12 +51,16 @@ void GameObject::Draw(bool shaded, bool wireframe)
 	if (mesh)
 	{
 		App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, mesh->materials[0], shaded, wireframe, selected, IsParentSelected());
+		if (selected || IsParentSelected())
+		{
+			App->renderer3D->AddAABB(&mesh->GetGlobalAABB());
+		}
 		//glPushMatrix();
 		//glMultMatrixf((float*)&transform->GetGlobalTransform().Transposed());
 		//mesh->Draw(shaded, wireframe);
 		//glPopMatrix();
-		//if (selected || IsParentSelected())
-		//	DrawAABB();
+		if (selected || IsParentSelected())
+			DrawAABB();
 	}
 
 	C_Camera* camera = GetComponent<C_Camera>();
@@ -73,7 +77,7 @@ void GameObject::Draw(bool shaded, bool wireframe)
 }
 
 void GameObject::DrawAABB()
-{
+{/*
 	AABB global_AABB = GetComponent<C_Mesh>()->GetGlobalAABB();
 	OBB global_OBB = GetComponent<C_Mesh>()->GetGlobalOBB();
 
@@ -104,7 +108,7 @@ void GameObject::DrawAABB()
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnd();
-	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);*/
 }
 
 void GameObject::DrawCamera(C_Camera* camera)

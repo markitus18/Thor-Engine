@@ -43,6 +43,11 @@ float4x4 C_Transform::GetGlobalTransform() const
 	return global_transform;
 }
 
+float4x4 C_Transform::GetGlobalTransformT() const
+{
+	return global_transformT;
+}
+
 float3 C_Transform::GetGlobalPosition() const
 {
 	float4x4 global_transform = GetGlobalTransform();
@@ -71,7 +76,6 @@ void C_Transform::SetEulerRotation(float3 euler_angles)
 	Quat quaternion_rotation = Quat::FromEulerXYZ(delta.x, delta.y, delta.z);
 	rotation = rotation * quaternion_rotation;
 	rotation_euler = euler_angles;
-	//rotation_euler *= RADTODEG;
 	UpdateLocalTransform();
 }
 

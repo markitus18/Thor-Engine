@@ -2,6 +2,8 @@
 #include "OpenGL.h"
 #include "Globals.h"
 #include "C_Camera.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 
 GameObject::GameObject()
 {
@@ -48,12 +50,13 @@ void GameObject::Draw(bool shaded, bool wireframe)
 	C_Mesh* mesh = GetComponent<C_Mesh>();
 	if (mesh)
 	{
-		glPushMatrix();
-		glMultMatrixf((float*)&transform->GetGlobalTransform().Transposed());
-		mesh->Draw(shaded, wireframe);
-		glPopMatrix();
-		if (selected || IsParentSelected())
-			DrawAABB();
+		App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, mesh->materials[0], shaded, wireframe, selected, IsParentSelected());
+		//glPushMatrix();
+		//glMultMatrixf((float*)&transform->GetGlobalTransform().Transposed());
+		//mesh->Draw(shaded, wireframe);
+		//glPopMatrix();
+		//if (selected || IsParentSelected())
+		//	DrawAABB();
 	}
 
 	C_Camera* camera = GetComponent<C_Camera>();
@@ -158,7 +161,11 @@ void GameObject::DrawCamera(C_Camera* camera)
 void GameObject::OnUpdateTransform()
 {
 	flipped_normals = transform->flipped_normals;
-	GetComponent<C_Mesh>()->flipped_normals = HasFlippedNormals();
+	C_Mesh* mesh = GetComponent<C_Mesh>();
+	if (mesh)
+	{
+		mesh->flipped_normals = HasFlippedNormals();
+	}
 
 	//Updating components
 	for (uint i = 0; i < components.size(); i++)
@@ -286,6 +293,7 @@ void GameObject::AddComponent(Component* component)
 				components.push_back(component);
 				component->gameObject = this;
 				component->OnUpdateTransform(GetComponent<C_Transform>()->GetGlobalTransform());
+				((C_Mesh*)component)->flipped_normals = HasFlippedNormals();
 			}
 			break;
 		}

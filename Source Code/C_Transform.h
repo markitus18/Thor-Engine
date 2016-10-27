@@ -23,6 +23,7 @@ public:
 	float3		GetEulerRotation() const;
 	float3		GetScale() const;
 	float4x4	GetGlobalTransform() const;
+	float4x4	GetGlobalTransformT() const;
 	float3		GetGlobalPosition() const;
 
 	void SetPosition(float3 position);

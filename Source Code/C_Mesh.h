@@ -64,10 +64,10 @@ public:
 	uint	num_tex_coords = 0;
 	float*	tex_coords = nullptr;
 
-	bool flipped_normals;
+	bool flipped_normals = false;
+	std::vector<C_Material*> materials;
 
 private:
-	std::vector<C_Material*> materials;
 
 	AABB	local_bounds;
 	OBB		obb;

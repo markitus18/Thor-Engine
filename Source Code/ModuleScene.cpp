@@ -91,15 +91,15 @@ update_status ModuleScene::Update(float dt)
 
 	for (uint i = 0; i < gameObjects.size(); i++)
 	{
-		if (i == 0)
-		{
-			gameObjects[1]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
-		}
-		else if (i == 1)
-		{
-			gameObjects[0]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
-		}
-		else
+		//if (i == 0)
+		//{
+		//	gameObjects[1]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		//}
+		//else if (i == 1)
+		//{
+		//	gameObjects[0]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		//}
+		//else
 			gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 	}
 	gameObjects.clear();

@@ -602,7 +602,6 @@ void ModuleRenderer3D::DrawAllMeshes()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	for (uint i = 0; i < meshes.size(); i++)
 	{
@@ -610,7 +609,6 @@ void ModuleRenderer3D::DrawAllMeshes()
 	}
 	meshes.clear();
 
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
@@ -623,23 +621,9 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 	glMultMatrixf((float*)&mesh.transform);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_vertices);
-	err = glGetError();
-	if (err!= GL_NO_ERROR)
-		LOG(SDL_GetError());
-
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
-	err = glGetError();
-	if (err != GL_NO_ERROR)
-		LOG(SDL_GetError());
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.mesh->id_indices);
-
-	err = glGetError();
-	if (err != GL_NO_ERROR)
-		LOG(SDL_GetError());
-
-	//Removed temporaly: game objects will use buffers, not mesh itself
 
 	if (mesh.selected || mesh.parentSelected || mesh.wireframe)
 	{
@@ -680,31 +664,14 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 			}
 
 			glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_normals);
-
-			err = glGetError();
-			if (err != GL_NO_ERROR)
-				LOG(SDL_GetError());
 			glNormalPointer(GL_FLOAT, 0, nullptr);
-
-			err = glGetError();
-			if (err != GL_NO_ERROR)
-				LOG(SDL_GetError());
-
 		}
 
 		if (mesh.mesh->num_tex_coords > 0)
 		{
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_tex_coords);
-
-			err = glGetError();
-			if (err != GL_NO_ERROR)
-				LOG(SDL_GetError());
 			glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
-
-			err = glGetError();
-			if (err != GL_NO_ERROR)
-				LOG(SDL_GetError());
-
 		}
 
 		if (mesh.material)
@@ -713,9 +680,15 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 		}
 
 		glDrawElements(GL_TRIANGLES, mesh.mesh->num_indices, GL_UNSIGNED_INT, nullptr);
+
+		//Back to default OpenGL state
 		if (mesh.material)
 		{
 			mesh.material->PopTexture();
+		}
+		if (mesh.mesh->num_tex_coords > 0)
+		{
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 		glFrontFace(GL_CCW);
 	}

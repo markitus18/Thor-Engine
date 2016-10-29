@@ -16,10 +16,10 @@ bool Intersects(const Frustum& frustum, const AABB& box)
 
 	//for (uint p = 0; p < 6; p++)
 	//{
-	//	bool outSidePoints = 0;
+	//	int outSidePoints = 0;
 	//	for (uint c = 0; c < 8; c++)
 	//	{
-	//		if (!planes[p].IsOnPositiveSide(corners[c]))
+	//		if (planes[p].IsOnPositiveSide(corners[c]))
 	//		{
 	//			outSidePoints++;
 	//		}

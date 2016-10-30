@@ -98,9 +98,9 @@ bool Intersects(const Plane* planes, const AABB& box, uint timer)
 		{
 			float3 farthestPoint = float3::zero;
 			float3 normal = planes[p].normal;
-			farthestPoint.x = normal.x > 0 ? box.maxPoint.x : box.minPoint.x;
-			farthestPoint.y = normal.y > 0 ? box.maxPoint.y : box.minPoint.y;
-			farthestPoint.z = planes[p].d > 0 ? box.maxPoint.z : box.minPoint.z;
+			farthestPoint.x = -normal.x >= 0 ? box.maxPoint.x : box.minPoint.x;
+			farthestPoint.y = -normal.y >= 0 ? box.maxPoint.y : box.minPoint.y;
+			farthestPoint.z = -normal.z >= 0 ? box.maxPoint.z : box.minPoint.z;
 
 			if (planes[p].normal.Dot(farthestPoint) - planes[p].d >= 0.f)
 			{

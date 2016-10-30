@@ -8,8 +8,8 @@
 
 bool Intersects(const Frustum& frustum, const AABB& box, PerfTimer& timer)
 {
-	bool libMethod = true;
-	bool optimized = true;
+	bool libMethod = false;
+	bool optimized = false;
 	if (libMethod)
 	{
 		timer.Start();
@@ -23,34 +23,35 @@ bool Intersects(const Frustum& frustum, const AABB& box, PerfTimer& timer)
 	}
 	else
 	{
+		timer.Start();
 		Plane planes[6];
 		frustum.GetPlanes(planes);
+		App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
 		if (!optimized)
 		{
 			float3 corners[8];
 			box.GetCornerPoints(corners);
-			//LOG("Getting Corners Time: %f", timer.ReadMs());
 
-			timer.Start();
+
 			for (uint p = 0; p < 6; p++)
 			{
 				int outSidePoints = 0;
 				for (uint c = 0; c < 8; c++)
 				{
-					if (planes[p].IsOnPositiveSide(corners[c]))
+					if (planes[p].normal.Dot(corners[c]) - planes[p].d >= 0.f)
 					{
 						outSidePoints++;
 					}
-					App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
+					//App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
 					if (outSidePoints >= 8)
 					{
-							App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
+							//App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
 							//	LOG("Intersection loop time: %f", timer.ReadMs());
 						return false;
 					}
 				}
 			}
-			App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
+		//	App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
 			return true;
 		}
 		else
@@ -64,7 +65,7 @@ bool Intersects(const Frustum& frustum, const AABB& box, PerfTimer& timer)
 				farthestPoint.y = normal.y >= 0 ? box.maxPoint.y : box.minPoint.y;
 				farthestPoint.z = planes[p].d >= 0 ? box.maxPoint.z : box.minPoint.z;
 
-				if (planes[p].IsOnPositiveSide(farthestPoint))
+				if (planes[p].normal.Dot(farthestPoint) - planes[p].d >= 0.f)
 				{
 					App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
 					return false;

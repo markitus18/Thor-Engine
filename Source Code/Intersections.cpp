@@ -8,14 +8,17 @@
 
 bool Intersects(const Frustum& frustum, const AABB& box, PerfTimer& timer)
 {
-	bool libMethod = false;
+	bool libMethod = true;
 	bool optimized = true;
 	if (libMethod)
 	{
+		timer.Start();
 		if (frustum.Intersects(box))
 		{
+			App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
 			return true;
 		}
+		App->moduleEditor->panelConfiguration->timerRead = timer.ReadMs();
 		return false;
 	}
 	else

@@ -37,6 +37,9 @@ bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
 
+	cullingTimer_library = App->moduleEditor->AddTimer("Math library culling");
+	cullingTimer_normal = App->moduleEditor->AddTimer("Normal culling");
+	cullingTimer_optimized = App->moduleEditor->AddTimer("Optimized culling");
 
 	bool ret = true;
 
@@ -86,7 +89,22 @@ update_status ModuleScene::Update(float dt)
 
 	root->Update();
 	std::vector<GameObject*> gameObjects;
-	TestGameObjectsCulling(gameObjects, root);
+
+	//Temporal culling testing, just for performance calculation ------
+	App->moduleEditor->StartTimer(cullingTimer_library);
+	TestGameObjectsCulling(gameObjects, root, true);
+	App->moduleEditor->ReadTimer(cullingTimer_library);
+	gameObjects.clear();
+
+	App->moduleEditor->StartTimer(cullingTimer_normal);
+	TestGameObjectsCulling(gameObjects, root, false, false);
+	App->moduleEditor->ReadTimer(cullingTimer_normal);
+	gameObjects.clear();
+	//----------------------------------------------------------------
+
+	App->moduleEditor->StartTimer(cullingTimer_optimized);
+	TestGameObjectsCulling(gameObjects, root, false, true);
+	App->moduleEditor->ReadTimer(cullingTimer_optimized);
 
 	for (uint i = 0; i < gameObjects.size(); i++)
 	{
@@ -95,7 +113,6 @@ update_status ModuleScene::Update(float dt)
 	gameObjects.clear();
 	camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 
-	//LOG("GameObjects in scene: %i", tmp_goCount)
 	return UPDATE_CONTINUE;
 }
 
@@ -126,16 +143,18 @@ const GameObject* ModuleScene::getRoot() const
 	return root;
 }
 
-void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject)
+void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)
 {
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
-	if (mesh && Intersects(camera->GetComponent<C_Camera>()->planes, mesh->GetGlobalAABB()))
+	if (mesh)
 	{
-		vector.push_back(gameObject);
+		//Intersection method according to "lib" and "optimized" parameters
+		if (lib ? Intersects(camera->GetComponent<C_Camera>()->frustum, mesh->GetGlobalAABB()) : Intersects(camera->GetComponent<C_Camera>()->planes, mesh->GetGlobalAABB(), optimized))
+			vector.push_back(gameObject);
 	}
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
-		TestGameObjectsCulling(vector, gameObject->childs[i]);
+		TestGameObjectsCulling(vector, gameObject->childs[i], lib, optimized);
 	}
 }

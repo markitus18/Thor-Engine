@@ -2,7 +2,23 @@
 #define __PANEL_CONFIGURATION_H__
 
 #include "Panel.h"
+#include "PerfTimer.h"
+
+#include <vector>
 #include <string>
+
+struct ConfigTimer
+{
+	ConfigTimer(const char* text)
+	{
+		this->text = text;
+	}
+
+	std::string text;
+	uint		text_end = 0;
+	PerfTimer	timer;
+	double		timer_read = 0.0f;
+};
 
 class PanelConfiguration : public Panel
 {
@@ -16,9 +32,24 @@ public:
 	void Init();
 
 	void UpdateFPSData(int fps, int ms);
+
+	uint AddTimer(const char* text);
+	void StartTimer(uint index);
+	void ReadTimer(uint index);
+	void StopTimer(uint index);
+
 private:
 	float FPS_data[100];
 	float ms_data[100];
+
+	//Timers data ------------------------
+	std::vector<ConfigTimer> timers;
+	uint text_spacing = 30;
+
+	bool show_culling_timers = false;
+
+	SwapButtons timerButtons;
+	//------------------------------------
 
 public:
 	float timerRead = 0;

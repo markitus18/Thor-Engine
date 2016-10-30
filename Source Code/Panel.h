@@ -3,8 +3,11 @@
 
 #include "p2Point.h"
 #include "ImGui\imgui.h"
+#include "Color.h"
+#include "Globals.h"
+#include <vector>
 
-//struct ImGuiWindowFlags;
+
 
 class Panel
 {
@@ -29,4 +32,18 @@ public:
 	bool active = true;
 };
 
+class SwapButtons
+{
+public:
+	uint active_button = 0;
+	ImVec4 active_color;
+	ImVec4 nonActive_color;
+
+	std::vector<std::string> buttons;
+
+public:
+	SwapButtons();
+	void AddButton(const char* text);
+	void Draw();
+};
 #endif //__PANEL_H__

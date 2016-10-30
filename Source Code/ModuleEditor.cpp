@@ -259,3 +259,25 @@ bool ModuleEditor::UsingMouse() const
 {
 	return using_mouse;
 }
+
+//Timer management -------------------
+uint ModuleEditor::AddTimer(const char* text)
+{
+	return panelConfiguration->AddTimer(text);
+}
+
+void ModuleEditor::StartTimer(uint index)
+{
+	panelConfiguration->StartTimer(index);
+}
+
+void ModuleEditor::ReadTimer(uint index)
+{
+	panelConfiguration->ReadTimer(index);
+}
+
+void ModuleEditor::StopTimer(uint index)
+{
+	panelConfiguration->StopTimer(index);
+}
+//------------------------------------

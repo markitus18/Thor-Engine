@@ -31,8 +31,14 @@ public:
 	bool UsingKeyboard() const;
 	bool UsingMouse() const;
 
-private:
+	//Timer management -------------------
+	uint AddTimer(const char* text);
+	void StartTimer(uint index);
+	void ReadTimer(uint index);
+	void StopTimer(uint index);
+	//------------------------------------
 
+private:
 	void DrawPanels();
 	void ShowAboutWindow();
 	//TODO: move into private

@@ -32,7 +32,7 @@ public:
 	GameObject* getRoot();
 	const GameObject* getRoot() const;
 
-	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject);
+	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
 
 public:
 	bool reset = false;
@@ -44,7 +44,9 @@ private:
 	GameObject* root = nullptr;
 	GameObject* camera = nullptr;
 
-	PerfTimer perfTimer;
+	uint cullingTimer_library = 0;
+	uint cullingTimer_normal = 0;
+	uint cullingTimer_optimized = 0;
 };
 
 #endif //__MODULE_SCENE_H__

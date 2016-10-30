@@ -5,6 +5,16 @@
 
 PanelConfiguration::PanelConfiguration()
 {
+	timerButtons.AddButton("Culling");
+	timerButtons.AddButton("Render");
+	timerButtons.AddButton("Test2");
+	timerButtons.AddButton("Test3");
+	timerButtons.AddButton("Test4");
+	timerButtons.AddButton("Test5");
+	timerButtons.AddButton("Test6");
+	timerButtons.AddButton("Test7");
+	timerButtons.AddButton("Test8");
+	timerButtons.AddButton("Test9");
 }
 
 PanelConfiguration::~PanelConfiguration()
@@ -72,14 +82,23 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 			ImGui::Text("Mouse wheel: %i", App->input->GetMouseZ());
 		}
 
+
 		if (ImGui::CollapsingHeader("Performance Timers"))
 		{
-			ImGui::Text("Timer ms: %f", timerRead);
-		}
-		//if (ImGui::CollapsingHeader("Hardware"))
-		//{
+			timerButtons.Draw();
 
-		//}
+			switch (timerButtons.active_button)
+			{
+				case 0:
+				{
+					for (uint i = 0; i < timers.size(); i++)
+					{
+						ImGui::Text("%s %f ms", timers[i].text.c_str(), timers[i].timer_read);
+					}
+					break;
+				}
+			}
+		}
 
 		ImGui::End();
 	}
@@ -114,47 +133,39 @@ void PanelConfiguration::UpdateFPSData(int fps, int ms)
 	ms_data[100 - 1] = ms;
 }
 
-/*
-ImGui::Begin("Settings", &show_Settings_window, ImVec2(500, 600), 1.0f);
-if (ImGui::BeginMenu("Options"))
+uint PanelConfiguration::AddTimer(const char* text)
 {
-ImGui::MenuItem("Default", NULL, false, false);
-if (ImGui::IsItemHovered())
-ImGui::SetMouseCursor(2);
-ImGui::MenuItem("Save", NULL, false, false);
-ImGui::MenuItem("Load", NULL, false, false);
-ImGui::EndMenu();
+	timers.push_back(ConfigTimer(text));
+
+	timers[timers.size() - 1].text_end = timers[timers.size() - 1].text.size() - 1;
+	timers[timers.size() - 1].text.append(1, ':');
+	uint size_to_append = text_spacing - timers[timers.size() - 1].text.size();
+	timers[timers.size() - 1].text.append(size_to_append, ' ');
+
+	return timers.size() - 1;
 }
 
-if (ImGui::CollapsingHeader("Application"))
+void PanelConfiguration::StartTimer(uint index)
 {
-ImGui::InputText("Project Name", tmp_appName, IM_ARRAYSIZE(tmp_appName));
-ImGui::PlotHistogram("FPS", FPS_data, IM_ARRAYSIZE(FPS_data), 0, NULL, 0.0f, 120.0f, ImVec2(0, 80));
-ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
+	if (index < timers.size())
+	{
+		timers[index].timer.Start();
+	}
 }
 
-if (ImGui::CollapsingHeader("Window"))
+void PanelConfiguration::ReadTimer(uint index)
 {
-
+	if (index < timers.size())
+	{
+		timers[index].timer_read = timers[index].timer.ReadMs();
+	}
 }
 
-if (ImGui::CollapsingHeader("File System"))
+//TODO: add timer stop function
+void PanelConfiguration::StopTimer(uint index)
 {
-
+	if (index < timers.size())
+	{
+	//	timers[index].time.
+	}
 }
-
-if (ImGui::CollapsingHeader("Input"))
-{
-ImGui::Text("Mouse position: %i, %i", App->input->GetMouseX(), App->input->GetMouseY());
-ImGui::Text("Mouse motion: %i, %i", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-ImGui::Text("Mouse wheel: %i", App->input->GetMouseZ());
-
-}
-
-if (ImGui::CollapsingHeader("Hardware"))
-{
-
-}
-
-ImGui::End();
-*/

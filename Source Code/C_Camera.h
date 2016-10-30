@@ -31,13 +31,15 @@ public:
 	float* GetOpenGLProjectionMatrix();
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+	void UpdatePlanes();
 
 	static Component::Type GetType();
 
 public:
-	Frustum frustum;
-	bool update_projection = true;
-
+	Frustum		frustum;
+	bool		update_projection = true;
+	bool		culling = false;
+	Plane		planes[6];
 };
 
 #endif // __CAMERA_H__

@@ -11,6 +11,7 @@ C_Camera::C_Camera(GameObject* gameObject) : Component(Component::Type::Camera, 
 	frustum.SetViewPlaneDistances(0.1f, 1000.0f);
 	frustum.SetPerspective(1.0f, 1.0f);
 
+	UpdatePlanes();
 	update_projection = true;
 }
 C_Camera::~C_Camera()
@@ -44,12 +45,14 @@ void C_Camera::SetNearPlane(float distance)
 {
 	if (distance > 0 && distance < frustum.FarPlaneDistance())
 		frustum.SetViewPlaneDistances(distance, frustum.FarPlaneDistance());
+	UpdatePlanes();
 }
 
 void C_Camera::SetFarPlane(float distance)
 {
 	if (distance > 0 && distance > frustum.NearPlaneDistance())
 		frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), distance);
+	UpdatePlanes();
 }
 
 //Setting vertical FOV in degrees 
@@ -57,12 +60,14 @@ void C_Camera::SetFOV(float fov)
 {
 	fov *= DEGTORAD;
 	frustum.SetVerticalFovAndAspectRatio(fov, frustum.AspectRatio());
+	UpdatePlanes();
 }
 
 void C_Camera::SetAspectRatio(float ar)
 {
 	float horizontalFov = frustum.HorizontalFov();
 	frustum.SetHorizontalFovAndAspectRatio(horizontalFov, ar);
+	UpdatePlanes();
 }
 //--------------------------------
 
@@ -74,6 +79,7 @@ void C_Camera::Look(const float3& position)
 
 	frustum.SetFront(matrix.MulDir(frustum.Front()).Normalized());
 	frustum.SetUp(matrix.MulDir(frustum.Up()).Normalized());
+	UpdatePlanes();
 }
 
 float * C_Camera::GetOpenGLViewMatrix()
@@ -108,10 +114,15 @@ void C_Camera::OnUpdateTransform(const float4x4& global, const float4x4& parent_
 	global.Decompose(position, quat, scale);
 
 	frustum.SetPos(position);
+	UpdatePlanes();
 
 	update_projection = true;
 }
 
+void C_Camera::UpdatePlanes()
+{
+	frustum.GetPlanes(planes);
+}
 
 Component::Type C_Camera::GetType()
 {

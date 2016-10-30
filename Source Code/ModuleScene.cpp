@@ -129,7 +129,7 @@ const GameObject* ModuleScene::getRoot() const
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject)
 {
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
-	if (mesh && Intersects(camera->GetComponent<C_Camera>()->frustum, mesh->GetGlobalAABB(), intersecTimer))
+	if (mesh && Intersects(camera->GetComponent<C_Camera>()->planes, mesh->GetGlobalAABB()))
 	{
 		vector.push_back(gameObject);
 	}

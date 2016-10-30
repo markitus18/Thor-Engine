@@ -45,7 +45,6 @@ private:
 	GameObject* camera = nullptr;
 
 	PerfTimer perfTimer;
-	PerfTimer intersecTimer;
 };
 
 #endif //__MODULE_SCENE_H__

@@ -35,7 +35,7 @@ private:
 
 	void DrawPanels();
 	void ShowAboutWindow();
-
+	//TODO: move into private
 public:
 	//Panels
 	PanelHierarchy*		panelHierarchy = nullptr;

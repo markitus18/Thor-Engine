@@ -72,6 +72,10 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 			ImGui::Text("Mouse wheel: %i", App->input->GetMouseZ());
 		}
 
+		if (ImGui::CollapsingHeader("Performance Timers"))
+		{
+			ImGui::Text("Timer ms: %f", timerRead);
+		}
 		//if (ImGui::CollapsingHeader("Hardware"))
 		//{
 

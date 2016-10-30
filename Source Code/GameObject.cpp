@@ -79,11 +79,11 @@ void GameObject::Draw(bool shaded, bool wireframe)
 		App->renderer3D->AddFrustum(camera->frustum, Blue);
 	}
 
-	for (uint i = 0; i < childs.size(); i++)
-	{
-		if (childs[i]->active)
-			childs[i]->Draw(shaded, wireframe);	
-	}
+	//for (uint i = 0; i < childs.size(); i++)
+	//{
+	//	if (childs[i]->active)
+	//		childs[i]->Draw(shaded, wireframe);	
+	//}
 }
 
 void GameObject::OnUpdateTransform()

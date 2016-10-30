@@ -45,6 +45,7 @@ void PanelConsole::Draw(ImGuiWindowFlags flags)
 
 		ImColor col = ImColor(0.6f, 0.6f, 1.0f, 1.0f);
 
+		//TODO URGENT: print only items being seen :/
 		for (int i = 0; i < items.Size; i++)
 		{
 			const char* item = items[i];

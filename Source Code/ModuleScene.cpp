@@ -85,7 +85,6 @@ update_status ModuleScene::Update(float dt)
 	}
 
 	root->Update();
-
 	std::vector<GameObject*> gameObjects;
 	TestGameObjectsCulling(gameObjects, root);
 
@@ -95,7 +94,6 @@ update_status ModuleScene::Update(float dt)
 	}
 	gameObjects.clear();
 	camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
-	//root->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 
 	//LOG("GameObjects in scene: %i", tmp_goCount)
 	return UPDATE_CONTINUE;
@@ -131,7 +129,7 @@ const GameObject* ModuleScene::getRoot() const
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject)
 {
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
-	if (mesh && Intersects(camera->GetComponent<C_Camera>()->frustum, mesh->GetGlobalAABB()))
+	if (mesh && Intersects(camera->GetComponent<C_Camera>()->frustum, mesh->GetGlobalAABB(), intersecTimer))
 	{
 		vector.push_back(gameObject);
 	}

@@ -19,5 +19,8 @@ public:
 private:
 	float FPS_data[100];
 	float ms_data[100];
+
+public:
+	float timerRead = 0;
 };
 #endif // __PANEL_CONFIGURATION_H__

@@ -14,8 +14,8 @@ struct RenderMesh
 {
 	RenderMesh(float4x4 trans, C_Mesh* m, C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected) : transform(trans), mesh(m), material(mat), shaded(sh), wireframe(wire), selected(selected),
 		parentSelected(parentSelected)
-	{
-	}
+	{}
+
 	float4x4 transform;
 	const C_Mesh* mesh;
 	const C_Material* material;
@@ -30,8 +30,7 @@ template <typename Box>
 struct RenderBox
 {
 	RenderBox(const Box* box, const Color& color) : box(box), color(color)
-	{
-	}
+	{}
 
 	const Box* box;
 	Color color;
@@ -53,7 +52,7 @@ public:
 
 	void SetActiveCamera(C_Camera* camera);
 	void SetCullingCamera(C_Camera* camera);
-	void DrawAll();
+	void DrawAllScene();
 
 	C_Camera* GetActiveCamera();
 

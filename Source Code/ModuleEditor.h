@@ -19,8 +19,9 @@ public:
 
 	bool Init();
 	update_status PreUpdate(float dt);
-	update_status Update(float dt);
 	bool CleanUp();
+
+	void Draw();
 
 	void Log(const char* input);
 	void GetEvent(SDL_Event* event);

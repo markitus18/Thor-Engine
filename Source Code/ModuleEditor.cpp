@@ -68,9 +68,8 @@ update_status ModuleEditor::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleEditor::Update(float dt)
+void ModuleEditor::Draw()
 {
-
 	DrawPanels();
 
 	//Showing all windows ----------
@@ -87,7 +86,7 @@ update_status ModuleEditor::Update(float dt)
 			if (ImGui::MenuItem("Exit          ", "Esc"))
 			{
 				ImGui::EndMenu();
-				return UPDATE_STOP;	
+				return;	
 			}
 			ImGui::EndMenu();
 
@@ -141,7 +140,6 @@ update_status ModuleEditor::Update(float dt)
 	//----------------------------
 
 	ImGui::Render();
-	return UPDATE_CONTINUE;
 }
 
 bool ModuleEditor::CleanUp()

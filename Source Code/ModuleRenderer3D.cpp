@@ -539,7 +539,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 //#pragma endregion
 #pragma endregion
 
-	DrawAll();
+	DrawAllScene();
+	App->moduleEditor->Draw();
 
 	return UPDATE_CONTINUE;
 }
@@ -616,7 +617,7 @@ void ModuleRenderer3D::SetCullingCamera(C_Camera* camera)
 
 }
 
-void ModuleRenderer3D::DrawAll()
+void ModuleRenderer3D::DrawAllScene()
 {
 	App->moduleEditor->StartTimer(mesh_draw_timer);
 	DrawAllMeshes();

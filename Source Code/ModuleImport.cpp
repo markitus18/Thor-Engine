@@ -174,6 +174,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 		uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 		std::string mat_path = "";
 		std::string file = "";
+		//TODO: too much code just for the path, create a new function
 		if (numTextures > 0)
 		{
 			aiString file_path;

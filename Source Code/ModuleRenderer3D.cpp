@@ -6,7 +6,7 @@
 #include "C_Camera.h"
 #include "C_Material.h"
 #include "Gizmos.h"
-
+#include "ModuleEditor.h"
 #include "OpenGL.h"
 #include "ModuleImport.h"
 
@@ -82,7 +82,7 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 
 		//Check for error
 		error = glGetError();
@@ -358,6 +358,8 @@ bool ModuleRenderer3D::Init()
 //	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, texture_indices, GL_STATIC_DRAW);
 //#pragma endregion
 #pragma endregion
+	mesh_draw_timer = App->moduleEditor->AddTimer("Mesh draw", "Render");
+	box_draw_timer = App->moduleEditor->AddTimer("Box draw", "Render");
 
 	return ret;
 }
@@ -581,16 +583,48 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::SetActiveCamera(C_Camera* _camera)
+void ModuleRenderer3D::SetActiveCamera(C_Camera* camera)
 {
-	camera = _camera;
+	if (this->camera)
+	{
+		this->camera->active_camera = false;
+	}
+	this->camera = camera ? camera : App->camera->GetCamera();
+	if (camera)
+	{
+		camera->active_camera = true;
+	}
 	UpdateProjectionMatrix();
+}
+
+C_Camera* ModuleRenderer3D::GetActiveCamera()
+{
+	return camera;
+}
+
+void ModuleRenderer3D::SetCullingCamera(C_Camera* camera)
+{
+	if (culling_camera)
+	{
+		culling_camera->culling = false;
+	}
+	this->culling_camera = camera;
+	if (camera)
+	{
+		camera->culling = true;
+	}
+
 }
 
 void ModuleRenderer3D::DrawAll()
 {
+	App->moduleEditor->StartTimer(mesh_draw_timer);
 	DrawAllMeshes();
+	App->moduleEditor->ReadTimer(mesh_draw_timer);
+
+	App->moduleEditor->StartTimer(box_draw_timer);
 	DrawAllBox();
+	App->moduleEditor->ReadTimer(box_draw_timer);
 }
 
 void ModuleRenderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected)
@@ -615,8 +649,6 @@ void ModuleRenderer3D::DrawAllMeshes()
 
 void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 {
-	GLenum err;
-
 	glPushMatrix();
 	glMultMatrixf((float*)&mesh.transform);
 
@@ -656,8 +688,6 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 	{
 		if (mesh.mesh->num_normals > 0)
 		{
-			//Removed temporaly: game objects will use buffers, not mesh itself
-
 			if (mesh.mesh->flipped_normals)
 			{
 				glFrontFace(GL_CW);
@@ -676,21 +706,28 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 
 		if (mesh.material)
 		{
-			mesh.material->StackTexture();
+			if (mesh.material->texture_id)
+			{
+				glBindTexture(GL_TEXTURE_2D, mesh.material->texture_id);
+			}
+			glColor4f(mesh.material->color.r, mesh.material->color.g, mesh.material->color.b, mesh.material->color.a);
 		}
 
 		glDrawElements(GL_TRIANGLES, mesh.mesh->num_indices, GL_UNSIGNED_INT, nullptr);
 
-		//Back to default OpenGL state
+		//Back to default OpenGL state --------------
 		if (mesh.material)
 		{
-			mesh.material->PopTexture();
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glColor4f(255, 255, 255, 1.0f);
 		}
+
 		if (mesh.mesh->num_tex_coords > 0)
 		{
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 		glFrontFace(GL_CCW);
+		//------------------------------------------
 	}
 
 	glPopMatrix();

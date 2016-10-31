@@ -37,9 +37,9 @@ bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
 
-	cullingTimer_library = App->moduleEditor->AddTimer("Math library culling");
-	cullingTimer_normal = App->moduleEditor->AddTimer("Normal culling");
-	cullingTimer_optimized = App->moduleEditor->AddTimer("Optimized culling");
+	cullingTimer_library = App->moduleEditor->AddTimer("Math library culling", "Culling");
+	cullingTimer_normal = App->moduleEditor->AddTimer("Normal culling", "Culling");
+	cullingTimer_optimized = App->moduleEditor->AddTimer("Optimized culling", "Culling");
 
 	bool ret = true;
 
@@ -88,30 +88,39 @@ update_status ModuleScene::Update(float dt)
 	}
 
 	root->Update();
-	std::vector<GameObject*> gameObjects;
 
-	//Temporal culling testing, just for performance calculation ------
-	App->moduleEditor->StartTimer(cullingTimer_library);
-	TestGameObjectsCulling(gameObjects, root, true);
-	App->moduleEditor->ReadTimer(cullingTimer_library);
-	gameObjects.clear();
-
-	App->moduleEditor->StartTimer(cullingTimer_normal);
-	TestGameObjectsCulling(gameObjects, root, false, false);
-	App->moduleEditor->ReadTimer(cullingTimer_normal);
-	gameObjects.clear();
-	//----------------------------------------------------------------
-
-	App->moduleEditor->StartTimer(cullingTimer_optimized);
-	TestGameObjectsCulling(gameObjects, root, false, true);
-	App->moduleEditor->ReadTimer(cullingTimer_optimized);
-
-	for (uint i = 0; i < gameObjects.size(); i++)
+	if (App->renderer3D->culling_camera)
 	{
-			gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		std::vector<GameObject*> gameObjects;
+
+		//Temporal culling testing, just for performance calculation ------
+		App->moduleEditor->StartTimer(cullingTimer_library);
+		App->moduleEditor->ReadTimer(cullingTimer_library);
+		TestGameObjectsCulling(gameObjects, root, true);
+
+		gameObjects.clear();
+
+		App->moduleEditor->StartTimer(cullingTimer_normal);
+		TestGameObjectsCulling(gameObjects, root, false, false);
+		App->moduleEditor->ReadTimer(cullingTimer_normal);
+		gameObjects.clear();
+		//----------------------------------------------------------------
+
+		App->moduleEditor->StartTimer(cullingTimer_optimized);
+		TestGameObjectsCulling(gameObjects, root, false, true);
+		App->moduleEditor->ReadTimer(cullingTimer_optimized);
+
+		for (uint i = 0; i < gameObjects.size(); i++)
+		{
+				gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		}
+		gameObjects.clear();
+		camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 	}
-	gameObjects.clear();
-	camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+	else
+	{
+		DrawAllGO(root);
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -156,5 +165,15 @@ void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameO
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
 		TestGameObjectsCulling(vector, gameObject->childs[i], lib, optimized);
+	}
+}
+
+void ModuleScene::DrawAllGO(GameObject* gameObject)
+{
+	gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+
+	for (uint i = 0; i < gameObject->childs.size(); i++)
+	{
+		DrawAllGO(gameObject->childs[i]);
 	}
 }

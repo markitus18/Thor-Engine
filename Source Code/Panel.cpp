@@ -7,6 +7,7 @@ Panel::Panel()
 
 Panel::Panel(int posX, int posY, int sizeX, int sizeY) : position(posX, posY), size(sizeX, sizeY)
 {
+
 }
 
 
@@ -44,8 +45,13 @@ void Panel::UpdatePosition(int, int)
 
 SwapButtons::SwapButtons()
 {
-	active_color = ImVec4(0, 1, 0, 1);
-	nonActive_color = ImVec4(1, 0, 0, 1);
+	nonActive_color[0] = ImVec4(0.67f, 0.40f, 0.40f, 0.60f);
+	nonActive_color[1] = ImVec4(0.67f, 0.40f, 0.40f, 0.80f);
+	nonActive_color[2] = ImVec4(0.67f, 0.40f, 0.40f, 1.00f);
+
+	active_color[0] = ImVec4(0.40f, 0.67f, 0.40f, 0.60f);
+	active_color[1] = ImVec4(0.40f, 0.67f, 0.40f, 0.80f);
+	active_color[2] = ImVec4(0.40f, 0.67f, 0.40f, 1.00f);
 }
 
 void SwapButtons::AddButton(const char* text)
@@ -57,10 +63,7 @@ void SwapButtons::Draw()
 {
 	for (uint i = 0; i < buttons.size(); i++)
 	{
-		if (i == active_button)
-			ImGui::PushStyleColor(ImGuiCol_Button, active_color);
-		else
-			ImGui::PushStyleColor(ImGuiCol_Button, nonActive_color);
+		PushColors(active_button == i);
 
 		if (ImGui::Button(buttons[i].c_str()))
 		{
@@ -71,6 +74,25 @@ void SwapButtons::Draw()
 		{
 			ImGui::SameLine();
 		}
-		ImGui::PopStyleColor();
+		PopColors();
 	}
+}
+
+const std::string& SwapButtons::GetActiveTag() const
+{
+	return buttons[active_button];
+}
+
+void SwapButtons::PushColors(bool active_button)
+{
+	const ImVec4* color = (active_button ? active_color : nonActive_color);
+
+	ImGui::PushStyleColor(ImGuiCol_Button, color[0]);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, color[1]);
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, color[2]);
+}
+
+void SwapButtons::PopColors()
+{
+	ImGui::PopStyleColor(3);
 }

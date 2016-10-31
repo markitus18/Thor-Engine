@@ -15,6 +15,7 @@ struct ConfigTimer
 	}
 
 	std::string text;
+	std::string tag;
 	uint		text_end = 0;
 	PerfTimer	timer;
 	double		timer_read = 0.0f;
@@ -33,7 +34,7 @@ public:
 
 	void UpdateFPSData(int fps, int ms);
 
-	uint AddTimer(const char* text);
+	uint AddTimer(const char* text, const char* tag);
 	void StartTimer(uint index);
 	void ReadTimer(uint index);
 	void StopTimer(uint index);
@@ -44,6 +45,7 @@ private:
 
 	//Timers data ------------------------
 	std::vector<ConfigTimer> timers;
+	std::vector<std::string> tags;
 	uint text_spacing = 30;
 
 	bool show_culling_timers = false;

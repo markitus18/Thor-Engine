@@ -8,6 +8,7 @@
 #include "OpenGL.h"
 #include "C_Camera.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
 
 PanelInspector::PanelInspector()
 {
@@ -91,28 +92,28 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 			}
 			
 			C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
+			std::vector<C_Material*> materials;
+			gameObject->GetComponents(materials);
 			if (mesh)
 			{
-				uint mat_size = mesh->GetMaterialsSize();
 				if (ImGui::CollapsingHeader("Mesh", transform_header_flags))
 				{
 					ImGui::Text("Materials");
 					ImGui::Separator();
-					ImGui::Text("Size: %i", mat_size);
-					for (uint i = 0; i < mat_size; i++)
+					ImGui::Text("Size: %i", materials.size());
+					for (uint i = 0; i < materials.size(); i++)
 					{
-						ImGui::Text("Element %i: %s", i, mesh->GetMaterial(i)->texture_file.c_str());
+						ImGui::Text("Element %i: %s", i, materials[i]->texture_file.c_str());
 					}
 				}
 
-				if (mat_size > 0)
+				if (materials.size() > 0)
 				{
-					for (uint i = 0; i < mat_size; i++)
+					for (uint i = 0; i < materials.size(); i++)
 					{
-						const C_Material* mat = mesh->GetMaterial(i);
-						if (ImGui::CollapsingHeader(mat->texture_file.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+						if (ImGui::CollapsingHeader(materials[i]->texture_file.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 						{
-							ImGui::Image((ImTextureID)mat->texture_id, ImVec2(128, 128));
+							ImGui::Image((ImTextureID)materials[i]->texture_id, ImVec2(128, 128));
 						}
 					}
 				}
@@ -123,15 +124,19 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 			{
 				if (ImGui::CollapsingHeader("Camera", transform_header_flags))
 				{
-					bool b = false;
-					if (ImGui::Checkbox("Render Camera", &b))
+					if (ImGui::Button("Match camera"))
 					{
-						App->renderer3D->SetActiveCamera(camera);
+						App->camera->Match(camera);
 					}
 
-					if (ImGui::Checkbox("Camera Culling", &b))
+					if (ImGui::Checkbox("Set View Camera", &camera->active_camera))
 					{
-						//App->renderer3D->SetActiveCamera(camera);
+						camera->active_camera ? App->renderer3D->SetActiveCamera(camera) : App->renderer3D->SetActiveCamera(nullptr);
+					}
+
+					if (ImGui::Checkbox("Camera Culling", &camera->culling))
+					{
+						camera->culling ? App->renderer3D->SetCullingCamera(camera) : App->renderer3D->SetCullingCamera(nullptr);
 					}
 
 					//TODO: move this into private, more polite way?

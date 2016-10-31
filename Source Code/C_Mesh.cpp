@@ -12,14 +12,8 @@ C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObjec
 
 C_Mesh::~C_Mesh()
 {
-	for (uint i = 0; i < materials.size(); i++)
-	{
-		if (materials[i] != nullptr)
-		{
-			RELEASE(materials[i]);
-		}
-	}
-	materials.clear();
+	//TODO: think a way of doing it on renderer. Store a vector with all loaded meshes?
+	ReleaseBuffers();
 }
 
 void C_Mesh::ReleaseBuffers()
@@ -35,11 +29,6 @@ void C_Mesh::ReleaseBuffers()
 
 	if (id_tex_coords != 0)
 		glDeleteBuffers(1, (GLuint*)&id_tex_coords);
-}
-
-void C_Mesh::LoadData(char* path)
-{
-
 }
 
 void C_Mesh::LoadBuffers()
@@ -67,47 +56,10 @@ void C_Mesh::LoadBuffers()
 	}
 }
 
-void C_Mesh::UpdateAABB()
+void C_Mesh::CreateAABB()
 {
 	local_bounds.SetNegativeInfinity();
 	local_bounds.Enclose((math::vec*)vertices, num_vertices);
-}
-
-void C_Mesh::AddMaterial(C_Material* material)
-{
-	//TMP: we could have multiple materials in one mesh
-	if (materials.empty())
-		materials.push_back(material);
-}
-
-Component* C_Mesh::CreateMaterial()
-{
-	Component* component = nullptr;
-	if (materials.empty())
-	{
-		component = new C_Material(gameObject);
-		materials.push_back((C_Material*)component);
-	}
-	return component;
-}
-
-void C_Mesh::RemoveMaterial(C_Material* material)
-{
-	std::vector<C_Material*>::iterator position = std::find(materials.begin(), materials.end(), material);
-	materials.erase(position);
-}
-
-const C_Material* C_Mesh::GetMaterial(uint position) const
-{
-	if (materials.empty() || materials.size() <= position)
-		return nullptr;
-
-	return materials[position];
-}
-
-uint C_Mesh::GetMaterialsSize() const
-{
-	return materials.size();
 }
 
 const AABB& C_Mesh::GetAABB() const

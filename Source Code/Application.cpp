@@ -35,13 +35,13 @@ Application::Application()
 	AddModule(input);
 	AddModule(audio);
 
+	AddModule(scene);
+	AddModule(moduleEditor);
+
 	AddModule(renderer3D);
 
 	AddModule(moduleImport);
 	AddModule(moduleMaterials);
-
-	AddModule(scene);
-	AddModule(moduleEditor);
 }
 
 Application::~Application()

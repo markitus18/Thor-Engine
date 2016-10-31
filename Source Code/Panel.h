@@ -36,8 +36,8 @@ class SwapButtons
 {
 public:
 	uint active_button = 0;
-	ImVec4 active_color;
-	ImVec4 nonActive_color;
+	ImVec4 active_color[3];
+	ImVec4 nonActive_color[3];
 
 	std::vector<std::string> buttons;
 
@@ -45,5 +45,10 @@ public:
 	SwapButtons();
 	void AddButton(const char* text);
 	void Draw();
+	const std::string& GetActiveTag() const;
+
+private:
+	void PushColors(bool active_button);
+	void PopColors();
 };
 #endif //__PANEL_H__

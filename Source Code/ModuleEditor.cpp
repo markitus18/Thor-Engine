@@ -44,10 +44,6 @@ bool ModuleEditor::Init()
 	panelButtons = new PanelButtons();
 	panelConfiguration->Init();
 
-	//Change background color, we use "test_color", controllable variable from UI
-	ImVec4 BgColor = ImColor(71, 71, 71);
-	glClearColor(BgColor.x, BgColor.y, BgColor.z, BgColor.w);
-
 	//Chaning ImGui style
 	ImGuiStyle style = ImGui::GetStyle();
 
@@ -261,9 +257,9 @@ bool ModuleEditor::UsingMouse() const
 }
 
 //Timer management -------------------
-uint ModuleEditor::AddTimer(const char* text)
+uint ModuleEditor::AddTimer(const char* text, const char* tag)
 {
-	return panelConfiguration->AddTimer(text);
+	return panelConfiguration->AddTimer(text, tag);
 }
 
 void ModuleEditor::StartTimer(uint index)

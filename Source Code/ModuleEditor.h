@@ -32,7 +32,7 @@ public:
 	bool UsingMouse() const;
 
 	//Timer management -------------------
-	uint AddTimer(const char* text);
+	uint AddTimer(const char* text, const char* tag);
 	void StartTimer(uint index);
 	void ReadTimer(uint index);
 	void StopTimer(uint index);

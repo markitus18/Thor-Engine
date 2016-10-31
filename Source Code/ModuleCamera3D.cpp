@@ -98,6 +98,12 @@ void ModuleCamera3D::SetNewTarget(const float3& new_target)
 	CenterOn(new_target, distance);
 }
 
+void ModuleCamera3D::Match(const C_Camera* camera)
+{
+	this->camera->Match(camera);
+	reference = this->camera->frustum.Pos() + this->camera->frustum.Front() * 40;
+}
+
 void ModuleCamera3D::SetPosition(float3 position)
 {
 	float3 difference = position - camera->frustum.Pos();

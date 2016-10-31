@@ -250,7 +250,7 @@ void ModuleImport::LoadMesh(C_Mesh* mesh, const aiMesh* from)
 		}
 	}
 	//-------------------------------------------
-	mesh->UpdateAABB();
+	mesh->CreateAABB();
 	mesh->LoadBuffers();
 }
 

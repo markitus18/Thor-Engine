@@ -13,9 +13,6 @@ public:
 	C_Material(const GameObject* gameObject);
 	~C_Material();
 
-	void StackTexture() const;
-	void PopTexture() const;
-
 	static Component::Type GetType();
 
 public:

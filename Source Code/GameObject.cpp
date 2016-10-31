@@ -55,17 +55,11 @@ void GameObject::Update()
 
 void GameObject::Draw(bool shaded, bool wireframe)
 {
-	if (name == "Line002")
-	{
-		int i = 0;
-	}
 	C_Mesh* mesh = GetComponent<C_Mesh>();
 	if (mesh)
 	{
-		//if (name == "Line002")
-		//{
-			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected());
-		//}
+		App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected());
+
 		if (selected || IsParentSelected())
 		{
 			App->renderer3D->AddAABB(mesh->GetGlobalAABB(), Green);
@@ -163,7 +157,7 @@ Component* GameObject::CreateComponent(Component::Type type)
 			C_Mesh* mesh = GetComponent<C_Mesh>();
 			if (mesh)
 			{
-				new_component = mesh->CreateMaterial();
+				new_component = new C_Material(this);
 			}
 		}
 		case(Component::Type::Camera):

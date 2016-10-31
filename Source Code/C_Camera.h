@@ -25,20 +25,24 @@ public:
 	void SetAspectRatio(float ar);
 	//--------------------------------
 
+
 	void Look(const float3& position);
+	void Match(const C_Camera* reference);
 
 	float* GetOpenGLViewMatrix();
 	float* GetOpenGLProjectionMatrix();
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
-	void UpdatePlanes();
-
 	static Component::Type GetType();
+
+private:
+	void UpdatePlanes();
 
 public:
 	Frustum		frustum;
 	bool		update_projection = true;
 	bool		culling = false;
+	bool		active_camera = false;
 	Plane		planes[6];
 };
 

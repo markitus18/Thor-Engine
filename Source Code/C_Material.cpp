@@ -13,27 +13,6 @@ C_Material::~C_Material()
 	glDeleteBuffers(1, &texture_id);
 }
 
-void C_Material::StackTexture() const
-{
-	//TODO: Temporal, want to move GL functions to Loaders and GameObject
-	if (texture_id)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture_id);
-	}
-	glColor4f(color.r, color.g, color.b, color.a);
-
-}
-
-void C_Material::PopTexture() const
-{
-	//TODO: Temporal, want to move GL functions to Loaders and GameObject
-	glColor4f(255, 255, 255, 1.0);
-	if (texture_id)
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-}
-
 Component::Type C_Material::GetType()
 {
 	return Component::Type::Material;

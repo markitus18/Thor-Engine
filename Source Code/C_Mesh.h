@@ -9,7 +9,6 @@
 #include <list>
 
 class GameObject;
-class C_Material;
 
 class C_Mesh : public Component
 {
@@ -20,17 +19,9 @@ public:
 	~C_Mesh();
 	void ReleaseBuffers();
 
-	void LoadData(char* path);
 	void LoadBuffers();
 
-	void UpdateAABB();
-
-	void AddMaterial(C_Material*);
-	Component* CreateMaterial();
-	void RemoveMaterial(C_Material*);
-
-	const C_Material* GetMaterial(uint position) const;
-	uint GetMaterialsSize() const;
+	void CreateAABB();
 
 	const AABB& GetAABB() const;
 	const AABB& GetGlobalAABB() const;
@@ -62,7 +53,6 @@ public:
 	float*	tex_coords = nullptr;
 
 	bool flipped_normals = false;
-	std::vector<C_Material*> materials;
 
 private:
 

@@ -5,16 +5,6 @@
 
 PanelConfiguration::PanelConfiguration()
 {
-	timerButtons.AddButton("Culling");
-	timerButtons.AddButton("Render");
-	timerButtons.AddButton("Test2");
-	timerButtons.AddButton("Test3");
-	timerButtons.AddButton("Test4");
-	timerButtons.AddButton("Test5");
-	timerButtons.AddButton("Test6");
-	timerButtons.AddButton("Test7");
-	timerButtons.AddButton("Test8");
-	timerButtons.AddButton("Test9");
 }
 
 PanelConfiguration::~PanelConfiguration()
@@ -58,7 +48,7 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 		if (ImGui::CollapsingHeader("Camera"))
 		{
 			float3 camera_pos = App->camera->GetPosition();
-			if (ImGui::DragFloat("Position", (float*)&camera_pos))
+			if (ImGui::DragFloat3("Position", (float*)&camera_pos))
 			{
 				App->camera->SetPosition(camera_pos);
 			}
@@ -87,15 +77,12 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 		{
 			timerButtons.Draw();
 
-			switch (timerButtons.active_button)
+			for (uint i = 0; i < timers.size(); i++)
 			{
-				case 0:
+				if (timers[i].tag == timerButtons.GetActiveTag())
 				{
-					for (uint i = 0; i < timers.size(); i++)
-					{
-						ImGui::Text("%s %f ms", timers[i].text.c_str(), timers[i].timer_read);
-					}
-					break;
+					ImGui::Text("%s %f ms", timers[i].text.c_str(), timers[i].timer_read);
+
 				}
 			}
 		}
@@ -133,7 +120,7 @@ void PanelConfiguration::UpdateFPSData(int fps, int ms)
 	ms_data[100 - 1] = ms;
 }
 
-uint PanelConfiguration::AddTimer(const char* text)
+uint PanelConfiguration::AddTimer(const char* text, const char* tag)
 {
 	timers.push_back(ConfigTimer(text));
 
@@ -141,6 +128,22 @@ uint PanelConfiguration::AddTimer(const char* text)
 	timers[timers.size() - 1].text.append(1, ':');
 	uint size_to_append = text_spacing - timers[timers.size() - 1].text.size();
 	timers[timers.size() - 1].text.append(size_to_append, ' ');
+
+	//Tag management
+	timers[timers.size() - 1].tag = tag;
+
+	bool tagFound = false;
+	for (uint i = 0; i < tags.size(); i++)
+	{
+		if (tags[i] == tag)
+			tagFound = true;
+	}
+	if (!tagFound)
+	{
+		tags.push_back(tag);
+		timerButtons.AddButton(tag);
+	}
+	//-------------
 
 	return timers.size() - 1;
 }

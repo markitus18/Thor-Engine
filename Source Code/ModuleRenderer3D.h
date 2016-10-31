@@ -52,8 +52,10 @@ public:
 	void UpdateProjectionMatrix();
 
 	void SetActiveCamera(C_Camera* camera);
-
+	void SetCullingCamera(C_Camera* camera);
 	void DrawAll();
+
+	C_Camera* GetActiveCamera();
 
 	void AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected);
 	void DrawAllMeshes();
@@ -69,7 +71,9 @@ public:
 	int window_width;
 	int window_height;
 
-	C_Camera* camera;
+	C_Camera* camera = nullptr;
+	C_Camera* culling_camera = nullptr;
+
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 
@@ -97,6 +101,9 @@ public:
 #pragma endregion
 
 private:
+	uint mesh_draw_timer;
+	uint box_draw_timer;
+
 	std::vector<RenderMesh> meshes;
 	
 	std::vector<RenderBox<AABB>> aabb;

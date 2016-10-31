@@ -82,6 +82,15 @@ void C_Camera::Look(const float3& position)
 	UpdatePlanes();
 }
 
+void C_Camera::Match(const C_Camera* reference)
+{
+	frustum.SetPos(reference->frustum.Pos());
+	frustum.SetFront(reference->frustum.Front());
+	frustum.SetUp(reference->frustum.Up());
+	UpdatePlanes();
+	update_projection = true;
+}
+
 float * C_Camera::GetOpenGLViewMatrix()
 {
 	static float4x4 m;

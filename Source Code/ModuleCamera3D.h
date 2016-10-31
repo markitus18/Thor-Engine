@@ -24,6 +24,7 @@ public:
 	void Look(const float3& position);
 	void CenterOn(const float3& position, float distance);
 	void SetNewTarget(const float3& new_target);
+	void Match(const C_Camera* camera);
 
 	void SetPosition(float3 position);
 

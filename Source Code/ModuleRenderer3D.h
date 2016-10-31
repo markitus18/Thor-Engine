@@ -65,6 +65,14 @@ public:
 	void AddFrustum(const Frustum& box, const Color& color);
 	void DrawAllBox();
 
+	//Component buffers management -----------------
+	void LoadBuffers(C_Mesh* mesh);
+	void LoadBuffers(C_Material* material);
+
+	void ReleaseBuffers(C_Mesh* mesh);
+	void ReleaseBuffers(C_Material* material);
+	//----------------------------------------------
+
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
 	int window_width;

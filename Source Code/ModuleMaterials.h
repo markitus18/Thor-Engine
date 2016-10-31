@@ -1,12 +1,12 @@
 #ifndef __MODULE_MATERIALS_H__
 #define __MODULE_MATERIALS_H__
 
-#include <list>
-#include "Globals.h"
 #include "Module.h"
 #include "Color.h"
+#include <list>
 
 class C_Material;
+struct aiMaterial;
 
 class ModuleMaterials : public Module
 {
@@ -18,8 +18,12 @@ public:
 	bool CleanUp();
 
 	C_Material* Exists(const char* texture_path) const;
-	C_Material* LoadMaterial(const std::string& texture_path, const std::string& file, const Color& color);
+	C_Material* LoadMaterial(const aiMaterial* from, const std::string& texture_path);
 	uint LoadIMG(const char* path);
+
+	//Tmp function, move to file system
+	void CutPath(std::string&);
+	std::string GetFileFolder(const std::string&);
 
 private:
 	std::list<C_Material*> materials;

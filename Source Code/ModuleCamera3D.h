@@ -2,7 +2,6 @@
 #define __MODULE_CAMERA_H__
 
 #include "Module.h"
-#include "Globals.h"
 #include "MathGeoLib\src\MathGeoLib.h"
 
 class C_Camera;

@@ -1,6 +1,9 @@
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
+#include "Globals.h"
+#include <string>
+
 class Application;
 struct PhysBody3D;
 

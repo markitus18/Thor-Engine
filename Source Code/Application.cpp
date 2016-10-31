@@ -10,6 +10,7 @@
 #include "ModuleEditor.h"
 #include "ModuleImport.h"
 #include "ModuleMaterials.h"
+#include "ModuleMeshes.h"
 
 Application::Application()
 {
@@ -25,6 +26,7 @@ Application::Application()
 	moduleEditor = new ModuleEditor(this);
 	moduleImport = new ModuleImport(this);
 	moduleMaterials = new ModuleMaterials(this);
+	moduleMeshes = new ModuleMeshes(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -42,6 +44,7 @@ Application::Application()
 
 	AddModule(moduleImport);
 	AddModule(moduleMaterials);
+	AddModule(moduleMeshes);
 }
 
 Application::~Application()

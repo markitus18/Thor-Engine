@@ -18,6 +18,7 @@ class ModuleCamera3D;
 class ModuleEditor;
 class ModuleImport;
 class ModuleMaterials;
+class ModuleMeshes;
 
 class Application
 {
@@ -33,6 +34,7 @@ public:
 	ModuleEditor* moduleEditor = nullptr;
 	ModuleImport* moduleImport = nullptr;
 	ModuleMaterials* moduleMaterials = nullptr;
+	ModuleMeshes* moduleMeshes = nullptr;
 
 private:
 

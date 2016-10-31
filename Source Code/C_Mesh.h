@@ -17,8 +17,8 @@ public:
 	C_Mesh();
 	C_Mesh(GameObject* new_GameObject);
 	~C_Mesh();
-	void ReleaseBuffers();
 
+	void ReleaseBuffers();
 	void LoadBuffers();
 
 	void CreateAABB();

@@ -1,5 +1,13 @@
 #include "ModuleMaterials.h"
 #include "C_Material.h"
+#include "Color.h"
+
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
+
+#pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 #include "Devil\include\ilu.h"
 #include "Devil\include\ilut.h"
@@ -7,6 +15,8 @@
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
 #pragma comment( lib, "Devil/libx86/ILU.lib" )
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
+
+
 
 ModuleMaterials::ModuleMaterials(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -43,8 +53,28 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 	return nullptr;
 }
 
-C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const std::string& file, const Color& color)
+C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::string& path)
 {
+	uint numTextures = from->GetTextureCount(aiTextureType_DIFFUSE);
+	std::string mat_path = "";
+	std::string file = "";
+	//TODO: too much code just for the path, create a new function
+	if (numTextures > 0)
+	{
+		aiString file_path;
+		aiReturn ret = from->GetTexture(aiTextureType_DIFFUSE, 0, &file_path);
+
+		//TODO: get file path from PhysFS
+		std::string mat_path_str(GetFileFolder(path));
+		mat_path_str += file_path.C_Str();
+		mat_path = mat_path_str;
+		std::string file_str = file_path.C_Str();
+		CutPath(file_str);
+		file = (char*)file_str.c_str();
+	}
+	aiColor4D color;
+	from->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+
 	C_Material* material = nullptr;
 	//TODO START: if we avoid duplicating materials this causes the game to break
 	//if (texture_path != "" && file != "")
@@ -59,9 +89,9 @@ C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const
 	else
 	{
 		material = new C_Material(nullptr);
-		if (texture_path != "" && file != "")
+		if (mat_path != "" && file != "")
 		{
-			material->texture_path = texture_path;
+			material->texture_path = mat_path;
 			material->texture_file = file;
 			material->texture_id = LoadIMG(material->texture_path.c_str());
 		}
@@ -70,7 +100,7 @@ C_Material* ModuleMaterials::LoadMaterial(const std::string& texture_path, const
 			material->texture_id = 0;
 		}
 
-		material->color = Color(color);
+		material->color = Color(color.r, color.g, color.b, color.a);
 		materials.push_back(material);
 	}
 	
@@ -81,5 +111,26 @@ uint ModuleMaterials::LoadIMG(const char* path)
 {
 	uint ret;
 	ret = ilutGLLoadImage((char*)path);
+	return ret;
+}
+
+//Tmp function, move to file system
+void ModuleMaterials::CutPath(std::string& str)
+{
+	uint position = str.find_last_of("\\/");
+	if (position != std::string::npos)
+	{
+		str = str.substr(position + 1, str.size() - position);
+	}
+}
+
+std::string ModuleMaterials::GetFileFolder(const std::string& str)
+{
+	std::string ret;
+	uint position = str.find_last_of("\\/");
+	if (position != std::string::npos)
+	{
+		ret = str.substr(0, position + 1);
+	}
 	return ret;
 }

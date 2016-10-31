@@ -220,6 +220,9 @@
     <ClCompile Include="Source Code\Intersections.cpp">
       <Filter>Source Code\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\ModuleMeshes.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -566,6 +569,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\Intersections.h">
       <Filter>Source Code\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ModuleMeshes.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

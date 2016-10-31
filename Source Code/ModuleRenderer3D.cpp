@@ -1,10 +1,10 @@
-#include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleWindow.h"
 #include "C_Camera.h"
 #include "C_Material.h"
+#include "C_Mesh.h"
 #include "Gizmos.h"
 #include "ModuleEditor.h"
 #include "OpenGL.h"
@@ -775,3 +775,49 @@ void ModuleRenderer3D::DrawAllBox()
 	glEnd();
 	glEnable(GL_LIGHTING);
 }
+
+//Component buffers management -----------------
+void ModuleRenderer3D::LoadBuffers(C_Mesh* mesh)
+{
+	glGenBuffers(1, (GLuint*)&mesh->id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&mesh->id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+
+	if (mesh->num_normals > 0)
+	{
+		glGenBuffers(1, (GLuint*)&mesh->id_normals);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
+	}
+
+	if (mesh->num_tex_coords > 0)
+	{
+		glGenBuffers(1, (GLuint*)&mesh->id_tex_coords);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coords);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_tex_coords * 2, mesh->tex_coords, GL_STATIC_DRAW);
+	}
+}
+
+void ModuleRenderer3D::LoadBuffers(C_Material* material)
+{
+
+}
+
+void ModuleRenderer3D::ReleaseBuffers(C_Mesh* mesh)
+{
+
+}
+
+void ModuleRenderer3D::ReleaseBuffers(C_Material* material)
+{
+	if (material->texture_id)
+	{
+		glDeleteBuffers(1, &material->texture_id);
+
+	}
+}
+//----------------------------------------------

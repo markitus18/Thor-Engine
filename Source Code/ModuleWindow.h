@@ -20,7 +20,6 @@ public:
 	bool CleanUp();
 
 	void SetTitle(const char* title);
-	const char* GetTitle();
 
 public:
 	//The window we'll be rendering to
@@ -28,9 +27,6 @@ public:
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
-
-private:
-	std::string title;
 };
 
 #endif // __ModuleWindow_H__

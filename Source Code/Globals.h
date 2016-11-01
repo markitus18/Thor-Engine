@@ -37,7 +37,7 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Thor Engine"
-#define LIFES 5
+#define ORGANIZATION "UPC"
 
 // Deletes a buffer
 #define RELEASE( x )\

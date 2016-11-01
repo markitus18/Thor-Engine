@@ -11,6 +11,8 @@ class Module
 {
 private :
 	bool enabled;
+	std::string title;
+	std::string organization;
 
 public:
 	Application* App;

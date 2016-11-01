@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "Module.h"
+#include "ModuleFileSystem.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -14,6 +15,7 @@
 
 Application::Application()
 {
+	fileSystem = new ModuleFileSystem(this);
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
@@ -32,6 +34,7 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(fileSystem);
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
@@ -45,6 +48,9 @@ Application::Application()
 	AddModule(moduleImport);
 	AddModule(moduleMaterials);
 	AddModule(moduleMeshes);
+
+	title = TITLE;
+	organization = ORGANIZATION;
 }
 
 Application::~Application()
@@ -185,13 +191,20 @@ void Application::Log(const char* input)
 {
 	moduleEditor->Log(input);
 }
-const char* Application::GetWindowTitle() const
+
+const char* Application::GetTitleName() const
 {
-	return window->GetTitle();
+	return title.c_str();
 }
 
-void Application::SetWindowTitle(char* new_name)
+const char* Application::GetOrganizationName() const
 {
+	return organization.c_str();
+}
+
+void Application::SetTitleName(const char* new_name)
+{
+	title = new_name;
 	window->SetTitle(new_name);
 }
 

@@ -8,6 +8,7 @@
 
 #include "ModuleMaterials.h"
 #include "ModuleMeshes.h"
+#include "ModuleFileSystem.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -43,7 +44,7 @@ bool ModuleImport::Init()
 	ilutRenderer(ILUT_OPENGL);
 
 	LOG("Entering mesh load");
-	const aiScene* file = aiImportFile("Game/Models/3D_Models/Street_environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* file = aiImportFileEx("Game/Models/3D_Models/Street_environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
 	if (file)
 	{
 		LOG("File found");

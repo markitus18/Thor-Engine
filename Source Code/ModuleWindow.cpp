@@ -63,8 +63,8 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-		title = TITLE;
+		window = SDL_CreateWindow(App->GetTitleName(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+
 		if(window == nullptr)
 		{
 			LOG("Window could not be created! SDL_Error: %s", SDL_GetError());
@@ -98,11 +98,5 @@ bool ModuleWindow::CleanUp()
 
 void ModuleWindow::SetTitle(const char* new_title)
 {
-	title = new_title;
 	SDL_SetWindowTitle(window, new_title);
-}
-
-const char* ModuleWindow::GetTitle()
-{
-	return title.c_str();
 }

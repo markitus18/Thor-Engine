@@ -5,9 +5,11 @@
 #include "Globals.h"
 #include "Timer.h"
 #include "PerfTimer.h"
+#include <string>
 
 class Module;
 
+class ModuleFileSystem;
 class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
@@ -23,6 +25,7 @@ class ModuleMeshes;
 class Application
 {
 public:
+	ModuleFileSystem* fileSystem;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleAudio* audio = nullptr;
@@ -50,6 +53,9 @@ private:
 	int			last_FPS;
 
 	p2List<Module*> list_modules;
+	
+	std::string title;
+	std::string organization;
 
 public:
 
@@ -64,8 +70,10 @@ public:
 	void RequestBrowser(char* path);
 	void Log(const char* input);
 
-	const char* GetWindowTitle() const;
-	void SetWindowTitle(char* new_name);
+	const char* GetTitleName() const;
+	const char* GetOrganizationName() const;
+
+	void SetTitleName(const char* new_name);
 
 private:
 

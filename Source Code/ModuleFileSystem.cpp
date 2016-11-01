@@ -19,6 +19,18 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 
 	// workaround VS string directory mess
 	AddPath(".");
+	AddPath("/Game/");
+	static char paths[512];
+
+	paths[0] = '\0';
+
+	char **path;
+	for (path = PHYSFS_getSearchPath(); *path != nullptr; path++)
+	{
+		strcat_s(paths, 512, *path);
+		strcat_s(paths, 512, "\n");
+	}
+
 
 	// Generate IO interfaces
 	CreateAssimpIO();
@@ -47,7 +59,7 @@ bool ModuleFileSystem::Init()
 	SDL_free(write_path);
 
 	CreateDir("Assets");
-	CreateDir("Assets/Meshes");
+	CreateDir("Assets/Models");
 	CreateDir("Assets/Textures");
 
 	return ret;

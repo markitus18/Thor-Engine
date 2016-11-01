@@ -44,11 +44,11 @@ bool ModuleImport::Init()
 	ilutRenderer(ILUT_OPENGL);
 
 	LOG("Entering mesh load");
-	const aiScene* file = aiImportFileEx("Game/Models/3D_Models/Street_environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
+	const aiScene* file = aiImportFileEx("Game/Assets/Models/Street_environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
 	if (file)
 	{
 		LOG("File found");
-		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/Street environment_V01.FBX");
+		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Assets/Models/Street_environment_V01.FBX");
 		aiReleaseImport(file);
 	}
 	else

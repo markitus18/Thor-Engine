@@ -95,9 +95,8 @@ update_status ModuleScene::Update(float dt)
 
 		//Temporal culling testing, just for performance calculation ------
 		App->moduleEditor->StartTimer(cullingTimer_library);
-		App->moduleEditor->ReadTimer(cullingTimer_library);
 		TestGameObjectsCulling(gameObjects, root, true);
-
+		App->moduleEditor->ReadTimer(cullingTimer_library);
 		gameObjects.clear();
 
 		App->moduleEditor->StartTimer(cullingTimer_normal);

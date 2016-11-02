@@ -6,6 +6,9 @@
 #include "Timer.h"
 #include "PerfTimer.h"
 #include <string>
+#include <vector>
+
+#include "PugiXml\src\pugixml.hpp"
 
 class Module;
 
@@ -52,10 +55,13 @@ private:
 	int			frame_count;
 	int			last_FPS;
 
-	p2List<Module*> list_modules;
+	std::vector<Module*> list_modules;
 	
 	std::string title;
 	std::string organization;
+
+	bool save_config = false;
+	bool load_config = false;
 
 public:
 
@@ -75,11 +81,17 @@ public:
 
 	void SetTitleName(const char* new_name);
 
+	void SaveConfig();
+	void LoadConfig();
+
 private:
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+	void SaveConfigNow();
+	void LoadConfigNow();
 };
 
 extern Application* App;

@@ -163,6 +163,8 @@
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Math\sse_mathfun.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.h" />
+    <ClInclude Include="Source Code\External Libraries\PugiXml\src\pugiconfig.hpp" />
+    <ClInclude Include="Source Code\External Libraries\PugiXml\src\pugixml.hpp" />
     <ClInclude Include="Source Code\GameObject.h" />
     <ClInclude Include="Source Code\Gizmos.h" />
     <ClInclude Include="Source Code\glmath.h" />
@@ -247,6 +249,7 @@
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Math\SSEMath.cpp" />
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.cpp" />
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.cpp" />
+    <ClCompile Include="Source Code\External Libraries\PugiXml\src\pugixml.cpp" />
     <ClCompile Include="Source Code\ModuleFileSystem.cpp" />
     <ClCompile Include="Source Code\GameObject.cpp" />
     <ClCompile Include="Source Code\Gizmos.cpp" />

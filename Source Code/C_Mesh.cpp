@@ -81,6 +81,16 @@ Component::Type C_Mesh::GetType()
 	return Component::Type::Mesh;
 }
 
+void C_Mesh::Save()
+{
+
+}
+
+void C_Mesh::Load()
+{
+
+}
+
 void C_Mesh::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
 {
 	obb = local_bounds;

@@ -79,6 +79,13 @@ public:
 	{ 
 		return true; 
 	}
+
+	virtual void Save()
+	{}
+
+	virtual void Load()
+	{}
+
 };
 
 #endif //__MODULE_H__

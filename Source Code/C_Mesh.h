@@ -27,9 +27,11 @@ public:
 	const AABB& GetGlobalAABB() const;
 	const OBB& GetGlobalOBB() const;
 
-	static Component::Type GetType();
-
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+
+	void Save();
+	void Load();
+	static Component::Type GetType();
 
 public:
 	//Vertices data

@@ -33,6 +33,10 @@ public:
 	float* GetOpenGLProjectionMatrix();
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+
+	void Save();
+	void Load();
+
 	static Component::Type GetType();
 
 private:

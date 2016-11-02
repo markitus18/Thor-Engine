@@ -13,6 +13,9 @@ public:
 	C_Material(const GameObject* gameObject);
 	~C_Material();
 
+	void Save();
+	void Load();
+
 	static Component::Type GetType();
 
 public:

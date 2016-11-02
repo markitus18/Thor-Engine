@@ -100,6 +100,16 @@ void C_Transform::OnUpdateTransform(const float4x4& global, const float4x4& pare
 	transform_updated = false;
 }
 
+void C_Transform::Save()
+{
+
+}
+
+void C_Transform::Load()
+{
+
+}
+
 Component::Type C_Transform::GetType()
 {
 	return Component::Type::Transform;

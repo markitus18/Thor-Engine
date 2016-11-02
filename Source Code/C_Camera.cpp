@@ -128,6 +128,16 @@ void C_Camera::OnUpdateTransform(const float4x4& global, const float4x4& parent_
 	update_projection = true;
 }
 
+void C_Camera::Save()
+{
+
+}
+
+void C_Camera::Load()
+{
+
+}
+
 void C_Camera::UpdatePlanes()
 {
 	frustum.GetPlanes(planes);

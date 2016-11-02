@@ -55,12 +55,9 @@ Application::Application()
 
 Application::~Application()
 {
-	p2List_item<Module*>* item = list_modules.getLast();
-
-	while(item != nullptr)
+	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		delete item->data;
-		item = item->prev;
+		RELEASE(list_modules[i])
 	}
 }
 
@@ -69,24 +66,18 @@ bool Application::Init()
 	bool ret = true;
 
 	// Call Init() in all modules
-	p2List_item<Module*>* item = list_modules.getFirst();
-
-	while(item != nullptr && ret == true)
+	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		if (item->data->IsEnabled())
-			ret = item->data->Init();
-		item = item->next;
+		if (list_modules[i]->IsEnabled())
+			ret = list_modules[i]->Init();
 	}
 
 	// After all Init calls we call Start() in all modules
 	LOG("-------------- Application Start --------------");
-	item = list_modules.getFirst();
-
-	while(item != nullptr && ret == true)
+	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		if (item->data->IsEnabled())
-			ret = item->data->Start();
-		item = item->next;
+		if (list_modules[i]->IsEnabled())
+			ret = list_modules[i]->Start();
 	}
 	
 	//Setting up all timers
@@ -124,44 +115,35 @@ void Application::FinishUpdate()
 
 }
 
+void Application::SaveConfig()
+{
+	save_config = true;
+}
+
+void Application::LoadConfig()
+{
+	load_config = true;
+}
+
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
-	p2List_item<Module*>* item = list_modules.getFirst();
-	
-	while(item != nullptr && ret == UPDATE_CONTINUE)
+	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
-		if (item->data->IsEnabled())
-		{
-			ret = item->data->PreUpdate(dt);
-		}
-		item = item->next;
+		ret = list_modules[i]->PreUpdate(dt);
 	}
 
-	item = list_modules.getFirst();
-
-	while(item != nullptr && ret == UPDATE_CONTINUE)
+	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
-		if (item->data->IsEnabled())
-		{
-
-			ret = item->data->Update(dt);
-		}
-		item = item->next;
+		ret = list_modules[i]->Update(dt);
 	}
 
-	item = list_modules.getFirst();
-
-	while(item != nullptr && ret == UPDATE_CONTINUE)
+	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
-		if (item->data->IsEnabled())
-		{
-			ret = item->data->PostUpdate(dt);
-		}
-		item = item->next;
+		ret = list_modules[i]->PostUpdate(dt);
 	}
 
 	FinishUpdate();
@@ -171,13 +153,12 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	p2List_item<Module*>* item = list_modules.getLast();
 
-	while(item != nullptr && ret == true)
+	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		ret = item->data->CleanUp();
-		item = item->prev;
+		ret = list_modules[i]->CleanUp();
 	}
+
 	return ret;
 }
 
@@ -210,5 +191,28 @@ void Application::SetTitleName(const char* new_name)
 
 void Application::AddModule(Module* mod)
 {
-	list_modules.add(mod);
+	list_modules.push_back(mod);
+}
+
+void Application::SaveConfigNow()
+{
+	LOG("Saving Config State");
+
+	pugi::xml_document data;
+	pugi::xml_node root;
+
+	root = data.append_child("Editor Configuration");
+
+	for (uint i = 0; i < list_modules.size(); i++)
+	{
+		list_modules[i]->Save(root.append_child(list_modules[i]->name.c_str()));
+	}
+
+
+	save_config = false;
+}
+
+void Application::LoadConfigNow()
+{
+	load_config = false;
 }

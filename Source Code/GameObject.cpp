@@ -55,29 +55,33 @@ void GameObject::Update()
 
 void GameObject::Draw(bool shaded, bool wireframe)
 {
-	C_Mesh* mesh = GetComponent<C_Mesh>();
-	if (mesh)
+	if (active && IsParentActive())
 	{
-		App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected());
-
-		if (selected || IsParentSelected())
+		C_Mesh* mesh = GetComponent<C_Mesh>();
+		if (mesh)
 		{
-			App->renderer3D->AddAABB(mesh->GetGlobalAABB(), Green);
-			App->renderer3D->AddOBB(mesh->GetGlobalOBB(), Yellow);
+			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected());
+
+			if (selected || IsParentSelected())
+			{
+				App->renderer3D->AddAABB(mesh->GetGlobalAABB(), Green);
+				App->renderer3D->AddOBB(mesh->GetGlobalOBB(), Yellow);
+			}
 		}
+
+		C_Camera* camera = GetComponent<C_Camera>();
+		if (camera)
+		{
+			App->renderer3D->AddFrustum(camera->frustum, Blue);
+		}
+
+		//for (uint i = 0; i < childs.size(); i++)
+		//{
+		//	if (childs[i]->active)
+		//		childs[i]->Draw(shaded, wireframe);	
+		//}
 	}
 
-	C_Camera* camera = GetComponent<C_Camera>();
-	if (camera)
-	{
-		App->renderer3D->AddFrustum(camera->frustum, Blue);
-	}
-
-	//for (uint i = 0; i < childs.size(); i++)
-	//{
-	//	if (childs[i]->active)
-	//		childs[i]->Draw(shaded, wireframe);	
-	//}
 }
 
 void GameObject::OnUpdateTransform()
@@ -114,6 +118,17 @@ bool GameObject::HasFlippedNormals() const
 		return flipped_normals != parent->HasFlippedNormals() ? true : false;
 	}
 	return flipped_normals;
+}
+
+bool GameObject::IsParentActive() const
+{
+	if (active == false)
+		return false;
+
+	if (parent)
+		return parent->IsParentActive();
+
+	return active;
 }
 
 void GameObject::Select()

@@ -27,20 +27,18 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 		if (ImGui::BeginMenu("Options"))
 		{
 			ImGui::MenuItem("Default", NULL, false, false);
-			//if (ImGui::IsItemHovered())
-			//	ImGui::SetMouseCursor(2);
 			ImGui::MenuItem("Save", NULL, false, false);
 			ImGui::MenuItem("Load", NULL, false, false);
 			ImGui::EndMenu();
 		}
 		if (ImGui::CollapsingHeader("Application"))
 		{
-			//TODO: This will be moved into module editor and use listeners structure
 			char appName[100];
 			strcpy_s(appName, 100, App->GetTitleName());
 
 			if (ImGui::InputText("Project Name", appName, 100, ImGuiInputTextFlags_EnterReturnsTrue))
 				App->SetTitleName(appName);
+
 			ImGui::PlotHistogram("FPS", FPS_data, IM_ARRAYSIZE(FPS_data), 0, NULL, 0.0f, 120.0f, ImVec2(0, 80));
 			ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
 		}

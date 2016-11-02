@@ -29,8 +29,8 @@ public:
 	
 	void ResetScene();
 
-	GameObject* getRoot();
-	const GameObject* getRoot() const;
+	GameObject* GetRoot();
+	const GameObject* GetRoot() const;
 private:
 	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
 	void DrawAllGO(GameObject* gameObject);

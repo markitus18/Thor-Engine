@@ -48,7 +48,7 @@ bool ModuleImport::Init()
 	if (file)
 	{
 		LOG("File found");
-		LoadFBX(file, file->mRootNode, App->scene->getRoot(), "Game/Assets/Models/Street_environment_V01.FBX");
+		LoadFBX(file, file->mRootNode, App->scene->GetRoot(), "Game/Assets/Models/Street_environment_V01.FBX");
 		aiReleaseImport(file);
 	}
 	else

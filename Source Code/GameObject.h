@@ -26,6 +26,7 @@ public:
 	void OnUpdateTransform();
 
 	bool HasFlippedNormals() const;
+	bool IsParentActive() const;
 
 	//Selection methods -----------------------------------
 	void Select();

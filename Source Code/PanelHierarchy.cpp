@@ -24,7 +24,7 @@ void PanelHierarchy::Draw(ImGuiWindowFlags flags)
 
 		ImGui::Begin("Hierarchy", &active, ImVec2(size.x, size.y), 1.0f, flags);
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
-		DrawRootChilds(App->scene->getRoot(), default_flags);
+		DrawRootChilds(App->scene->GetRoot(), default_flags);
 		ImGui::End();
 	}
 }

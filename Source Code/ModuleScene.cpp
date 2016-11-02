@@ -143,11 +143,12 @@ void ModuleScene::ResetScene()
 	App->camera->Enable();
 }
 
-GameObject* ModuleScene::getRoot()
+GameObject* ModuleScene::GetRoot()
 {
 	return root;
 }
-const GameObject* ModuleScene::getRoot() const
+
+const GameObject* ModuleScene::GetRoot() const
 {
 	return root;
 }

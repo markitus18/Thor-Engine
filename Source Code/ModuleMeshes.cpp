@@ -84,3 +84,8 @@ C_Mesh* ModuleMeshes::LoadMesh(const aiMesh* from)
 	return mesh;
 }
 
+void ModuleMeshes::LoadBuffers(C_Mesh* mesh)
+{
+
+}
+

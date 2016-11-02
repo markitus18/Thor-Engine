@@ -226,9 +226,6 @@
     <ClCompile Include="Source Code\ModuleFileSystem.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\External Libraries\PugiXml\src\pugixml.cpp">
-      <Filter>Source Code\External Libraries\PugiXML</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -582,12 +579,6 @@
     <ClInclude Include="Source Code\ModuleFileSystem.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\PugiXml\src\pugiconfig.hpp">
-      <Filter>Source Code\External Libraries\PugiXML</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\PugiXml\src\pugixml.hpp">
-      <Filter>Source Code\External Libraries\PugiXML</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -637,9 +628,6 @@
     </Filter>
     <Filter Include="Source Code\GameObjects\Components">
       <UniqueIdentifier>{7a22f48e-f24f-4f9b-87ca-da9c7d73ac05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Code\External Libraries\PugiXML">
-      <UniqueIdentifier>{976cc9e0-a872-4007-8ae0-50b42563e947}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

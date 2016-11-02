@@ -1,7 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleFileSystem.h"
-#include "PhysFS\include\physfs.h"
+
+#include "PhysFS/include/physfs.h"
 
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
@@ -17,20 +18,11 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 	PHYSFS_init(base_path);
 	SDL_free(base_path);
 
+	AddPath("Game");
+	AddPath("Assets");
+	if(PHYSFS_setWriteDir(".") == 0)
+		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 	// workaround VS string directory mess
-	AddPath(".");
-	AddPath("/Game/");
-	static char paths[512];
-
-	paths[0] = '\0';
-
-	char **path;
-	for (path = PHYSFS_getSearchPath(); *path != nullptr; path++)
-	{
-		strcat_s(paths, 512, *path);
-		strcat_s(paths, 512, "\n");
-	}
-
 
 	// Generate IO interfaces
 	CreateAssimpIO();
@@ -53,14 +45,10 @@ bool ModuleFileSystem::Init()
 	char* write_path = SDL_GetPrefPath(App->GetOrganizationName(), App->GetTitleName());
 
 	// Trun this on while in game mode
-	if(PHYSFS_setWriteDir(write_path) == 0)
-		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
+	//if(PHYSFS_setWriteDir(write_path) == 0)
+	//	LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
 	SDL_free(write_path);
-
-	CreateDir("Assets");
-	CreateDir("Assets/Models");
-	CreateDir("Assets/Textures");
 
 	return ret;
 }

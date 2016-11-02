@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-#include "PugiXml\src\pugixml.hpp"
-
 class Module;
 
 class ModuleFileSystem;
@@ -60,8 +58,8 @@ private:
 	std::string title;
 	std::string organization;
 
-	bool save_config = false;
-	bool load_config = false;
+	bool save_settings = false;
+	bool load_settings = false;
 
 public:
 
@@ -81,8 +79,8 @@ public:
 
 	void SetTitleName(const char* new_name);
 
-	void SaveConfig();
-	void LoadConfig();
+	void SaveSettings();
+	void LoadSettings();
 
 private:
 
@@ -90,8 +88,8 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	void SaveConfigNow();
-	void LoadConfigNow();
+	void SaveSettingsNow();
+	void LoadSettingsNow();
 };
 
 extern Application* App;

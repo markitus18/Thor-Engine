@@ -115,14 +115,14 @@ void Application::FinishUpdate()
 
 }
 
-void Application::SaveConfig()
+void Application::SaveSettings()
 {
-	save_config = true;
+	save_settings = true;
 }
 
-void Application::LoadConfig()
+void Application::LoadSettings()
 {
-	load_config = true;
+	load_settings = true;
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -194,25 +194,20 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
-void Application::SaveConfigNow()
+void Application::SaveSettingsNow()
 {
 	LOG("Saving Config State");
 
-	pugi::xml_document data;
-	pugi::xml_node root;
-
-	root = data.append_child("Editor Configuration");
-
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		list_modules[i]->Save(root.append_child(list_modules[i]->name.c_str()));
+		list_modules[i]->Save();
 	}
 
 
-	save_config = false;
+	save_settings = false;
 }
 
-void Application::LoadConfigNow()
+void Application::LoadSettingsNow()
 {
-	load_config = false;
+	load_settings = false;
 }

@@ -122,6 +122,16 @@ void ModuleFileSystem::DiscoverFiles(const char* directory, vector<string> & fil
 	PHYSFS_freeList(rc);
 }
 
+void ModuleFileSystem::NormalizePath(char * full_path) const
+{
+	int len = strlen(full_path);
+	for (int i = 0; i < len; ++i)
+	{
+		if (full_path[i] == '\\')
+			full_path[i] = '/';
+	}
+}
+
 void ModuleFileSystem::SplitFilePath(const char * full_path, std::string * path, std::string * file, std::string * extension) const
 {
 	if (full_path != nullptr)

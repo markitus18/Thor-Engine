@@ -196,7 +196,8 @@ void Application::SaveSettingsNow(const char* full_path)
 	JSON_Object* root = json_value_get_object(root_value);
 	json_object_set_string(root, "Name", "Marc");
 	json_object_set_number(root, "Age", 19);
-	
+	json_object_set_value(root, "RootNode", json_value_init_object());
+	root = json_object_get_object(root, "RootNode");
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
 		json_object_set_value(root, list_modules[i]->name.c_str(), json_value_init_object());

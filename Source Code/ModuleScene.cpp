@@ -15,6 +15,9 @@
 #include "C_Camera.h"
 #include "Intersections.h"
 
+#include <windows.h>
+#include <shobjidl.h> 
+
 //#include <GLFW/glfw3.h>
 
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene", start_enabled)
@@ -62,6 +65,26 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
+	{
+#pragma region WindowTest
+		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
+			COINIT_DISABLE_OLE1DDE);
+		if (SUCCEEDED(hr))
+		{
+			IFileOpenDialog *pFileOpen;
+			// Create the FileOpenDialog object.
+			hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+				IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+			if (SUCCEEDED(hr))
+			{
+				// Show the Open dialog box.
+				hr = pFileOpen->Show(NULL);
+			}
+		}
+#pragma endregion
+	}
 	if (drawGrid)
 	{
 		//TODO: Move this into a mesh "prefab"

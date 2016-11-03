@@ -97,7 +97,7 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 		{
 			material->texture_path = mat_path;
 			material->texture_file = file;
-			material->texture_id = LoadIMG(file.c_str());
+			material->texture_id = LoadIMG((char*)mat_path.c_str());
 		}
 		else
 		{
@@ -111,7 +111,7 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 	return material;
 }
 
-uint ModuleMaterials::LoadIMG(const char* path)
+uint ModuleMaterials::LoadIMG(char* path)
 {
 	uint ret = 0;
 	//ret = ilutGLLoadImage((char*)path);
@@ -120,7 +120,8 @@ uint ModuleMaterials::LoadIMG(const char* path)
 	std::string full_path = "Assets/Textures/";
 	full_path.append(path);
 
-	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+	App->fileSystem->NormalizePath(path);
+	uint size = App->fileSystem->Load(path, &buffer);
 
 	ILuint ImageName;
 	ilGenImages(1, &ImageName);

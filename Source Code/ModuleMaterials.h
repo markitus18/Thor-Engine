@@ -19,7 +19,7 @@ public:
 
 	C_Material* Exists(const char* texture_path) const;
 	C_Material* LoadMaterial(const aiMaterial* from, const std::string& texture_path);
-	uint LoadIMG(const char* path);
+	uint LoadIMG(char* path);
 
 	//Tmp function, move to file system
 	void CutPath(std::string&);

@@ -40,6 +40,8 @@ public:
 	Timer timer;
 	uint tmp_goCount = 1;
 
+	std::string current_scene;
+
 private:
 	bool drawGrid = true;
 	GameObject* root = nullptr;

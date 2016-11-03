@@ -8,7 +8,9 @@
 #include "GameObject.h"
 #include <vector>
 
-ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+
+
+ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module("Camera", start_enabled)
 {
 	camera = new C_Camera(nullptr);
 
@@ -116,6 +118,23 @@ C_Camera * ModuleCamera3D::GetCamera() const
 	return camera;
 }
 
+void ModuleCamera3D::Save(JSON_Object* root)
+{
+	float3 position = camera->frustum.Pos();
+	json_object_set_number(root, "PositionX", position.x);
+	json_object_set_number(root, "PositionY", position.y);
+	json_object_set_number(root, "PositionZ", position.z);
+}
+
+void ModuleCamera3D::Load(JSON_Object* root)
+{
+	float3 position = float3::zero;
+	position.x = json_value_get_number(json_object_get_value(root, ("PositionX")));
+	position.x = json_value_get_number(json_object_get_value(root, ("PositionY")));
+	position.x = json_value_get_number(json_object_get_value(root, ("PositionZ")));
+
+	camera->frustum.SetPos(position);
+}
 
 void ModuleCamera3D::Move_Keyboard(float dt)
 {

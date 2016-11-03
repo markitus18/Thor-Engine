@@ -58,9 +58,6 @@ private:
 	std::string title;
 	std::string organization;
 
-	bool save_settings = false;
-	bool load_settings = false;
-
 public:
 
 	Application();
@@ -79,17 +76,14 @@ public:
 
 	void SetTitleName(const char* new_name);
 
-	void SaveSettings();
-	void LoadSettings();
-
 private:
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	void SaveSettingsNow();
-	void LoadSettingsNow();
+	void SaveSettingsNow(const char*);
+	void LoadSettingsNow(const char*);
 };
 
 extern Application* App;

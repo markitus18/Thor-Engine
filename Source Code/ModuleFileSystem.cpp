@@ -11,7 +11,7 @@
 
 using namespace std;
 
-ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Module(app, true)
+ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Module("FileSystem", true)
 {
 	// needs to be created before Init so other modules can use it
 	char* base_path = SDL_GetBasePath();

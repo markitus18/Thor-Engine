@@ -26,7 +26,7 @@
 
 
 
-ModuleImport::ModuleImport(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleImport::ModuleImport(Application* app, bool start_enabled) : Module("Importer", start_enabled)
 {}
 
 // Destructor

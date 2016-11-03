@@ -17,7 +17,7 @@
 
 //#include <GLFW/glfw3.h>
 
-ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene", start_enabled)
 {
 	root = new GameObject(nullptr, "root");
 

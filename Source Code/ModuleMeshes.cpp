@@ -8,7 +8,7 @@
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module("Meshes", start_enabled)
 {
 
 }

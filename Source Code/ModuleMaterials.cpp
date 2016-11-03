@@ -18,7 +18,7 @@
 
 
 
-ModuleMaterials::ModuleMaterials(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleMaterials::ModuleMaterials(Application* app, bool start_enabled) : Module("Materials", start_enabled)
 {
 
 }

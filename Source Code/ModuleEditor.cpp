@@ -16,7 +16,7 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
 
-ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module("Editor", start_enabled)
 {
 
 }

@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include <string>
+#include "parson/parson.h"
 
 class Application;
 struct PhysBody3D;
@@ -13,10 +14,9 @@ private :
 	bool enabled;
 
 public:
-	Application* App;
 	std::string name;
 
-	Module(Application* parent, bool start_enabled = true) : App(parent)
+	Module(const char* name, bool start_enabled = true) : name(name)
 	{
 		enabled = start_enabled;
 	}
@@ -79,10 +79,10 @@ public:
 		return true; 
 	}
 
-	virtual void Save()
+	virtual void Save(JSON_Object* root)
 	{}
 
-	virtual void Load()
+	virtual void Load(JSON_Object* root)
 	{}
 
 };

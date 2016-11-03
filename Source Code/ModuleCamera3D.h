@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "MathGeoLib\src\MathGeoLib.h"
 
+//TODO: remove it from .h
+#include "parson/parson.h"
 class C_Camera;
 
 class ModuleCamera3D : public Module
@@ -28,6 +30,9 @@ public:
 	void SetPosition(float3 position);
 
 	C_Camera* GetCamera() const;
+
+	void Save(JSON_Object* root);
+	void Load(JSON_Object* root);
 
 private:
 

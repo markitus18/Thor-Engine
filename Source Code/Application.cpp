@@ -13,6 +13,8 @@
 #include "ModuleMaterials.h"
 #include "ModuleMeshes.h"
 
+#include "parson/parson.h"
+
 Application::Application()
 {
 	fileSystem = new ModuleFileSystem(this);
@@ -72,6 +74,8 @@ bool Application::Init()
 			ret = list_modules[i]->Init();
 	}
 
+	LoadSettingsNow("Config.JSON");
+
 	// After all Init calls we call Start() in all modules
 	LOG("-------------- Application Start --------------");
 	for (uint i = 0; i < list_modules.size(); i++)
@@ -115,16 +119,6 @@ void Application::FinishUpdate()
 
 }
 
-void Application::SaveSettings()
-{
-	save_settings = true;
-}
-
-void Application::LoadSettings()
-{
-	load_settings = true;
-}
-
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
@@ -153,7 +147,7 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-
+	SaveSettingsNow("Config.JSON");
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
 		ret = list_modules[i]->CleanUp();
@@ -194,20 +188,48 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
-void Application::SaveSettingsNow()
+void Application::SaveSettingsNow(const char* full_path)
 {
 	LOG("Saving Config State");
 
+	JSON_Value* root_value = json_value_init_object();
+	JSON_Object* root = json_value_get_object(root_value);
+	json_object_set_number(root, "Number", 15);
+
+	
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		list_modules[i]->Save();
+		json_object_set_value(root, list_modules[i]->name.c_str(), json_value_init_object());
+		list_modules[i]->Save(json_object_get_object(root, list_modules[i]->name.c_str()));
 	}
+	
 
+	size_t size = json_serialization_size(root_value);
+	char* buffer = new char[size];
+	json_serialize_to_buffer(root_value, buffer, size);
 
-	save_settings = false;
+	fileSystem->Save(full_path, buffer, size);
+
+	RELEASE_ARRAY(buffer);
+	json_value_free(root_value);
 }
 
-void Application::LoadSettingsNow()
+void Application::LoadSettingsNow(const char* full_path)
 {
-	load_settings = false;
+	char* buffer = nullptr;
+	uint size = fileSystem->Load(full_path, &buffer);
+
+	if (size > 0)
+	{
+		JSON_Value* root_value = json_parse_string(buffer);
+		if (root_value)
+		{
+			JSON_Object* root = json_value_get_object(root_value);
+
+			for (uint i = 0; i < list_modules.size(); i++)
+			{
+				list_modules[i]->Load(json_object_get_object(root, list_modules[i]->name.c_str()));
+			}
+		}
+	}
 }

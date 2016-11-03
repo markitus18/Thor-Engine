@@ -113,7 +113,7 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 
 uint ModuleMaterials::LoadIMG(const char* path)
 {
-	uint ret;
+	uint ret = 0;
 	//ret = ilutGLLoadImage((char*)path);
 
 	char* buffer = nullptr;
@@ -126,10 +126,14 @@ uint ModuleMaterials::LoadIMG(const char* path)
 	ilGenImages(1, &ImageName);
 	ilBindImage(ImageName);
 
-	ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
+	if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+	{
+		ret = ilutGLBindTexImage();
+		ilDeleteImages(1, &ImageName);
+	}
 
 	RELEASE_ARRAY(buffer);
-	return ImageName;
+	return ret;
 }
 
 //Tmp function, move to file system

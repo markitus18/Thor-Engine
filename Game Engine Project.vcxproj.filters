@@ -226,6 +226,12 @@
     <ClCompile Include="Source Code\ModuleFileSystem.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\parson\parson.c">
+      <Filter>Source Code\External Libraries\parson</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Config.cpp">
+      <Filter>Source Code\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -579,6 +585,12 @@
     <ClInclude Include="Source Code\ModuleFileSystem.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\parson\parson.h">
+      <Filter>Source Code\External Libraries\parson</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Config.h">
+      <Filter>Source Code\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -628,6 +640,9 @@
     </Filter>
     <Filter Include="Source Code\GameObjects\Components">
       <UniqueIdentifier>{7a22f48e-f24f-4f9b-87ca-da9c7d73ac05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\External Libraries\parson">
+      <UniqueIdentifier>{ba2abca1-375c-41b2-ae5c-bb3ea88488dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

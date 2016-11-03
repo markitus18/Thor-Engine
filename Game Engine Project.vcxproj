@@ -85,6 +85,7 @@
     <ClInclude Include="Source Code\Application.h" />
     <ClInclude Include="Source Code\Color.h" />
     <ClInclude Include="Source Code\Component.h" />
+    <ClInclude Include="Source Code\Config.h" />
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Math\sse_mathfun.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.h" />
+    <ClInclude Include="Source Code\External Libraries\parson\parson.h" />
     <ClInclude Include="Source Code\GameObject.h" />
     <ClInclude Include="Source Code\Gizmos.h" />
     <ClInclude Include="Source Code\glmath.h" />
@@ -204,6 +206,7 @@
     <ClCompile Include="Source Code\Application.cpp" />
     <ClCompile Include="Source Code\Color.cpp" />
     <ClCompile Include="Source Code\Component.cpp" />
+    <ClCompile Include="Source Code\Config.cpp" />
     <ClCompile Include="Source Code\C_Camera.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui.cpp" />
@@ -247,6 +250,7 @@
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Math\SSEMath.cpp" />
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Math\TransformOps.cpp" />
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.cpp" />
+    <ClCompile Include="Source Code\External Libraries\parson\parson.c" />
     <ClCompile Include="Source Code\ModuleFileSystem.cpp" />
     <ClCompile Include="Source Code\GameObject.cpp" />
     <ClCompile Include="Source Code\Gizmos.cpp" />

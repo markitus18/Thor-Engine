@@ -130,10 +130,12 @@ void ModuleCamera3D::Load(JSON_Object* root)
 {
 	float3 position = float3::zero;
 	position.x = json_value_get_number(json_object_get_value(root, ("PositionX")));
-	position.x = json_value_get_number(json_object_get_value(root, ("PositionY")));
-	position.x = json_value_get_number(json_object_get_value(root, ("PositionZ")));
+	position.y = json_value_get_number(json_object_get_value(root, ("PositionY")));
+	position.z = json_value_get_number(json_object_get_value(root, ("PositionZ")));
 
 	camera->frustum.SetPos(position);
+	Look(float3(0, 0, 0));
+	camera->update_projection = true;
 }
 
 void ModuleCamera3D::Move_Keyboard(float dt)

@@ -1,4 +1,8 @@
 #include "ModuleMaterials.h"
+
+#include "Application.h"
+#include "ModuleFileSystem.h"
+
 #include "C_Material.h"
 #include "Color.h"
 
@@ -93,7 +97,7 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 		{
 			material->texture_path = mat_path;
 			material->texture_file = file;
-			material->texture_id = LoadIMG(material->texture_path.c_str());
+			material->texture_id = LoadIMG(file.c_str());
 		}
 		else
 		{
@@ -110,8 +114,22 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 uint ModuleMaterials::LoadIMG(const char* path)
 {
 	uint ret;
-	ret = ilutGLLoadImage((char*)path);
-	return ret;
+	//ret = ilutGLLoadImage((char*)path);
+
+	char* buffer = nullptr;
+	std::string full_path = "Assets/Textures/";
+	full_path.append(path);
+
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	ILuint ImageName;
+	ilGenImages(1, &ImageName);
+	ilBindImage(ImageName);
+
+	ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
+
+	RELEASE_ARRAY(buffer);
+	return ImageName;
 }
 
 //Tmp function, move to file system

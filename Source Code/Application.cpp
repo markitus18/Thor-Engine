@@ -265,11 +265,12 @@ void Application::LoadSettingsNow(const char* full_path)
 	if (size > 0)
 	{
 		Config config(buffer);
+		Config root = config.GetNode("EditorState");
 		if (config.NodeExists())
 		{
 			for (uint i = 0; i < list_modules.size(); i++)
 			{
-				list_modules[i]->Load(config.SetNode(list_modules[i]->name.c_str()));
+				list_modules[i]->Load(root.GetNode(list_modules[i]->name.c_str()));
 			}
 		}
 	}

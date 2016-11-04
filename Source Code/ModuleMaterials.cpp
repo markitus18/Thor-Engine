@@ -65,16 +65,9 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 	//TODO: too much code just for the path, create a new function
 	if (numTextures > 0)
 	{
-		aiString file_path;
-		aiReturn ret = from->GetTexture(aiTextureType_DIFFUSE, 0, &file_path);
-
-		//TODO: get file path from PhysFS
-		std::string mat_path_str(GetFileFolder(path));
-		mat_path_str += file_path.C_Str();
-		mat_path = mat_path_str;
-		std::string file_str = file_path.C_Str();
-		CutPath(file_str);
-		file = (char*)file_str.c_str();
+		aiString aiStr;
+		aiReturn ret = from->GetTexture(aiTextureType_DIFFUSE, 0, &aiStr);
+		App->fileSystem->SplitFilePath(aiStr.C_Str(), &mat_path, &file);
 	}
 	aiColor4D color;
 	from->Get(AI_MATKEY_COLOR_DIFFUSE, color);
@@ -95,9 +88,9 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 		material = new C_Material(nullptr);
 		if (mat_path != "" && file != "")
 		{
-			material->texture_path = mat_path;
+			material->texture_path = mat_path + file;
 			material->texture_file = file;
-			material->texture_id = LoadIMG((char*)mat_path.c_str());
+			material->texture_id = LoadIMG((char*)file.c_str());
 		}
 		else
 		{
@@ -111,17 +104,16 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 	return material;
 }
 
-uint ModuleMaterials::LoadIMG(char* path)
+uint ModuleMaterials::LoadIMG(char* file)
 {
+	//TODO: Search for all "Textures" folder and search that file
 	uint ret = 0;
-	//ret = ilutGLLoadImage((char*)path);
 
 	char* buffer = nullptr;
-	std::string full_path = "Assets/Textures/";
-	full_path.append(path);
+	std::string full_path = "/Textures/";
+	full_path.append(file);
 
-	App->fileSystem->NormalizePath(path);
-	uint size = App->fileSystem->Load(path, &buffer);
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
 
 	ILuint ImageName;
 	ilGenImages(1, &ImageName);

@@ -7,6 +7,7 @@
 //TODO: remove it from .h
 #include "parson/parson.h"
 class C_Camera;
+class Config;
 
 class ModuleCamera3D : public Module
 {
@@ -33,6 +34,9 @@ public:
 
 	void Save(JSON_Object* root);
 	void Load(JSON_Object* root);
+
+	void Save(Config& root);
+	void Load(Config& root);
 
 private:
 

@@ -7,6 +7,7 @@
 
 class Application;
 struct PhysBody3D;
+class Config;
 
 class Module
 {
@@ -85,6 +86,11 @@ public:
 	virtual void Load(JSON_Object* root)
 	{}
 
+	virtual void Save(Config& root)
+	{}
+
+	virtual void Load(Config& root)
+	{}
 };
 
 #endif //__MODULE_H__

@@ -2,6 +2,8 @@
 #define __CONFIG_H__
 
 #include "parson\parson.h"
+#include <string>
+#include "Globals.h"
 
 //http://kgabis.github.io/parson/
 
@@ -16,7 +18,8 @@ typedef struct json_array_t  JSON_Array;
 
 class Config
 {
-	/* Brief parson explanation
+	///Brief parson explanation
+	/* 
 	-	Save a JSON file into a buffer then create a new file with fileSystem:
 		JSON_Status json_serialize_to_buffer(const JSON_Value *value, char *buf, size_t buf_size_in_bytes);
 	-	JSON nodes are called objects
@@ -24,21 +27,30 @@ class Config
 	-	Get values from a node: same function as append, but with "get"
 	*/
 public:
-	Config();					//Contructor used for data append
+	Config(bool alloc = true);	//Contructor used for data append
 	Config(const char* buffer); //Constructor used for data read
+	~Config();					//Free data if initialized
 
-	void Release();				//Freeing JSON_Value data
+	uint Serialize(char* buffer);	//Returns a filled buffer
+	bool NodeExists();
 
-	//Append attributes
+	//Append attributes ------------
 	void SetNumber(const char* name, double data);
 	void SetString(const char* name, char* data);
 	void SetBool(const char* name, bool data);
 	Config SetNode(const char* name);
+	//Endof append attributes------
 
-
+	//Get attributes --------------
+	int GetNumber(const char* name) const;
+	std::string GetString(const char* name) const;
+	bool GetBool(const char* name) const;
+	Config GetNode(const char* name) const;
+	//Endof Get attributes---------
+	
 private:
-	JSON_Value* root_value; //Only used for file root
-	JSON_Object* node;
+	JSON_Value* root_value = nullptr; //Only used for file root
+	JSON_Object* node = nullptr;
 };
 
 #endif //__CONFIG_H__

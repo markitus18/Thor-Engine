@@ -6,6 +6,8 @@
 #include "C_Camera.h"
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
+#include "Config.h"
+
 #include <vector>
 
 
@@ -132,6 +134,26 @@ void ModuleCamera3D::Load(JSON_Object* root)
 	position.x = json_value_get_number(json_object_get_value(root, ("PositionX")));
 	position.y = json_value_get_number(json_object_get_value(root, ("PositionY")));
 	position.z = json_value_get_number(json_object_get_value(root, ("PositionZ")));
+
+	camera->frustum.SetPos(position);
+	Look(float3(0, 0, 0));
+	camera->update_projection = true;
+}
+
+void ModuleCamera3D::Save(Config& config)
+{
+	float3 position = camera->frustum.Pos();
+	config.SetNumber("PositionX", position.x);
+	config.SetNumber("PositionY", position.y);
+	config.SetNumber("PositionZ", position.z);
+}
+
+void ModuleCamera3D::Load(Config& config)
+{
+	float3 position = float3::zero;
+	position.x = config.GetNumber("PositionX");
+	position.y = config.GetNumber("PositionY");
+	position.z = config.GetNumber("PositionZ");
 
 	camera->frustum.SetPos(position);
 	Look(float3(0, 0, 0));

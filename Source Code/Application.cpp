@@ -12,6 +12,7 @@
 #include "ModuleImport.h"
 #include "ModuleMaterials.h"
 #include "ModuleMeshes.h"
+#include "Config.h"
 
 #include "parson/parson.h"
 
@@ -192,27 +193,52 @@ void Application::SaveSettingsNow(const char* full_path)
 {
 	LOG("Saving Config State");
 
-	JSON_Value* root_value = json_value_init_object();
-	JSON_Object* root = json_value_get_object(root_value);
-	json_object_set_string(root, "Name", "Marc");
-	json_object_set_number(root, "Age", 19);
-	json_object_set_value(root, "RootNode", json_value_init_object());
-	root = json_object_get_object(root, "RootNode");
-	for (uint i = 0; i < list_modules.size(); i++)
+	bool config_mode = true;
+
+	if (!config_mode)
 	{
-		json_object_set_value(root, list_modules[i]->name.c_str(), json_value_init_object());
-		list_modules[i]->Save(json_object_get_object(root, list_modules[i]->name.c_str()));
-	}
+#pragma region direct parson
+		JSON_Value* root_value = json_value_init_object();
+		JSON_Object* root = json_value_get_object(root_value);
+		json_object_set_string(root, "Name", "Marc");
+		json_object_set_number(root, "Age", 19);
+		json_object_set_value(root, "RootNode", json_value_init_object());
+		for (uint i = 0; i < list_modules.size(); i++)
+		{
+			json_object_set_value(root, list_modules[i]->name.c_str(), json_value_init_object());
+			list_modules[i]->Save(json_object_get_object(root, list_modules[i]->name.c_str()));
+		}
 	
 
-	size_t size = json_serialization_size(root_value);
-	char* buffer = new char[size];
-	json_serialize_to_buffer(root_value, buffer, size);
+		size_t size = json_serialization_size(root_value);
+		char* buffer = new char[size];
+		json_serialize_to_buffer(root_value, buffer, size);
 
-	fileSystem->Save(full_path, buffer, size);
+		fileSystem->Save(full_path, buffer, size);
 
-	RELEASE_ARRAY(buffer);
-	json_value_free(root_value);
+		RELEASE_ARRAY(buffer);
+		json_value_free(root_value);
+#pragma endregion
+	}
+
+	else
+	{
+#pragma region Config wrapper
+		Config config(true);
+		Config node = config.SetNode("EditorState");
+
+		for (uint i = 0; i < list_modules.size(); i++)
+		{
+			list_modules[i]->Save(node.SetNode(list_modules[i]->name.c_str()));
+		}
+
+		char* buffer = nullptr;
+		uint size = config.Serialize(buffer);
+
+		fileSystem->Save(full_path, buffer, size);
+		RELEASE_ARRAY(buffer);
+#pragma endregion
+	}
 }
 
 void Application::LoadSettingsNow(const char* full_path)
@@ -220,16 +246,30 @@ void Application::LoadSettingsNow(const char* full_path)
 	char* buffer = nullptr;
 	uint size = fileSystem->Load(full_path, &buffer);
 
+	//Direct parson
+	//if (size > 0)
+	//{
+	//	JSON_Value* root_value = json_parse_string(buffer);
+	//	if (root_value)
+	//	{
+	//		JSON_Object* root = json_value_get_object(root_value);
+
+	//		for (uint i = 0; i < list_modules.size(); i++)
+	//		{
+	//			list_modules[i]->Load(json_object_get_object(root, list_modules[i]->name.c_str()));
+	//		}
+	//	}
+	//}
+
+	//Config wrapper
 	if (size > 0)
 	{
-		JSON_Value* root_value = json_parse_string(buffer);
-		if (root_value)
+		Config config(buffer);
+		if (config.NodeExists())
 		{
-			JSON_Object* root = json_value_get_object(root_value);
-
 			for (uint i = 0; i < list_modules.size(); i++)
 			{
-				list_modules[i]->Load(json_object_get_object(root, list_modules[i]->name.c_str()));
+				list_modules[i]->Load(config.SetNode(list_modules[i]->name.c_str()));
 			}
 		}
 	}

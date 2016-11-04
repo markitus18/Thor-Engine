@@ -233,7 +233,7 @@ void Application::SaveSettingsNow(const char* full_path)
 		}
 
 		char* buffer = nullptr;
-		uint size = config.Serialize(buffer);
+		uint size = config.Serialize(&buffer);
 
 		fileSystem->Save(full_path, buffer, size);
 		RELEASE_ARRAY(buffer);

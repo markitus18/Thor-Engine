@@ -31,7 +31,7 @@ public:
 	Config(const char* buffer); //Constructor used for data read
 	~Config();					//Free data if initialized
 
-	uint Serialize(char* buffer);	//Returns a filled buffer
+	uint Serialize(char** buffer);	//Returns a filled buffer
 	bool NodeExists();
 
 	//Append attributes ------------

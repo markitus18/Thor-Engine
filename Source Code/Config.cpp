@@ -29,11 +29,11 @@ Config::~Config()
 }
 
 //Fills a buffer, returns its size
-uint Config::Serialize(char* buffer)
+uint Config::Serialize(char** buffer)
 {
 	size_t size = json_serialization_size(root_value);
-	buffer = new char[size];
-	json_serialize_to_buffer(root_value, buffer, size);
+	*buffer = new char[size];
+	json_serialize_to_buffer(root_value, *buffer, size);
 	return size;
 }
 
@@ -66,8 +66,9 @@ Config Config::SetNode(const char* name)
 		list_modules[i]->Save(json_object_get_object(root, list_modules[i]->name.c_str()));
 	*/
 	 
-	Config config(true);
-	json_object_set_value(node, name, config.root_value);
+	Config config(false);
+	json_object_set_value(node, name, json_value_init_object());
+	config.node = json_object_get_object(node, name);
 	return config;
 }
 

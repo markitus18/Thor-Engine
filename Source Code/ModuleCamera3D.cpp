@@ -120,26 +120,6 @@ C_Camera * ModuleCamera3D::GetCamera() const
 	return camera;
 }
 
-void ModuleCamera3D::Save(JSON_Object* root)
-{
-	float3 position = camera->frustum.Pos();
-	json_object_set_number(root, "PositionX", position.x);
-	json_object_set_number(root, "PositionY", position.y);
-	json_object_set_number(root, "PositionZ", position.z);
-}
-
-void ModuleCamera3D::Load(JSON_Object* root)
-{
-	float3 position = float3::zero;
-	position.x = json_value_get_number(json_object_get_value(root, ("PositionX")));
-	position.y = json_value_get_number(json_object_get_value(root, ("PositionY")));
-	position.z = json_value_get_number(json_object_get_value(root, ("PositionZ")));
-
-	camera->frustum.SetPos(position);
-	Look(float3(0, 0, 0));
-	camera->update_projection = true;
-}
-
 void ModuleCamera3D::SaveConfig(Config& config)
 {
 	float3 position = camera->frustum.Pos();
@@ -151,9 +131,9 @@ void ModuleCamera3D::SaveConfig(Config& config)
 void ModuleCamera3D::LoadConfig(Config& config)
 {
 	float3 position = float3::zero;
-	position.x = config.GetNumber("PositionX");
-	position.y = config.GetNumber("PositionY");
-	position.z = config.GetNumber("PositionZ");
+	position.x = config.GetNumber("PositionX", 20);
+	position.y = config.GetNumber("PositionY", 20);
+	position.z = config.GetNumber("PositionZ", 20);
 
 	camera->frustum.SetPos(position);
 	Look(float3(0, 0, 0));

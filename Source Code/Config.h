@@ -16,6 +16,30 @@ typedef struct json_value_t  JSON_Value;
 struct json_array_t;
 typedef struct json_array_t  JSON_Array;
 
+class Config_Array
+{
+public:
+	//Contructor only to be called from Config, it would cause mem leak
+	Config_Array();
+	Config_Array(JSON_Array* arr);
+
+	//Append attributes ------------
+	void AddNumber(int number);
+	void AddString(char* string);
+	void AddBool(bool boolean);
+	//Endof append attributes-------
+
+	//Get attributes ---------------
+	double GetNumber(int index, double default);
+	const char* GetString(int index, const char* default);
+	bool GetBool(int index, bool default);
+	//Endof Get attributes----------
+
+private:
+	JSON_Array* arr;
+	uint size;
+};
+
 class Config
 {
 	///Brief parson explanation
@@ -55,27 +79,5 @@ private:
 	JSON_Object* node = nullptr;
 };
 
-class Config_Array
-{
-public:
-	//Contructor only to be called from Config, it would cause mem leak
-	Config_Array();
-	Config_Array(JSON_Array* arr);
 
-	//Append attributes ------------
-	void AddNumber(int number);
-	void AddString(char* string);
-	void AddBool(bool boolean);
-	//Endof append attributes-------
-
-	//Get attributes ---------------
-	double GetNumber(int index, double default);
-	const char* GetString(int index, const char* default);
-	bool GetBool(int index, bool default);
-	//Endof Get attributes----------
-
-private:
-	JSON_Array* arr;
-	uint size;
-};
 #endif //__CONFIG_H__

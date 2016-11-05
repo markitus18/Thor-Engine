@@ -26,6 +26,7 @@ class Config
 	-	Append attributes to object: json_object_set_[type of attribute]. Attribute types are bool, number, string and value (any attribute or an object)
 	-	Get values from a node: same function as append, but with "get"
 	*/
+
 public:
 	Config(bool alloc = true);	//Contructor used for data append
 	Config(const char* buffer); //Constructor used for data read
@@ -34,17 +35,18 @@ public:
 	uint Serialize(char** buffer);	//Returns a filled buffer
 	bool NodeExists();
 
-	//Append attributes ------------
+	//Append attributes -----------
 	void SetNumber(const char* name, double data);
 	void SetString(const char* name, char* data);
 	void SetBool(const char* name, bool data);
+	Config_Array SetArray(const char* name);
 	Config SetNode(const char* name);
 	//Endof append attributes------
 
 	//Get attributes --------------
-	int GetNumber(const char* name) const;
-	std::string GetString(const char* name) const;
-	bool GetBool(const char* name) const;
+	double GetNumber(const char* name, double default) const;
+	std::string GetString(const char* name, const char* default) const;
+	bool GetBool(const char* name, bool default) const;
 	Config GetNode(const char* name) const;
 	//Endof Get attributes---------
 	
@@ -53,4 +55,27 @@ private:
 	JSON_Object* node = nullptr;
 };
 
+class Config_Array
+{
+public:
+	//Contructor only to be called from Config, it would cause mem leak
+	Config_Array();
+	Config_Array(JSON_Array* arr);
+
+	//Append attributes ------------
+	void AddNumber(int number);
+	void AddString(char* string);
+	void AddBool(bool boolean);
+	//Endof append attributes-------
+
+	//Get attributes ---------------
+	double GetNumber(int index, double default);
+	const char* GetString(int index, const char* default);
+	bool GetBool(int index, bool default);
+	//Endof Get attributes----------
+
+private:
+	JSON_Array* arr;
+	uint size;
+};
 #endif //__CONFIG_H__

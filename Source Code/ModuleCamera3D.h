@@ -32,11 +32,8 @@ public:
 
 	C_Camera* GetCamera() const;
 
-	void Save(JSON_Object* root);
-	void Load(JSON_Object* root);
-
-	void Save(Config& root);
-	void Load(Config& root);
+	void SaveConfig(Config& root);
+	void LoadConfig(Config& root);
 
 private:
 

@@ -80,16 +80,10 @@ public:
 		return true; 
 	}
 
-	virtual void Save(JSON_Object* root)
+	virtual void SaveConfig(Config& root)
 	{}
 
-	virtual void Load(JSON_Object* root)
-	{}
-
-	virtual void Save(Config& root)
-	{}
-
-	virtual void Load(Config& root)
+	virtual void LoadConfig(Config& root)
 	{}
 };
 

@@ -140,7 +140,7 @@ void ModuleCamera3D::Load(JSON_Object* root)
 	camera->update_projection = true;
 }
 
-void ModuleCamera3D::Save(Config& config)
+void ModuleCamera3D::SaveConfig(Config& config)
 {
 	float3 position = camera->frustum.Pos();
 	config.SetNumber("PositionX", position.x);
@@ -148,7 +148,7 @@ void ModuleCamera3D::Save(Config& config)
 	config.SetNumber("PositionZ", position.z);
 }
 
-void ModuleCamera3D::Load(Config& config)
+void ModuleCamera3D::LoadConfig(Config& config)
 {
 	float3 position = float3::zero;
 	position.x = config.GetNumber("PositionX");

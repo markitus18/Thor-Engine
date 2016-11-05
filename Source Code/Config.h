@@ -4,6 +4,8 @@
 #include "parson\parson.h"
 #include <string>
 #include "Globals.h"
+#include <vector>
+#include "MathGeoLib\src\MathGeoLib.h"
 
 //http://kgabis.github.io/parson/
 
@@ -16,30 +18,7 @@ typedef struct json_value_t  JSON_Value;
 struct json_array_t;
 typedef struct json_array_t  JSON_Array;
 
-class Config_Array
-{
-public:
-	//Contructor only to be called from Config, it would cause mem leak
-	Config_Array();
-	Config_Array(JSON_Array* arr);
-
-	//Append attributes ------------
-	void AddNumber(int number);
-	void AddString(char* string);
-	void AddBool(bool boolean);
-	//Endof append attributes-------
-
-	//Get attributes ---------------
-	double GetNumber(int index, double default);
-	const char* GetString(int index, const char* default);
-	bool GetBool(int index, bool default);
-	//Endof Get attributes----------
-
-private:
-	JSON_Array* arr;
-	uint size;
-};
-
+class Config_Array;
 class Config
 {
 	///Brief parson explanation
@@ -52,25 +31,27 @@ class Config
 	*/
 
 public:
-	Config(bool alloc = true);	//Contructor used for data append
-	Config(const char* buffer); //Constructor used for data read
-	~Config();					//Free data if initialized
+	Config();						//Contructor used for new files
+	Config(const char* buffer);		//Constructor used for data read
+	Config(JSON_Object* obj);		//Constructor used for node append
+	~Config();						//Free data if initialized
 
 	uint Serialize(char** buffer);	//Returns a filled buffer
 	bool NodeExists();
 
 	//Append attributes -----------
 	void SetNumber(const char* name, double data);
-	void SetString(const char* name, char* data);
+	void SetString(const char* name, const char* data);
 	void SetBool(const char* name, bool data);
 	Config_Array SetArray(const char* name);
 	Config SetNode(const char* name);
 	//Endof append attributes------
 
 	//Get attributes --------------
-	double GetNumber(const char* name, double default) const;
-	std::string GetString(const char* name, const char* default) const;
-	bool GetBool(const char* name, bool default) const;
+	double GetNumber(const char* name, double default = 0) const;
+	std::string GetString(const char* name, const char* default = "") const;
+	bool GetBool(const char* name, bool default = true) const;
+	Config_Array GetArray(const char* name);
 	Config GetNode(const char* name) const;
 	//Endof Get attributes---------
 	
@@ -79,5 +60,35 @@ private:
 	JSON_Object* node = nullptr;
 };
 
+class Config_Array
+{
+public:
+	//Contructor only to be called from Config, it would cause mem leak
+	Config_Array();
+	Config_Array(JSON_Array* arr);
+
+	//Append attributes ------------
+	void AddNumber(int number);
+	void AddString(char* string);
+	void AddBool(bool boolean);
+	void AddFloat3(const float3& data);
+	void AddQuat(const Quat& data);
+	Config AddNode();
+	//Endof append attributes-------
+
+	//Get attributes ---------------
+	double GetNumber(int index, double default = 0) const;
+	const char* GetString(int index, const char* default = "") const;
+	bool GetBool(int index, bool default = true) const;
+	float3 GetFloat3(int index, float3 default = float3::zero) const; //Index is based on float3 not on single data!
+	void FillVectorNumber(std::vector<double>& vector) const;
+	void FillVectorString(std::vector<char*>& vector) const;
+	void FillVectorBoool(std::vector<bool>& vector) const;
+	//Endof Get attributes----------
+
+private:
+	JSON_Array* arr;
+	uint size;
+};
 
 #endif //__CONFIG_H__

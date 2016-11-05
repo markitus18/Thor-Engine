@@ -15,6 +15,7 @@
 struct PhysBody3D;
 struct PhysMotor3D;
 class GameObject;
+class Config;
 
 class ModuleScene : public Module
 {
@@ -31,10 +32,15 @@ public:
 
 	GameObject* GetRoot();
 	const GameObject* GetRoot() const;
+
+	void SaveScene(Config& node) const;
+	void LoadScene(Config& node);
+
 private:
 	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
 	void DrawAllGO(GameObject* gameObject);
-
+	void GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const;
+	//void SaveGameObject();
 public:
 	bool reset = false;
 	Timer timer;

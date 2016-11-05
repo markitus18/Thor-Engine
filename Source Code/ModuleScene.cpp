@@ -14,6 +14,7 @@
 //#include <stdio.h>
 #include "C_Camera.h"
 #include "Intersections.h"
+#include "Config.h"
 
 #include <windows.h>
 #include <shobjidl.h> 
@@ -65,6 +66,16 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	{
+		App->SaveScene();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	{
+		App->LoadScene();
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 	{
 #pragma region WindowTest
@@ -175,6 +186,44 @@ const GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
+void ModuleScene::SaveScene(Config& node) const
+{
+	//Store all gameObjects in a vector
+	std::vector<GameObject*> gameObjects;
+	GettAllGameObjects(gameObjects, root);
+
+	Config_Array arr = node.SetArray("GameObjects");
+	for (uint i = 0; i < gameObjects.size(); i++)
+	{
+		if (gameObjects[i]->name != "root")
+		{
+			//Single GameObject save
+			Config gameObject_node = arr.AddNode();
+			gameObject_node.SetNumber("UID", gameObjects[i]->uid);
+			gameObject_node.SetNumber("ParentUID", gameObjects[i]->parent->uid);
+			gameObject_node.SetString("Name", gameObjects[i]->name.c_str());
+
+			C_Transform* transform = gameObjects[i]->GetComponent<C_Transform>();
+			//Translation part
+			Config_Array transform_node = gameObject_node.SetArray("Translation");
+			transform_node.AddFloat3(transform->GetPosition());
+
+			//Rotation part
+			Config_Array rotation_node = gameObject_node.SetArray("Rotation");
+			rotation_node.AddQuat(transform->GetQuatRotation());
+
+			//Scale part
+			Config_Array scale_node = gameObject_node.SetArray("Scale");
+			scale_node.AddFloat3(transform->GetScale());
+		}
+	}
+}
+
+void ModuleScene::LoadScene(Config& node)
+{
+
+}
+
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)
 {
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
@@ -198,5 +247,14 @@ void ModuleScene::DrawAllGO(GameObject* gameObject)
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
 		DrawAllGO(gameObject->childs[i]);
+	}
+}
+
+void ModuleScene::GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const
+{
+	vector.push_back(gameObject);
+	for (uint i = 0; i < gameObject->childs.size(); i++)
+	{
+		GettAllGameObjects(vector, gameObject->childs[i]);
 	}
 }

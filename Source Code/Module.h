@@ -80,10 +80,16 @@ public:
 		return true; 
 	}
 
-	virtual void SaveConfig(Config& root)
+	virtual void SaveConfig(Config& root) const
 	{}
 
 	virtual void LoadConfig(Config& root)
+	{}
+
+	virtual void SaveScene(Config& root) const
+	{}
+
+	virtual void LoadScene(Config& root)
 	{}
 };
 

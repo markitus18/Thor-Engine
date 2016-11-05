@@ -24,7 +24,7 @@
 #pragma comment( lib, "Devil/libx86/ILU.lib" )
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
-
+#include "MathGeoLib\src\MathGeoLib.h"
 
 ModuleImport::ModuleImport(Application* app, bool start_enabled) : Module("Importer", start_enabled)
 {}
@@ -142,6 +142,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	//-----------------------------------------------
 
 	GameObject* gameObject = new GameObject(parent, name.c_str(), pos, scale, rot);
+	gameObject->uid = random.Int();
 
 	// Loading node meshes ----------------------------------------
 	for (uint i = 0; i < node->mNumMeshes; i++)
@@ -155,6 +156,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			if (name == "")
 				name = "No name";
 			child = new GameObject(gameObject, name.c_str());
+			child->uid = random.Int();
 		}
 		else
 		{

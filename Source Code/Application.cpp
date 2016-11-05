@@ -118,6 +118,10 @@ void Application::FinishUpdate()
 
 	App->moduleEditor->UpdateFPSData(last_FPS, frameTimer.Read());
 
+	if (save_scene)
+		SaveSceneNow("Scene");
+	if (load_scene)
+		LoadSceneNow("Scene");
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -184,6 +188,16 @@ void Application::SetTitleName(const char* new_name)
 	window->SetTitle(new_name);
 }
 
+void Application::SaveScene()
+{
+	save_scene = true;
+}
+
+void Application::LoadScene()
+{
+	load_scene = true;
+}
+
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
@@ -193,7 +207,7 @@ void Application::SaveSettingsNow(const char* full_path)
 {
 	LOG("Saving Config State");
 
-	Config config(true);
+	Config config;
 	Config node = config.SetNode("EditorState");
 
 	for (uint i = 0; i < list_modules.size(); i++)
@@ -225,4 +239,28 @@ void Application::LoadSettingsNow(const char* full_path)
 			}
 		}
 	}
+}
+
+void Application::SaveSceneNow(const char* path)
+{
+	Config config;
+	Config node = config.SetNode("Scene");
+
+	for (uint i = 0; i < list_modules.size(); i++)
+	{
+		list_modules[i]->SaveScene(node.SetNode(list_modules[i]->name.c_str()));
+	}
+
+	char* buffer = nullptr;
+	uint size = config.Serialize(&buffer);
+
+	fileSystem->Save(path, buffer, size);
+	RELEASE_ARRAY(buffer);
+
+	save_scene = false;
+}
+
+void Application::LoadSceneNow(const char* path)
+{
+	load_scene = false;
 }

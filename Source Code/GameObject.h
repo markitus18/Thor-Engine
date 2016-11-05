@@ -76,6 +76,7 @@ public:
 	std::vector<GameObject*>	childs;
 	bool						active = true;
 
+	unsigned long long			uid = 0;
 private:
 	bool						flipped_normals = false;
 

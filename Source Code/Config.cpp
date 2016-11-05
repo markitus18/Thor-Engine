@@ -1,13 +1,10 @@
 #include "Config.h"
 
 //Contructor used for data append
-Config::Config(bool alloc)
+Config::Config()
 {
-	if (alloc)
-	{
-		root_value = json_value_init_object();
-		node = json_value_get_object(root_value);
-	}
+	root_value = json_value_init_object();
+	node = json_value_get_object(root_value);
 }
 
 //Constructor used for data read
@@ -18,6 +15,11 @@ Config::Config(const char* buffer)
 	{
 		node = json_value_get_object(root_value);
 	}
+}
+
+Config::Config(JSON_Object* obj) : node(obj)
+{
+
 }
 
 Config::~Config()
@@ -31,9 +33,9 @@ Config::~Config()
 //Fills a buffer, returns its size
 uint Config::Serialize(char** buffer)
 {
-	size_t size = json_serialization_size(root_value);
+	size_t size = json_serialization_size_pretty(root_value);
 	*buffer = new char[size];
-	json_serialize_to_buffer(root_value, *buffer, size);
+	json_serialize_to_buffer_pretty(root_value, *buffer, size);
 	return size;
 }
 
@@ -48,7 +50,7 @@ void Config::SetNumber(const char* name, double data)
 	json_object_set_number(node, name, data);
 }
 
-void Config::SetString(const char* name, char* data)
+void Config::SetString(const char* name, const char* data)
 {
 	json_object_set_string(node, name, data);
 }
@@ -60,23 +62,14 @@ void Config::SetBool(const char* name, bool data)
 
 Config_Array Config::SetArray(const char* name)
 {
-	//TODO init array, add it, and return it
-	//JSON_Vjson_value_init_array();
-	return Config_Array();
+	json_object_set_value(node, name, json_value_init_array());
+	return Config_Array(json_object_get_array(node, name));
 }
 
 Config Config::SetNode(const char* name)
 {
-	///	Code reference:
-	/*
-		json_object_set_value(root, list_modules[i]->name.c_str(), json_value_init_object());
-		list_modules[i]->Save(json_object_get_object(root, list_modules[i]->name.c_str()));
-	*/
-	 
-	Config config(false);
 	json_object_set_value(node, name, json_value_init_object());
-	config.node = json_object_get_object(node, name);
-	return config;
+	return Config(json_object_get_object(node, name));
 }
 
 //Get attributes --------------
@@ -101,11 +94,15 @@ bool Config::GetBool(const char* name, bool default) const
 	return default;
 }
 
+Config_Array Config::GetArray(const char* name)
+{
+	if (json_object_has_value_of_type(node, name, JSONArray))
+		return Config_Array(json_object_get_array(node, name));
+}
+
 Config Config::GetNode(const char* name) const
 {
-	Config config(false);
-	config.node = json_object_get_object(node, name);
-	return config;
+	return Config(json_object_get_object(node, name));
 }
 //Endof Get attributes---------
 
@@ -137,10 +134,34 @@ void Config_Array::AddBool(bool boolean)
 	json_array_append_boolean(arr, boolean);
 	size++;
 }
+
+void Config_Array::AddFloat3(const float3& data)
+{
+	json_array_append_number(arr, data.x);
+	json_array_append_number(arr, data.y);
+	json_array_append_number(arr, data.z);
+	size += 3;
+}
+
+void Config_Array::AddQuat(const Quat& data)
+{
+	json_array_append_number(arr, data.x);
+	json_array_append_number(arr, data.y);
+	json_array_append_number(arr, data.z);
+	json_array_append_number(arr, data.w);
+	size += 4;
+}
+
+Config Config_Array::AddNode()
+{
+	json_array_append_value(arr, json_value_init_object());
+	size++;
+	return Config(json_array_get_object(arr, size - 1));
+}
 //Endof append attributes-------
 
 //Get attributes ---------------
-double Config_Array::GetNumber(int index, double default)
+double Config_Array::GetNumber(int index, double default) const
 {
 	if (index < size)
 		return json_array_get_number(arr, index);
@@ -151,25 +172,59 @@ double Config_Array::GetNumber(int index, double default)
 	}
 }
 
-const char* Config_Array::GetString(int index, const char* default)
+const char* Config_Array::GetString(int index, const char* default) const
 {
 	if (index < size)
 		return json_array_get_string(arr, index);
 	else
 	{
 		LOG("[Warning] JSON Array: Index out of size");
-		return nullptr;
+		return default;
 	}
 }
 
-bool Config_Array::GetBool(int index, bool default)
+float3 Config_Array::GetFloat3(int index, float3 default) const
+{
+	index *= 3;
+	float3 ret = default;
+	ret.x = GetNumber(index, ret.x);
+	ret.y = GetNumber(index, ret.y);
+	ret.z = GetNumber(index, ret.z);
+	return ret;
+}
+
+bool Config_Array::GetBool(int index, bool default) const
 {
 	if (index < size)
 		return json_array_get_boolean(arr, index);
 	else
 	{
 		LOG("[Warning] JSON Array: Index out of size");
-		return false;
+		return default;
+	}
+}
+
+void Config_Array::FillVectorNumber(std::vector<double>& vector) const
+{
+	for (uint i = 0; i < size; i++)
+	{
+		vector.push_back(GetNumber(i));
+	}
+}
+
+void Config_Array::FillVectorString(std::vector<char*>& vector) const
+{
+	for (uint i = 0; i < size; i++)
+	{
+		vector.push_back((char*)GetString(i));
+	}
+}
+
+void Config_Array::FillVectorBoool(std::vector<bool>& vector) const
+{
+	for (uint i = 0; i < size; i++)
+	{
+		vector.push_back(GetBool(i));
 	}
 }
 //Endof Get attributes----------

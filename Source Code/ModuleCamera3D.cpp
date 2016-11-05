@@ -120,7 +120,7 @@ C_Camera * ModuleCamera3D::GetCamera() const
 	return camera;
 }
 
-void ModuleCamera3D::SaveConfig(Config& config)
+void ModuleCamera3D::SaveConfig(Config& config) const
 {
 	float3 position = camera->frustum.Pos();
 	config.SetNumber("PositionX", position.x);
@@ -140,10 +140,23 @@ void ModuleCamera3D::LoadConfig(Config& config)
 	camera->update_projection = true;
 }
 
+void ModuleCamera3D::SaveScene(Config& root) const
+{
+	float3 position = camera->frustum.Pos();
+	Config_Array pos = root.SetArray("Position");
+	pos.AddFloat3(position);
+
+	Config_Array ref = root.SetArray("Reference");
+	ref.AddFloat3(reference);
+}
+
+void ModuleCamera3D::LoadScene(Config& root)
+{
+
+}
+
 void ModuleCamera3D::Move_Keyboard(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_REPEAT)
-		Zoom(1.0f);
 }
 
 void ModuleCamera3D::Move_Mouse()

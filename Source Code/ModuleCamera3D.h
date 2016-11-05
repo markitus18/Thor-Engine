@@ -32,8 +32,11 @@ public:
 
 	C_Camera* GetCamera() const;
 
-	void SaveConfig(Config& root);
+	void SaveConfig(Config& root) const;
 	void LoadConfig(Config& root);
+
+	void SaveScene(Config& root) const;
+	void LoadScene(Config& root);
 
 private:
 

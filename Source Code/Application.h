@@ -58,6 +58,9 @@ private:
 	std::string title;
 	std::string organization;
 
+	bool save_scene = false;
+	bool load_scene = false;
+
 public:
 
 	Application();
@@ -76,6 +79,9 @@ public:
 
 	void SetTitleName(const char* new_name);
 
+	void SaveScene();
+	void LoadScene();
+
 private:
 
 	void AddModule(Module* mod);
@@ -84,6 +90,9 @@ private:
 
 	void SaveSettingsNow(const char*);
 	void LoadSettingsNow(const char*);
+
+	void SaveSceneNow(const char*);
+	void LoadSceneNow(const char*);
 };
 
 extern Application* App;

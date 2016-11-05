@@ -2,6 +2,7 @@
 #define __MODULE_IMPORT_H__
 
 #include "Module.h"
+#include "MathGeoLib\src\Algorithm\Random\LCG.h"
 
 struct aiScene;
 struct aiNode;
@@ -30,6 +31,7 @@ public:
 private:
 	bool fbx_loaded = false;
 	uint material_count = 0;
+	LCG random;
 
 };
 

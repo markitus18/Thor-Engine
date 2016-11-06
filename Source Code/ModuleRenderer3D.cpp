@@ -628,9 +628,9 @@ void ModuleRenderer3D::DrawAllScene()
 	App->moduleEditor->ReadTimer(box_draw_timer);
 }
 
-void ModuleRenderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected)
+void ModuleRenderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
 {
-	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected));
+	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected, flippedNormals));
 }
 
 void ModuleRenderer3D::DrawAllMeshes()
@@ -689,7 +689,7 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 	{
 		if (mesh.mesh->num_normals > 0)
 		{
-			if (mesh.mesh->flipped_normals)
+			if (mesh.flippedNormals)
 			{
 				glFrontFace(GL_CW);
 			}

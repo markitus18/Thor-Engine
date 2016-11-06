@@ -101,12 +101,12 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 	
 	//Skipp all dummy modules. Assimp loads this fbx nodes to stack all transformations
-	std::string name = node->mName.C_Str();	
+	std::string node_name = node->mName.C_Str();	
 	bool dummyFound = true;
 	while (dummyFound)
 	{
 		//All dummy modules have one children (next dummy module or last module containing the mesh)
-		if (name.find("$AssimpFbx$") != std::string::npos && node->mNumChildren == 1)
+		if (node_name.find("$AssimpFbx$") != std::string::npos && node->mNumChildren == 1)
 		{
 			//Dummy module have only one child node, so we use that one as our next GameObject
 			node = node->mChildren[0];
@@ -117,7 +117,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
 			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
-			name = node->mName.C_Str();
+			node_name = node->mName.C_Str();
 
 			//if we find a dummy node we "change" our current node into the dummy one and search
 			//for other dummy nodes inside that one.
@@ -128,20 +128,20 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	}
 	
 	//Cutting path into file name --------------------
-	if (name == "RootNode")
+	if (node_name == "RootNode")
 	{
-		name = path;
+		node_name = path;
 		uint slashPos;
-		if ((slashPos = name.find_last_of("/")) != std::string::npos)
-			name = name.substr(slashPos + 1, name.size() - slashPos);
+		if ((slashPos = node_name.find_last_of("/")) != std::string::npos)
+			node_name = node_name.substr(slashPos + 1, node_name.size() - slashPos);
 
 		uint pointPos;
-		if ((pointPos = name.find_first_of(".")) != std::string::npos)
-			name = name.substr(0, name.size() - (name.size() - pointPos));
+		if ((pointPos = node_name.find_first_of(".")) != std::string::npos)
+			node_name = node_name.substr(0, node_name.size() - (node_name.size() - pointPos));
 	}
 	//-----------------------------------------------
 
-	GameObject* gameObject = new GameObject(parent, name.c_str(), pos, scale, rot);
+	GameObject* gameObject = new GameObject(parent, node_name.c_str(), pos, scale, rot);
 	gameObject->uid = random.Int();
 
 	// Loading node meshes ----------------------------------------
@@ -152,10 +152,10 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 		if (node->mNumMeshes > 1)
 		{
-			name = newMesh->mName.C_Str();
-			if (name == "")
-				name = "No name";
-			child = new GameObject(gameObject, name.c_str());
+			node_name = newMesh->mName.C_Str();
+			if (node_name == "")
+				node_name = "No name";
+			child = new GameObject(gameObject, node_name.c_str());
 			child->uid = random.Int();
 		}
 		else
@@ -163,7 +163,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			child = gameObject;
 		}
 
-		C_Mesh* mesh = App->moduleMeshes->LoadMesh(newMesh);
+		C_Mesh* mesh = App->moduleMeshes->LoadMesh(newMesh, node_name.c_str());
 		child->AddComponent(mesh);
 
 

@@ -1,4 +1,6 @@
 #include "ModuleMeshes.h"
+#include "Application.h"
+
 #include "C_Mesh.h"
 
 #include "Assimp/include/cimport.h"
@@ -7,6 +9,8 @@
 #include "Assimp/include/cfileio.h"
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#include "ModuleFileSystem.h"
 
 ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module("Meshes", start_enabled)
 {
@@ -28,7 +32,7 @@ bool ModuleMeshes::CleanUp()
 	return true;
 }
 
-C_Mesh* ModuleMeshes::LoadMesh(const aiMesh* from)
+C_Mesh* ModuleMeshes::LoadMesh(const aiMesh* from, const char* file)
 {
 	C_Mesh* mesh = new C_Mesh;
 
@@ -47,7 +51,7 @@ C_Mesh* ModuleMeshes::LoadMesh(const aiMesh* from)
 		{
 			if (from->mFaces[i].mNumIndices != 3)
 			{
-				LOG("WARNING, geometry face with != 3 indices!");
+				LOG("[warning], geometry face with != 3 indices!");
 			}
 			else
 			{
@@ -81,6 +85,8 @@ C_Mesh* ModuleMeshes::LoadMesh(const aiMesh* from)
 	mesh->CreateAABB();
 	mesh->LoadBuffers();
 
+	SaveMesh(*mesh, file);
+
 	return mesh;
 }
 
@@ -89,3 +95,43 @@ void ModuleMeshes::LoadBuffers(C_Mesh* mesh)
 
 }
 
+void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
+{
+	// amount of indices / vertices / normals / texture_coords
+	uint ranges[4] = { mesh.num_indices, mesh.num_vertices, mesh.num_normals, mesh.num_tex_coords };
+
+	uint size = sizeof(ranges) + (sizeof(uint) * mesh.num_indices) + (sizeof(float) * mesh.num_vertices * 3) + (sizeof(float) * mesh.num_normals * 3) + (sizeof(float) * mesh.num_tex_coords * 2);
+
+	// Allocate buffer size
+	char* data = new char[size];
+	char* cursor = data;
+
+	// First store ranges
+	uint bytes = sizeof(ranges);
+	memcpy(cursor, ranges, bytes);
+	cursor += bytes;
+
+	// Store indices
+	bytes = sizeof(uint) * mesh.num_indices;
+	memcpy(cursor, mesh.indices, bytes);
+	cursor += bytes;
+
+	//Store vertices
+	bytes = sizeof(float) * mesh.num_vertices * 3;
+	memcpy(cursor, mesh.vertices, bytes);
+	cursor += bytes;
+
+	//Store normals
+	bytes = sizeof(float) * mesh.num_normals * 3;
+	memcpy(cursor, mesh.normals, bytes);
+	cursor += bytes;
+
+	//Store texture coords
+	bytes = sizeof(float) * mesh.num_tex_coords * 2;
+	memcpy(cursor, mesh.tex_coords, bytes);
+
+	std::string full_path = ("Library/Meshes/");
+	full_path.append(path).append(".mesh");
+
+	App->fileSystem->Save(full_path.c_str(), &data, size);
+}

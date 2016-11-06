@@ -43,12 +43,20 @@ void PanelConsole::Draw(ImGuiWindowFlags flags)
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing
 
-		ImColor col = ImColor(0.6f, 0.6f, 1.0f, 1.0f);
+
 
 		//TODO URGENT: print only items being seen :/
 		for (int i = 0; i < items.Size; i++)
 		{
 			const char* item = items[i];
+
+			ImColor col = ImColor(0.6f, 0.6f, 1.0f, 1.0f);
+			if (strstr(item, "[error]"))
+				col = ImColor(1.0f, 0.4f, 0.4f, 1.0f);
+
+			else if (strstr(item, "[warning]"))
+				col = ImColor(1.0f, 1.0f, 0.4f, 1.0f);
+
 			ImGui::PushStyleColor(0, col);
 			ImGui::TextUnformatted(item);
 			ImGui::PopStyleColor();

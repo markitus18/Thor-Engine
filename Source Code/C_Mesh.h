@@ -54,8 +54,6 @@ public:
 	uint	num_tex_coords = 0;
 	float*	tex_coords = nullptr;
 
-	bool flipped_normals = false;
-
 private:
 
 	AABB	local_bounds;

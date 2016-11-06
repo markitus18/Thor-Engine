@@ -260,7 +260,8 @@ void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameO
 
 void ModuleScene::DrawAllGameObjects(GameObject* gameObject)
 {
-	gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+	if (gameObject->name != "root");
+		gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{

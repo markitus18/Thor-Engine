@@ -60,7 +60,7 @@ void GameObject::Draw(bool shaded, bool wireframe)
 		C_Mesh* mesh = GetComponent<C_Mesh>();
 		if (mesh)
 		{
-			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected());
+			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected(), flipped_normals);
 
 			if (selected || IsParentSelected())
 			{
@@ -95,12 +95,7 @@ void GameObject::Draw(bool shaded, bool wireframe)
 
 void GameObject::OnUpdateTransform()
 {
-	flipped_normals = transform->flipped_normals;
-	C_Mesh* mesh = GetComponent<C_Mesh>();
-	if (mesh)
-	{
-		mesh->flipped_normals = HasFlippedNormals();
-	}
+	flipped_normals = HasFlippedNormals();
 
 	//Updating components
 	for (uint i = 0; i < components.size(); i++)
@@ -124,9 +119,9 @@ bool GameObject::HasFlippedNormals() const
 {
 	if (parent)
 	{
-		return flipped_normals != parent->HasFlippedNormals() ? true : false;
+		return transform->flipped_normals != parent->HasFlippedNormals() ? true : false;
 	}
-	return flipped_normals;
+	return transform->flipped_normals;
 }
 
 bool GameObject::IsParentActive() const
@@ -222,7 +217,6 @@ void GameObject::AddComponent(Component* component)
 				components.push_back(component);
 				component->gameObject = this;
 				component->OnUpdateTransform(GetComponent<C_Transform>()->GetGlobalTransform());
-				((C_Mesh*)component)->flipped_normals = HasFlippedNormals();
 			}
 			break;
 		}

@@ -16,7 +16,13 @@ class ModuleMeshes : public Module
 		bool Init();
 		bool CleanUp();
 
-		C_Mesh* LoadMesh(const aiMesh* mesh);
+		//FBX conversion
+		C_Mesh* LoadMesh(const aiMesh* mesh, const char* file);
+
+		//Own file format conversion
+		void	SaveMesh(const C_Mesh& mesh, const char* path);
+		//C_Mesh* LoadMesh(const char* path);
+
 		void	LoadBuffers(C_Mesh* mesh);
 
 	private:

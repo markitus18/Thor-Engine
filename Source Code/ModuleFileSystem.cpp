@@ -25,6 +25,11 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 	// workaround VS string directory mess
 
+	CreateDir("Library");
+	CreateDir("Library/Meshes");
+	CreateDir("Library/Materials");
+	CreateDir("Library/Textures");
+
 	// Generate IO interfaces
 	CreateAssimpIO();
 }
@@ -101,6 +106,7 @@ bool ModuleFileSystem::IsDirectory(const char* file) const
 
 const char * ModuleFileSystem::GetWriteDir() const
 {
+	//TODO: erase first annoying dot (".")
 	return PHYSFS_getWriteDir();
 }
 
@@ -244,25 +250,25 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 		uint written = (uint)PHYSFS_write(fs_file, (const void*)buffer, 1, size);
 		if (written != size)
 		{
-			LOG("File System error while writing to file %s: %s", file, PHYSFS_getLastError());
+			LOG("[error] File System error while writing to file %s: %s", file, PHYSFS_getLastError());
 		}
 		else
 		{
 			if (append == true)
-				LOG("Added %u data to [%s%s]", size, PHYSFS_getWriteDir(), file)
+				LOG("Added %u data to [%s%s]", size, GetWriteDir(), file)
 			else if (overwrite == true)
-				LOG("File [%s%s] overwritten with %u bytes", PHYSFS_getWriteDir(), file, size)
+				LOG("File [%s%s] overwritten with %u bytes", GetWriteDir(), file, size)
 			else
-				LOG("New file created [%s%s] of %u bytes", PHYSFS_getWriteDir(), file, size);
+				LOG("New file created [%s%s] of %u bytes", GetWriteDir(), file, size);
 
 			ret = written;
 		}
 
 		if (PHYSFS_close(fs_file) == 0)
-			LOG("File System error while closing file %s: %s", file, PHYSFS_getLastError());
+			LOG("[error] File System error while closing file %s: %s", file, PHYSFS_getLastError());
 	}
 	else
-		LOG("File System error while opening file %s: %s", file, PHYSFS_getLastError());
+		LOG("[error] File System error while opening file %s: %s", file, PHYSFS_getLastError());
 
 	return ret;
 }

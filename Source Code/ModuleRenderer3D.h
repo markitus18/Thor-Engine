@@ -12,8 +12,8 @@ class C_Material;
 
 struct RenderMesh
 {
-	RenderMesh(float4x4 trans, C_Mesh* m, C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected) : transform(trans), mesh(m), material(mat), shaded(sh), wireframe(wire), selected(selected),
-		parentSelected(parentSelected)
+	RenderMesh(float4x4 trans, C_Mesh* m, C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected, bool flippedNormals) : transform(trans), mesh(m), material(mat), shaded(sh), wireframe(wire), selected(selected),
+		parentSelected(parentSelected), flippedNormals(flippedNormals)
 	{}
 
 	float4x4 transform;
@@ -23,6 +23,7 @@ struct RenderMesh
 	bool wireframe;
 	bool selected;
 	bool parentSelected;
+	bool flippedNormals;
 
 };
 
@@ -56,7 +57,7 @@ public:
 
 	C_Camera* GetActiveCamera();
 
-	void AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected);
+	void AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
 	void DrawAllMeshes();
 	void DrawMesh(const RenderMesh& mesh);
 

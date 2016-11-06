@@ -12,8 +12,6 @@
 
 #include <list>
 
-struct PhysBody3D;
-struct PhysMotor3D;
 class GameObject;
 class Config;
 
@@ -27,8 +25,6 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
-	
-	void ResetScene();
 
 	GameObject* GetRoot();
 	const GameObject* GetRoot() const;
@@ -38,14 +34,12 @@ public:
 
 private:
 	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
-	void DrawAllGO(GameObject* gameObject);
+	void DrawAllGameObjects(GameObject* gameObject);
 	void GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const;
-	//void SaveGameObject();
+	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
+
 public:
 	bool reset = false;
-	Timer timer;
-	uint tmp_goCount = 1;
-
 	std::string current_scene;
 
 private:
@@ -56,6 +50,8 @@ private:
 	uint cullingTimer_library = 0;
 	uint cullingTimer_normal = 0;
 	uint cullingTimer_optimized = 0;
+
+	LCG random;
 };
 
 #endif //__MODULE_SCENE_H__

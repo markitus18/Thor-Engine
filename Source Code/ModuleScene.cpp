@@ -24,12 +24,16 @@
 ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene", start_enabled)
 {
 	root = new GameObject(nullptr, "root");
+	root->uid = 0;
+
+	current_scene = "Scene";
 
 	//TMP camera for testing purposes
 	camera = new GameObject(root, "Camera");
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
 	camera->CreateComponent(Component::Type::Camera);
 	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
+	camera->uid = random.Int();
 }
 
 ModuleScene::~ModuleScene()
@@ -40,16 +44,12 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
+	bool ret = true;
 
 	cullingTimer_library = App->moduleEditor->AddTimer("Math library culling", "Culling");
 	cullingTimer_normal = App->moduleEditor->AddTimer("Normal culling", "Culling");
 	cullingTimer_optimized = App->moduleEditor->AddTimer("Optimized culling", "Culling");
 
-	bool ret = true;
-
-	timer.Start();
-	timer.Stop();
-	reset = false;
 	return ret;
 }
 
@@ -68,12 +68,12 @@ update_status ModuleScene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
 	{
-		App->SaveScene();
+		App->SaveScene(current_scene.c_str());
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 	{
-		App->LoadScene();
+		App->LoadScene(current_scene.c_str());
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
@@ -152,7 +152,7 @@ update_status ModuleScene::Update(float dt)
 	}
 	else
 	{
-		DrawAllGO(root);
+		DrawAllGameObjects(root);
 	}
 
 	return UPDATE_CONTINUE;
@@ -160,20 +160,7 @@ update_status ModuleScene::Update(float dt)
 
 update_status ModuleScene::PostUpdate(float dt)
 {
-	if (reset)
-	{
-		ResetScene();
-		reset = false;
-	}
 	return UPDATE_CONTINUE;
-}
-
-void ModuleScene::ResetScene()
-{
-	App->camera->Disable();
-	this->Disable();
-	this->Enable();
-	App->camera->Enable();
 }
 
 GameObject* ModuleScene::GetRoot()
@@ -221,7 +208,38 @@ void ModuleScene::SaveScene(Config& node) const
 
 void ModuleScene::LoadScene(Config& node)
 {
+	delete root;
+	root = new GameObject(nullptr, "root");
+	root->uid = 0;
 
+	std::vector<GameObject*> not_parented_GameObjects;
+
+	Config_Array gameObjects_array = node.GetArray("GameObjects");
+	for (uint i = 0; i < gameObjects_array.GetSize(); i++)
+	{
+		//Single GameObject load
+		Config gameObject_node = gameObjects_array.GetNode(i);
+
+		float3 position = gameObject_node.GetArray("Translation").GetFloat3(0);
+		Quat rotation = gameObject_node.GetArray("Rotation").GetQuat(0);
+		float3 scale = gameObject_node.GetArray("Scale").GetFloat3(0);
+
+		//Parent setup
+		GameObject* parent = nullptr;
+		FindGameObjectByID(gameObject_node.GetNumber("ParentUID"), root, &parent);
+
+		GameObject* gameObject = new GameObject(parent, gameObject_node.GetString("Name").c_str(), position, scale, rotation);
+		gameObject->uid = gameObject_node.GetNumber("UID");
+
+		if (parent == nullptr)
+			not_parented_GameObjects.push_back(gameObject);
+	}
+
+	//Security method if any game object is left without a parent
+	for (uint i = 0; i < not_parented_GameObjects.size(); i++)
+	{
+		not_parented_GameObjects[i]->parent = root;
+	}
 }
 
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)
@@ -240,13 +258,13 @@ void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameO
 	}
 }
 
-void ModuleScene::DrawAllGO(GameObject* gameObject)
+void ModuleScene::DrawAllGameObjects(GameObject* gameObject)
 {
 	gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
-		DrawAllGO(gameObject->childs[i]);
+		DrawAllGameObjects(gameObject->childs[i]);
 	}
 }
 
@@ -257,4 +275,22 @@ void ModuleScene::GettAllGameObjects(std::vector<GameObject*>& vector, GameObjec
 	{
 		GettAllGameObjects(vector, gameObject->childs[i]);
 	}
+}
+
+void ModuleScene::FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret)
+{
+	if (gameObject->uid == id)
+	{
+		if (*ret != nullptr)
+			LOG("[error] Conflict: GameObjects with same UID");
+		*ret = gameObject;
+	}
+
+	//Optimization vs security: if ret != nullptr we can stop searching
+	//If we search for all game objects, we can find uid conflicts if any
+	for (uint i = 0; i < gameObject->childs.size(); i++)
+	{
+		FindGameObjectByID(id, gameObject->childs[i], ret);
+	}
+
 }

@@ -756,19 +756,19 @@ void ModuleRenderer3D::DrawAllBox()
 
 	for (uint i = 0; i < aabb.size(); i++)
 	{
-		Gizmos::DrawWireBox(*aabb[i].box, Green);
+		Gizmos::DrawWireBox(*aabb[i].box, aabb[i].color);
 	}
 	aabb.clear();
 
 	for (uint i = 0; i < obb.size(); i++)
 	{
-		Gizmos::DrawWireBox(*obb[i].box, Yellow);
+		Gizmos::DrawWireBox(*obb[i].box, obb[i].color);
 	}
 	obb.clear();
 
 	for (uint i = 0; i < frustum.size(); i++)
 	{
-		Gizmos::DrawWireBox(*frustum[i].box, Blue);
+		Gizmos::DrawWireBox(*frustum[i].box, frustum[i].color);
 	}
 	frustum.clear();
 

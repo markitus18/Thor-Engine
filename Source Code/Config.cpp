@@ -98,6 +98,13 @@ Config_Array Config::GetArray(const char* name)
 {
 	if (json_object_has_value_of_type(node, name, JSONArray))
 		return Config_Array(json_object_get_array(node, name));
+	else
+	{
+		//Careful, if this else is entered we cause a memory leak, but at least
+		//program doesn't break and we can see the error
+		LOG("[error] Array '%s' not found when loading scene", name);
+		return Config_Array();
+	}
 }
 
 Config Config::GetNode(const char* name) const
@@ -161,7 +168,7 @@ Config Config_Array::AddNode()
 //Endof append attributes-------
 
 //Get attributes ---------------
-double Config_Array::GetNumber(int index, double default) const
+double Config_Array::GetNumber(uint index, double default) const
 {
 	if (index < size)
 		return json_array_get_number(arr, index);
@@ -172,7 +179,7 @@ double Config_Array::GetNumber(int index, double default) const
 	}
 }
 
-const char* Config_Array::GetString(int index, const char* default) const
+const char* Config_Array::GetString(uint index, const char* default) const
 {
 	if (index < size)
 		return json_array_get_string(arr, index);
@@ -183,17 +190,32 @@ const char* Config_Array::GetString(int index, const char* default) const
 	}
 }
 
-float3 Config_Array::GetFloat3(int index, float3 default) const
+float3 Config_Array::GetFloat3(uint index, float3 default) const
 {
 	index *= 3;
 	float3 ret = default;
-	ret.x = GetNumber(index, ret.x);
-	ret.y = GetNumber(index, ret.y);
-	ret.z = GetNumber(index, ret.z);
+
+	ret.x = GetNumber(index + 0, ret.x);
+	ret.y = GetNumber(index + 1, ret.y);
+	ret.z = GetNumber(index + 2, ret.z);
+
 	return ret;
 }
 
-bool Config_Array::GetBool(int index, bool default) const
+Quat Config_Array::GetQuat(uint index, Quat  default) const
+{
+	index *= 4;
+	Quat ret = default;
+
+	ret.x = GetNumber(index + 0, ret.x);
+	ret.y = GetNumber(index + 1, ret.y);
+	ret.z = GetNumber(index + 2, ret.z);
+	ret.w = GetNumber(index + 3, ret.w);
+
+	return ret;
+}
+
+bool Config_Array::GetBool(uint index, bool default) const
 {
 	if (index < size)
 		return json_array_get_boolean(arr, index);
@@ -226,5 +248,15 @@ void Config_Array::FillVectorBoool(std::vector<bool>& vector) const
 	{
 		vector.push_back(GetBool(i));
 	}
+}
+
+Config Config_Array::GetNode(uint index) const
+{
+	return Config(json_array_get_object(arr, index));
+}
+
+uint Config_Array::GetSize() const
+{
+	return size;
 }
 //Endof Get attributes----------

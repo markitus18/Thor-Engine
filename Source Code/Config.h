@@ -77,13 +77,16 @@ public:
 	//Endof append attributes-------
 
 	//Get attributes ---------------
-	double GetNumber(int index, double default = 0) const;
-	const char* GetString(int index, const char* default = "") const;
-	bool GetBool(int index, bool default = true) const;
-	float3 GetFloat3(int index, float3 default = float3::zero) const; //Index is based on float3 not on single data!
+	double GetNumber(uint index, double default = 0) const;
+	const char* GetString(uint index, const char* default = "") const;
+	bool GetBool(uint index, bool default = true) const;
+	float3 GetFloat3(uint index, float3 default = float3::zero) const; //Index is based on float3 not on single data!
+	Quat GetQuat(uint index, Quat  default = Quat::identity) const;
 	void FillVectorNumber(std::vector<double>& vector) const;
 	void FillVectorString(std::vector<char*>& vector) const;
 	void FillVectorBoool(std::vector<bool>& vector) const;
+	Config GetNode(uint index) const;
+	uint GetSize() const;
 	//Endof Get attributes----------
 
 private:

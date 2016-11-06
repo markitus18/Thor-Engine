@@ -61,6 +61,9 @@ private:
 	bool save_scene = false;
 	bool load_scene = false;
 
+	std::string scene_to_save;
+	std::string scene_to_load;
+
 public:
 
 	Application();
@@ -79,8 +82,8 @@ public:
 
 	void SetTitleName(const char* new_name);
 
-	void SaveScene();
-	void LoadScene();
+	void SaveScene(const char* file);
+	void LoadScene(const char* file);
 
 private:
 
@@ -91,8 +94,8 @@ private:
 	void SaveSettingsNow(const char*);
 	void LoadSettingsNow(const char*);
 
-	void SaveSceneNow(const char*);
-	void LoadSceneNow(const char*);
+	void SaveSceneNow();
+	void LoadSceneNow();
 };
 
 extern Application* App;

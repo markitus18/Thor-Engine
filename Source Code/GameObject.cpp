@@ -68,6 +68,15 @@ void GameObject::Draw(bool shaded, bool wireframe)
 				App->renderer3D->AddOBB(mesh->GetGlobalOBB(), Yellow);
 			}
 		}
+		else
+		{
+			defaultAABB.SetNegativeInfinity();
+			defaultAABB.Enclose(transform->GetGlobalPosition() - float3(1, 1, 1), transform->GetGlobalPosition() + float3(1, 1, 1));
+			if (selected || IsParentSelected())
+				App->renderer3D->AddAABB(defaultAABB, Red);
+			else
+				App->renderer3D->AddAABB(defaultAABB, Pink);
+		}
 
 		C_Camera* camera = GetComponent<C_Camera>();
 		if (camera)

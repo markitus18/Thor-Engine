@@ -82,6 +82,7 @@ private:
 
 	C_Transform*				transform = nullptr;
 	std::vector<Component*>		components;
+	AABB						defaultAABB;
 
 	bool						selected = false;
 };

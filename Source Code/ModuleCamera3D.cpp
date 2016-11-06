@@ -152,7 +152,10 @@ void ModuleCamera3D::SaveScene(Config& root) const
 
 void ModuleCamera3D::LoadScene(Config& root)
 {
-
+	camera->frustum.SetPos(root.GetArray("Position").GetFloat3(0));
+	reference = root.GetArray("Reference").GetFloat3(0);
+	Look(reference);
+	camera->update_projection = true;
 }
 
 void ModuleCamera3D::Move_Keyboard(float dt)

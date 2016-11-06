@@ -119,9 +119,9 @@ void Application::FinishUpdate()
 	App->moduleEditor->UpdateFPSData(last_FPS, frameTimer.Read());
 
 	if (save_scene)
-		SaveSceneNow("Scene");
+		SaveSceneNow();
 	if (load_scene)
-		LoadSceneNow("Scene");
+		LoadSceneNow();
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -188,13 +188,15 @@ void Application::SetTitleName(const char* new_name)
 	window->SetTitle(new_name);
 }
 
-void Application::SaveScene()
+void Application::SaveScene(const char* scene)
 {
+	scene_to_save = scene;
 	save_scene = true;
 }
 
-void Application::LoadScene()
+void Application::LoadScene(const char* scene)
 {
+	scene_to_load = scene;
 	load_scene = true;
 }
 
@@ -241,10 +243,10 @@ void Application::LoadSettingsNow(const char* full_path)
 	}
 }
 
-void Application::SaveSceneNow(const char* path)
+void Application::SaveSceneNow()
 {
 	Config config;
-	Config node = config.SetNode("Scene");
+	Config node = config.SetNode(scene_to_save.c_str());
 
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
@@ -254,13 +256,45 @@ void Application::SaveSceneNow(const char* path)
 	char* buffer = nullptr;
 	uint size = config.Serialize(&buffer);
 
-	fileSystem->Save(path, buffer, size);
+	std::string full_path = scene_to_save;
+	full_path.append(".scene");
+
+	fileSystem->Save(full_path.c_str(), buffer, size);
 	RELEASE_ARRAY(buffer);
 
 	save_scene = false;
 }
 
-void Application::LoadSceneNow(const char* path)
+void Application::LoadSceneNow()
 {
+	char* buffer = nullptr;
+	std::string fullPath = scene_to_load;
+	fullPath.append(".scene");
+
+	if (App->fileSystem->Exists(fullPath.c_str()))
+	{
+		uint size = App->fileSystem->Load(fullPath.c_str(), &buffer);
+
+		if (size > 0)
+		{
+			Config config(buffer);
+			Config node = config.GetNode(scene_to_load.c_str());
+
+			for (uint i = 0; i < list_modules.size(); i++)
+			{
+				list_modules[i]->LoadScene(node.GetNode(list_modules[i]->name.c_str()));
+			}
+		}
+		else
+		{
+			LOG("[error] File '%s' is empty", fullPath.c_str());
+		}
+	}
+	else
+	{
+		LOG("[error] File '%s' not found", fullPath.c_str());
+	}
+
+	RELEASE_ARRAY(buffer);
 	load_scene = false;
 }

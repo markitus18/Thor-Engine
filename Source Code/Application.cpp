@@ -68,11 +68,25 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	char* buffer = nullptr;
-	uint size = fileSystem->Load("Config.JSON", &buffer);
-
 	Config config;
 
+	//char* buffer = nullptr;
+	//uint size = fileSystem->Load("Config.JSON", &buffer);
+
+	//if (size > 0)
+	//{
+	//	config.Release();
+	//	config = Config(buffer);
+	//}
+	//else
+	//{
+	//	size = fileSystem->Load("DefaultConfig.JSON", &buffer);
+	//	if (size > 0)
+	//	{
+	//		config.Release();
+	//		config = Config(buffer);
+	//	}
+	//}
 
 	// Call Init() in all modules
 	for (uint i = 0; i < list_modules.size(); i++)

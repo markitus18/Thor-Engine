@@ -24,10 +24,7 @@ Config::Config(JSON_Object* obj) : node(obj)
 
 Config::~Config()
 {
-	if (root_value)
-	{
-		json_value_free(root_value);
-	}
+	Release();
 }
 
 //Fills a buffer, returns its size
@@ -43,6 +40,14 @@ bool Config::NodeExists()
 {
 	//Casting (bool)root_value could cause problems
 	return root_value != nullptr;
+}
+
+void Config::Release()
+{
+	if (root_value)
+	{
+		json_value_free(root_value);
+	}
 }
 
 void Config::SetNumber(const char* name, double data)

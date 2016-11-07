@@ -38,6 +38,7 @@ public:
 
 	uint Serialize(char** buffer);	//Returns a filled buffer
 	bool NodeExists();
+	void Release();
 
 	//Append attributes -----------
 	void SetNumber(const char* name, double data);

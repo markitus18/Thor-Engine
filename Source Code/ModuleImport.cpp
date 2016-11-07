@@ -43,18 +43,7 @@ bool ModuleImport::Init()
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
-	LOG("Entering mesh load");
-	const aiScene* file = aiImportFileEx("Models/Street_environment_V01.FBX", aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
-	if (file)
-	{
-		LOG("Starting scene load Assets/Models/Street_environment_V01.FBX");
-		LoadFBX(file, file->mRootNode, App->scene->GetRoot(), "Models/Street_environment_V01.FBX");
-		aiReleaseImport(file);
-	}
-	else
-	{
-		LOG("File not found");
-	}
+	ImportFile("Models/Street_environment_V01.FBX");
 	//const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
 	//LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
 
@@ -84,6 +73,22 @@ std::string ModuleImport::GetFileFolder(const std::string& str)
 		ret = str.substr(0, position + 1);
 	}
 	return ret;
+}
+
+void ModuleImport::ImportFile(char* path)
+{
+	LOG("Entering mesh load");
+	const aiScene* file = aiImportFileEx(path, aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
+	if (file)
+	{
+		LOG("Starting scene load %s", path);
+		LoadFBX(file, file->mRootNode, App->scene->GetRoot(), path);
+		aiReleaseImport(file);
+	}
+	else
+	{
+		LOG("File not found");
+	}
 }
 
 GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path)
@@ -163,7 +168,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 			child = gameObject;
 		}
 
-		C_Mesh* mesh = App->moduleMeshes->LoadMesh(newMesh, node_name.c_str());
+		C_Mesh* mesh = App->moduleMeshes->ImportMesh(newMesh, node_name.c_str());
 		child->AddComponent(mesh);
 
 

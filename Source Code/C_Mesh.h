@@ -54,6 +54,7 @@ public:
 	uint	num_tex_coords = 0;
 	float*	tex_coords = nullptr;
 
+	std::string libFile = "";
 private:
 
 	AABB	local_bounds;

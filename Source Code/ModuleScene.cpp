@@ -15,6 +15,7 @@
 #include "C_Camera.h"
 #include "Intersections.h"
 #include "Config.h"
+#include "ModuleMeshes.h"
 
 #include <windows.h>
 #include <shobjidl.h> 
@@ -147,8 +148,8 @@ update_status ModuleScene::Update(float dt)
 		{
 				gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 		}
-		gameObjects.clear();
-		camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+gameObjects.clear();
+camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 	}
 	else
 	{
@@ -202,6 +203,17 @@ void ModuleScene::SaveScene(Config& node) const
 			//Scale part
 			Config_Array scale_node = gameObject_node.SetArray("Scale");
 			scale_node.AddFloat3(transform->GetScale());
+
+			//A thought: each component type will have a folder, same number as their enumeration
+			//Transform = 01 // Mesh = 02 // Material = 03 ...
+			//Each component will go indexed by a number also, not a file name: mesh path would be Library/02/02.mesh
+
+			//TMP for mesh storage
+			std::string meshLibFile = "";
+			C_Mesh* mesh = gameObjects[i]->GetComponent<C_Mesh>();
+			if (mesh)
+				meshLibFile = mesh->libFile;
+			gameObject_node.SetString("Mesh", meshLibFile.c_str());
 		}
 	}
 }
@@ -233,6 +245,18 @@ void ModuleScene::LoadScene(Config& node)
 
 		if (parent == nullptr)
 			not_parented_GameObjects.push_back(gameObject);
+
+		//Mesh load
+		std::string meshPath = gameObject_node.GetString("Mesh");
+
+		if (meshPath != "")
+		{
+			C_Mesh* mesh = App->moduleMeshes->LoadMesh(meshPath.c_str());
+			if (mesh != nullptr)
+			{
+				gameObject->AddComponent(mesh);
+			}
+		}	
 	}
 
 	//Security method if any game object is left without a parent

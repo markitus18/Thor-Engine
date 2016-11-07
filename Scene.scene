@@ -4,9 +4,9 @@
         "Window": {},
         "Camera": {
             "Position": [
-                75.993225,
-                66.440475,
-                -118.786911
+                -114.469803,
+                176.065979,
+                -218.599884
             ],
             "Reference": [
                 0,
@@ -19,7 +19,7 @@
         "Scene": {
             "GameObjects": [
                 {
-                    "UID": 1830365188,
+                    "UID": 1900907740,
                     "ParentUID": 0,
                     "Name": "Camera",
                     "Translation": [
@@ -37,10 +37,11 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 1106143644,
+                    "UID": 1169654475,
                     "ParentUID": 0,
                     "Name": "Street_environment_V01",
                     "Translation": [
@@ -58,11 +59,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 2063057504,
-                    "ParentUID": 1106143644,
+                    "UID": 2081793382,
+                    "ParentUID": 1169654475,
                     "Name": "Sky001",
                     "Translation": [
                         18.153732,
@@ -79,11 +81,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 1977723683,
-                    "ParentUID": 1106143644,
+                    "UID": 718228545,
+                    "ParentUID": 1169654475,
                     "Name": "Dummy001",
                     "Translation": [
                         0,
@@ -100,11 +103,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 891539444,
-                    "ParentUID": 1977723683,
+                    "UID": 1780294697,
+                    "ParentUID": 718228545,
                     "Name": "City_building_004",
                     "Translation": [
                         -41.475891,
@@ -121,11 +125,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_004"
                 },
                 {
-                    "UID": 1147781483,
-                    "ParentUID": 1977723683,
+                    "UID": 1730929585,
+                    "ParentUID": 718228545,
                     "Name": "City_building_001",
                     "Translation": [
                         17.707165,
@@ -142,11 +147,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_001"
                 },
                 {
-                    "UID": 1828123073,
-                    "ParentUID": 1977723683,
+                    "UID": 856302233,
+                    "ParentUID": 718228545,
                     "Name": "City_building_007",
                     "Translation": [
                         16.010492,
@@ -163,11 +169,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_007"
                 },
                 {
-                    "UID": 843158584,
-                    "ParentUID": 1977723683,
+                    "UID": 324239326,
+                    "ParentUID": 718228545,
                     "Name": "City_building_008",
                     "Translation": [
                         40.979996,
@@ -184,11 +191,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_008"
                 },
                 {
-                    "UID": 78285919,
-                    "ParentUID": 1977723683,
+                    "UID": 1665501829,
+                    "ParentUID": 718228545,
                     "Name": "Line002",
                     "Translation": [
                         -2.159772,
@@ -205,11 +213,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "Line002"
                 },
                 {
-                    "UID": 30470613,
-                    "ParentUID": 1977723683,
+                    "UID": 523317044,
+                    "ParentUID": 718228545,
                     "Name": "Plane001",
                     "Translation": [
                         -0.028603,
@@ -226,11 +235,12 @@
                         0.996635,
                         0.970616,
                         0.996635
-                    ]
+                    ],
+                    "Mesh": "Plane001"
                 },
                 {
-                    "UID": 1828188084,
-                    "ParentUID": 1977723683,
+                    "UID": 1795848969,
+                    "ParentUID": 718228545,
                     "Name": "City_building_010",
                     "Translation": [
                         25.154011,
@@ -247,11 +257,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 1074322121,
-                    "ParentUID": 1828188084,
+                    "UID": 155658762,
+                    "ParentUID": 1795848969,
                     "Name": "No name",
                     "Translation": [
                         0,
@@ -268,11 +279,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "No name"
                 },
                 {
-                    "UID": 672444778,
-                    "ParentUID": 1828188084,
+                    "UID": 916186440,
+                    "ParentUID": 1795848969,
                     "Name": "No name",
                     "Translation": [
                         0,
@@ -289,11 +301,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "No name"
                 },
                 {
-                    "UID": 1134384538,
-                    "ParentUID": 1977723683,
+                    "UID": 1256856046,
+                    "ParentUID": 718228545,
                     "Name": "City_building_011",
                     "Translation": [
                         30.134541,
@@ -310,11 +323,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_011"
                 },
                 {
-                    "UID": 1127318026,
-                    "ParentUID": 1977723683,
+                    "UID": 58614257,
+                    "ParentUID": 718228545,
                     "Name": "City_building_013",
                     "Translation": [
                         -42.288055,
@@ -331,11 +345,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_013"
                 },
                 {
-                    "UID": 923441237,
-                    "ParentUID": 1977723683,
+                    "UID": 564257297,
+                    "ParentUID": 718228545,
                     "Name": "City_building_014",
                     "Translation": [
                         -19.439707,
@@ -352,11 +367,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_014"
                 },
                 {
-                    "UID": 1684420938,
-                    "ParentUID": 1977723683,
+                    "UID": 238919866,
+                    "ParentUID": 718228545,
                     "Name": "City_building_016",
                     "Translation": [
                         34.270424,
@@ -373,11 +389,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 1283129122,
-                    "ParentUID": 1684420938,
+                    "UID": 1579144771,
+                    "ParentUID": 238919866,
                     "Name": "No name",
                     "Translation": [
                         0,
@@ -394,11 +411,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "No name"
                 },
                 {
-                    "UID": 1707854856,
-                    "ParentUID": 1684420938,
+                    "UID": 1212793626,
+                    "ParentUID": 238919866,
                     "Name": "No name",
                     "Translation": [
                         0,
@@ -415,11 +433,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "No name"
                 },
                 {
-                    "UID": 688362480,
-                    "ParentUID": 1977723683,
+                    "UID": 1143003000,
+                    "ParentUID": 718228545,
                     "Name": "City_building_017",
                     "Translation": [
                         44.260082,
@@ -436,11 +455,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 1239153628,
-                    "ParentUID": 688362480,
+                    "UID": 2005323415,
+                    "ParentUID": 1143003000,
                     "Name": "No name",
                     "Translation": [
                         0,
@@ -457,11 +477,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "No name"
                 },
                 {
-                    "UID": 254184057,
-                    "ParentUID": 688362480,
+                    "UID": 414616951,
+                    "ParentUID": 1143003000,
                     "Name": "No name",
                     "Translation": [
                         0,
@@ -478,11 +499,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "No name"
                 },
                 {
-                    "UID": 1282981117,
-                    "ParentUID": 1977723683,
+                    "UID": 1719046244,
+                    "ParentUID": 718228545,
                     "Name": "City_building_022",
                     "Translation": [
                         -20.831324,
@@ -499,11 +521,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_022"
                 },
                 {
-                    "UID": 2141016986,
-                    "ParentUID": 1977723683,
+                    "UID": 307422567,
+                    "ParentUID": 718228545,
                     "Name": "City_building_023",
                     "Translation": [
                         42.130642,
@@ -520,11 +543,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_023"
                 },
                 {
-                    "UID": 756160389,
-                    "ParentUID": 1977723683,
+                    "UID": 1244511105,
+                    "ParentUID": 718228545,
                     "Name": "City_building_024",
                     "Translation": [
                         -20.572771,
@@ -541,11 +565,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_024"
                 },
                 {
-                    "UID": 1228320011,
-                    "ParentUID": 1977723683,
+                    "UID": 1732419343,
+                    "ParentUID": 718228545,
                     "Name": "City_building_026",
                     "Translation": [
                         31.511889,
@@ -562,11 +587,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_026"
                 },
                 {
-                    "UID": 1921178644,
-                    "ParentUID": 1977723683,
+                    "UID": 1495528895,
+                    "ParentUID": 718228545,
                     "Name": "City_building_028",
                     "Translation": [
                         13.387990,
@@ -583,11 +609,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_028"
                 },
                 {
-                    "UID": 506904176,
-                    "ParentUID": 1977723683,
+                    "UID": 1620057647,
+                    "ParentUID": 718228545,
                     "Name": "Object010",
                     "Translation": [
                         -2.503353,
@@ -604,11 +631,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "Object010"
                 },
                 {
-                    "UID": 1576866145,
-                    "ParentUID": 1977723683,
+                    "UID": 2044817700,
+                    "ParentUID": 718228545,
                     "Name": "City_building_030",
                     "Translation": [
                         -42.807240,
@@ -625,11 +653,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_030"
                 },
                 {
-                    "UID": 1486362758,
-                    "ParentUID": 1977723683,
+                    "UID": 1267164776,
+                    "ParentUID": 718228545,
                     "Name": "City_building_031",
                     "Translation": [
                         -34.679482,
@@ -646,11 +675,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_031"
                 },
                 {
-                    "UID": 1267076729,
-                    "ParentUID": 1977723683,
+                    "UID": 503167489,
+                    "ParentUID": 718228545,
                     "Name": "City_building_032",
                     "Translation": [
                         -29.478403,
@@ -667,11 +697,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_032"
                 },
                 {
-                    "UID": 815698243,
-                    "ParentUID": 1977723683,
+                    "UID": 1270501805,
+                    "ParentUID": 718228545,
                     "Name": "City_building_033",
                     "Translation": [
                         -32.361496,
@@ -688,11 +719,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_033"
                 },
                 {
-                    "UID": 1669814635,
-                    "ParentUID": 1977723683,
+                    "UID": 902229622,
+                    "ParentUID": 718228545,
                     "Name": "City_building_034",
                     "Translation": [
                         16.049517,
@@ -709,11 +741,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_034"
                 },
                 {
-                    "UID": 137472990,
-                    "ParentUID": 1977723683,
+                    "UID": 231838512,
+                    "ParentUID": 718228545,
                     "Name": "City_building_035",
                     "Translation": [
                         13.387990,
@@ -730,11 +763,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_035"
                 },
                 {
-                    "UID": 1819905758,
-                    "ParentUID": 1977723683,
+                    "UID": 341953100,
+                    "ParentUID": 718228545,
                     "Name": "City_building_036",
                     "Translation": [
                         -31.216331,
@@ -751,11 +785,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_036"
                 },
                 {
-                    "UID": 2123604718,
-                    "ParentUID": 1977723683,
+                    "UID": 113064458,
+                    "ParentUID": 718228545,
                     "Name": "City_building_037",
                     "Translation": [
                         -20.317694,
@@ -772,11 +807,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_037"
                 },
                 {
-                    "UID": 1824910516,
-                    "ParentUID": 1977723683,
+                    "UID": 1133064163,
+                    "ParentUID": 718228545,
                     "Name": "City_building_038",
                     "Translation": [
                         -41.649002,
@@ -793,11 +829,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_038"
                 },
                 {
-                    "UID": 520026975,
-                    "ParentUID": 1977723683,
+                    "UID": 1543286972,
+                    "ParentUID": 718228545,
                     "Name": "City_building_039",
                     "Translation": [
                         -42.807240,
@@ -814,11 +851,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_039"
                 },
                 {
-                    "UID": 371221702,
-                    "ParentUID": 1977723683,
+                    "UID": 132967261,
+                    "ParentUID": 718228545,
                     "Name": "City_building_040",
                     "Translation": [
                         -34.679482,
@@ -835,11 +873,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_040"
                 },
                 {
-                    "UID": 2007906944,
-                    "ParentUID": 1977723683,
+                    "UID": 1659159511,
+                    "ParentUID": 718228545,
                     "Name": "City_building_041",
                     "Translation": [
                         30.695278,
@@ -856,11 +895,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": "City_building_041"
                 },
                 {
-                    "UID": 2041346759,
-                    "ParentUID": 1106143644,
+                    "UID": 1346426848,
+                    "ParentUID": 1169654475,
                     "Name": "Camera001",
                     "Translation": [
                         -78.312431,
@@ -877,11 +917,12 @@
                         1,
                         1.000000,
                         1.000000
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 134949879,
-                    "ParentUID": 1106143644,
+                    "UID": 1922393058,
+                    "ParentUID": 1169654475,
                     "Name": "Camera001.Target",
                     "Translation": [
                         -28.132622,
@@ -898,11 +939,12 @@
                         1,
                         1.000000,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 104570234,
-                    "ParentUID": 1106143644,
+                    "UID": 1303759037,
+                    "ParentUID": 1169654475,
                     "Name": "Spot001",
                     "Translation": [
                         -66.721268,
@@ -919,11 +961,12 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 },
                 {
-                    "UID": 314697984,
-                    "ParentUID": 1106143644,
+                    "UID": 1316607228,
+                    "ParentUID": 1169654475,
                     "Name": "Spot001.Target",
                     "Translation": [
                         28.890945,
@@ -940,7 +983,8 @@
                         1,
                         1,
                         1
-                    ]
+                    ],
+                    "Mesh": ""
                 }
             ]
         },

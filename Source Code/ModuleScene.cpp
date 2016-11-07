@@ -27,6 +27,7 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene",
 	root = new GameObject(nullptr, "root");
 	root->uid = 0;
 
+	//TODO: This should nto be here
 	//TMP camera for testing purposes
 	camera = new GameObject(root, "Camera");
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
@@ -34,11 +35,27 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene",
 	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
 	camera->uid = random.Int();
 
-	current_scene = "Scene01";
+	current_scene = "Default Scene";
 }
 
 ModuleScene::~ModuleScene()
 {
+}
+
+bool ModuleScene::Init(Config& config)
+{
+	std::string newScene = config.GetString("Current Scene");
+
+	if (newScene == "")
+	{
+		CreateDefaultScene();
+	}
+	else
+	{
+		current_scene = newScene;
+		App->LoadScene(current_scene.c_str());
+	}
+	return true;
 }
 
 // Load assets
@@ -236,9 +253,7 @@ void ModuleScene::SaveScene(Config& node) const
 
 void ModuleScene::LoadScene(Config& node)
 {
-	delete root;
-	root = new GameObject(nullptr, "root");
-	root->uid = 0;
+	DeleteAllGameObjects();
 
 	std::vector<GameObject*> not_parented_GameObjects;
 
@@ -280,6 +295,12 @@ void ModuleScene::LoadScene(Config& node)
 	{
 		not_parented_GameObjects[i]->parent = root;
 	}
+}
+
+void ModuleScene::LoadScene(const char* file)
+{
+	current_scene = file;
+	App->LoadScene(file);
 }
 
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)
@@ -334,4 +355,17 @@ void ModuleScene::FindGameObjectByID(uint id, GameObject* gameObject, GameObject
 		FindGameObjectByID(id, gameObject->childs[i], ret);
 	}
 
+}
+
+void ModuleScene::DeleteAllGameObjects()
+{
+	for (uint i = 0; i < root->childs.size(); i++)
+	{
+		delete root->childs[i];
+	}
+}
+
+void ModuleScene::CreateDefaultScene()
+{
+	App->LoadScene("ProjectSettings/DefaultScene");
 }

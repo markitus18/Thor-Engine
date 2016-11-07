@@ -21,6 +21,7 @@ public:
 	ModuleScene(Application* app, bool start_enabled = true);
 	~ModuleScene();
 
+	bool Init(Config& config);
 	bool Start();
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
@@ -33,13 +34,16 @@ public:
 	void LoadConfig(Config& config);
 
 	void SaveScene(Config& node) const;
-	void LoadScene(Config& node);
+	void LoadScene(Config& node); //Load itself
+	void LoadScene(const char* file); //Calls application and prepares to load
 
 private:
 	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
 	void DrawAllGameObjects(GameObject* gameObject);
 	void GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const;
 	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
+	void DeleteAllGameObjects();
+	void CreateDefaultScene();
 
 public:
 	bool reset = false;

@@ -42,6 +42,7 @@ public:
 	//------------------------------------
 
 	void LoadScene(Config& root);
+	void ResetScene();
 
 private:
 	void DrawPanels();

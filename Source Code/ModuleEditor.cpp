@@ -279,4 +279,9 @@ void ModuleEditor::LoadScene(Config& root)
 {
 	panelHierarchy->selectedGameObjects.clear();
 }
+
+void ModuleEditor::ResetScene()
+{
+	panelHierarchy->selectedGameObjects.clear();
+}
 //------------------------------------

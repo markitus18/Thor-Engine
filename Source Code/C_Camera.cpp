@@ -46,6 +46,7 @@ void C_Camera::SetNearPlane(float distance)
 	if (distance > 0 && distance < frustum.FarPlaneDistance())
 		frustum.SetViewPlaneDistances(distance, frustum.FarPlaneDistance());
 	UpdatePlanes();
+	update_projection = true;
 }
 
 void C_Camera::SetFarPlane(float distance)
@@ -53,6 +54,7 @@ void C_Camera::SetFarPlane(float distance)
 	if (distance > 0 && distance > frustum.NearPlaneDistance())
 		frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), distance);
 	UpdatePlanes();
+	update_projection = true;
 }
 
 //Setting vertical FOV in degrees 
@@ -61,6 +63,7 @@ void C_Camera::SetFOV(float fov)
 	fov *= DEGTORAD;
 	frustum.SetVerticalFovAndAspectRatio(fov, frustum.AspectRatio());
 	UpdatePlanes();
+	update_projection = true;
 }
 
 void C_Camera::SetAspectRatio(float ar)
@@ -68,6 +71,7 @@ void C_Camera::SetAspectRatio(float ar)
 	float horizontalFov = frustum.HorizontalFov();
 	frustum.SetHorizontalFovAndAspectRatio(horizontalFov, ar);
 	UpdatePlanes();
+	update_projection = true;
 }
 //--------------------------------
 
@@ -80,6 +84,7 @@ void C_Camera::Look(const float3& position)
 	frustum.SetFront(matrix.MulDir(frustum.Front()).Normalized());
 	frustum.SetUp(matrix.MulDir(frustum.Up()).Normalized());
 	UpdatePlanes();
+	update_projection = true;
 }
 
 void C_Camera::Match(const C_Camera* reference)

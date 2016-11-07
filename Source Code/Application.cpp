@@ -68,25 +68,19 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	Config config;
+	char* buffer = nullptr;
+	char* defBuffer = nullptr;
 
-	//char* buffer = nullptr;
-	//uint size = fileSystem->Load("Config.JSON", &buffer);
+	uint size = fileSystem->Load("ProjectSettings/Settings.JSON", &buffer);
+	uint defSize = fileSystem->Load("ProjectSettings/DefaultSettings.JSON", &defBuffer);
 
-	//if (size > 0)
-	//{
-	//	config.Release();
-	//	config = Config(buffer);
-	//}
-	//else
-	//{
-	//	size = fileSystem->Load("DefaultConfig.JSON", &buffer);
-	//	if (size > 0)
-	//	{
-	//		config.Release();
-	//		config = Config(buffer);
-	//	}
-	//}
+	if (size == 0 && defSize == 0)
+	{
+		LOG("[error] failed to load project settings");
+		return false;
+	}
+
+	Config config(buffer);// = size > 0 ? Config(buffer) : Config(defBuffer);
 
 	// Call Init() in all modules
 	for (uint i = 0; i < list_modules.size(); i++)
@@ -94,8 +88,6 @@ bool Application::Init()
 		if (list_modules[i]->IsEnabled())
 			ret = list_modules[i]->Init(config);
 	}
-
-	LoadSettingsNow("Config.JSON");
 
 	// After all Init calls we call Start() in all modules
 	LOG("-------------- Application Start --------------");

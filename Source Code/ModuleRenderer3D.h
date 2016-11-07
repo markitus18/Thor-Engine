@@ -9,6 +9,7 @@
 class C_Camera;
 class C_Mesh;
 class C_Material;
+class Config;
 
 struct RenderMesh
 {
@@ -43,7 +44,7 @@ public:
 	ModuleRenderer3D(Application* app, bool start_enabled = true);
 	~ModuleRenderer3D();
 
-	bool Init();
+	bool Init(Config& config);
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();

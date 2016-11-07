@@ -10,6 +10,8 @@ class PanelInspector;
 class PanelConfiguration;
 class PanelButtons;
 
+class Config;
+
 class ModuleEditor : public Module
 {
 public:
@@ -17,7 +19,7 @@ public:
 	ModuleEditor(Application* app, bool start_enabled = true);
 	~ModuleEditor();
 
-	bool Init();
+	bool Init(Config& config);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
@@ -38,6 +40,8 @@ public:
 	void ReadTimer(uint index);
 	void StopTimer(uint index);
 	//------------------------------------
+
+	void LoadScene(Config& root);
 
 private:
 	void DrawPanels();

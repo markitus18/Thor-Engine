@@ -162,20 +162,6 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 		}
 		ImGui::End();
 	}
-
-	/* STYLE TODO: window swap with another window as buttons
-	ImGuiStyle& style = ImGui::GetStyle();
-	style.Colors[ImGuiCol_WindowBg] = style.Colors[ImGuiCol_TitleBg];
-	style.WindowRounding = 0;
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar;
-	bool active0 = true;
-	ImGui::Begin("Stuf", &active0, window_flags);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.70f);
-	ImGui::Button("Console");
-	ImGui::SameLine();
-	ImGui::Button("Debug console");
-	ImGui::End();
-	*/
 }
 
 void PanelInspector::UpdatePosition(int screen_width, int screen_height)

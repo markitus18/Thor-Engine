@@ -25,6 +25,7 @@
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
 #include "MathGeoLib\src\MathGeoLib.h"
+#include "ModuleInput.h"
 
 ModuleImport::ModuleImport(Application* app, bool start_enabled) : Module("Importer", start_enabled)
 {}
@@ -34,7 +35,7 @@ ModuleImport::~ModuleImport()
 {}
 
 // Called before render is available
-bool ModuleImport::Init()
+bool ModuleImport::Init(Config& config)
 {
 	LOG("Loading Module Import");
 
@@ -43,7 +44,7 @@ bool ModuleImport::Init()
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
-	ImportFile("Models/Street_environment_V01.FBX");
+	//ImportFile("Models/Street_environment_V01.FBX");
 	//const aiScene* file2 = aiImportFile("Game/Models/3D Models/maya tmp test.fbx", aiProcessPreset_TargetRealtime_MaxQuality);
 	//LoadFBX(file2, file2->mRootNode, App->scene->getRoot(), "Game/Models/3D Models/maya tmp test.fbx");
 
@@ -51,6 +52,11 @@ bool ModuleImport::Init()
 }
 update_status ModuleImport::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	{
+		ImportFile("Models/Street_environment_V01.FBX");
+	}
+
 	return UPDATE_CONTINUE;
 }
 

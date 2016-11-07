@@ -152,7 +152,7 @@ void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
 
 	uint totalSizeBefore = sizeof(data);
 
-	App->fileSystem->Save(full_path.c_str(), &data, size);
+	App->fileSystem->Save(full_path.c_str(), data, size);
 
 	uint totalSizeAfter = sizeof(data);
 
@@ -192,16 +192,19 @@ C_Mesh* ModuleMeshes::LoadMesh(const char* path)
 
 		//Code breaks here due to huge ranges value
 		bytes = sizeof(uint) * mesh->num_indices;
+		mesh->indices = new uint[mesh->num_indices];
 		memcpy(mesh->indices, cursor, bytes);
 		cursor += bytes;
 
 		bytes = sizeof(float) * mesh->num_vertices * 3;
+		mesh->vertices = new float[mesh->num_vertices * 3];
 		memcpy(mesh->vertices, cursor, bytes);
 		cursor += bytes;
 
 		if (mesh->num_normals > 0)
 		{
 			bytes = sizeof(float) * mesh->num_normals * 3;
+			mesh->normals = new float[mesh->num_normals * 3];
 			memcpy(mesh->normals, cursor, bytes);
 			cursor += bytes;
 		}
@@ -209,6 +212,7 @@ C_Mesh* ModuleMeshes::LoadMesh(const char* path)
 		if (mesh->num_tex_coords > 0)
 		{
 			bytes = sizeof(float) * mesh->num_tex_coords * 2;
+			mesh->tex_coords = new float[mesh->num_tex_coords * 2];
 			memcpy(mesh->tex_coords, cursor, bytes);
 			cursor += bytes;
 		}

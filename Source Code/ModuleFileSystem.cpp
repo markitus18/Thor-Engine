@@ -42,7 +42,7 @@ ModuleFileSystem::~ModuleFileSystem()
 }
 
 // Called before render is available
-bool ModuleFileSystem::Init()
+bool ModuleFileSystem::Init(Config& config)
 {
 	LOG("Loading File System");
 	bool ret = true;

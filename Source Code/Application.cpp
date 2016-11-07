@@ -68,11 +68,17 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	char* buffer = nullptr;
+	uint size = fileSystem->Load("Config.JSON", &buffer);
+
+	Config config;
+
+
 	// Call Init() in all modules
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
 		if (list_modules[i]->IsEnabled())
-			ret = list_modules[i]->Init();
+			ret = list_modules[i]->Init(config);
 	}
 
 	LoadSettingsNow("Config.JSON");

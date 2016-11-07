@@ -6,6 +6,7 @@
 #include <string>
 
 class Application;
+class Config;
 
 class ModuleWindow : public Module
 {
@@ -16,7 +17,7 @@ public:
 	// Destructor
 	virtual ~ModuleWindow();
 
-	bool Init();
+	bool Init(Config& config);
 	bool CleanUp();
 
 	void SetTitle(const char* title);

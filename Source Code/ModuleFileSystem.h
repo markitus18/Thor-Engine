@@ -10,6 +10,7 @@ int close_sdl_rwops(SDL_RWops *rw);
 struct aiFileIO;
 
 //struct BASS_FILEPROCS;
+class Config;
 
 class ModuleFileSystem : public Module
 {
@@ -21,7 +22,7 @@ public:
 	~ModuleFileSystem();
 
 	// Called before render is available
-	bool Init();
+	bool Init(Config& config);
 
 	// Called before quitting
 	bool CleanUp();

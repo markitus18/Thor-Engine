@@ -32,7 +32,7 @@ ModuleCamera3D::~ModuleCamera3D()
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::Init()
+bool ModuleCamera3D::Init(Config& config)
 {
 	App->renderer3D->camera = camera;
 
@@ -118,26 +118,6 @@ void ModuleCamera3D::SetPosition(float3 position)
 C_Camera * ModuleCamera3D::GetCamera() const
 {
 	return camera;
-}
-
-void ModuleCamera3D::SaveConfig(Config& config) const
-{
-	float3 position = camera->frustum.Pos();
-	config.SetNumber("PositionX", position.x);
-	config.SetNumber("PositionY", position.y);
-	config.SetNumber("PositionZ", position.z);
-}
-
-void ModuleCamera3D::LoadConfig(Config& config)
-{
-	float3 position = float3::zero;
-	position.x = config.GetNumber("PositionX", 20);
-	position.y = config.GetNumber("PositionY", 20);
-	position.z = config.GetNumber("PositionZ", 20);
-
-	camera->frustum.SetPos(position);
-	Look(float3(0, 0, 0));
-	camera->update_projection = true;
 }
 
 void ModuleCamera3D::SaveScene(Config& root) const

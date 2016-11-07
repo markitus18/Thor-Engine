@@ -14,6 +14,8 @@ enum KEY_STATE
 	KEY_UP
 };
 
+class Config;
+
 class ModuleInput : public Module
 {
 public:
@@ -21,7 +23,7 @@ public:
 	ModuleInput(Application* app, bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init();
+	bool Init(Config& config);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 

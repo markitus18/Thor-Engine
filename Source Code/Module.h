@@ -50,7 +50,7 @@ public:
 		return ret;
 	}
 
-	virtual bool Init() 
+	virtual bool Init(Config& config) 
 	{
 		return true; 
 	}

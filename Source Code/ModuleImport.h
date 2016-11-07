@@ -13,6 +13,8 @@ class GameObject;
 class C_Mesh;
 class C_Material;
 
+class Config;
+
 class ModuleImport : public Module
 {
 public:
@@ -22,7 +24,7 @@ public:
 
 	void ImportFile(char* path);
 	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path);
-	bool Init();
+	bool Init(Config& config);
 	bool CleanUp();
 	update_status Update(float dt);
 

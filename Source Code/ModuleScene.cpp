@@ -27,14 +27,14 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene",
 	root = new GameObject(nullptr, "root");
 	root->uid = 0;
 
-	current_scene = "Scene";
-
 	//TMP camera for testing purposes
 	camera = new GameObject(root, "Camera");
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
 	camera->CreateComponent(Component::Type::Camera);
 	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
 	camera->uid = random.Int();
+
+	current_scene = "Scene01";
 }
 
 ModuleScene::~ModuleScene()
@@ -148,8 +148,8 @@ update_status ModuleScene::Update(float dt)
 		{
 				gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 		}
-gameObjects.clear();
-camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		gameObjects.clear();
+		camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 	}
 	else
 	{
@@ -172,6 +172,22 @@ GameObject* ModuleScene::GetRoot()
 const GameObject* ModuleScene::GetRoot() const
 {
 	return root;
+}
+
+void ModuleScene::SaveConfig(Config& config) const
+{
+	config.SetString("Current Scene", current_scene.c_str());
+}
+
+void ModuleScene::LoadConfig(Config& config)
+{
+	std::string newScene = config.GetString("Current Scene");
+
+	if (newScene != "" && newScene != current_scene)
+	{
+		current_scene = newScene;
+		App->LoadScene(current_scene.c_str());
+	}
 }
 
 void ModuleScene::SaveScene(Config& node) const

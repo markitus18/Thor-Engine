@@ -15,7 +15,7 @@ public:
 	ModuleCamera3D(Application* app, bool start_enabled = true);
 	~ModuleCamera3D();
 
-	bool Init();
+	bool Init(Config& config);
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp() override;
@@ -31,9 +31,6 @@ public:
 	void SetPosition(float3 position);
 
 	C_Camera* GetCamera() const;
-
-	void SaveConfig(Config& root) const;
-	void LoadConfig(Config& root);
 
 	void SaveScene(Config& root) const;
 	void LoadScene(Config& root);

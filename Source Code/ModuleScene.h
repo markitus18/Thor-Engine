@@ -29,6 +29,9 @@ public:
 	GameObject* GetRoot();
 	const GameObject* GetRoot() const;
 
+	void SaveConfig(Config& config) const;
+	void LoadConfig(Config& config);
+
 	void SaveScene(Config& node) const;
 	void LoadScene(Config& node);
 
@@ -40,7 +43,7 @@ private:
 
 public:
 	bool reset = false;
-	std::string current_scene;
+	std::string current_scene = "Scene01";
 
 private:
 	bool drawGrid = true;

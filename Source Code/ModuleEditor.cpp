@@ -24,7 +24,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module("Edito
 ModuleEditor::~ModuleEditor()
 {}
 
-bool ModuleEditor::Init()
+bool ModuleEditor::Init(Config& config)
 {
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
@@ -273,5 +273,10 @@ void ModuleEditor::ReadTimer(uint index)
 void ModuleEditor::StopTimer(uint index)
 {
 	panelConfiguration->StopTimer(index);
+}
+
+void ModuleEditor::LoadScene(Config& root)
+{
+	panelHierarchy->selectedGameObjects.clear();
 }
 //------------------------------------

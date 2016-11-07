@@ -32,7 +32,7 @@ bool ModuleMeshes::CleanUp()
 	return true;
 }
 
-C_Mesh* ModuleMeshes::LoadMesh(const aiMesh* from, const char* file)
+C_Mesh* ModuleMeshes::ImportMesh(const aiMesh* from, const char* file)
 {
 	C_Mesh* mesh = new C_Mesh;
 
@@ -81,7 +81,8 @@ C_Mesh* ModuleMeshes::LoadMesh(const aiMesh* from, const char* file)
 			mesh->tex_coords[i * 2 + 1] = from->mTextureCoords[0][i].y;
 		}
 	}
-	//-------------------------------------------
+
+	mesh->libFile = file;
 	mesh->CreateAABB();
 	mesh->LoadBuffers();
 
@@ -134,4 +135,58 @@ void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
 	full_path.append(path).append(".mesh");
 
 	App->fileSystem->Save(full_path.c_str(), &data, size);
+}
+
+C_Mesh* ModuleMeshes::LoadMesh(const char* path)
+{
+	std::string full_path = "Library/Meshes/";
+	full_path.append(path).append(".mesh");
+
+	char* buffer;
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	if (size > 0)
+	{
+		char* cursor = buffer;
+
+		C_Mesh* mesh = new C_Mesh();
+
+		uint ranges[4];
+		uint bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
+		cursor += bytes;
+
+		mesh->num_indices = ranges[0];
+		mesh->num_vertices = ranges[1];
+		mesh->num_normals = ranges[2];
+		mesh->num_tex_coords = ranges[3];
+
+		bytes = sizeof(uint) * mesh->num_indices;
+		memcpy(mesh->indices, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(float) * mesh->num_vertices * 3;
+		memcpy(mesh->vertices, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(float) * mesh->num_normals * 3;
+		memcpy(mesh->normals, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(float) * mesh->num_tex_coords * 2;
+		memcpy(mesh->tex_coords, cursor, bytes);
+		cursor += bytes;
+
+		mesh->CreateAABB();
+		mesh->LoadBuffers();
+		mesh->libFile = path;
+
+		RELEASE_ARRAY(buffer);
+		return mesh;
+	}
+	else
+	{
+		LOG("[warning] mesh file '%s' is empty", path);
+		return nullptr;
+	}
 }

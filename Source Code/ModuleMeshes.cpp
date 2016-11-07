@@ -107,11 +107,19 @@ void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
 	char* data = new char[size];
 	char* cursor = data;
 
+	uint size_after_alloc = sizeof(data);
+
 	// First store ranges
 	uint bytes = sizeof(ranges);
 	memcpy(cursor, ranges, bytes);
+
+	uint rangesTest[4];
+	memcpy(rangesTest, cursor, bytes);
+
 	cursor += bytes;
 
+
+	
 	// Store indices
 	bytes = sizeof(uint) * mesh.num_indices;
 	memcpy(cursor, mesh.indices, bytes);
@@ -123,24 +131,45 @@ void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
 	cursor += bytes;
 
 	//Store normals
-	bytes = sizeof(float) * mesh.num_normals * 3;
-	memcpy(cursor, mesh.normals, bytes);
-	cursor += bytes;
+	if (mesh.num_normals > 0)
+	{
+		bytes = sizeof(float) * mesh.num_normals * 3;
+		memcpy(cursor, mesh.normals, bytes);
+		cursor += bytes;
+	}
 
-	//Store texture coords
-	bytes = sizeof(float) * mesh.num_tex_coords * 2;
-	memcpy(cursor, mesh.tex_coords, bytes);
+	if (mesh.num_tex_coords > 0)
+	{
+		//Store texture coords
+		bytes = sizeof(float) * mesh.num_tex_coords * 2;
+		memcpy(cursor, mesh.tex_coords, bytes);
+		cursor += bytes;
+	}
+
 
 	std::string full_path = ("Library/Meshes/");
-	full_path.append(path).append(".mesh");
+	full_path.append(path);// .append(".mesh");
+
+	uint totalSizeBefore = sizeof(data);
 
 	App->fileSystem->Save(full_path.c_str(), &data, size);
+
+	uint totalSizeAfter = sizeof(data);
+
+	RELEASE_ARRAY(data);
+
+	//Ranges are already broken here
+	uint size2 = App->fileSystem->Load(full_path.c_str(), &data);
+	uint rangesTest2[4];
+	bytes = sizeof(rangesTest2);
+	memcpy(rangesTest2, data, bytes);
+
 }
 
 C_Mesh* ModuleMeshes::LoadMesh(const char* path)
 {
 	std::string full_path = "Library/Meshes/";
-	full_path.append(path).append(".mesh");
+	full_path.append(path);// .append(".mesh");
 
 	char* buffer;
 	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
@@ -161,6 +190,7 @@ C_Mesh* ModuleMeshes::LoadMesh(const char* path)
 		mesh->num_normals = ranges[2];
 		mesh->num_tex_coords = ranges[3];
 
+		//Code breaks here due to huge ranges value
 		bytes = sizeof(uint) * mesh->num_indices;
 		memcpy(mesh->indices, cursor, bytes);
 		cursor += bytes;
@@ -169,13 +199,20 @@ C_Mesh* ModuleMeshes::LoadMesh(const char* path)
 		memcpy(mesh->vertices, cursor, bytes);
 		cursor += bytes;
 
-		bytes = sizeof(float) * mesh->num_normals * 3;
-		memcpy(mesh->normals, cursor, bytes);
-		cursor += bytes;
+		if (mesh->num_normals > 0)
+		{
+			bytes = sizeof(float) * mesh->num_normals * 3;
+			memcpy(mesh->normals, cursor, bytes);
+			cursor += bytes;
+		}
 
-		bytes = sizeof(float) * mesh->num_tex_coords * 2;
-		memcpy(mesh->tex_coords, cursor, bytes);
-		cursor += bytes;
+		if (mesh->num_tex_coords > 0)
+		{
+			bytes = sizeof(float) * mesh->num_tex_coords * 2;
+			memcpy(mesh->tex_coords, cursor, bytes);
+			cursor += bytes;
+		}
+
 
 		mesh->CreateAABB();
 		mesh->LoadBuffers();

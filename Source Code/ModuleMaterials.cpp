@@ -62,7 +62,7 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 	uint numTextures = from->GetTextureCount(aiTextureType_DIFFUSE);
 	std::string mat_path = "";
 	std::string file = "";
-	//TODO: too much code just for the path, create a new function
+
 	if (numTextures > 0)
 	{
 		aiString aiStr;
@@ -73,7 +73,7 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 	from->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 
 	C_Material* material = nullptr;
-	//TODO START: if we avoid duplicating materials this causes the game to break
+	//TODO START: if we avoid duplicating materials this causes the game to break: pointer pointing to erased memory
 	//if (texture_path != "" && file != "")
 	//{
 	//	material = Exists(texture_path.c_str());
@@ -106,7 +106,7 @@ C_Material* ModuleMaterials::LoadMaterial(const aiMaterial* from, const std::str
 
 uint ModuleMaterials::LoadIMG(char* file)
 {
-	//TODO: Search for all "Textures" folder and search that file
+	//TODO: Search for all "Textures" folder and search that file ?
 	uint ret = 0;
 
 	char* buffer = nullptr;

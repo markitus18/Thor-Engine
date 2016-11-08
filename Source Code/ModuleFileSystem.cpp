@@ -128,6 +128,22 @@ void ModuleFileSystem::DiscoverFiles(const char* directory, vector<string> & fil
 	PHYSFS_freeList(rc);
 }
 
+void ModuleFileSystem::GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& file_list) const
+{
+	vector<string> files;
+	vector<string> dirs;
+	DiscoverFiles(directory, files, dirs);
+
+	for (uint i = 0; i < files.size(); i++)
+	{
+		string ext;
+		SplitFilePath(files[i].c_str(), nullptr, nullptr, &ext);
+
+		if (ext == extension)
+			file_list.push_back(files[i]);
+	}
+}
+
 void ModuleFileSystem::NormalizePath(char * full_path) const
 {
 	int len = strlen(full_path);

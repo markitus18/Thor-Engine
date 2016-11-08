@@ -99,7 +99,6 @@ void ModuleImport::ImportFile(char* path)
 
 GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path)
 {
-	//TODO: get all transforms
 	aiVector3D		translation;
 	aiVector3D		scaling;
 	aiQuaternion	rotation;

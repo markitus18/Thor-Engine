@@ -107,18 +107,27 @@ void ModuleEditor::Draw()
 		if (ImGui::BeginMenu("File"))
 		{
 
-			if (ImGui::MenuItem("Open Scene"))
+			if (ImGui::BeginMenu("Open Scene"))
 			{
-				std::vector<std::string> files;
-				std::vector<std::string> dirs;
-				App->fileSystem->DiscoverFiles("Assets", files, dirs);
+				//TODO: avoid doing this every frame
+				sceneList.clear();
+				App->fileSystem->GetAllFilesWithExtension("Assets", "scene", sceneList);
+				
+				for (uint i = 0; i < sceneList.size(); i++)
+				{
+					if (ImGui::MenuItem(sceneList[i].c_str()))
+					{
+						App->LoadScene(sceneList[i].c_str());
+					}
+				}
+				ImGui::EndMenu();
 			}
 
 			if (ImGui::MenuItem("Save Scene"))
 			{
 				if (App->scene->current_scene == "Untitled")
 				{
-					StartFileNameWindow();
+					OpenFileNameWindow();
 				}
 				else
 				{
@@ -128,7 +137,7 @@ void ModuleEditor::Draw()
 
 			if (ImGui::MenuItem("Save Scene as"))
 			{
-				StartFileNameWindow();
+				OpenFileNameWindow();
 			}
 			ImGui::Separator();
 			if (ImGui::MenuItem("Exit          "))
@@ -301,7 +310,7 @@ void ModuleEditor::ShowFileNameWindow()
 	ImGui::End();
 }
 
-void ModuleEditor::StartFileNameWindow()
+void ModuleEditor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
 	std::string file;

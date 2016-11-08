@@ -46,7 +46,7 @@ void PanelConsole::Draw(ImGuiWindowFlags flags)
 
 
 
-		//TODO URGENT: print only items being seen :/
+		//TODO URGENT: print only items being seen :/  //can be done?
 		for (int i = 0; i < items.Size; i++)
 		{
 			const char* item = items[i];

@@ -108,7 +108,9 @@ update_status ModuleInput::PreUpdate(float dt)
 
 				mouse_motion_x = (event.motion.xrel / SCREEN_SIZE) - last_mouse_swap;
 				mouse_motion_y = event.motion.yrel / SCREEN_SIZE;
-				//TODO: more polite way to to this?
+
+				//TODO: more polite way to to this ?
+				//TODO: work with ImGui mouse control
 				if (infiniteHorizontal)
 				{
 					if (mouse_x > App->renderer3D->window_width - 10)

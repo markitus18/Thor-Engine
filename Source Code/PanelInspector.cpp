@@ -139,7 +139,7 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 						camera->culling ? App->renderer3D->SetCullingCamera(camera) : App->renderer3D->SetCullingCamera(nullptr);
 					}
 
-					//TODO: move this into private, more polite way?
+					//TODO: move all frustum functions to C_Camera and call from there
 					float camera_fov = camera->GetFOV();
 					if (ImGui::DragFloat("Field of View", (float*)&camera_fov))
 					{

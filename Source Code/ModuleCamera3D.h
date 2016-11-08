@@ -4,8 +4,6 @@
 #include "Module.h"
 #include "MathGeoLib\src\MathGeoLib.h"
 
-//TODO: remove it from .h
-#include "parson/parson.h"
 class C_Camera;
 class Config;
 

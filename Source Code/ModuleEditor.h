@@ -3,6 +3,8 @@
 
 #include "Module.h"
 #include "ImGui\imgui.h"
+#include <string>
+#include <vector>
 
 class PanelConsole;
 class PanelHierarchy;
@@ -47,9 +49,10 @@ public:
 private:
 	void DrawPanels();
 	void ShowAboutWindow();
+
+	void OpenFileNameWindow();
 	void ShowFileNameWindow();
 
-	void StartFileNameWindow();
 	//TODO: move into private
 public:
 	//Panels
@@ -69,6 +72,8 @@ private:
 	bool show_fileName_window = false;
 
 	char fileName[50];
+
+	std::vector<std::string> sceneList;
 
 	bool using_keyboard;
 	bool using_mouse;

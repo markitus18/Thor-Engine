@@ -115,7 +115,7 @@ update_status ModuleScene::Update(float dt)
 	}
 	if (drawGrid)
 	{
-		//TODO: Move this into a mesh "prefab"
+		//TODO: Move this into a mesh "prefab" or a renderer method
 		glLineWidth(1.0f);
 		
 		glBegin(GL_LINES);

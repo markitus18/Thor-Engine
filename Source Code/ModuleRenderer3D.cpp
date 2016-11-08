@@ -538,16 +538,15 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 //	glBindTexture(GL_TEXTURE_2D, 0);
 //#pragma endregion
 #pragma endregion
-
-	DrawAllScene();
-	App->moduleEditor->Draw();
-
 	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	DrawAllScene();
+	App->moduleEditor->Draw();
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }

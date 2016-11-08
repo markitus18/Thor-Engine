@@ -7,6 +7,7 @@
 #include "ModuleImport.h"
 #include "ModuleEditor.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleFileSystem.h"
 
 #include "GameObject.h"
 #include <gl/GL.h>
@@ -44,7 +45,7 @@ bool ModuleScene::Init(Config& config)
 {
 	std::string newScene = config.GetString("Current Scene");
 
-	if (newScene == "")
+	if (newScene == "" || !App->fileSystem->Exists(newScene.c_str()))
 	{
 		CreateDefaultScene();
 	}

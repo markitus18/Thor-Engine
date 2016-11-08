@@ -83,12 +83,12 @@ bool Application::Init()
 	}
 
 	Config config(buffer);
-
+	Config node = config.GetNode("EditorState");
 	// Call Init() in all modules
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
 		if (list_modules[i]->IsEnabled())
-			ret = list_modules[i]->Init(config);
+			ret = list_modules[i]->Init(node.GetNode(list_modules[i]->name.c_str()));
 	}
 
 	// After all Init calls we call Start() in all modules
@@ -166,7 +166,7 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	SaveSettingsNow("Config.JSON");
+	SaveSettingsNow("ProjectSettings/Settings.JSON");
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
 		ret = list_modules[i]->CleanUp();
@@ -286,14 +286,19 @@ void Application::SaveSceneNow()
 	uint size = config.Serialize(&buffer);
 
 	std::string extension = "";
-	fileSystem->SplitFilePath(scene_to_save.c_str(), nullptr, &extension);
-	if (extension != ".scene")
+	std::string full_path = "Assets/";
+
+	fileSystem->SplitFilePath(scene_to_save.c_str(), nullptr, nullptr, &extension);
+
+	if (extension != "scene")
 		scene_to_save.append(".scene");
 	
+	full_path.append(scene_to_save);
+
 	scene->current_scene = scene_to_save;
 	UpdateSceneName();
 
-	fileSystem->Save(scene_to_save.c_str(), buffer, size);
+	fileSystem->Save(full_path.c_str(), buffer, size);
 	RELEASE_ARRAY(buffer);
 
 	save_scene = false;

@@ -1,0 +1,995 @@
+{
+    "FileSystem": {},
+    "Window": {},
+    "Camera": {
+        "Position": [
+            -142.060043,
+            64.635231,
+            -22.453680
+        ],
+        "Reference": [
+            -4.490003,
+            -5.264433,
+            -0.195754
+        ]
+    },
+    "Input": {},
+    "Audio": {},
+    "Scene": {
+        "GameObjects": [
+            {
+                "UID": 1164319419,
+                "ParentUID": 0,
+                "Name": "Camera",
+                "Translation": [
+                    10,
+                    10,
+                    -10
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 771523462,
+                "ParentUID": 0,
+                "Name": "Street_environment_V01",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 1373969138,
+                "ParentUID": 771523462,
+                "Name": "Sky001",
+                "Translation": [
+                    18.153732,
+                    0,
+                    58.960911
+                ],
+                "Rotation": [
+                    -1.000000,
+                    0,
+                    0,
+                    0
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 1741268377,
+                "ParentUID": 771523462,
+                "Name": "Dummy001",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    -0.707107,
+                    0,
+                    0,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 1246318320,
+                "ParentUID": 1741268377,
+                "Name": "City_building_004",
+                "Translation": [
+                    -41.475891,
+                    21.014099,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_004"
+            },
+            {
+                "UID": 850999685,
+                "ParentUID": 1741268377,
+                "Name": "City_building_001",
+                "Translation": [
+                    17.707165,
+                    20.053276,
+                    0.000000
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_001"
+            },
+            {
+                "UID": 522732302,
+                "ParentUID": 1741268377,
+                "Name": "City_building_007",
+                "Translation": [
+                    16.010492,
+                    37.493286,
+                    -0.000002
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_007"
+            },
+            {
+                "UID": 1887715480,
+                "ParentUID": 1741268377,
+                "Name": "City_building_008",
+                "Translation": [
+                    40.979996,
+                    18.270824,
+                    -0.000002
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_008"
+            },
+            {
+                "UID": 787720327,
+                "ParentUID": 1741268377,
+                "Name": "Line002",
+                "Translation": [
+                    -2.159772,
+                    1.853838,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "Line002"
+            },
+            {
+                "UID": 1586992628,
+                "ParentUID": 1741268377,
+                "Name": "Plane001",
+                "Translation": [
+                    -0.028603,
+                    0.026032,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    0.996635,
+                    0.970616,
+                    0.996635
+                ],
+                "Mesh": "Plane001"
+            },
+            {
+                "UID": 2127599485,
+                "ParentUID": 1741268377,
+                "Name": "City_building_010",
+                "Translation": [
+                    25.154011,
+                    -39.153721,
+                    0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 771709713,
+                "ParentUID": 2127599485,
+                "Name": "No name",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "No name"
+            },
+            {
+                "UID": 1456048127,
+                "ParentUID": 2127599485,
+                "Name": "No name",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "No name"
+            },
+            {
+                "UID": 1708576879,
+                "ParentUID": 1741268377,
+                "Name": "City_building_011",
+                "Translation": [
+                    30.134541,
+                    37.493286,
+                    -0.000002
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_011"
+            },
+            {
+                "UID": 1564201882,
+                "ParentUID": 1741268377,
+                "Name": "City_building_013",
+                "Translation": [
+                    -42.288055,
+                    33.201576,
+                    0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_013"
+            },
+            {
+                "UID": 256003705,
+                "ParentUID": 1741268377,
+                "Name": "City_building_014",
+                "Translation": [
+                    -19.439707,
+                    32.061729,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    1,
+                    -0.000000
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_014"
+            },
+            {
+                "UID": 1267159352,
+                "ParentUID": 1741268377,
+                "Name": "City_building_016",
+                "Translation": [
+                    34.270424,
+                    -41.972748,
+                    0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    1,
+                    -0.000000
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 125543185,
+                "ParentUID": 1267159352,
+                "Name": "No name",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "No name"
+            },
+            {
+                "UID": 183639595,
+                "ParentUID": 1267159352,
+                "Name": "No name",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "No name"
+            },
+            {
+                "UID": 1202092904,
+                "ParentUID": 1741268377,
+                "Name": "City_building_017",
+                "Translation": [
+                    44.260082,
+                    -39.153721,
+                    0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 1324862147,
+                "ParentUID": 1202092904,
+                "Name": "No name",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "No name"
+            },
+            {
+                "UID": 1657413990,
+                "ParentUID": 1202092904,
+                "Name": "No name",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "No name"
+            },
+            {
+                "UID": 80593539,
+                "ParentUID": 1741268377,
+                "Name": "City_building_022",
+                "Translation": [
+                    -20.831324,
+                    -27.426489,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    1,
+                    0.000000
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_022"
+            },
+            {
+                "UID": 1775492755,
+                "ParentUID": 1741268377,
+                "Name": "City_building_023",
+                "Translation": [
+                    42.130642,
+                    37.493286,
+                    -0.000002
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_023"
+            },
+            {
+                "UID": 274890888,
+                "ParentUID": 1741268377,
+                "Name": "City_building_024",
+                "Translation": [
+                    -20.572771,
+                    43.060829,
+                    -0.069194
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    1,
+                    0.000000
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_024"
+            },
+            {
+                "UID": 1951735031,
+                "ParentUID": 1741268377,
+                "Name": "City_building_026",
+                "Translation": [
+                    31.511889,
+                    -16.446016,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    1,
+                    0.000000
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_026"
+            },
+            {
+                "UID": 1864312973,
+                "ParentUID": 1741268377,
+                "Name": "City_building_028",
+                "Translation": [
+                    13.387990,
+                    -33.755039,
+                    -0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_028"
+            },
+            {
+                "UID": 1421868553,
+                "ParentUID": 1741268377,
+                "Name": "Object010",
+                "Translation": [
+                    -2.503353,
+                    15.800846,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "Object010"
+            },
+            {
+                "UID": 1504336301,
+                "ParentUID": 1741268377,
+                "Name": "City_building_030",
+                "Translation": [
+                    -42.807240,
+                    -41.835564,
+                    -0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_030"
+            },
+            {
+                "UID": 620147731,
+                "ParentUID": 1741268377,
+                "Name": "City_building_031",
+                "Translation": [
+                    -34.679482,
+                    -41.835564,
+                    -0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_031"
+            },
+            {
+                "UID": 146457016,
+                "ParentUID": 1741268377,
+                "Name": "City_building_032",
+                "Translation": [
+                    -29.478403,
+                    21.014099,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_032"
+            },
+            {
+                "UID": 231554980,
+                "ParentUID": 1741268377,
+                "Name": "City_building_033",
+                "Translation": [
+                    -32.361496,
+                    42.370422,
+                    0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_033"
+            },
+            {
+                "UID": 2077008198,
+                "ParentUID": 1741268377,
+                "Name": "City_building_034",
+                "Translation": [
+                    16.049517,
+                    -16.696884,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_034"
+            },
+            {
+                "UID": 428898566,
+                "ParentUID": 1741268377,
+                "Name": "City_building_035",
+                "Translation": [
+                    13.387990,
+                    -40.802517,
+                    -0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_035"
+            },
+            {
+                "UID": 1734435598,
+                "ParentUID": 1741268377,
+                "Name": "City_building_036",
+                "Translation": [
+                    -31.216331,
+                    33.201576,
+                    0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_036"
+            },
+            {
+                "UID": 135297548,
+                "ParentUID": 1741268377,
+                "Name": "City_building_037",
+                "Translation": [
+                    -20.317694,
+                    -16.163609,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    1,
+                    0.000000
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_037"
+            },
+            {
+                "UID": 687313566,
+                "ParentUID": 1741268377,
+                "Name": "City_building_038",
+                "Translation": [
+                    -41.649002,
+                    -16.495394,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_038"
+            },
+            {
+                "UID": 1227156032,
+                "ParentUID": 1741268377,
+                "Name": "City_building_039",
+                "Translation": [
+                    -42.807240,
+                    -30.643888,
+                    -0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_039"
+            },
+            {
+                "UID": 340691624,
+                "ParentUID": 1741268377,
+                "Name": "City_building_040",
+                "Translation": [
+                    -34.679482,
+                    -30.643888,
+                    -0.000001
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    -0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_040"
+            },
+            {
+                "UID": 334673389,
+                "ParentUID": 1741268377,
+                "Name": "City_building_041",
+                "Translation": [
+                    30.695278,
+                    21.612646,
+                    0.000000
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0.707107,
+                    0.707107
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": "City_building_041"
+            },
+            {
+                "UID": 98445619,
+                "ParentUID": 771523462,
+                "Name": "Camera001",
+                "Translation": [
+                    -78.312431,
+                    45.251217,
+                    -97.031113
+                ],
+                "Rotation": [
+                    0.049340,
+                    0.932287,
+                    0.139331,
+                    -0.330140
+                ],
+                "Scale": [
+                    1,
+                    1.000000,
+                    1.000000
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 1262122822,
+                "ParentUID": 771523462,
+                "Name": "Camera001.Target",
+                "Translation": [
+                    -28.132622,
+                    20.873329,
+                    -35.064213
+                ],
+                "Rotation": [
+                    0.049340,
+                    0.932287,
+                    0.139331,
+                    -0.330140
+                ],
+                "Scale": [
+                    1,
+                    1.000000,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 1664606163,
+                "ParentUID": 771523462,
+                "Name": "Spot001",
+                "Translation": [
+                    -66.721268,
+                    141.934128,
+                    0.000006
+                ],
+                "Rotation": [
+                    -0.690035,
+                    -0.154439,
+                    -0.690035,
+                    0.154439
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            },
+            {
+                "UID": 443180221,
+                "ParentUID": 771523462,
+                "Name": "Spot001.Target",
+                "Translation": [
+                    28.890945,
+                    -60.963882,
+                    -0.000003
+                ],
+                "Rotation": [
+                    0.000000,
+                    0,
+                    0,
+                    1.000000
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Mesh": ""
+            }
+        ]
+    },
+    "Editor": {},
+    "Renderer": {},
+    "Importer": {},
+    "Materials": {},
+    "Meshes": {}
+} 

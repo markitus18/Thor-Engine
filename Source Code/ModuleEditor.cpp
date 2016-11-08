@@ -109,7 +109,9 @@ void ModuleEditor::Draw()
 
 			if (ImGui::MenuItem("Open Scene"))
 			{
-				
+				std::vector<std::string> files;
+				std::vector<std::string> dirs;
+				App->fileSystem->DiscoverFiles("Assets", files, dirs);
 			}
 
 			if (ImGui::MenuItem("Save Scene"))

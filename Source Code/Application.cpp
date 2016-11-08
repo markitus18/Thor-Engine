@@ -69,18 +69,20 @@ bool Application::Init()
 	bool ret = true;
 
 	char* buffer = nullptr;
-	char* defBuffer = nullptr;
 
 	uint size = fileSystem->Load("ProjectSettings/Settings.JSON", &buffer);
-	uint defSize = fileSystem->Load("ProjectSettings/DefaultSettings.JSON", &defBuffer);
 
-	if (size == 0 && defSize == 0)
+	if (size <= 0)
 	{
-		LOG("[error] failed to load project settings");
-		return false;
+		uint defSize = fileSystem->Load("ProjectSettings/DefaultSettings.JSON", &buffer);
+		if (defSize <= 0)
+		{
+			LOG("[error] failed to load project settings");
+			return false;
+		}
 	}
 
-	Config config(buffer);// = size > 0 ? Config(buffer) : Config(defBuffer);
+	Config config(buffer);
 
 	// Call Init() in all modules
 	for (uint i = 0; i < list_modules.size(); i++)
@@ -194,10 +196,26 @@ const char* Application::GetOrganizationName() const
 	return organization.c_str();
 }
 
+void Application::UpdateSceneName()
+{
+	std::string windowTitle = title;
+	std::string sceneName = "";
+
+	App->fileSystem->SplitFilePath(scene->current_scene.c_str(), nullptr, &sceneName);
+	windowTitle.append(" - ").append(sceneName);
+
+	window->SetTitle(windowTitle.c_str());
+}
+
 void Application::SetTitleName(const char* new_name)
 {
 	title = new_name;
-	window->SetTitle(new_name);
+	UpdateSceneName();
+}
+
+void Application::OpenSceneWindow()
+{
+
 }
 
 void Application::SaveScene(const char* scene)
@@ -258,20 +276,24 @@ void Application::LoadSettingsNow(const char* full_path)
 void Application::SaveSceneNow()
 {
 	Config config;
-	Config node = config.SetNode(scene_to_save.c_str());
 
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		list_modules[i]->SaveScene(node.SetNode(list_modules[i]->name.c_str()));
+		list_modules[i]->SaveScene(config.SetNode(list_modules[i]->name.c_str()));
 	}
 
 	char* buffer = nullptr;
 	uint size = config.Serialize(&buffer);
 
-	std::string full_path = scene_to_save;
-	full_path.append(".scene");
+	std::string extension = "";
+	fileSystem->SplitFilePath(scene_to_save.c_str(), nullptr, &extension);
+	if (extension != ".scene")
+		scene_to_save.append(".scene");
+	
+	scene->current_scene = scene_to_save;
+	UpdateSceneName();
 
-	fileSystem->Save(full_path.c_str(), buffer, size);
+	fileSystem->Save(scene_to_save.c_str(), buffer, size);
 	RELEASE_ARRAY(buffer);
 
 	save_scene = false;
@@ -280,33 +302,34 @@ void Application::SaveSceneNow()
 void Application::LoadSceneNow()
 {
 	char* buffer = nullptr;
-	std::string fullPath = scene_to_load;
-	fullPath.append(".scene");
 
-	if (App->fileSystem->Exists(fullPath.c_str()))
+	if (App->fileSystem->Exists(scene_to_load.c_str()))
 	{
-		uint size = App->fileSystem->Load(fullPath.c_str(), &buffer);
+		uint size = App->fileSystem->Load(scene_to_load.c_str(), &buffer);
 
 		if (size > 0)
 		{
+			if (scene_to_load.find("ProjectSettings/") == scene_to_load.npos)
+				scene->current_scene = scene_to_load;
+			
 			Config config(buffer);
-			Config node = config.GetNode(scene_to_load.c_str());
 
 			for (uint i = 0; i < list_modules.size(); i++)
 			{
-				list_modules[i]->LoadScene(node.GetNode(list_modules[i]->name.c_str()));
+				list_modules[i]->LoadScene(config.GetNode(list_modules[i]->name.c_str()));
 			}
 		}
 		else
 		{
-			LOG("[error] File '%s' is empty", fullPath.c_str());
+			LOG("[error] File '%s' is empty", scene_to_load.c_str());
 		}
 	}
 	else
 	{
-		LOG("[error] File '%s' not found", fullPath.c_str());
+		LOG("[error] File '%s' not found", scene_to_load.c_str());
 	}
 
 	RELEASE_ARRAY(buffer);
+	UpdateSceneName();
 	load_scene = false;
 }

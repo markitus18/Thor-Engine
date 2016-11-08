@@ -11,6 +11,9 @@
 #include "PanelConfiguration.h"
 #include "PanelButtons.h"
 
+#include "ModuleScene.h"
+#include "ModuleFileSystem.h"
+
 #include "OpenGL.h"
 
 #include "ImGui\imgui.h"
@@ -54,6 +57,24 @@ bool ModuleEditor::Init(Config& config)
 	ImVec4 headerColor = style.Colors[ImGuiCol_TitleBg];
 	headerColor.w = 1.0f;
 	ImGui::PushStyleColor(ImGuiCol_TitleBg, headerColor);
+
+	headerColor = style.Colors[ImGuiCol_TitleBgActive];
+	headerColor.w = 1.0f;
+	ImGui::PushStyleColor(ImGuiCol_TitleBgActive, headerColor);
+
+
+	//Button color
+	ImVec4 buttonColor(0.37, 0.37, 0.64, 0.6);
+	ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
+
+	buttonColor = ImVec4(0.37, 0.37, 0.64, 0.8);
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, buttonColor);
+
+	buttonColor = ImVec4(0.347, 0.37, 0.64, 1.0);
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, buttonColor);
+
+
+
 	return true;
 }
 
@@ -77,16 +98,41 @@ void ModuleEditor::Draw()
 		ShowAboutWindow();
 	if (show_Demo_window)
 		ImGui::ShowTestWindow(&show_Demo_window);
+	if (show_fileName_window)
+		ShowFileNameWindow();
 
 	// -----------------------------
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Exit          ", "Esc"))
+
+			if (ImGui::MenuItem("Open Scene"))
+			{
+				
+			}
+
+			if (ImGui::MenuItem("Save Scene"))
+			{
+				if (App->scene->current_scene == "Untitled")
+				{
+					StartFileNameWindow();
+				}
+				else
+				{
+					App->SaveScene(App->scene->current_scene.c_str());
+				}
+			}
+
+			if (ImGui::MenuItem("Save Scene as"))
+			{
+				StartFileNameWindow();
+			}
+			ImGui::Separator();
+			if (ImGui::MenuItem("Exit          "))
 			{
 				ImGui::EndMenu();
-				return;	
+				return;
 			}
 			ImGui::EndMenu();
 
@@ -221,12 +267,45 @@ void ModuleEditor::DrawPanels()
 void ModuleEditor::ShowAboutWindow()
 {
 	ImGui::SetNextWindowSize(ImVec2(600, 100));
-	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(400, 100), 1.0f, ImGuiWindowFlags_NoResize);
+	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoResize);
 	ImGui::Text("v0.4-alpha");
 	ImGui::Separator();
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
 	ImGui::End();
+}
+
+void ModuleEditor::ShowFileNameWindow()
+{
+	ImGui::SetNextWindowSize(ImVec2(400, 100));
+	ImGui::Begin("File Name", &show_fileName_window, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoResize);
+
+	if (ImGui::InputText("", fileName, 50, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		App->SaveScene(fileName);
+	}
+
+	if (ImGui::Button("Accept"))
+	{
+		App->SaveScene(fileName);
+		show_fileName_window = false;
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Cancel"))
+	{
+		show_fileName_window = false;
+	}
+	ImGui::End();
+}
+
+void ModuleEditor::StartFileNameWindow()
+{
+	show_fileName_window = true;
+	std::string file;
+	App->fileSystem->SplitFilePath(App->scene->current_scene.c_str(), nullptr, &file);
+
+	strcpy_s(fileName, 50, file.c_str());
 }
 
 void ModuleEditor::UpdateFPSData(int fps, int ms)

@@ -80,8 +80,10 @@ public:
 	const char* GetTitleName() const;
 	const char* GetOrganizationName() const;
 
+	void UpdateSceneName();
 	void SetTitleName(const char* new_name);
 
+	void OpenSceneWindow();
 	void SaveScene(const char* file);
 	void LoadScene(const char* file);
 

@@ -47,6 +47,9 @@ public:
 private:
 	void DrawPanels();
 	void ShowAboutWindow();
+	void ShowFileNameWindow();
+
+	void StartFileNameWindow();
 	//TODO: move into private
 public:
 	//Panels
@@ -63,6 +66,9 @@ private:
 	//Active window controllers
 	bool show_About_window = false;
 	bool show_Demo_window = false;
+	bool show_fileName_window = false;
+
+	char fileName[50];
 
 	bool using_keyboard;
 	bool using_mouse;

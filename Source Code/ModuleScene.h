@@ -33,6 +33,7 @@ public:
 	void SaveConfig(Config& config) const;
 	void LoadConfig(Config& config);
 
+	void StartSaveScene(const char* sceneName);
 	void SaveScene(Config& node) const;
 	void LoadScene(Config& node); //Load itself
 	void LoadScene(const char* file); //Calls application and prepares to load
@@ -47,7 +48,7 @@ private:
 
 public:
 	bool reset = false;
-	std::string current_scene = "Scene01";
+	std::string current_scene = "Untitled";
 
 private:
 	bool drawGrid = true;

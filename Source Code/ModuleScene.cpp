@@ -29,13 +29,11 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene",
 
 	//TODO: This should nto be here
 	//TMP camera for testing purposes
-	camera = new GameObject(root, "Camera");
-	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
-	camera->CreateComponent(Component::Type::Camera);
-	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
-	camera->uid = random.Int();
-
-	current_scene = "Default Scene";
+	//camera = new GameObject(root, "Camera");
+	//camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
+	//camera->CreateComponent(Component::Type::Camera);
+	//camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
+	//camera->uid = random.Int();
 }
 
 ModuleScene::~ModuleScene()
@@ -163,6 +161,7 @@ update_status ModuleScene::Update(float dt)
 
 		for (uint i = 0; i < gameObjects.size(); i++)
 		{
+			if (gameObjects[i]->name != "root");
 				gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 		}
 		gameObjects.clear();
@@ -363,9 +362,10 @@ void ModuleScene::DeleteAllGameObjects()
 	{
 		delete root->childs[i];
 	}
+	root->childs.clear();
 }
 
 void ModuleScene::CreateDefaultScene()
 {
-	App->LoadScene("ProjectSettings/DefaultScene");
+	App->LoadScene("ProjectSettings/Untitled.scene");
 }

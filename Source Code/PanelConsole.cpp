@@ -33,7 +33,8 @@ void PanelConsole::Draw(ImGuiWindowFlags flags)
 	{
 		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
 		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
-
+		
+		flags |= ImGuiWindowFlags_NoTitleBar;
 		if (!ImGui::Begin("Console", &active, ImVec2(size.x, size.y), 1.0f, flags))
 		{
 			ImGui::End();

@@ -57,20 +57,20 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 	return nullptr;
 }
 
-C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const char* global_scene_path, const char* local_scene_path)
+C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::string& path)
 {
 	uint numTextures = from->GetTextureCount(aiTextureType_DIFFUSE);
+	std::string mat_path = "";
+	std::string file = "";
 
-	std::string texture_global_path = "";
-	std::string scene_dir = "";
-	App->fileSystem->SplitFilePath(global_scene_path, &scene_dir);
-
+	std::string tmpPath = "";
+	App->fileSystem->SplitFilePath(path.c_str(), &tmpPath);
 	if (numTextures > 0)
 	{
 		aiString aiStr;
 		aiReturn ret = from->GetTexture(aiTextureType_DIFFUSE, 0, &aiStr);
-		texture_global_path = global_scene_path;
-		texture_global_path.append(aiStr.C_Str());
+		App->fileSystem->SplitFilePath(aiStr.C_Str(), &mat_path, &file);
+		tmpPath += mat_path + file;
 	}
 	aiColor4D color;
 	from->Get(AI_MATKEY_COLOR_DIFFUSE, color);
@@ -84,14 +84,11 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const char* 
 	else
 	{
 		material = new C_Material(nullptr);
-		if (texture_global_path != "")
+		if (mat_path != "" && file != "")
 		{
-			std::string file;
-			App->fileSystem->SplitFilePath(texture_global_path.c_str(), nullptr, &file);
-			std::string texture_local_path = local_scene_path + std::string("/Textures/") + file;
-			material->texture_path = texture_local_path;
+			material->texture_path = mat_path + file;
 			material->texture_file = file;
-			material->texture_id = ImportTexture(texture_global_path.c_str(), texture_local_path.c_str());
+			material->texture_id = ImportTexture(tmpPath.c_str());
 		}
 		else
 		{
@@ -105,57 +102,53 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const char* 
 	return material;
 }
 
-uint ModuleMaterials::ImportTexture(const char* global_path, const char* local_path)
+uint ModuleMaterials::ImportTexture(const char* file)
 {
+	//TODO: Search for all "Textures" folder and search that file ?
 	uint ret = 0;
-	//First of all, duplicate texture in assets
-	if (App->fileSystem->CopyNewFile(global_path, local_path))
+
+	char* buffer = nullptr;
+	std::string full_path = file;//"/Textures/";
+	//full_path.append(file);
+
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	if (size > 0)
 	{
-		//LEFT HERE
-		char* buffer = nullptr;
+		ILuint ImageName;
+		ilGenImages(1, &ImageName);
+		ilBindImage(ImageName);
 
-		uint size = App->fileSystem->Load(local_path, &buffer);
-
-		if (size > 0)
+ 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			ILuint ImageName;
-			ilGenImages(1, &ImageName);
-			ilBindImage(ImageName);
+			ilEnable(IL_FILE_OVERWRITE);
 
- 			if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+			//Loading texture buffer
+			ret = ilutGLBindTexImage();
+			ilDeleteImages(1, &ImageName);
+
+			//Saving texture in dds
+			ILuint bufSize;
+			ILubyte* data;
+
+			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+			bufSize = ilSaveL(IL_DDS, nullptr, 0);
+
+			if (bufSize > 0)
 			{
-				ilEnable(IL_FILE_OVERWRITE);
-
-				//Loading texture buffer
-				ret = ilutGLBindTexImage();
-				ilDeleteImages(1, &ImageName);
-
-				//Saving texture in dds
-				ILuint bufSize;
-				ILubyte* data;
-
-				ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-				bufSize = ilSaveL(IL_DDS, nullptr, 0);
-
-				if (bufSize > 0)
+				data = new ILubyte[bufSize];
+				if (ilSaveL(IL_DDS, data, bufSize) > 0)
 				{
-					data = new ILubyte[bufSize];
-					if (ilSaveL(IL_DDS, data, bufSize) > 0)
-					{
-						std::string save_path = "Library/Textures/";
-						std::string fileName;
-						App->fileSystem->SplitFilePath(local_path, nullptr, &fileName);
-						save_path.append(fileName).append(".dds");
-						App->fileSystem->Save(save_path.c_str(), data, bufSize);
-						RELEASE_ARRAY(data);
-					}
+					std::string save_path = "Library/Textures/";
+					save_path.append(file).append(".dds");
+					App->fileSystem->Save(save_path.c_str(), data, bufSize);
+					RELEASE_ARRAY(data);
 				}
 			}
-
-			RELEASE_ARRAY(buffer);
 		}
-	}
 
+		RELEASE_ARRAY(buffer);
+	}
 	return ret;
 }
 

@@ -179,7 +179,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
-		C_Material* go_mat = App->moduleMaterials->LoadMaterial(material, path);
+		C_Material* go_mat = App->moduleMaterials->ImportMaterial(material, path);
 		child->AddComponent(go_mat);
 		//--------------------------------
 

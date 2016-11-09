@@ -18,8 +18,8 @@ public:
 	bool CleanUp();
 
 	C_Material* Exists(const char* texture_path) const;
-	C_Material* ImportMaterial(const aiMaterial* from, const char* global_path, const char* local_path);
-	uint ImportTexture(const char* global_path, const char* local_path);
+	C_Material* ImportMaterial(const aiMaterial* from, const std::string& texture_path);
+	uint ImportTexture(const char* path);
 
 	//Tmp function, move to file system
 	void CutPath(std::string&);

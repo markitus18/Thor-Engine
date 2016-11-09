@@ -22,8 +22,8 @@ public:
 	ModuleImport(Application* app, bool start_enabled = true);
 	~ModuleImport();
 
-	void ImportFile(char* global_path, char* local_destination);
-	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* global_path, char* local_path);
+	void ImportFile(char* path);
+	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path);
 	bool Init(Config& config);
 	bool CleanUp();
 	update_status Update(float dt);

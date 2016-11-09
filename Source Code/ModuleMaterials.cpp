@@ -88,7 +88,7 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 		{
 			material->texture_path = mat_path + file;
 			material->texture_file = file;
-			material->texture_id = ImportTexture(tmpPath.c_str());
+			material->texture_id = ImportTexture(file.c_str());
 		}
 		else
 		{
@@ -107,11 +107,11 @@ uint ModuleMaterials::ImportTexture(const char* file)
 	//TODO: Search for all "Textures" folder and search that file ?
 	uint ret = 0;
 
-	char* buffer = nullptr;
-	std::string full_path = file;//"/Textures/";
-	//full_path.append(file);
+	char* loadBuffer = nullptr;
+	std::string full_path = "/Textures/";
+	full_path.append(file);
 
-	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+	uint size = App->fileSystem->Load(full_path.c_str(), &loadBuffer);
 
 	if (size > 0)
 	{
@@ -119,35 +119,35 @@ uint ModuleMaterials::ImportTexture(const char* file)
 		ilGenImages(1, &ImageName);
 		ilBindImage(ImageName);
 
- 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+ 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)loadBuffer, size))
 		{
 			ilEnable(IL_FILE_OVERWRITE);
 
 			//Loading texture buffer
 			ret = ilutGLBindTexImage();
-			ilDeleteImages(1, &ImageName);
-
 			//Saving texture in dds
-			ILuint bufSize;
-			ILubyte* data;
+			ILuint saveBufferSize;
+			ILubyte* saveBuffer;
 
 			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-			bufSize = ilSaveL(IL_DDS, nullptr, 0);
+			saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
 
-			if (bufSize > 0)
+			if (saveBuffer > 0)
 			{
-				data = new ILubyte[bufSize];
-				if (ilSaveL(IL_DDS, data, bufSize) > 0)
+				saveBuffer = new ILubyte[saveBufferSize];
+				if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
 				{
 					std::string save_path = "Library/Textures/";
 					save_path.append(file).append(".dds");
-					App->fileSystem->Save(save_path.c_str(), data, bufSize);
-					RELEASE_ARRAY(data);
+					App->fileSystem->Save(save_path.c_str(), saveBuffer, saveBufferSize);
+					RELEASE_ARRAY(saveBuffer);
 				}
 			}
+
+			ilDeleteImages(1, &ImageName);
 		}
 
-		RELEASE_ARRAY(buffer);
+		RELEASE_ARRAY(loadBuffer);
 	}
 	return ret;
 }

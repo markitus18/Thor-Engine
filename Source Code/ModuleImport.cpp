@@ -54,7 +54,7 @@ update_status ModuleImport::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 	{
-		ImportFile("Models/Street_environment_V01.FBX");
+		ImportFile("Models/Street_environment_V01.FBX", "");
 	}
 
 	return UPDATE_CONTINUE;
@@ -81,23 +81,36 @@ std::string ModuleImport::GetFileFolder(const std::string& str)
 	return ret;
 }
 
-void ModuleImport::ImportFile(char* path)
+//Imports a new file from a global path into a destination in assets
+void ModuleImport::ImportFile(char* global_path, char* local_destination)
 {
-	LOG("Entering mesh load");
-	const aiScene* file = aiImportFileEx(path, aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
-	if (file)
+	LOG("Starting file import");
+
+	std::string fileName = "";
+	App->fileSystem->SplitFilePath(global_path, nullptr, &fileName);
+
+	std::string local_dst = local_destination + fileName;
+
+	//First we duplicate the file in our directory
+	if (App->fileSystem->CopyNewFile(global_path, local_dst.c_str()))
 	{
-		LOG("Starting scene load %s", path);
-		LoadFBX(file, file->mRootNode, App->scene->GetRoot(), path);
-		aiReleaseImport(file);
-	}
-	else
-	{
-		LOG("File not found");
+		//Open fbx in a new aiScene
+		const aiScene* scene = aiImportFileEx(local_dst.c_str(), aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
+
+		if (scene)
+		{
+			LOG("Starting scene load %s", local_destination);
+			LoadFBX(scene, scene->mRootNode, App->scene->GetRoot(), global_path, local_destination);
+			aiReleaseImport(scene);
+		}
+		else
+		{
+			LOG("File not found");
+		}
 	}
 }
 
-GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path)
+GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* global_path, char* local_path)
 {
 	aiVector3D		translation;
 	aiVector3D		scaling;
@@ -140,14 +153,9 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	//Cutting path into file name --------------------
 	if (node_name == "RootNode")
 	{
-		node_name = path;
-		uint slashPos;
-		if ((slashPos = node_name.find_last_of("/")) != std::string::npos)
-			node_name = node_name.substr(slashPos + 1, node_name.size() - slashPos);
-
-		uint pointPos;
-		if ((pointPos = node_name.find_first_of(".")) != std::string::npos)
-			node_name = node_name.substr(0, node_name.size() - (node_name.size() - pointPos));
+		std::string file_name;
+		App->fileSystem->SplitFilePath(global_path, nullptr, &file_name);
+		node_name = file_name;
 	}
 	//-----------------------------------------------
 
@@ -179,7 +187,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
-		C_Material* go_mat = App->moduleMaterials->ImportMaterial(material, path);
+		C_Material* go_mat = App->moduleMaterials->ImportMaterial(material, global_path, local_path);
 		child->AddComponent(go_mat);
 		//--------------------------------
 
@@ -187,7 +195,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 	// ------------------------------------------------------------
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
-		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject, path);
+		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject, global_path, local_path);
 	}
 	return gameObject;
 }

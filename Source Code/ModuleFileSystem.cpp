@@ -21,6 +21,7 @@ ModuleFileSystem::ModuleFileSystem(Application* app, bool start_enabled) : Modul
 	//AddPath("Game");
 	AddPath(".");
 	AddPath("Assets");
+
 	if(PHYSFS_setWriteDir(".") == 0)
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 	// workaround VS string directory mess
@@ -244,6 +245,13 @@ SDL_RWops* ModuleFileSystem::Load(const char* file) const
 	}
 	else
 		return nullptr;
+}
+
+bool ModuleFileSystem::CopyNewFile(const char* source, const char* destination) const
+{
+	std::string dst_file = GetWriteDir();
+	dst_file.append(destination);
+	return CopyFile(source, dst_file.c_str(), true);
 }
 
 int close_sdl_rwops(SDL_RWops *rw)

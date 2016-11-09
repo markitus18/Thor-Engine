@@ -4,6 +4,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
+#include "ModuleImport.h"
 
 #include "SDL/include/SDL_mouse.h"
 #include "Assimp/include/cfileio.h"
@@ -145,6 +146,16 @@ update_status ModuleInput::PreUpdate(float dt)
 					App->renderer3D->OnResize(event.window.data1, event.window.data2);
 					App->moduleEditor->OnResize(event.window.data1, event.window.data2);
 				}
+				break;
+			}
+
+			case SDL_DROPFILE:
+			{
+				char* file = event.drop.file;
+				SDL_free(event.drop.file);
+				App->moduleImport->ImportFile(file, "/Assets/");
+				int i = 0;
+				break;
 			}
 		}
 	}

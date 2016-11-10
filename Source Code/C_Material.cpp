@@ -13,16 +13,6 @@ C_Material::~C_Material()
 	glDeleteBuffers(1, &texture_id);
 }
 
-void C_Material::Save()
-{
-
-}
-
-void C_Material::Load()
-{
-
-}
-
 Component::Type C_Material::GetType()
 {
 	return Component::Type::Material;

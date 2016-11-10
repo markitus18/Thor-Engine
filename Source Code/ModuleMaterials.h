@@ -20,11 +20,9 @@ public:
 	C_Material* Exists(const char* texture_path) const;
 	C_Material* ImportMaterial(const aiMaterial* from, const std::string& texture_path);
 
+	void SaveMaterial(const C_Material* material, const char* path);
 
-	//Own file format conversion
-	uint ImportTexture(const char* path);
-
-	std::string SaveTexture(const char* buffer, uint size, const char* path);
+	std::string SaveTexture(const char* path);
 	uint LoadTexture(const char* path);
 
 private:

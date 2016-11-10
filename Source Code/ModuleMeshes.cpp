@@ -157,13 +157,6 @@ void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
 	uint totalSizeAfter = sizeof(data);
 
 	RELEASE_ARRAY(data);
-
-	//Ranges are already broken here
-	uint size2 = App->fileSystem->Load(full_path.c_str(), &data);
-	uint rangesTest2[4];
-	bytes = sizeof(rangesTest2);
-	memcpy(rangesTest2, data, bytes);
-
 }
 
 C_Mesh* ModuleMeshes::LoadMesh(const char* path)

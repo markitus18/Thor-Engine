@@ -86,9 +86,11 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 		material = new C_Material(nullptr);
 		if (mat_path != "" && file != "")
 		{
-			material->texture_path = mat_path + file;
+			std::string tex_path = SaveTexture(file.c_str());
+
+			material->texture_path = tex_path;
 			material->texture_file = file;
-			material->texture_id = ImportTexture(file.c_str());
+			material->texture_id = LoadTexture(tex_path.c_str());
 		}
 		else
 		{
@@ -99,62 +101,78 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 		materials.push_back(material);
 	}
 	
+	SaveMaterial(material, file.c_str());
 	return material;
 }
 
-uint ModuleMaterials::ImportTexture(const char* file)
+void ModuleMaterials::SaveMaterial(const C_Material* material, const char* path)
 {
-	//TODO: Search for all "Textures" folder and search that file ?
-	uint ret = 0;
+	uint size = material->texture_path.size() + sizeof(float) * 4; //Color size
 
-	char* buffer = nullptr;
-	std::string full_path = "/Textures/";
-	full_path.append(file);
+	// Allocate buffer size
+	char* data = new char[size];
+	char* cursor = data;
 
-	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+	// Store texture path
+	uint bytes = material->texture_path.size();;
+	memcpy(cursor, material->texture_path.c_str(), bytes);
+	cursor += bytes;
 
-	if (size > 0)
-	{
-		std::string saved_file = SaveTexture(buffer, size, file);
-		RELEASE_ARRAY(buffer);
-		ret = LoadTexture(saved_file.c_str());
-	}
-	return ret;
+	float color[4] { material->color.r, material->color.g, material->color.b, material->color.a };
+	bytes = sizeof(float) * 4;
+	memcpy(cursor, color, bytes);
+	cursor += bytes;
+
+	std::string full_path = ("Library/Materials/");
+	full_path.append(path);// .append(".mat");
+
+	App->fileSystem->Save(full_path.c_str(), data, size);
+
+	RELEASE_ARRAY(data);
 }
 
-std::string ModuleMaterials::SaveTexture(const char* buffer, uint size, const char* path)
+std::string ModuleMaterials::SaveTexture(const char* path)
 {
 	std::string ret = "";
 
-	ILuint ImageName;
-	ilGenImages(1, &ImageName);
-	ilBindImage(ImageName);
+	char* buffer = nullptr;
+	std::string full_path = "/Textures/";
+	full_path.append(path);
 
-	if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+	
+	if (size > 0)
 	{
-		ilEnable(IL_FILE_OVERWRITE);
+		ILuint ImageName;
+		ilGenImages(1, &ImageName);
+		ilBindImage(ImageName);
 
-		ILuint saveBufferSize;
-		ILubyte* saveBuffer;
-
-		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-		saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
-
-		if (saveBufferSize > 0)
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			saveBuffer = new ILubyte[saveBufferSize];
-			if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+			ilEnable(IL_FILE_OVERWRITE);
+
+			ILuint saveBufferSize;
+			ILubyte* saveBuffer;
+
+			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+			saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
+
+			if (saveBufferSize > 0)
 			{
-				std::string save_path = "Library/Textures/";
-				ret = save_path.append(path).append(".dds");
-				App->fileSystem->Save(save_path.c_str(), saveBuffer, saveBufferSize);
-				RELEASE_ARRAY(saveBuffer);
+				saveBuffer = new ILubyte[saveBufferSize];
+				if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+				{
+					std::string save_path = "Library/Textures/";
+					ret = save_path.append(path).append(".dds");
+					App->fileSystem->Save(save_path.c_str(), saveBuffer, saveBufferSize);
+					RELEASE_ARRAY(saveBuffer);
+				}
 			}
+
+			ilDeleteImages(1, &ImageName);
 		}
-
-		ilDeleteImages(1, &ImageName);
+		RELEASE_ARRAY(buffer);
 	}
-
 	return ret;
 }
 

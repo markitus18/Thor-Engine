@@ -17,6 +17,7 @@
 #include "Intersections.h"
 #include "Config.h"
 #include "ModuleMeshes.h"
+#include "ModuleMaterials.h"
 
 #include <windows.h>
 #include <shobjidl.h> 
@@ -247,6 +248,12 @@ void ModuleScene::SaveScene(Config& node) const
 			if (mesh)
 				meshLibFile = mesh->libFile;
 			gameObject_node.SetString("Mesh", meshLibFile.c_str());
+
+			std::string matLibFile = "";
+			C_Material* mat = gameObjects[i]->GetComponent<C_Material>();
+			if (mat)
+				matLibFile = mat->libFile;
+			gameObject_node.SetString("Material", matLibFile.c_str());
 		}
 	}
 }
@@ -288,6 +295,18 @@ void ModuleScene::LoadScene(Config& node)
 				gameObject->AddComponent(mesh);
 			}
 		}	
+
+		//Material load
+		std::string matPath = gameObject_node.GetString("Material");
+
+		if (matPath != "")
+		{
+			C_Material* mat = App->moduleMaterials->LoadMaterial(matPath.c_str());
+			if (mat != nullptr)
+			{
+				gameObject->AddComponent(mat);
+			}
+		}
 	}
 
 	//Security method if any game object is left without a parent

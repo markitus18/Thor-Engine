@@ -21,8 +21,9 @@ public:
 	C_Material* ImportMaterial(const aiMaterial* from, const std::string& texture_path);
 
 	void SaveMaterial(const C_Material* material, const char* path);
+	C_Material* LoadMaterial(const char* path);
 
-	std::string SaveTexture(const char* path);
+	void SaveTexture(const char* path);
 	uint LoadTexture(const char* path);
 
 private:

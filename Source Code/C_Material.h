@@ -20,6 +20,8 @@ public:
 	std::string texture_path;
 	std::string texture_file;
 	Color color;
+
+	std::string libFile = "";
 };
 
 #endif // __C_MATERIAL_H__

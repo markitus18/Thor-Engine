@@ -74,7 +74,7 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 	}
 	aiColor4D color;
 	from->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-
+//	from->
 	C_Material* material = nullptr;
 
 	if (material != nullptr)
@@ -86,11 +86,9 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 		material = new C_Material(nullptr);
 		if (mat_path != "" && file != "")
 		{
-			std::string tex_path = SaveTexture(file.c_str());
-
-			material->texture_path = tex_path;
-			material->texture_file = file;
-			material->texture_id = LoadTexture(tex_path.c_str());
+			SaveTexture(file.c_str());
+			material->texture_id = LoadTexture(file.c_str());
+			material->texture_path = file;
 		}
 		else
 		{
@@ -100,23 +98,39 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 		material->color = Color(color.r, color.g, color.b, color.a);
 		materials.push_back(material);
 	}
-	
-	SaveMaterial(material, file.c_str());
+	aiString mat_name;
+	from->Get(AI_MATKEY_NAME, mat_name);
+	SaveMaterial(material, mat_name.C_Str());
+	material = LoadMaterial(mat_name.C_Str());
 	return material;
 }
 
 void ModuleMaterials::SaveMaterial(const C_Material* material, const char* path)
 {
-	uint size = material->texture_path.size() + sizeof(float) * 4; //Color size
+	uint size = sizeof(uint) + material->texture_path.size() + sizeof(float) * 4; //Color size
 
 	// Allocate buffer size
 	char* data = new char[size];
 	char* cursor = data;
 
-	// Store texture path
-	uint bytes = material->texture_path.size();;
-	memcpy(cursor, material->texture_path.c_str(), bytes);
+	// Store texture path lenght
+	uint bytes = sizeof(uint);
+	uint path_size = material->texture_path.size();
+	memcpy(cursor, &path_size, bytes);
+
 	cursor += bytes;
+
+	// Store texture path
+	bytes = material->texture_path.size();
+
+	if (bytes)
+	{
+		memcpy(cursor, material->texture_path.c_str(), bytes);
+		cursor += bytes;
+		
+		//memcpy(cursor, "/0", 1);
+		//cursor += 1;
+	}
 
 	float color[4] { material->color.r, material->color.g, material->color.b, material->color.a };
 	bytes = sizeof(float) * 4;
@@ -131,7 +145,67 @@ void ModuleMaterials::SaveMaterial(const C_Material* material, const char* path)
 	RELEASE_ARRAY(data);
 }
 
-std::string ModuleMaterials::SaveTexture(const char* path)
+C_Material* ModuleMaterials::LoadMaterial(const char* path)
+{
+	std::string full_path = "Library/Materials/";
+	full_path.append(path);// .append(".mesh");
+
+	char* buffer;
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	if (size > 0)
+	{
+		char* cursor = buffer;
+
+		C_Material* material = new C_Material(nullptr);
+
+		uint pathSize = 0;
+		uint bytes = sizeof(uint);
+		//Problem here, check pathSize
+		memcpy(&pathSize, cursor, bytes);
+		cursor += bytes;
+
+		if (pathSize > 0)
+		{
+			char* tex_path = new char[pathSize + 1];
+			bytes = sizeof(char) * pathSize;
+			memcpy(tex_path, cursor, bytes);
+			cursor += bytes;
+			tex_path[pathSize] = '\0';
+			material->texture_path = tex_path;
+			RELEASE_ARRAY(tex_path);
+		}
+
+		else
+		{
+			material->texture_path != "";
+		}
+
+		if (material->texture_path != "")
+		{
+			material->texture_id = LoadTexture(material->texture_path.c_str());
+		}
+
+		float color[4];
+		bytes = sizeof(float) * 4;
+		memcpy(color, cursor, bytes);
+		cursor += bytes;
+
+		material->color = Color(color[0], color[1], color[2], color[3]);
+
+		material->libFile = path;
+		RELEASE_ARRAY(buffer);
+		return material;
+	}
+	else
+	{
+		LOG("[warning] material file '%s' is empty", path);
+		return nullptr;
+	}
+
+}
+
+void ModuleMaterials::SaveTexture(const char* path)
 {
 	std::string ret = "";
 
@@ -163,7 +237,7 @@ std::string ModuleMaterials::SaveTexture(const char* path)
 				if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
 				{
 					std::string save_path = "Library/Textures/";
-					ret = save_path.append(path).append(".dds");
+					ret = save_path.append(path);
 					App->fileSystem->Save(save_path.c_str(), saveBuffer, saveBufferSize);
 					RELEASE_ARRAY(saveBuffer);
 				}
@@ -173,15 +247,18 @@ std::string ModuleMaterials::SaveTexture(const char* path)
 		}
 		RELEASE_ARRAY(buffer);
 	}
-	return ret;
 }
 
 uint ModuleMaterials::LoadTexture(const char* path)
 {
 	uint ret = 0;
 
+	std::string full_path = "Library/Textures/";
+	full_path.append(path);// .append(".mesh");
+
+
 	char* buffer = nullptr;
-	uint size = App->fileSystem->Load(path, &buffer);
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
 
 	if (size > 0)
 	{

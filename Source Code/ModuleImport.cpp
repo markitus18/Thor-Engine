@@ -60,27 +60,6 @@ update_status ModuleImport::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-//Tmp function, move to file system
-void ModuleImport::CutPath(std::string& str)
-{
-	uint position = str.find_last_of("\\/");
-	if (position != std::string::npos)
-	{
-		str = str.substr(position + 1, str.size() - position);
-	}
-}
-
-std::string ModuleImport::GetFileFolder(const std::string& str)
-{
-	std::string ret;
-	uint position = str.find_last_of("\\/");
-	if (position != std::string::npos)
-	{
-		ret = str.substr(0, position + 1);
-	}
-	return ret;
-}
-
 void ModuleImport::ImportFile(char* path)
 {
 	LOG("Entering mesh load");

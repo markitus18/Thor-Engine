@@ -107,11 +107,63 @@ uint ModuleMaterials::ImportTexture(const char* file)
 	//TODO: Search for all "Textures" folder and search that file ?
 	uint ret = 0;
 
-	char* loadBuffer = nullptr;
+	char* buffer = nullptr;
 	std::string full_path = "/Textures/";
 	full_path.append(file);
 
-	uint size = App->fileSystem->Load(full_path.c_str(), &loadBuffer);
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	if (size > 0)
+	{
+		std::string saved_file = SaveTexture(buffer, size, file);
+		RELEASE_ARRAY(buffer);
+		ret = LoadTexture(saved_file.c_str());
+	}
+	return ret;
+}
+
+std::string ModuleMaterials::SaveTexture(const char* buffer, uint size, const char* path)
+{
+	std::string ret = "";
+
+	ILuint ImageName;
+	ilGenImages(1, &ImageName);
+	ilBindImage(ImageName);
+
+	if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+	{
+		ilEnable(IL_FILE_OVERWRITE);
+
+		ILuint saveBufferSize;
+		ILubyte* saveBuffer;
+
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+		saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
+
+		if (saveBufferSize > 0)
+		{
+			saveBuffer = new ILubyte[saveBufferSize];
+			if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+			{
+				std::string save_path = "Library/Textures/";
+				ret = save_path.append(path).append(".dds");
+				App->fileSystem->Save(save_path.c_str(), saveBuffer, saveBufferSize);
+				RELEASE_ARRAY(saveBuffer);
+			}
+		}
+
+		ilDeleteImages(1, &ImageName);
+	}
+
+	return ret;
+}
+
+uint ModuleMaterials::LoadTexture(const char* path)
+{
+	uint ret = 0;
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(path, &buffer);
 
 	if (size > 0)
 	{
@@ -119,56 +171,9 @@ uint ModuleMaterials::ImportTexture(const char* file)
 		ilGenImages(1, &ImageName);
 		ilBindImage(ImageName);
 
- 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)loadBuffer, size))
-		{
-			ilEnable(IL_FILE_OVERWRITE);
-
-			//Loading texture buffer
-			ret = ilutGLBindTexImage();
-			//Saving texture in dds
-			ILuint saveBufferSize;
-			ILubyte* saveBuffer;
-
-			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-			saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
-
-			if (saveBuffer > 0)
-			{
-				saveBuffer = new ILubyte[saveBufferSize];
-				if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
-				{
-					std::string save_path = "Library/Textures/";
-					save_path.append(file).append(".dds");
-					App->fileSystem->Save(save_path.c_str(), saveBuffer, saveBufferSize);
-					RELEASE_ARRAY(saveBuffer);
-				}
-			}
-
-			ilDeleteImages(1, &ImageName);
-		}
-
-		RELEASE_ARRAY(loadBuffer);
+		ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
+		ret = ilutGLBindTexImage();
 	}
-	return ret;
-}
 
-//Tmp function, move to file system
-void ModuleMaterials::CutPath(std::string& str)
-{
-	uint position = str.find_last_of("\\/");
-	if (position != std::string::npos)
-	{
-		str = str.substr(position + 1, str.size() - position);
-	}
-}
-
-std::string ModuleMaterials::GetFileFolder(const std::string& str)
-{
-	std::string ret;
-	uint position = str.find_last_of("\\/");
-	if (position != std::string::npos)
-	{
-		ret = str.substr(0, position + 1);
-	}
 	return ret;
 }

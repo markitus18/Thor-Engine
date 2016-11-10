@@ -28,9 +28,6 @@ public:
 	bool CleanUp();
 	update_status Update(float dt);
 
-	//Tmp function, move to file system
-	void CutPath(std::string&);
-	std::string GetFileFolder(const std::string&);
 private:
 	bool fbx_loaded = false;
 	uint material_count = 0;

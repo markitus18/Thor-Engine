@@ -19,11 +19,13 @@ public:
 
 	C_Material* Exists(const char* texture_path) const;
 	C_Material* ImportMaterial(const aiMaterial* from, const std::string& texture_path);
+
+
+	//Own file format conversion
 	uint ImportTexture(const char* path);
 
-	//Tmp function, move to file system
-	void CutPath(std::string&);
-	std::string GetFileFolder(const std::string&);
+	std::string SaveTexture(const char* buffer, uint size, const char* path);
+	uint LoadTexture(const char* path);
 
 private:
 	std::list<C_Material*> materials;

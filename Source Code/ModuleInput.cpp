@@ -107,10 +107,6 @@ update_status ModuleInput::PreUpdate(float dt)
 				mouse_y = event.motion.y / SCREEN_SIZE;
 
 				mouse_motion_x = (event.motion.xrel / SCREEN_SIZE) - last_mouse_swap;
-				ImGui::GetIO().MouseDelta.x = mouse_motion_x;
-				ImGui::GetIO().MousePos.x = mouse_x;
-				ImGui::GetIO().MousePos.y = mouse_y;
-
 				mouse_motion_y = event.motion.yrel / SCREEN_SIZE;
 
 				//TODO: more polite way to to this ?
@@ -122,24 +118,15 @@ update_status ModuleInput::PreUpdate(float dt)
 						int last_x = mouse_x;
 						App->input->SetMouseX(10);
 						last_mouse_swap = mouse_x - last_x;
+						ResetImGuiDrag();
 
-						ImGui::GetCurrentContext()->ActiveIdIsJustActivated = true;
-						ImGui::ResetMouseDragDelta(0);
-						ImGui::ResetMouseDragDelta(1);
-						ImGui::GetIO().MousePos.x = mouse_x;
-						ImGui::GetIO().MousePosPrev.x = mouse_x;
-						ImGui::GetIO().MouseClickedPos[0] = ImVec2(mouse_x, mouse_y);
 					}
 					else if (mouse_x < 10) 
 					{
 						int last_x = mouse_x;
 						App->input->SetMouseX(App->renderer3D->window_width - 10);
 						last_mouse_swap = mouse_x - last_x;
-
-						ImGui::GetCurrentContext()->ActiveIdIsJustActivated = true;
-						ImGui::ResetMouseDragDelta(0);
-						ImGui::ResetMouseDragDelta(1);
-						ImGui::GetIO().MouseClickedPos[0] = ImVec2(mouse_x, mouse_y);
+						ResetImGuiDrag();
 					}
 					else
 						last_mouse_swap = 0;
@@ -196,4 +183,20 @@ void ModuleInput::SetMouseY(int y)
 void ModuleInput::InfiniteHorizontal()
 {
 	infiniteHorizontal = true;
+}
+
+void ModuleInput::ResetImGuiDrag()
+{
+	//First update mouse position, otherwise in next frame mousePrev will
+	//not be the updated version
+	ImGui::GetIO().MousePos.x = mouse_x;
+	ImGui::GetIO().MousePos.y = mouse_y;
+
+	//Last mouse click position is set to where the mouse is
+	ImGui::ResetMouseDragDelta(0);
+
+	//Then we reset our imgui dragged item mouse values
+	ImGui::GetCurrentContext()->ActiveIdIsJustActivated = true;
+
+	///It looks so simple when it's done :'(
 }

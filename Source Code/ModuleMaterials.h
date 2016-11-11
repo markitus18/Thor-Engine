@@ -23,7 +23,7 @@ public:
 	void SaveMaterial(const C_Material* material, const char* path);
 	C_Material* LoadMaterial(const char* path);
 
-	void SaveTexture(const char* path);
+	void ImportTexture(const char* path);
 	uint LoadTexture(const char* path);
 
 private:

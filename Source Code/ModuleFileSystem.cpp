@@ -173,9 +173,9 @@ void ModuleFileSystem::SplitFilePath(const char * full_path, std::string * path,
 		if (file != nullptr)
 		{
 			if (pos_separator < full.length())
-				*file = full.substr(pos_separator + 1);
+				*file = full.substr(pos_separator + 1, pos_dot - pos_separator - 1);
 			else
-				*file = full;
+				*file = full.substr(0, pos_dot);
 		}
 
 		if (extension != nullptr)

@@ -220,7 +220,7 @@ void ModuleImport::ImportFile(char* path)
 		}
 
 		aiReleaseImport(file);
-		delete rootNode;
+		RELEASE(rootNode);
 	}
 	else
 	{

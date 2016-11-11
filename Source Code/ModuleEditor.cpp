@@ -322,10 +322,10 @@ void ModuleEditor::DeleteSelectedGameObjects()
 void ModuleEditor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
-	std::string file;
-	App->fileSystem->SplitFilePath(App->scene->current_scene.c_str(), nullptr, &file);
-
-	strcpy_s(fileName, 50, file.c_str());
+	std::string file, extension;
+	App->fileSystem->SplitFilePath(App->scene->current_scene.c_str(), nullptr, &file, &extension);
+	std::string str = file + extension;
+	strcpy_s(fileName, 50, str.c_str());
 }
 
 void ModuleEditor::UpdateFPSData(int fps, int ms)

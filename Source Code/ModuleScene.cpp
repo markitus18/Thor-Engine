@@ -86,6 +86,7 @@ update_status ModuleScene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
+		//Import "external" file into project: creates all own-format files (and then loads them by now)
 		std::string file = "Models/Street_environment_V01.FBX";
 		App->moduleImport->ImportFile("Models/Street_environment_V01.FBX");
 
@@ -342,7 +343,8 @@ void ModuleScene::DrawAllGameObjects(GameObject* gameObject)
 
 void ModuleScene::GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const
 {
-	vector.push_back(gameObject);
+	if (gameObject->name != "root")
+		vector.push_back(gameObject);
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
 		GettAllGameObjects(vector, gameObject->childs[i]);
@@ -371,7 +373,7 @@ void ModuleScene::DeleteAllGameObjects()
 {
 	for (uint i = 0; i < root->childs.size(); i++)
 	{
-		delete root->childs[i];
+		RELEASE(root->childs[i]);
 	}
 	root->childs.clear();
 }

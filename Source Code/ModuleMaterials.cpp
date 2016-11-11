@@ -60,24 +60,25 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::string& path)
 {
 	uint numTextures = from->GetTextureCount(aiTextureType_DIFFUSE);
-	std::string texture_file = "";
-
+	std::string texture_file = "", texture_extension = "";
+	std::string texture_path;
 	if (numTextures > 0)
 	{
 		aiString aiStr;
 		aiReturn ret = from->GetTexture(aiTextureType_DIFFUSE, 0, &aiStr);
-		App->fileSystem->SplitFilePath(aiStr.C_Str(), nullptr, &texture_file);
+		App->fileSystem->SplitFilePath(aiStr.C_Str(), nullptr, &texture_file, &texture_extension);
 	}
+	texture_path = texture_file + std::string(".") + texture_extension;
 
 	aiColor4D color;
 	from->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 
 	C_Material* material =  new C_Material(nullptr);
-	if (texture_file != "")
+	if (texture_path != "" && texture_path != ("."))
 	{
-		SaveTexture(texture_file.c_str());
+		ImportTexture(texture_path.c_str());
 		material->texture_id = LoadTexture(texture_file.c_str());
-		material->texture_path = texture_file;
+		material->texture_path = texture_path;
 	}
 
 	material->color = Color(color.r, color.g, color.b, color.a);
@@ -162,7 +163,7 @@ C_Material* ModuleMaterials::LoadMaterial(const char* path)
 
 		else
 		{
-			material->texture_path != "";
+			material->texture_path = "";
 		}
 
 		if (material->texture_path != "")
@@ -189,14 +190,13 @@ C_Material* ModuleMaterials::LoadMaterial(const char* path)
 
 }
 
-void ModuleMaterials::SaveTexture(const char* path)
+void ModuleMaterials::ImportTexture(const char* path)
 {
 	std::string ret = "";
 
 	char* buffer = nullptr;
 	std::string full_path = "/Textures/";
 	full_path.append(path);
-
 	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
 	
 	if (size > 0)
@@ -220,8 +220,12 @@ void ModuleMaterials::SaveTexture(const char* path)
 				saveBuffer = new ILubyte[saveBufferSize];
 				if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
 				{
+					std::string fileName = "";
+					App->fileSystem->SplitFilePath(path, nullptr, &fileName);
+
 					std::string save_path = "Library/Textures/";
-					ret = save_path.append(path);
+					ret = save_path.append(fileName);
+
 					App->fileSystem->Save(save_path.c_str(), saveBuffer, saveBufferSize);
 					RELEASE_ARRAY(saveBuffer);
 				}

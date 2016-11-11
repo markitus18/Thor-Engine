@@ -67,6 +67,9 @@ public:
 		return mouse_motion_y;
 	}
 
+private:
+	void ResetImGuiDrag();
+
 public:
 	//Dirty variable to tell ImGui not to drag
 	bool ignoreDrag = false;

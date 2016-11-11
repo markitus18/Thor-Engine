@@ -60,44 +60,28 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::string& path)
 {
 	uint numTextures = from->GetTextureCount(aiTextureType_DIFFUSE);
-	std::string mat_path = "";
-	std::string file = "";
+	std::string texture_file = "";
 
-	std::string tmpPath = "";
-	App->fileSystem->SplitFilePath(path.c_str(), &tmpPath);
 	if (numTextures > 0)
 	{
 		aiString aiStr;
 		aiReturn ret = from->GetTexture(aiTextureType_DIFFUSE, 0, &aiStr);
-		App->fileSystem->SplitFilePath(aiStr.C_Str(), &mat_path, &file);
-		tmpPath += mat_path + file;
+		App->fileSystem->SplitFilePath(aiStr.C_Str(), nullptr, &texture_file);
 	}
+
 	aiColor4D color;
 	from->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-//	from->
-	C_Material* material = nullptr;
 
-	if (material != nullptr)
+	C_Material* material =  new C_Material(nullptr);
+	if (texture_file != "")
 	{
-		return material;
+		SaveTexture(texture_file.c_str());
+		material->texture_id = LoadTexture(texture_file.c_str());
+		material->texture_path = texture_file;
 	}
-	else
-	{
-		material = new C_Material(nullptr);
-		if (mat_path != "" && file != "")
-		{
-			SaveTexture(file.c_str());
-			material->texture_id = LoadTexture(file.c_str());
-			material->texture_path = file;
-		}
-		else
-		{
-			material->texture_id = 0;
-		}
 
-		material->color = Color(color.r, color.g, color.b, color.a);
-		materials.push_back(material);
-	}
+	material->color = Color(color.r, color.g, color.b, color.a);
+
 	aiString mat_name;
 	from->Get(AI_MATKEY_NAME, mat_name);
 	SaveMaterial(material, mat_name.C_Str());

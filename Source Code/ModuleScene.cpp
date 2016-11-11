@@ -84,14 +84,17 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
-		App->SaveScene(current_scene.c_str());
-	}
+		std::string file = "Models/Street_environment_V01.FBX";
+		App->moduleImport->ImportFile("Models/Street_environment_V01.FBX");
 
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-	{
-		App->LoadScene(current_scene.c_str());
+		std::string fileName;
+		App->fileSystem->SplitFilePath(file.c_str(), nullptr, &fileName);
+
+		GameObject* gameObject = App->moduleImport->LoadGameObject(fileName.c_str());
+		gameObject->parent = root;
+		root->childs.push_back(gameObject);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
@@ -214,48 +217,7 @@ void ModuleScene::SaveScene(Config& node) const
 	std::vector<GameObject*> gameObjects;
 	GettAllGameObjects(gameObjects, root);
 
-	Config_Array arr = node.SetArray("GameObjects");
-	for (uint i = 0; i < gameObjects.size(); i++)
-	{
-		if (gameObjects[i]->name != "root")
-		{
-			//Single GameObject save
-			Config gameObject_node = arr.AddNode();
-			gameObject_node.SetNumber("UID", gameObjects[i]->uid);
-			gameObject_node.SetNumber("ParentUID", gameObjects[i]->parent->uid);
-			gameObject_node.SetString("Name", gameObjects[i]->name.c_str());
-
-			C_Transform* transform = gameObjects[i]->GetComponent<C_Transform>();
-			//Translation part
-			Config_Array transform_node = gameObject_node.SetArray("Translation");
-			transform_node.AddFloat3(transform->GetPosition());
-
-			//Rotation part
-			Config_Array rotation_node = gameObject_node.SetArray("Rotation");
-			rotation_node.AddQuat(transform->GetQuatRotation());
-
-			//Scale part
-			Config_Array scale_node = gameObject_node.SetArray("Scale");
-			scale_node.AddFloat3(transform->GetScale());
-
-			//A thought: each component type will have a folder, same number as their enumeration
-			//Transform = 01 // Mesh = 02 // Material = 03 ...
-			//Each component will go indexed by a number also, not a file name: mesh path would be Library/02/02.mesh
-
-			//TMP for mesh storage
-			std::string meshLibFile = "";
-			C_Mesh* mesh = gameObjects[i]->GetComponent<C_Mesh>();
-			if (mesh)
-				meshLibFile = mesh->libFile;
-			gameObject_node.SetString("Mesh", meshLibFile.c_str());
-
-			std::string matLibFile = "";
-			C_Material* mat = gameObjects[i]->GetComponent<C_Material>();
-			if (mat)
-				matLibFile = mat->libFile;
-			gameObject_node.SetString("Material", matLibFile.c_str());
-		}
-	}
+	App->moduleImport->SaveGameObjectConfig(node, gameObjects);
 }
 
 void ModuleScene::LoadScene(Config& node)
@@ -320,6 +282,11 @@ void ModuleScene::LoadScene(const char* file)
 {
 	current_scene = file;
 	App->LoadScene(file);
+}
+
+GameObject* ModuleScene::CreateGameObject(const char* name)
+{
+	return new GameObject(root, name);
 }
 
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)

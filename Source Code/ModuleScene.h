@@ -33,11 +33,11 @@ public:
 	void SaveConfig(Config& config) const;
 	void LoadConfig(Config& config);
 
-	void StartSaveScene(const char* sceneName);
 	void SaveScene(Config& node) const;
 	void LoadScene(Config& node); //Load itself
 	void LoadScene(const char* file); //Calls application and prepares to load
 
+	GameObject* CreateGameObject(const char* name);
 private:
 	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
 	void DrawAllGameObjects(GameObject* gameObject);

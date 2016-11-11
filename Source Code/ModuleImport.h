@@ -23,10 +23,18 @@ public:
 	~ModuleImport();
 
 	void ImportFile(char* path);
-	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path);
+	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path, std::vector<GameObject*>& vector);
 	bool Init(Config& config);
 	bool CleanUp();
 	update_status Update(float dt);
+
+	void SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects);
+	GameObject* LoadGameObject(const char* path);
+	GameObject* LoadGameObjectConfig(Config& config);
+
+private:
+	void SaveGameObjectSingle(Config& config, GameObject* gameObject);
+	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
 
 private:
 	bool fbx_loaded = false;

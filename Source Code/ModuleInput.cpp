@@ -107,6 +107,10 @@ update_status ModuleInput::PreUpdate(float dt)
 				mouse_y = event.motion.y / SCREEN_SIZE;
 
 				mouse_motion_x = (event.motion.xrel / SCREEN_SIZE) - last_mouse_swap;
+				ImGui::GetIO().MouseDelta.x = mouse_motion_x;
+				ImGui::GetIO().MousePos.x = mouse_x;
+				ImGui::GetIO().MousePos.y = mouse_y;
+
 				mouse_motion_y = event.motion.yrel / SCREEN_SIZE;
 
 				//TODO: more polite way to to this ?
@@ -118,12 +122,24 @@ update_status ModuleInput::PreUpdate(float dt)
 						int last_x = mouse_x;
 						App->input->SetMouseX(10);
 						last_mouse_swap = mouse_x - last_x;
+
+						ImGui::GetCurrentContext()->ActiveIdIsJustActivated = true;
+						ImGui::ResetMouseDragDelta(0);
+						ImGui::ResetMouseDragDelta(1);
+						ImGui::GetIO().MousePos.x = mouse_x;
+						ImGui::GetIO().MousePosPrev.x = mouse_x;
+						ImGui::GetIO().MouseClickedPos[0] = ImVec2(mouse_x, mouse_y);
 					}
-					else if (mouse_x < 10)
+					else if (mouse_x < 10) 
 					{
 						int last_x = mouse_x;
 						App->input->SetMouseX(App->renderer3D->window_width - 10);
 						last_mouse_swap = mouse_x - last_x;
+
+						ImGui::GetCurrentContext()->ActiveIdIsJustActivated = true;
+						ImGui::ResetMouseDragDelta(0);
+						ImGui::ResetMouseDragDelta(1);
+						ImGui::GetIO().MouseClickedPos[0] = ImVec2(mouse_x, mouse_y);
 					}
 					else
 						last_mouse_swap = 0;
@@ -153,6 +169,7 @@ update_status ModuleInput::PreUpdate(float dt)
 		return UPDATE_STOP;
 
 	infiniteHorizontal = false;
+
 	return UPDATE_CONTINUE;
 }
 

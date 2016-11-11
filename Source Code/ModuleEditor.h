@@ -46,6 +46,8 @@ public:
 	void LoadScene(Config& root);
 	void ResetScene();
 
+	void OnRemoveGameObject(GameObject* gameObject) override;
+
 private:
 	void DrawPanels();
 	void ShowAboutWindow();
@@ -53,6 +55,7 @@ private:
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();
 
+	void DeleteSelectedGameObjects();
 	//TODO: move into private
 public:
 	//Panels

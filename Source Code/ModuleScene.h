@@ -38,6 +38,9 @@ public:
 	void LoadScene(const char* file); //Calls application and prepares to load
 
 	GameObject* CreateGameObject(const char* name);
+	void DeleteToRemoveGameObjects();
+	bool DeleteGameObject(GameObject* gameObject);
+
 private:
 	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
 	void DrawAllGameObjects(GameObject* gameObject);

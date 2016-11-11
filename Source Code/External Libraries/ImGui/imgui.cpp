@@ -2091,8 +2091,13 @@ void ImGui::NewFrame()
         g.IO.MousePos = ImVec2(-9999.0f, -9999.0f);
     if ((g.IO.MousePos.x < 0 && g.IO.MousePos.y < 0) || (g.IO.MousePosPrev.x < 0 && g.IO.MousePosPrev.y < 0))   // if mouse just appeared or disappeared (negative coordinate) we cancel out movement in MouseDelta
         g.IO.MouseDelta = ImVec2(0.0f, 0.0f);
-    else
-        g.IO.MouseDelta = g.IO.MousePos - g.IO.MousePosPrev;
+	else
+	{	//Warning: Marc apportation in here :D
+		if (g.IO.IgnoreMouseDelta)
+			g.IO.MouseDelta = ImVec2(0.0f, 0.0f);
+		else
+			g.IO.MouseDelta = g.IO.MousePos - g.IO.MousePosPrev;
+	}
     g.IO.MousePosPrev = g.IO.MousePos;
     for (int i = 0; i < IM_ARRAYSIZE(g.IO.MouseDown); i++)
     {
@@ -2118,7 +2123,11 @@ void ImGui::NewFrame()
         }
         else if (g.IO.MouseDown[i])
         {
-            g.IO.MouseDragMaxDistanceSqr[i] = ImMax(g.IO.MouseDragMaxDistanceSqr[i], ImLengthSqr(g.IO.MousePos - g.IO.MouseClickedPos[i]));
+			//WARNING: HERE IS WHERE MOUSE DRAG IS CALCULATED
+			if (g.IO.IgnoreMouseDelta)
+				g.IO.MouseDragMaxDistanceSqr[i] = 0;
+			else
+			   g.IO.MouseDragMaxDistanceSqr[i] = ImMax(g.IO.MouseDragMaxDistanceSqr[i], ImLengthSqr(g.IO.MousePos - g.IO.MouseClickedPos[i]));
         }
     }
     memcpy(g.IO.KeysDownDurationPrev, g.IO.KeysDownDuration, sizeof(g.IO.KeysDownDuration));
@@ -2287,6 +2296,9 @@ void ImGui::NewFrame()
     // Create implicit window - we will only render it if the user has added something to it.
     ImGui::SetNextWindowSize(ImVec2(400,400), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Debug");
+
+	//WARNING: Marc apportation in here :D
+	g.IO.IgnoreMouseDelta = false;
 }
 
 // NB: behavior of ImGui after Shutdown() is not tested/guaranteed at the moment. This function is merely here to free heap allocations.
@@ -3176,12 +3188,17 @@ ImVec2 ImGui::GetMousePosOnOpeningCurrentPopup()
 ImVec2 ImGui::GetMouseDragDelta(int button, float lock_threshold)
 {
     ImGuiContext& g = *GImGui;
-    IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
-    if (lock_threshold < 0.0f)
-        lock_threshold = g.IO.MouseDragThreshold;
-    if (g.IO.MouseDown[button])
-        if (g.IO.MouseDragMaxDistanceSqr[button] >= lock_threshold * lock_threshold)
-            return g.IO.MousePos - g.IO.MouseClickedPos[button];     // Assume we can only get active with left-mouse button (at the moment).
+
+	if (!g.IO.IgnoreMouseDelta)
+	{
+		IM_ASSERT(button >= 0 && button < IM_ARRAYSIZE(g.IO.MouseDown));
+		if (lock_threshold < 0.0f)
+			lock_threshold = g.IO.MouseDragThreshold;
+		if (g.IO.MouseDown[button])
+			if (g.IO.MouseDragMaxDistanceSqr[button] >= lock_threshold * lock_threshold)
+				return g.IO.MousePos - g.IO.MouseClickedPos[button];     // Assume we can only get active with left-mouse button (at the moment).
+	}
+	
     return ImVec2(0.0f, 0.0f);
 }
 
@@ -6740,7 +6757,7 @@ bool ImGui::DragBehavior(const ImRect& frame_bb, ImGuiID id, float* v, float v_s
                 g.DragCurrentValue = *v;
                 g.DragLastMouseDelta = ImVec2(0.f, 0.f);
             }
-
+			//Marc was here: delta stays high the frame after mouse teleport
             float v_cur = g.DragCurrentValue;
             const ImVec2 mouse_drag_delta = GetMouseDragDelta(0, 1.0f);
             if (fabsf(mouse_drag_delta.x - g.DragLastMouseDelta.x) > 0.0f)

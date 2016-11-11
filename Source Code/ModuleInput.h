@@ -67,6 +67,10 @@ public:
 		return mouse_motion_y;
 	}
 
+public:
+	//Dirty variable to tell ImGui not to drag
+	bool ignoreDrag = false;
+
 private:
 	KEY_STATE* keyboard = nullptr;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
@@ -79,6 +83,8 @@ private:
 	//TODO: change "ifinite mouse" functionality in a more polite way
 	int last_mouse_swap = 0;
 	bool infiniteHorizontal = false;
+	int ignoreDragCount = 0;
+
 };
 
 #endif //__MODULE_INPUT_H__

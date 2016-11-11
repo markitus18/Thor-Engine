@@ -14,6 +14,7 @@
 #include "ModuleScene.h"
 #include "ModuleFileSystem.h"
 
+#include "GameObject.h"
 #include "OpenGL.h"
 
 #include "ImGui\imgui.h"
@@ -310,6 +311,14 @@ void ModuleEditor::ShowFileNameWindow()
 	ImGui::End();
 }
 
+void ModuleEditor::DeleteSelectedGameObjects()
+{
+	for (uint i = 0; i < panelHierarchy->selectedGameObjects.size(); i++)
+	{
+		panelHierarchy->selectedGameObjects[i]->toRemove = true;
+	}
+}
+
 void ModuleEditor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
@@ -373,5 +382,16 @@ void ModuleEditor::LoadScene(Config& root)
 void ModuleEditor::ResetScene()
 {
 	panelHierarchy->selectedGameObjects.clear();
+}
+
+void ModuleEditor::OnRemoveGameObject(GameObject* gameObject)
+{
+	for (std::vector<GameObject*>::iterator it = panelHierarchy->selectedGameObjects.begin(); it != panelHierarchy->selectedGameObjects.end(); it++)
+	{
+		if (*it == gameObject)
+		{
+			panelHierarchy->selectedGameObjects.erase(it);
+		}
+	}
 }
 //------------------------------------

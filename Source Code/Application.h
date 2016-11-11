@@ -23,6 +23,8 @@ class ModuleImport;
 class ModuleMaterials;
 class ModuleMeshes;
 
+class GameObject;
+
 class Application
 {
 public:
@@ -86,6 +88,8 @@ public:
 	void OpenSceneWindow();
 	void SaveScene(const char* file);
 	void LoadScene(const char* file);
+
+	void OnRemoveGameObject(GameObject* gameObject);
 
 private:
 

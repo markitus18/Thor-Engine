@@ -75,6 +75,7 @@ public:
 	GameObject*					parent = nullptr;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
+	bool						toRemove = false;
 
 	unsigned long long			uid = 0;
 private:

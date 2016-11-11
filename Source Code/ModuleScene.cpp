@@ -289,6 +289,30 @@ GameObject* ModuleScene::CreateGameObject(const char* name)
 	return new GameObject(root, name);
 }
 
+void ModuleScene::DeleteToRemoveGameObjects()
+{
+
+}
+
+bool ModuleScene::DeleteGameObject(GameObject* gameObject)
+{
+	if (gameObject->toRemove == true)
+	{
+		RELEASE(gameObject);
+		return true;
+	}
+	else
+	{
+		for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
+		{
+			if (DeleteGameObject(*it))
+			{
+				gameObject->childs.erase(it);
+			}
+		}
+	}
+}
+
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)
 {
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();

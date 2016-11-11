@@ -6,8 +6,8 @@
 #include "parson/parson.h"
 
 class Application;
-struct PhysBody3D;
 class Config;
+class GameObject;
 
 class Module
 {
@@ -90,6 +90,9 @@ public:
 	{}
 
 	virtual void LoadScene(Config& root)
+	{}
+
+	virtual void OnRemoveGameObject(GameObject* gameObject)
 	{}
 };
 

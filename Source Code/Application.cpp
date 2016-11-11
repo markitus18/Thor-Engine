@@ -40,11 +40,14 @@ Application::Application()
 	AddModule(fileSystem);
 	AddModule(window);
 	AddModule(camera);
+
+	AddModule(moduleEditor);
+
 	AddModule(input);
 	AddModule(audio);
 
 	AddModule(scene);
-	AddModule(moduleEditor);
+
 
 	AddModule(renderer3D);
 
@@ -228,6 +231,14 @@ void Application::LoadScene(const char* scene)
 {
 	scene_to_load = scene;
 	load_scene = true;
+}
+
+void Application::OnRemoveGameObject(GameObject* gameObject)
+{
+	for (uint i = 0; i < list_modules.size(); i++)
+	{
+		list_modules[i]->OnRemoveGameObject(gameObject);
+	}
 }
 
 void Application::AddModule(Module* mod)

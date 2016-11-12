@@ -232,6 +232,9 @@
     <ClCompile Include="Source Code\Config.cpp">
       <Filter>Source Code\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\Quadtree.cpp">
+      <Filter>Source Code\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -589,6 +592,9 @@
       <Filter>Source Code\External Libraries\parson</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Config.h">
+      <Filter>Source Code\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Quadtree.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
   </ItemGroup>

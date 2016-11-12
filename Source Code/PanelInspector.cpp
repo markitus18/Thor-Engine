@@ -69,29 +69,20 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 					ImGui::EndPopup();
 				}
 
-				float3 pos = previous_Pos = transform->GetPosition();
+				float3 pos = transform->GetPosition();
 				float3 scale = transform->GetScale();
 				float3 rotation = transform->GetEulerRotation();
 
-				pos = previous_Pos;
 				if (ImGui::DragFloat3("Position", (float*)&pos, 0.15f))
 				{
-					previous_Pos -= pos;
-					if (previous_Pos.Length() > 50)
-						LOG("Drag Jump");
-
 					App->input->InfiniteHorizontal();
-					if (App->input->ignoreDrag == false)
-					{
-						transform->SetPosition(pos);
-					}
+					transform->SetPosition(pos);
 				}
 
 				if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.5f))
 				{
 					App->input->InfiniteHorizontal();
-					if(!ImGui::GetIO().IgnoreMouseDelta)
-						transform->SetEulerRotation(rotation);
+					transform->SetEulerRotation(rotation);
 				}
 
 				if (ImGui::DragFloat3("Scale", (float*)&scale, 0.15f))

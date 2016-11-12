@@ -833,9 +833,6 @@ struct ImGuiIO
     float       KeysDownDuration[512];      // Duration the keyboard key has been down (0.0f == just pressed)
     float       KeysDownDurationPrev[512];  // Previous duration the key has been down
 
-	//WARNING: Marc aportation in here :D
-	bool		IgnoreMouseDelta = false;
-
     IMGUI_API   ImGuiIO();
 };
 

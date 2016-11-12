@@ -204,7 +204,8 @@ void Application::UpdateSceneName()
 	std::string windowTitle = title;
 	std::string sceneName = "";
 	std::string sceneExtension = "";
-	App->fileSystem->SplitFilePath(scene->current_scene.c_str(), nullptr, &sceneName, &sceneExtension);
+	App->fileSystem->SplitFilePath
+	(scene->current_scene.c_str(), nullptr, &sceneName, &sceneExtension);
 	windowTitle.append(" - ").append(sceneName + std::string(".") + sceneExtension);
 
 	window->SetTitle(windowTitle.c_str());

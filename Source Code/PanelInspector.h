@@ -3,7 +3,7 @@
 
 #include "Panel.h"
 #include <vector>
-#include "MathGeoLib\src\MathGeoLib.h"
+
 class GameObject;
 
 class PanelInspector : public Panel
@@ -15,11 +15,6 @@ public:
 	void Draw(ImGuiWindowFlags flags);
 
 	void UpdatePosition(int, int);
-
-private:
-	float3 previous_Pos;
-
-
 };
 
 #endif //__PANEL_INSPECTOR_H__

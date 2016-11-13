@@ -5874,8 +5874,11 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     // For regular tree nodes, we arbitrary allow to click past 2 worth of ItemSpacing
     // (Ideally we'd want to add a flag for the user to specify we want want the hit test to be done up to the right side of the content or not)
     const ImRect interact_bb = display_frame ? bb : ImRect(bb.Min.x, bb.Min.y, bb.Min.x + text_width + style.ItemSpacing.x*2, bb.Max.y);
+	//Warning: Thorgory modification, button not being clicked on arrow
+	ImRect interact_bb_button = interact_bb; //<--
+	interact_bb_button.Min.x += text_offset_x; //<--
     bool is_open = TreeNodeBehaviorIsOpen(id, flags);
-    if (!ItemAdd(interact_bb, &id))
+    if (!ItemAdd(interact_bb_button, &id)) //<--
     {
         if (is_open && !(flags & ImGuiTreeNodeFlags_NoTreePushOnOpen))
             TreePushRawID(id);
@@ -5895,7 +5898,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     {
         bool toggled = !(flags & (ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick));
         if (flags & ImGuiTreeNodeFlags_OpenOnArrow)
-            toggled |= IsMouseHoveringRect(interact_bb.Min, ImVec2(interact_bb.Min.x + text_offset_x, interact_bb.Max.y));
+            toggled |= IsMouseHoveringRect(interact_bb.Min, ImVec2(interact_bb.Min.x + text_offset_x, interact_bb.Max.y)); //<--
         if (flags & ImGuiTreeNodeFlags_OpenOnDoubleClick)
             toggled |= g.IO.MouseDoubleClicked[0];
         if (toggled)

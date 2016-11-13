@@ -47,7 +47,14 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 	if (gameObject->IsSelected())
 		gameObject_flag |= ImGuiTreeNodeFlags_Selected;
 
+	if (gameObject->IsParentActive() == false)
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
+
 	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());
+
+	if (gameObject->IsParentActive() == false)
+		ImGui::PopStyleColor();
+
 	if (ImGui::IsItemClicked())
 	{
 		//If control is pressed, select / unselect only the GameObject

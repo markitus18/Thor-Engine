@@ -54,6 +54,8 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 			{
 				if (gameObject->isStatic)
 					App->scene->quadtree->AddGameObject(gameObject);
+				else
+					App->scene->quadtree->RemoveGameObject(gameObject);
 			}
 			ImGui::Separator();
 			ImGui::Separator();

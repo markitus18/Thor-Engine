@@ -12,7 +12,7 @@ Quadtree::Quadtree(const AABB& box)
 
 Quadtree::~Quadtree()
 {
-
+	RELEASE(root);
 }
 
 void Quadtree::Draw()
@@ -22,11 +22,29 @@ void Quadtree::Draw()
 
 void Quadtree::AddGameObject(const GameObject* gameObject)
 {
-	root->AddGameobject(gameObject);
+	if (root->AddGameObject(gameObject) == false)
+		out_of_tree.push_back(gameObject);
+}
+
+bool Quadtree::RemoveGameObject(const GameObject* gameObject)
+{
+	if (root->RemoveGameObject(gameObject) == false)
+	{
+		for (std::vector<const GameObject*>::iterator it = out_of_tree.begin(); it < out_of_tree.end(); it++)
+		{
+			if (*it == gameObject)
+			{
+				out_of_tree.erase(it);
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 QuadtreeNode::QuadtreeNode(const AABB& box) : box(box)
 {
+
 }
 
 QuadtreeNode::QuadtreeNode(Quadtree* tree, QuadtreeNode* parent, uint index) : tree(tree)
@@ -60,7 +78,7 @@ void QuadtreeNode::Split()
 			childs.push_back(QuadtreeNode(tree, this, i));
 }
 
-bool QuadtreeNode::AddGameobject(const GameObject* gameObject)
+bool QuadtreeNode::AddGameObject(const GameObject* gameObject)
 {
 	if (box.Intersects(gameObject->GetAABB()))
 	{
@@ -75,22 +93,49 @@ bool QuadtreeNode::AddGameobject(const GameObject* gameObject)
 		}
 		else
 		{
-			SendToChilds(gameObject);
+			if (SendToChilds(gameObject))
+				return true;
 		}
 
 	}
 	else
+	{
 		return false;
+	}
 
+
+}
+
+bool QuadtreeNode::RemoveGameObject(const GameObject* gameObject)
+{
+	for (std::vector<const GameObject*>::iterator it = bucket.begin(); it != bucket.end(); it++)
+	{
+		if (*it == gameObject)
+		{
+			bucket.erase(it);
+			return true;
+		}
+	}
+
+	for (uint i = 0; i < childs.size(); i++)
+	{
+		if (childs[i].RemoveGameObject(gameObject) == true)
+			return true;
+	}
+	return false;
 }
 
 void QuadtreeNode::Redistribute()
 {
-	for (std::vector<const GameObject*>::iterator it = bucket.begin(); it != bucket.end(); it++)
+	for (std::vector<const GameObject*>::iterator it = bucket.begin(); it != bucket.end();)
 	{
 		if (SendToChilds(*it))
 		{
 			it = bucket.erase(it);
+		}
+		else
+		{
+			it++;
 		}
 	}
 }
@@ -110,7 +155,7 @@ bool QuadtreeNode::SendToChilds(const GameObject* gameObject)
 	}
 	if (intersectionCount == 1)
 	{
-		childs[intersectionChild].AddGameobject(gameObject);
+		childs[intersectionChild].AddGameObject(gameObject);
 		return true;
 	}
 	else if (intersectionCount == 0)
@@ -120,7 +165,20 @@ bool QuadtreeNode::SendToChilds(const GameObject* gameObject)
 
 void QuadtreeNode::Draw()
 {
-	App->renderer3D->AddAABB(box, Color(0.6, 0.19, 0.8, 1));
+	Color color;
+	switch (bucket.size())
+	{
+	case 0:
+		color = Color(0, 1, 0, 1);
+		break;
+	case 1:
+		color = Color(1, 1, 0, 1);
+		break;
+	case 2:
+		color = Color(1, 0, 0, 1);
+		break;
+	}
+	App->renderer3D->AddAABB(box, color);
 
 	for (uint i = 0; i < childs.size(); i++)
 		childs[i].Draw();

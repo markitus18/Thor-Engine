@@ -58,9 +58,8 @@ bool ModuleScene::Init(Config& config)
 		App->LoadScene(current_scene.c_str());
 	}
 
-	quadtree = new Quadtree(AABB(vec(-100, -50, -100), vec(100, 50, 100)));
-	for (uint i = 0; i < 4; i++)
-		quadtree->AddGameObject(root);
+	quadtree = new Quadtree(AABB(vec(-80, -30, -80), vec(80, 30, 80)));
+
 	return true;
 }
 

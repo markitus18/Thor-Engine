@@ -14,8 +14,10 @@ public:
 	~Quadtree();
 	void Draw();
 	void AddGameObject(const GameObject* gameObject);
+	bool RemoveGameObject(const GameObject* gameObject);
 private:
 	QuadtreeNode* root;
+	std::vector<const GameObject*> out_of_tree;
 };
 
 class QuadtreeNode
@@ -28,8 +30,8 @@ public:
 	QuadtreeNode(Quadtree* tree, QuadtreeNode* parent, uint index);
 	~QuadtreeNode();
 
-	bool AddGameobject(const GameObject* gameObject);
-
+	bool AddGameObject(const GameObject* gameObject);
+	bool RemoveGameObject(const GameObject* gameObject);
 private:
 	void Split();
 	void Redistribute();
@@ -43,7 +45,7 @@ public:
 
 	//Pointer to tree, maybe not necessary
 	Quadtree* tree;
-	uint maxBucketSize = 3;
+	uint maxBucketSize = 2;
 	std::vector<const GameObject*> bucket;
 };
 

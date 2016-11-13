@@ -271,9 +271,9 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 		else
 		{
 			if (append == true)
-				LOG("Added %u data to [%s%s]", size, GetWriteDir(), file)
+				LOG("Added %u data to [%s%s]", size, GetWriteDir(), file);
 			else if (overwrite == true)
-				LOG("File [%s%s] overwritten with %u bytes", GetWriteDir(), file, size)
+				LOG("File [%s%s] overwritten with %u bytes", GetWriteDir(), file, size);
 			else
 				LOG("New file created [%s%s] of %u bytes", GetWriteDir(), file, size);
 

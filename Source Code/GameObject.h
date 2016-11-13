@@ -24,7 +24,7 @@ public:
 	void Draw(bool shaded, bool wireframe);
 
 	void OnUpdateTransform();
-
+	const AABB& GetAABB() const;
 	bool HasFlippedNormals() const;
 	bool IsParentActive() const;
 
@@ -69,12 +69,15 @@ public:
 	}
 	//EndOf Component management -------------------------
 
+private:
+	void UpdateAABB();
 public:
 	std::string					name;
 
 	GameObject*					parent = nullptr;
 	std::vector<GameObject*>	childs;
 	bool						active = true;
+	bool						isStatic = false;
 	bool						toRemove = false;
 
 	unsigned long long			uid = 0;
@@ -83,7 +86,9 @@ private:
 
 	C_Transform*				transform = nullptr;
 	std::vector<Component*>		components;
-	AABB						defaultAABB;
+
+	AABB						aabb;
+	OBB							obb;
 
 	bool						selected = false;
 };

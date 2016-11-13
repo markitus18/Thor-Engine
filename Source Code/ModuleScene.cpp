@@ -19,6 +19,8 @@
 #include "ModuleMeshes.h"
 #include "ModuleMaterials.h"
 
+#include "Quadtree.h"
+
 #include <windows.h>
 #include <shobjidl.h> 
 
@@ -55,6 +57,10 @@ bool ModuleScene::Init(Config& config)
 		current_scene = newScene;
 		App->LoadScene(current_scene.c_str());
 	}
+
+	quadtree = new Quadtree(AABB(vec(-100, -50, -100), vec(100, 50, 100)));
+	for (uint i = 0; i < 4; i++)
+		quadtree->AddGameObject(root);
 	return true;
 }
 
@@ -98,9 +104,10 @@ update_status ModuleScene::Update(float dt)
 		root->childs.push_back(gameObject);
 	}
 
+#pragma region WindowTest
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 	{
-#pragma region WindowTest
+
 		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
 			COINIT_DISABLE_OLE1DDE);
 		if (SUCCEEDED(hr))
@@ -116,8 +123,9 @@ update_status ModuleScene::Update(float dt)
 				hr = pFileOpen->Show(NULL);
 			}
 		}
-#pragma endregion
 	}
+#pragma endregion
+
 	if (drawGrid)
 	{
 		//TODO: Move this into a mesh "prefab" or a renderer method
@@ -177,6 +185,8 @@ update_status ModuleScene::Update(float dt)
 	{
 		DrawAllGameObjects(root);
 	}
+
+	quadtree->Draw();
 
 	return UPDATE_CONTINUE;
 }
@@ -316,13 +326,9 @@ bool ModuleScene::DeleteGameObject(GameObject* gameObject)
 
 void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)
 {
-	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
-	if (mesh)
-	{
-		//Intersection method according to "lib" and "optimized" parameters
-		if (lib ? Intersects(camera->GetComponent<C_Camera>()->frustum, mesh->GetGlobalAABB()) : Intersects(camera->GetComponent<C_Camera>()->planes, mesh->GetGlobalAABB(), optimized))
-			vector.push_back(gameObject);
-	}
+	//Intersection method according to "lib" and "optimized" parameters
+	if (lib ? Intersects(camera->GetComponent<C_Camera>()->frustum, gameObject->GetAABB()) : Intersects(camera->GetComponent<C_Camera>()->planes, gameObject->GetAABB(), optimized))
+		vector.push_back(gameObject);
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{

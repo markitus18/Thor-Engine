@@ -10,6 +10,9 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 
+#include "ModuleScene.h"
+#include "Quadtree.h"
+
 PanelInspector::PanelInspector()
 {
 }
@@ -46,7 +49,12 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 			ImGuiInputTextFlags name_input_flags = ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue;
 			if (ImGui::InputText("###", go_name, 50, name_input_flags))
 				gameObject->name = go_name;
-			
+			ImGui::SameLine();
+			if (ImGui::Checkbox("static", &gameObject->isStatic))
+			{
+				if (gameObject->isStatic)
+					App->scene->quadtree->AddGameObject(gameObject);
+			}
 			ImGui::Separator();
 			ImGui::Separator();
 
@@ -88,8 +96,7 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				if (ImGui::DragFloat3("Scale", (float*)&scale, 0.15f))
 				{
 					App->input->InfiniteHorizontal();
-					if (!ImGui::GetIO().IgnoreMouseDelta)
-						transform->SetScale(scale);
+					transform->SetScale(scale);
 				}
 			}
 			

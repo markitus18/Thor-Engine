@@ -61,21 +61,6 @@ void GameObject::Draw(bool shaded, bool wireframe)
 		if (mesh)
 		{
 			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected(), flipped_normals);
-
-			if (selected || IsParentSelected())
-			{
-				App->renderer3D->AddAABB(mesh->GetGlobalAABB(), Green);
-				App->renderer3D->AddOBB(mesh->GetGlobalOBB(), Yellow);
-			}
-		}
-		else
-		{
-			defaultAABB.SetNegativeInfinity();
-			defaultAABB.Enclose(transform->GetGlobalPosition() - float3(1, 1, 1), transform->GetGlobalPosition() + float3(1, 1, 1));
-			if (selected || IsParentSelected())
-				App->renderer3D->AddAABB(defaultAABB, Red);
-			else
-				App->renderer3D->AddAABB(defaultAABB, Pink);
 		}
 
 		C_Camera* camera = GetComponent<C_Camera>();
@@ -84,13 +69,12 @@ void GameObject::Draw(bool shaded, bool wireframe)
 			App->renderer3D->AddFrustum(camera->frustum, Blue);
 		}
 
-		//for (uint i = 0; i < childs.size(); i++)
-		//{
-		//	if (childs[i]->active)
-		//		childs[i]->Draw(shaded, wireframe);	
-		//}
+		if (selected || IsParentSelected())
+		{
+			App->renderer3D->AddAABB(aabb, Green);
+			App->renderer3D->AddOBB(obb, Yellow);
+		}
 	}
-
 }
 
 void GameObject::OnUpdateTransform()
@@ -98,13 +82,13 @@ void GameObject::OnUpdateTransform()
 	flipped_normals = HasFlippedNormals();
 
 	//Updating components
+	float4x4 global_parent = float4x4::identity;
+	if (parent)
+	{
+		global_parent = parent->GetComponent<C_Transform>()->GetGlobalTransform();
+	}
 	for (uint i = 0; i < components.size(); i++)
 	{
-		float4x4 global_parent = float4x4::identity;
-		if (parent)
-		{
-			global_parent = parent->GetComponent<C_Transform>()->GetGlobalTransform();
-		}
 		components[i]->OnUpdateTransform(transform->GetGlobalTransform(), global_parent);
 	}
 
@@ -113,6 +97,13 @@ void GameObject::OnUpdateTransform()
 	{
 		childs[i]->OnUpdateTransform();
 	}
+
+	UpdateAABB();
+}
+
+const AABB& GameObject::GetAABB() const
+{
+	return aabb;
 }
 
 bool GameObject::HasFlippedNormals() const
@@ -247,6 +238,26 @@ bool GameObject::HasComponent(Component::Type type)
 			return true;
 	}
 	return false;
+}
+
+void GameObject::UpdateAABB()
+{
+	C_Mesh* mesh = GetComponent <C_Mesh>();
+	if (mesh)
+	{
+		AABB meshAABB = mesh->GetAABB();
+		obb = mesh->GetAABB();
+		obb.Transform(GetComponent< C_Transform>()->GetGlobalTransform());
+
+		aabb.SetNegativeInfinity();
+		aabb.Enclose(obb);
+	}
+	else
+	{
+		aabb.SetNegativeInfinity();
+		aabb.Enclose(transform->GetGlobalPosition() - float3(1, 1, 1), transform->GetGlobalPosition() + float3(1, 1, 1));
+		obb = aabb;
+	}
 }
 
 //void GameObject::GetComponents(Component::Type type, std::vector<Component*>& vec)

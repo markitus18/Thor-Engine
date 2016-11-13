@@ -58,22 +58,13 @@ void C_Mesh::LoadBuffers()
 
 void C_Mesh::CreateAABB()
 {
-	local_bounds.SetNegativeInfinity();
-	local_bounds.Enclose((math::vec*)vertices, num_vertices);
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((math::vec*)vertices, num_vertices);
 }
 
 const AABB& C_Mesh::GetAABB() const
 {
-	return local_bounds;
-}
-
-const AABB& C_Mesh::GetGlobalAABB() const
-{
-	return global_bounds;
-}
-const OBB& C_Mesh::GetGlobalOBB() const
-{
-	return obb;
+	return aabb;
 }
 
 Component::Type C_Mesh::GetType()
@@ -89,13 +80,4 @@ void C_Mesh::Save()
 void C_Mesh::Load()
 {
 
-}
-
-void C_Mesh::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
-{
-	obb = local_bounds;
-	obb.Transform(global);
-
-	global_bounds.SetNegativeInfinity();
-	global_bounds.Enclose(obb);
 }

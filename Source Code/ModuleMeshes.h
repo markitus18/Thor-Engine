@@ -23,8 +23,6 @@ class ModuleMeshes : public Module
 		void	SaveMesh(const C_Mesh& mesh, const char* path);
 		C_Mesh* LoadMesh(const char* path);
 
-		void	LoadBuffers(C_Mesh* mesh);
-
 	private:
 		std::vector<C_Mesh*> meshes;
 };

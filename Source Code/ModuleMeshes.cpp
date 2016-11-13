@@ -91,11 +91,6 @@ C_Mesh* ModuleMeshes::ImportMesh(const aiMesh* from, const char* file)
 	return mesh;
 }
 
-void ModuleMeshes::LoadBuffers(C_Mesh* mesh)
-{
-
-}
-
 void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
 {
 	// amount of indices / vertices / normals / texture_coords

@@ -22,12 +22,7 @@ public:
 	void LoadBuffers();
 
 	void CreateAABB();
-
 	const AABB& GetAABB() const;
-	const AABB& GetGlobalAABB() const;
-	const OBB& GetGlobalOBB() const;
-
-	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	void Save();
 	void Load();
@@ -57,9 +52,7 @@ public:
 	std::string libFile = "";
 private:
 
-	AABB	local_bounds;
-	OBB		obb;
-	AABB	global_bounds;
+	AABB	aabb;
 };
 
 #endif

@@ -7,13 +7,14 @@
 #include "Primitive.h"
 #include "Timer.h"
 
-#include "MathGeoLib/src/MathBuildConfig.h"
-#include "MathGeoLib/src/MathGeoLib.h"
+//#include "MathGeoLib/src/MathBuildConfig.h"
+#include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
 #include <list>
 
 class GameObject;
 class Config;
+class Quadtree;
 
 class ModuleScene : public Module
 {
@@ -52,11 +53,13 @@ private:
 public:
 	bool reset = false;
 	std::string current_scene = "Untitled";
-
+	Quadtree* quadtree;
 private:
 	bool drawGrid = true;
 	GameObject* root = nullptr;
 	GameObject* camera = nullptr;
+
+
 
 	uint cullingTimer_library = 0;
 	uint cullingTimer_normal = 0;

@@ -5,27 +5,37 @@
 #include "Globals.h"
 
 class GameObject;
+class QuadtreeNode;
 
 class Quadtree
 {
 public:
-	Quadtree();
+	Quadtree(const AABB& box);
 	~Quadtree();
-
+	void Draw();
+	void AddGameObject(const GameObject* gameObject);
 private:
-	QuadtreeNode root;
+	QuadtreeNode* root;
 };
 
 class QuadtreeNode
 {
+	friend class Quadtree;
+
 public:
-	QuadtreeNode();
+	QuadtreeNode(const AABB& box);
 	//Index marking which node from parent. 0 stats at top left, and counting clockwise
 	QuadtreeNode(Quadtree* tree, QuadtreeNode* parent, uint index);
 	~QuadtreeNode();
 
+	bool AddGameobject(const GameObject* gameObject);
+
+private:
 	void Split();
-	void AddGameobject();
+	void Redistribute();
+	bool SendToChilds(const GameObject* gameObject);
+
+	void Draw();
 
 public:
 	AABB box;
@@ -34,7 +44,7 @@ public:
 	//Pointer to tree, maybe not necessary
 	Quadtree* tree;
 	uint maxBucketSize = 3;
-	std::vector<GameObject*> gameObjects;
+	std::vector<const GameObject*> bucket;
 };
 
 #endif

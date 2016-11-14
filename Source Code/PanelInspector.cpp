@@ -122,8 +122,9 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 				{
 					for (uint i = 0; i < materials.size(); i++)
 					{
-						if (ImGui::CollapsingHeader(materials[i]->texture_path.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+						if (ImGui::CollapsingHeader(materials[i]->libFile.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 						{
+							ImGui::Text(materials[i]->texture_file.c_str());
 							ImGui::Image((ImTextureID)materials[i]->texture_id, ImVec2(128, 128));
 						}
 					}

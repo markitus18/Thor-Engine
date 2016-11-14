@@ -78,7 +78,10 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 	{
 		ImportTexture(texture_path.c_str());
 		material->texture_id = LoadTexture(texture_file.c_str());
-		material->texture_path = texture_path;
+
+		std::string save_texture_path;
+		App->fileSystem->SplitFilePath(texture_path.c_str(), nullptr, &save_texture_path);
+		material->texture_path = save_texture_path;
 	}
 
 	material->color = Color(color.r, color.g, color.b, color.a);
@@ -168,6 +171,7 @@ C_Material* ModuleMaterials::LoadMaterial(const char* path)
 
 		if (material->texture_path != "")
 		{
+			App->fileSystem->SplitFilePath(material->texture_path.c_str(), nullptr, &material->texture_file);
 			material->texture_id = LoadTexture(material->texture_path.c_str());
 		}
 

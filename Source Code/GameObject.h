@@ -55,7 +55,7 @@ public:
 	}
 
 	template<typename RetComponent>
-	bool GetComponents(std::vector<RetComponent*> vector)
+	bool GetComponents(std::vector<RetComponent*>& vector)
 	{
 		Component::Type type = RetComponent::GetType();
 		for (uint i = 0; i < components.size(); i++)

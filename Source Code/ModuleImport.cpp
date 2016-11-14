@@ -77,13 +77,14 @@ GameObject* ModuleImport::LoadGameObject(const char* path)
 	if (size > 0)
 	{
 		Config config(buffer);
-		ret = LoadGameObjectConfig(config);
+		std::vector<GameObject*> roots;
+		ret = LoadGameObjectConfig(config, roots);
 	}
 
 	return ret;
 }
 
-GameObject* ModuleImport::LoadGameObjectConfig(Config& config)
+void ModuleImport::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& roots)
 {
 	std::vector<GameObject*> not_parented_GameObjects;
 	std::unordered_map<unsigned long long, GameObject*> createdGameObjects;
@@ -112,7 +113,7 @@ GameObject* ModuleImport::LoadGameObjectConfig(Config& config)
 
 		if (gameObject_node.GetNumber("ParentUID") == 0)
 		{
-			ret = gameObject;
+			roots.push_back(gameObject);
 		}
 
 		if (parent == nullptr)
@@ -149,8 +150,6 @@ GameObject* ModuleImport::LoadGameObjectConfig(Config& config)
 		LOG("[warning] GameObject not parented when loading prefab");
 		//not_parented_GameObjects[i]->parent = root;
 	}
-
-	return ret;
 }
 
 void ModuleImport::SaveGameObjectSingle(Config& config, GameObject* gameObject)

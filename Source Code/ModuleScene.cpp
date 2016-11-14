@@ -97,10 +97,7 @@ update_status ModuleScene::Update(float dt)
 
 		std::string fileName;
 		App->fileSystem->SplitFilePath(file.c_str(), nullptr, &fileName);
-
-		GameObject* gameObject = App->moduleImport->LoadGameObject(fileName.c_str());
-		gameObject->parent = root;
-		root->childs.push_back(gameObject);
+		LoadGameObject(fileName.c_str());
 	}
 
 #pragma region WindowTest
@@ -292,6 +289,13 @@ void ModuleScene::LoadScene(const char* file)
 {
 	current_scene = file;
 	App->LoadScene(file);
+}
+
+void ModuleScene::LoadGameObject(const char* file)
+{
+	GameObject* gameObject = App->moduleImport->LoadGameObject(file);
+	gameObject->parent = root;
+	root->childs.push_back(gameObject);
 }
 
 GameObject* ModuleScene::CreateGameObject(const char* name)

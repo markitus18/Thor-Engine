@@ -30,7 +30,7 @@ public:
 
 	void SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects);
 	GameObject* LoadGameObject(const char* path);
-	GameObject* LoadGameObjectConfig(Config& config);
+	void LoadGameObjectConfig(Config& config, std::vector<GameObject*>& nodes);
 
 private:
 	void SaveGameObjectSingle(Config& config, GameObject* gameObject);

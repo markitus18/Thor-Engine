@@ -27,7 +27,7 @@ class QuadtreeNode
 
 public:
 	QuadtreeNode(const AABB& box);
-	//Index marking which node from parent. 0 stats at top left, and counting clockwise
+	//Index marking which node from parent. 0 starts at top left, and counting clockwise
 	QuadtreeNode(Quadtree* tree, QuadtreeNode* parent, uint index);
 	~QuadtreeNode();
 

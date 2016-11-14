@@ -160,9 +160,6 @@
     <ClCompile Include="Source Code\Color.cpp">
       <Filter>Source Code\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\glmath.cpp">
-      <Filter>Source Code\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\PerfTimer.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
@@ -487,9 +484,6 @@
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Color.h">
-      <Filter>Source Code\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\glmath.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\p2DynArray.h">

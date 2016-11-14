@@ -208,6 +208,7 @@ void GameObject::AddComponent(Component* component)
 				components.push_back(component);
 				component->gameObject = this;
 				component->OnUpdateTransform(GetComponent<C_Transform>()->GetGlobalTransform());
+				UpdateAABB();
 			}
 			break;
 		}

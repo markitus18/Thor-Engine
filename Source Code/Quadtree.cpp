@@ -113,6 +113,7 @@ bool QuadtreeNode::RemoveGameObject(const GameObject* gameObject)
 		if (*it == gameObject)
 		{
 			bucket.erase(it);
+			TryRemovingChilds();
 			return true;
 		}
 	}
@@ -120,7 +121,11 @@ bool QuadtreeNode::RemoveGameObject(const GameObject* gameObject)
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i].RemoveGameObject(gameObject) == true)
+		{
+			TryRemovingChilds();
 			return true;
+		}
+
 	}
 	return false;
 }
@@ -163,6 +168,29 @@ bool QuadtreeNode::SendToChilds(const GameObject* gameObject)
 	return false;
 }
 
+void QuadtreeNode::TryRemovingChilds()
+{
+	std::vector<const GameObject*> childsBucket;
+	GetChildsBuckets(childsBucket);
+	if (childsBucket.size() + bucket.size() <= maxBucketSize)
+	{
+		for (uint i = 0; i < childsBucket.size(); i++)
+		{
+			bucket.push_back(childsBucket[i]);
+		}
+		childs.clear();
+	}
+	childsBucket.clear();
+}
+
+void QuadtreeNode::GetChildsBuckets(std::vector<const GameObject*>& vector) const
+{
+	for (uint i = 0; i < childs.size(); i++)
+	{
+		childs[i].GetChildsBuckets(vector);
+	}
+}
+
 void QuadtreeNode::Draw()
 {
 	Color color;
@@ -178,7 +206,12 @@ void QuadtreeNode::Draw()
 		color = Color(1, 0, 0, 1);
 		break;
 	}
-	App->renderer3D->AddAABB(box, color);
+	toDraw = box;
+	toDraw.maxPoint.x -= 1;
+	toDraw.maxPoint.z -= 1;
+	toDraw.minPoint.x += 1;
+	toDraw.minPoint.z += 1;
+	App->renderer3D->AddAABB(toDraw, color);
 
 	for (uint i = 0; i < childs.size(); i++)
 		childs[i].Draw();

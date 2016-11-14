@@ -32,15 +32,18 @@ public:
 
 	bool AddGameObject(const GameObject* gameObject);
 	bool RemoveGameObject(const GameObject* gameObject);
+
 private:
 	void Split();
 	void Redistribute();
 	bool SendToChilds(const GameObject* gameObject);
-
+	void TryRemovingChilds();
+	void GetChildsBuckets(std::vector<const GameObject*>& vector) const;
 	void Draw();
 
 public:
 	AABB box;
+	AABB toDraw;
 	std::vector<QuadtreeNode> childs;
 
 	//Pointer to tree, maybe not necessary

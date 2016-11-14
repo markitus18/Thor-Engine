@@ -171,7 +171,7 @@ bool QuadtreeNode::SendToChilds(const GameObject* gameObject)
 void QuadtreeNode::TryRemovingChilds()
 {
 	std::vector<const GameObject*> childsBucket;
-	GetChildsBuckets(childsBucket);
+	GetChildsBuckets(childsBucket, false);
 	if (childsBucket.size() + bucket.size() <= maxBucketSize)
 	{
 		for (uint i = 0; i < childsBucket.size(); i++)
@@ -183,11 +183,19 @@ void QuadtreeNode::TryRemovingChilds()
 	childsBucket.clear();
 }
 
-void QuadtreeNode::GetChildsBuckets(std::vector<const GameObject*>& vector) const
+void QuadtreeNode::GetChildsBuckets(std::vector<const GameObject*>& vector, bool addSelf) const
 {
+	if (addSelf)
+	{
+		for (uint i = 0; i < bucket.size(); i++)
+		{
+			vector.push_back(bucket[i]);
+		}
+	}
+
 	for (uint i = 0; i < childs.size(); i++)
 	{
-		childs[i].GetChildsBuckets(vector);
+		childs[i].GetChildsBuckets(vector, true);
 	}
 }
 
@@ -202,7 +210,7 @@ void QuadtreeNode::Draw()
 	case 1:
 		color = Color(1, 1, 0, 1);
 		break;
-	case 2:
+	default:
 		color = Color(1, 0, 0, 1);
 		break;
 	}

@@ -15,6 +15,7 @@ public:
 	void Draw();
 	void AddGameObject(const GameObject* gameObject);
 	bool RemoveGameObject(const GameObject* gameObject);
+
 private:
 	QuadtreeNode* root;
 	std::vector<const GameObject*> out_of_tree;
@@ -38,10 +39,10 @@ private:
 	void Redistribute();
 	bool SendToChilds(const GameObject* gameObject);
 	void TryRemovingChilds();
-	void GetChildsBuckets(std::vector<const GameObject*>& vector) const;
+	void GetChildsBuckets(std::vector<const GameObject*>& vector, bool addSelf) const;
 	void Draw();
 
-public:
+private:
 	AABB box;
 	AABB toDraw;
 	std::vector<QuadtreeNode> childs;

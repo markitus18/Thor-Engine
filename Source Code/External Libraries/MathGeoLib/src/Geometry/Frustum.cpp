@@ -91,6 +91,7 @@ void Frustum::SetKind(FrustumProjectiveSpace p, FrustumHandedness h)
 	if (up.IsFinite())
 		WorldMatrixChanged(); // Setting handedness affects world matrix.
 	ProjectionMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetViewPlaneDistances(float n, float f)
@@ -98,6 +99,7 @@ void Frustum::SetViewPlaneDistances(float n, float f)
 	nearPlaneDistance = n;
 	farPlaneDistance = f;
 	ProjectionMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetFrame(const vec &p, const vec &f, const vec &u)
@@ -106,24 +108,28 @@ void Frustum::SetFrame(const vec &p, const vec &f, const vec &u)
 	front = f;
 	up = u;
 	WorldMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetPos(const vec &p)
 {
 	pos = p;
 	WorldMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetFront(const vec &f)
 {
 	front = f;
 	WorldMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetUp(const vec &u)
 {
 	up = u;
 	WorldMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetPerspective(float h, float v)
@@ -132,6 +138,7 @@ void Frustum::SetPerspective(float h, float v)
 	horizontalFov = h;
 	verticalFov = v;
 	ProjectionMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetOrthographic(float w, float h)
@@ -140,6 +147,7 @@ void Frustum::SetOrthographic(float w, float h)
 	orthographicWidth = w;
 	orthographicHeight = h;
 	ProjectionMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::WorldMatrixChanged()
@@ -148,6 +156,7 @@ void Frustum::WorldMatrixChanged()
 	float3x4 viewMatrix = worldMatrix;
 	viewMatrix.InverseOrthonormal();
 	viewProjMatrix = projectionMatrix * viewMatrix;
+	UpdatePlanes();
 }
 
 void Frustum::ProjectionMatrixChanged()
@@ -159,6 +168,7 @@ void Frustum::ProjectionMatrixChanged()
 		viewMatrix.InverseOrthonormal();
 		viewProjMatrix = projectionMatrix * viewMatrix;
 	}
+	UpdatePlanes();
 }
 
 float Frustum::AspectRatio() const
@@ -172,6 +182,7 @@ void Frustum::SetHorizontalFovAndAspectRatio(float hFov, float aspectRatio)
 	horizontalFov = hFov;
 	verticalFov = 2.f * Atan(Tan(hFov*0.5f)/aspectRatio);
 	ProjectionMatrixChanged();
+	UpdatePlanes();
 }
 
 void Frustum::SetVerticalFovAndAspectRatio(float vFov, float aspectRatio)
@@ -180,6 +191,7 @@ void Frustum::SetVerticalFovAndAspectRatio(float vFov, float aspectRatio)
 	verticalFov = vFov;
 	horizontalFov = 2.f * Atan(Tan(vFov*0.5f)*aspectRatio);
 	ProjectionMatrixChanged();
+	UpdatePlanes();
 }
 
 vec Frustum::WorldRight() const
@@ -188,6 +200,16 @@ vec Frustum::WorldRight() const
 		return Cross(front, up);
 	else
 		return Cross(up, front);
+}
+
+void Frustum::UpdatePlanes()
+{
+	planes[0] = CalcNearPlane();
+	planes[1] = CalcFarPlane();
+	planes[2] = CalcLeftPlane();
+	planes[3] = CalcRightPlane();
+	planes[4] = CalcTopPlane();
+	planes[5] = CalcBottomPlane();
 }
 
 float Frustum::NearPlaneWidth() const
@@ -206,17 +228,17 @@ float Frustum::NearPlaneHeight() const
 		return orthographicHeight;
 }
 
-Plane Frustum::NearPlane() const
+Plane Frustum::CalcNearPlane() const
 {
 	return Plane(pos + front * nearPlaneDistance, -front);
 }
 
-Plane Frustum::FarPlane() const
+Plane Frustum::CalcFarPlane() const
 {
 	return Plane(pos + front * farPlaneDistance, front);
 }
 
-Plane Frustum::LeftPlane() const
+Plane Frustum::CalcLeftPlane() const
 {
 	if (type == PerspectiveFrustum)
 	{
@@ -233,7 +255,7 @@ Plane Frustum::LeftPlane() const
 	}
 }
 
-Plane Frustum::RightPlane() const
+Plane Frustum::CalcRightPlane() const
 {
 	if (type == PerspectiveFrustum)
 	{
@@ -250,7 +272,7 @@ Plane Frustum::RightPlane() const
 	}
 }
 
-Plane Frustum::TopPlane() const
+Plane Frustum::CalcTopPlane() const
 {
 	if (type == PerspectiveFrustum)
 	{
@@ -265,7 +287,7 @@ Plane Frustum::TopPlane() const
 	}
 }
 
-Plane Frustum::BottomPlane() const
+Plane Frustum::CalcBottomPlane() const
 {
 	if (type == PerspectiveFrustum)
 	{
@@ -278,6 +300,36 @@ Plane Frustum::BottomPlane() const
 	{
 		return Plane(NearPlanePos(0.f, -1.f), -up);
 	}
+}
+
+Plane Frustum::NearPlane() const
+{
+	return planes[0];
+}
+
+Plane Frustum::FarPlane() const
+{
+	return planes[1];
+}
+
+Plane Frustum::LeftPlane() const
+{
+	return planes[2];
+}
+
+Plane Frustum::RightPlane() const
+{
+	return planes[3];
+}
+
+Plane Frustum::TopPlane() const
+{
+	return planes[4];
+}
+
+Plane Frustum::BottomPlane() const
+{
+	return planes[5];
 }
 
 void Frustum::SetWorldMatrix(const float3x4 &worldTransform)
@@ -1054,7 +1106,20 @@ bool Frustum::Intersects(const LineSegment &lineSegment) const
 
 bool Frustum::Intersects(const AABB &aabb) const
 {
-	return GJKIntersect(*this, aabb);
+	for (int p = 0; p < 6; p++)
+	{
+		float3 farthestPoint = float3::zero;
+		float3 normal = planes[p].normal;
+		farthestPoint.x = -normal.x >= 0 ? aabb.maxPoint.x : aabb.minPoint.x;
+		farthestPoint.y = -normal.y >= 0 ? aabb.maxPoint.y : aabb.minPoint.y;
+		farthestPoint.z = -normal.z >= 0 ? aabb.maxPoint.z : aabb.minPoint.z;
+
+		if (planes[p].normal.Dot(farthestPoint) - planes[p].d >= 0.f)
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 bool Frustum::Intersects(const OBB &obb) const

@@ -50,12 +50,10 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 			if (ImGui::InputText("###", go_name, 50, name_input_flags))
 				gameObject->name = go_name;
 			ImGui::SameLine();
-			if (ImGui::Checkbox("static", &gameObject->isStatic))
+			bool gameObject_static = gameObject->isStatic;
+			if (ImGui::Checkbox("static", &gameObject_static))
 			{
-				if (gameObject->isStatic)
-					App->scene->quadtree->AddGameObject(gameObject);
-				else
-					App->scene->quadtree->RemoveGameObject(gameObject);
+				App->scene->SetStaticGameObject(gameObject, gameObject_static, true);
 			}
 			ImGui::Separator();
 			ImGui::Separator();

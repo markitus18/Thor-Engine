@@ -53,17 +53,17 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::Draw(bool shaded, bool wireframe)
+void GameObject::Draw(bool shaded, bool wireframe) const
 {
 	if (active && IsParentActive())
 	{
-		C_Mesh* mesh = GetComponent<C_Mesh>();
+		const C_Mesh* mesh = GetComponent<C_Mesh>();
 		if (mesh)
 		{
 			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected(), flipped_normals);
 		}
 
-		C_Camera* camera = GetComponent<C_Camera>();
+		const C_Camera* camera = GetComponent<C_Camera>();
 		if (camera)
 		{
 			App->renderer3D->AddFrustum(camera->frustum, Blue);
@@ -148,6 +148,11 @@ bool GameObject::IsParentSelected() const
 		return parent->IsSelected() ? true : parent->IsParentSelected();
 	}
 	return false;
+}
+
+void GameObject::SetStatic(bool isStatic)
+{
+	this->isStatic = isStatic;
 }
 
 Component* GameObject::CreateComponent(Component::Type type)

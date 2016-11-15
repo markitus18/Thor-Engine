@@ -627,7 +627,7 @@ void ModuleRenderer3D::DrawAllScene()
 	App->moduleEditor->ReadTimer(box_draw_timer);
 }
 
-void ModuleRenderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
+void ModuleRenderer3D::AddMesh(float4x4 transform, const C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
 {
 	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected, flippedNormals));
 }

@@ -13,8 +13,8 @@ class Config;
 
 struct RenderMesh
 {
-	RenderMesh(float4x4 trans, C_Mesh* m, C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected, bool flippedNormals) : transform(trans), mesh(m), material(mat), shaded(sh), wireframe(wire), selected(selected),
-		parentSelected(parentSelected), flippedNormals(flippedNormals)
+	RenderMesh(float4x4 trans, const C_Mesh* m, const C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected, bool flippedNormals) : transform(trans), mesh(m), material(mat),
+		shaded(sh), wireframe(wire), selected(selected), parentSelected(parentSelected), flippedNormals(flippedNormals)
 	{}
 
 	float4x4 transform;
@@ -58,7 +58,7 @@ public:
 
 	C_Camera* GetActiveCamera();
 
-	void AddMesh(float4x4 transform, C_Mesh* mesh, C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
+	void AddMesh(float4x4 transform, const C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
 	void DrawAllMeshes();
 	void DrawMesh(const RenderMesh& mesh);
 

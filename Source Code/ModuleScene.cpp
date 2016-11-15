@@ -89,6 +89,11 @@ bool ModuleScene::CleanUp()
 // Update
 update_status ModuleScene::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+	{
+		CreateCamera();
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
 		//Import "external" file into project: creates all own-format files (and then loads them by now)
@@ -151,22 +156,13 @@ update_status ModuleScene::Update(float dt)
 
 	if (App->renderer3D->culling_camera)
 	{
-		std::vector<GameObject*> gameObjects;
-
-		//Temporal culling testing, just for performance calculation ------
-		App->moduleEditor->StartTimer(cullingTimer_library);
-		TestGameObjectsCulling(gameObjects, root, true);
-		App->moduleEditor->ReadTimer(cullingTimer_library);
-		gameObjects.clear();
-
-		App->moduleEditor->StartTimer(cullingTimer_normal);
-		TestGameObjectsCulling(gameObjects, root, false, false);
-		App->moduleEditor->ReadTimer(cullingTimer_normal);
-		gameObjects.clear();
-		//----------------------------------------------------------------
+		std::vector<const GameObject*> candidates;
 
 		App->moduleEditor->StartTimer(cullingTimer_optimized);
-		TestGameObjectsCulling(gameObjects, root, false, true);
+		quadtree->CollectCandidates(candidates, App->renderer3D->culling_camera->frustum);
+
+		std::vector<const GameObject*> gameObjects;
+		TestGameObjectsCulling(candidates, gameObjects);
 		App->moduleEditor->ReadTimer(cullingTimer_optimized);
 
 		for (uint i = 0; i < gameObjects.size(); i++)
@@ -175,7 +171,6 @@ update_status ModuleScene::Update(float dt)
 				gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 		}
 		gameObjects.clear();
-		camera->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 	}
 	else
 	{
@@ -207,6 +202,35 @@ void ModuleScene::SaveConfig(Config& config) const
 	config.SetString("Current Scene", current_scene.c_str());
 }
 
+void ModuleScene::SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds)
+{
+	gameObject->isStatic = isStatic;
+
+	if (allChilds)
+	{
+		for (uint i = 0; i < gameObject->childs.size(); i++)
+		{
+			SetStaticGameObject(gameObject->childs[i], isStatic, allChilds);
+		}
+	}
+
+	if (isStatic == true)
+	{
+		GameObject* it = gameObject->parent;
+		while (it != nullptr)
+		{
+			it->SetStatic(isStatic);
+			it = it->parent;
+		}
+		
+		quadtree->AddGameObject(gameObject);
+	}
+	else
+	{
+		quadtree->RemoveGameObject(gameObject);
+	}
+}
+
 void ModuleScene::LoadConfig(Config& config)
 {
 	std::string newScene = config.GetString("Current Scene");
@@ -230,59 +254,27 @@ void ModuleScene::SaveScene(Config& node) const
 void ModuleScene::LoadScene(Config& node)
 {
 	DeleteAllGameObjects();
+	std::vector<GameObject*> roots;
+	std::vector<GameObject*> newGameObjects;
 
-	std::vector<GameObject*> not_parented_GameObjects;
+	App->moduleImport->LoadGameObjectConfig(node, roots);
 
-	Config_Array gameObjects_array = node.GetArray("GameObjects");
-	for (uint i = 0; i < gameObjects_array.GetSize(); i++)
+	for (uint i = 0; i < roots.size(); i++)
 	{
-		//Single GameObject load
-		Config gameObject_node = gameObjects_array.GetNode(i);
+		roots[i]->parent = root;
+		root->childs.push_back(roots[i]);
+		GettAllGameObjects(newGameObjects, roots[i]);
+	}
 
-		float3 position = gameObject_node.GetArray("Translation").GetFloat3(0);
-		Quat rotation = gameObject_node.GetArray("Rotation").GetQuat(0);
-		float3 scale = gameObject_node.GetArray("Scale").GetFloat3(0);
-
-		//Parent setup
-		GameObject* parent = nullptr;
-		FindGameObjectByID(gameObject_node.GetNumber("ParentUID"), root, &parent);
-
-		GameObject* gameObject = new GameObject(parent, gameObject_node.GetString("Name").c_str(), position, scale, rotation);
-		gameObject->uid = gameObject_node.GetNumber("UID");
-
-		if (parent == nullptr)
-			not_parented_GameObjects.push_back(gameObject);
-
-		//Mesh load
-		std::string meshPath = gameObject_node.GetString("Mesh");
-
-		if (meshPath != "")
+	for (uint i = 0; i < newGameObjects.size(); i++)
+	{
+		if (newGameObjects[i]->isStatic)
 		{
-			C_Mesh* mesh = App->moduleMeshes->LoadMesh(meshPath.c_str());
-			if (mesh != nullptr)
-			{
-				gameObject->AddComponent(mesh);
-			}
-		}	
-
-		//Material load
-		std::string matPath = gameObject_node.GetString("Material");
-
-		if (matPath != "")
-		{
-			C_Material* mat = App->moduleMaterials->LoadMaterial(matPath.c_str());
-			if (mat != nullptr)
-			{
-				gameObject->AddComponent(mat);
-			}
+			quadtree->AddGameObject(newGameObjects[i]);
 		}
 	}
 
-	//Security method if any game object is left without a parent
-	for (uint i = 0; i < not_parented_GameObjects.size(); i++)
-	{
-		not_parented_GameObjects[i]->parent = root;
-	}
+
 }
 
 void ModuleScene::LoadScene(const char* file)
@@ -327,15 +319,23 @@ bool ModuleScene::DeleteGameObject(GameObject* gameObject)
 	}
 }
 
-void ModuleScene::TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib, bool optimized)
+void ModuleScene::CreateCamera()
 {
-	//Intersection method according to "lib" and "optimized" parameters
-	if (lib ? Intersects(camera->GetComponent<C_Camera>()->frustum, gameObject->GetAABB()) : Intersects(camera->GetComponent<C_Camera>()->planes, gameObject->GetAABB(), optimized))
-		vector.push_back(gameObject);
+	GameObject* camera = new GameObject(root, "Camera");
+	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
+	camera->CreateComponent(Component::Type::Camera);
+	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
+	camera->uid = random.Int();
+}
 
-	for (uint i = 0; i < gameObject->childs.size(); i++)
+void ModuleScene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)
+{
+	for (uint i = 0; i < vector.size(); i++)
 	{
-		TestGameObjectsCulling(vector, gameObject->childs[i], lib, optimized);
+		if (App->renderer3D->culling_camera->frustum.Intersects(vector[i]->GetAABB()))
+		{
+			final.push_back(vector[i]);
+		}
 	}
 }
 

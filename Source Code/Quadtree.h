@@ -15,7 +15,11 @@ public:
 	void Draw();
 	void AddGameObject(const GameObject* gameObject);
 	bool RemoveGameObject(const GameObject* gameObject);
-
+	template<typename PRIMITIVE>
+	void CollectCandidates(std::vector<const GameObject*>& gameObjects, const PRIMITIVE& primitive)
+	{
+		root->CollectCandidates(gameObjects, primitive);
+	}
 private:
 	QuadtreeNode* root;
 	std::vector<const GameObject*> out_of_tree;
@@ -33,6 +37,9 @@ public:
 
 	bool AddGameObject(const GameObject* gameObject);
 	bool RemoveGameObject(const GameObject* gameObject);
+
+	template<typename PRIMITIVE>
+	void CollectCandidates(std::vector<const GameObject*>& gameObjects, const PRIMITIVE& primitive);
 
 private:
 	void Split();
@@ -52,5 +59,22 @@ private:
 	uint maxBucketSize = 2;
 	std::vector<const GameObject*> bucket;
 };
+
+template<typename PRIMITIVE>
+void QuadtreeNode::CollectCandidates(std::vector<const GameObject*>& gameObjects, const PRIMITIVE& primitive)
+{
+	if (primitive.Intersects(box))
+	{
+		for (uint i = 0; i < bucket.size(); i++)
+		{
+			gameObjects.push_back(bucket[i]);
+		}
+
+		for (uint i = 0; i < childs.size(); i++)
+		{
+			childs[i].CollectCandidates(gameObjects, primitive);
+		}
+	}
+}
 
 #endif

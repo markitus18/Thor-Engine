@@ -21,7 +21,7 @@ public:
 	~GameObject();
 
 	void Update();
-	void Draw(bool shaded, bool wireframe);
+	void Draw(bool shaded, bool wireframe) const;
 
 	void OnUpdateTransform();
 	const AABB& GetAABB() const;
@@ -35,10 +35,26 @@ public:
 	bool IsParentSelected() const;
 	//EndOf Selection methods -----------------------------
 
+	void SetStatic(bool isStatic);
+
 	//Component management --------------------------------
 	Component* CreateComponent(Component::Type type);
 	void AddComponent(Component* component);
 	bool HasComponent(Component::Type type);
+
+	template<typename RetComponent>
+	const RetComponent* GetComponent() const
+	{
+		Component::Type type = RetComponent::GetType();
+		for (uint i = 0; i < components.size(); i++)
+		{
+			if (components[i]->GetType() == type)
+			{
+				return ((RetComponent*)(components[i]));
+			}
+		}
+		return NULL;
+	}
 
 	template<typename RetComponent>
 	RetComponent* GetComponent()

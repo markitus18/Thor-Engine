@@ -66,8 +66,6 @@ void ModuleImport::SaveGameObjectConfig(Config& config, std::vector<GameObject*>
 
 GameObject* ModuleImport::LoadGameObject(const char* path)
 {
-	GameObject* ret = nullptr;
-
 	std::string full_path = "Library/GameObjects/";
 	full_path.append(path);// .append(".mesh");
 
@@ -78,10 +76,11 @@ GameObject* ModuleImport::LoadGameObject(const char* path)
 	{
 		Config config(buffer);
 		std::vector<GameObject*> roots;
-		ret = LoadGameObjectConfig(config, roots);
+		LoadGameObjectConfig(config, roots);
+		return roots[0];
 	}
 
-	return ret;
+	return nullptr;
 }
 
 void ModuleImport::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& roots)
@@ -118,6 +117,9 @@ void ModuleImport::LoadGameObjectConfig(Config& config, std::vector<GameObject*>
 
 		if (parent == nullptr)
 			not_parented_GameObjects.push_back(gameObject);
+
+		gameObject->active = gameObject_node.GetBool("Active");
+		gameObject->isStatic = gameObject_node.GetBool("Static");
 
 		//Mesh load
 		std::string meshPath = gameObject_node.GetString("Mesh");
@@ -172,6 +174,8 @@ void ModuleImport::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	Config_Array scale_node = config.SetArray("Scale");
 	scale_node.AddFloat3(transform->GetScale());
 
+	config.SetBool("Active", gameObject->active);
+	config.SetBool("Static", gameObject->isStatic);
 	//A thought: each component type will have a folder, same number as their enumeration
 	//Transform = 01 // Mesh = 02 // Material = 03 ...
 	//Each component will go indexed by a number also, not a file name: mesh path would be Library/02/02.mesh

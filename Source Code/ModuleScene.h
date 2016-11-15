@@ -31,6 +31,8 @@ public:
 	GameObject* GetRoot();
 	const GameObject* GetRoot() const;
 
+	void SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds);
+
 	void SaveConfig(Config& config) const;
 	void LoadConfig(Config& config);
 
@@ -44,8 +46,12 @@ public:
 	void DeleteToRemoveGameObjects();
 	bool DeleteGameObject(GameObject* gameObject);
 
+	//GameObject primitives creation ---------
+	void CreateCamera();
+
+	//----------------------------------------
 private:
-	void TestGameObjectsCulling(std::vector<GameObject*>& vector, GameObject* gameObject, bool lib = false, bool optimized = true);
+	void TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final);
 	void DrawAllGameObjects(GameObject* gameObject);
 	void GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const;
 	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
@@ -59,7 +65,6 @@ public:
 private:
 	bool drawGrid = true;
 	GameObject* root = nullptr;
-	GameObject* camera = nullptr;
 
 
 

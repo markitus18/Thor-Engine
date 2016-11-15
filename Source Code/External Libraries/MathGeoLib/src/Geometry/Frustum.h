@@ -22,6 +22,8 @@
 #include "../Math/float3.h"
 #include "../Math/float3x4.h"
 #include "../Math/float4x4.h"
+#include "../Geometry/Plane.h"
+
 #include "Ray.h"
 
 #ifdef MATH_TINYXML_INTEROP
@@ -162,6 +164,8 @@ class Frustum
 	float3x4 worldMatrix;
 	float4x4 projectionMatrix;
 	float4x4 viewProjMatrix;
+
+	math::Plane planes[6];
 
 public:
 	/// The default constructor creates an uninitialized Frustum object.
@@ -304,11 +308,14 @@ public:
 		@see pos, front. */
 	vec WorldRight() const;
 
+	/// Updates planes data, so we avoid calculating planes each frame
+	void UpdatePlanes();
+
 	/// Computes the plane equation of the near plane of this Frustum.
 	/** The normal vector of the returned plane points outwards from the volume inside the frustum, i.e. towards the eye point
 		(towards -front). This means the negative half-space of the Frustum is the space inside the Frustum.
 		@see front, FarPlane(), LeftPlane(), RightPlane(), TopPlane(), BottomPlane(), GetPlane(), GetPlanes(). */
-	Plane NearPlane() const;
+	Plane CalcNearPlane() const;
 
 	/// Computes the width of the near plane quad in world space units.
 	/** @see NearPlaneHeight(). */
@@ -322,17 +329,24 @@ public:
 	/** The normal vector of the returned plane points outwards from the volume inside the frustum, i.e. away from the eye point.
 		(towards front). This means the negative half-space of the Frustum is the space inside the Frustum.
 		@see front, FarPlane(), LeftPlane(), RightPlane(), TopPlane(), BottomPlane(), GetPlane(), GetPlanes(). */
-	Plane FarPlane() const;
+	Plane CalcFarPlane() const;
 
 	/// Returns the plane equation of the specified side of this Frustum.
 	/** The normal vector of the returned plane points outwards from the volume inside the frustum.
 		This means the negative half-space of the Frustum is the space inside the Frustum.
 		[indexTitle: Left/Right/Top/BottomPlane]
 		@see NearPlane(), FarPlane(), GetPlane(), GetPlanes(). */
+	Plane CalcLeftPlane() const;
+	Plane CalcRightPlane() const; ///< [similarOverload: LeftPlane] [hideIndex]
+	Plane CalcTopPlane() const; ///< [similarOverload: LeftPlane] [hideIndex]
+	Plane CalcBottomPlane() const; ///< [similarOverload: LeftPlane] [hideIndex]
+
+	Plane NearPlane() const;
+	Plane FarPlane() const;
 	Plane LeftPlane() const;
-	Plane RightPlane() const; ///< [similarOverload: LeftPlane] [hideIndex]
-	Plane TopPlane() const; ///< [similarOverload: LeftPlane] [hideIndex]
-	Plane BottomPlane() const; ///< [similarOverload: LeftPlane] [hideIndex]
+	Plane RightPlane() const;
+	Plane TopPlane() const;
+	Plane BottomPlane() const;
 
 	/// Returns the specified plane of this frustum.
 	/** The normal vector of the returned plane points outwards from the volume inside the frustum.

@@ -73,13 +73,36 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 			SelectSingle(gameObject);
 		}
 	}
-	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-	{
-		float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
-		App->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
-		LOG("New camera look position: %f x, %f y, %f z", pos.x, pos.y, pos.z);
-	}
 
+
+	if (ImGui::IsItemHovered())
+	{
+		if (ImGui::IsMouseClicked(1))
+		{
+			ImGui::OpenPopup("GameObjectPopup");
+		}
+
+
+
+		if (ImGui::IsMouseDoubleClicked(0))
+		{
+			float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
+			App->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
+			LOG("New camera look position: %f x, %f y, %f z", pos.x, pos.y, pos.z);
+		}
+
+	}
+	if (ImGui::BeginPopup("GameObjectPopup"))
+	{
+		//if (ImGui::IsItemHovered() == false)
+		//ImGui::CloseCurrentPopup();
+		//else
+		if (ImGui::Button("delete"))
+		{
+			gameObject->toRemove = true;
+		}
+		ImGui::EndPopup();
+	}
 	if (nodeOpen)
 	{
 		for (uint i = 0; i < gameObject->childs.size(); i++)

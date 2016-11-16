@@ -44,7 +44,7 @@ public:
 
 private:
 
-	int			maxFPS = 60;
+	int			maxFPS = 30;
 	float		frame_ms_cap = 0.0f;
 
 	Timer		frameTimer;

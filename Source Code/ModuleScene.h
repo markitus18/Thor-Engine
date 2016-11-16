@@ -45,7 +45,7 @@ public:
 	GameObject* CreateGameObject(const char* name);
 	void DeleteToRemoveGameObjects();
 	bool DeleteGameObject(GameObject* gameObject);
-
+	void OnRemoveGameObject(GameObject* gameObject);
 	//GameObject primitives creation ---------
 	void CreateCamera();
 
@@ -65,7 +65,7 @@ public:
 private:
 	bool drawGrid = true;
 	GameObject* root = nullptr;
-
+	std::vector<const GameObject*> nonStatic;
 
 
 	uint cullingTimer_library = 0;

@@ -131,19 +131,19 @@ update_status ModuleScene::Update(float dt)
 	{
 		//TODO: Move this into a mesh "prefab" or a renderer method
 		glLineWidth(1.0f);
-		
+
 		glBegin(GL_LINES);
-		
+
 		float d = 20.0f;
-		
-		for(float i = -d; i <= d; i += 1.0f)
+
+		for (float i = -d; i <= d; i += 1.0f)
 		{
 			glVertex3f(i, 0.0f, -d);
 			glVertex3f(i, 0.0f, d);
 			glVertex3f(-d, 0.0f, i);
 			glVertex3f(d, 0.0f, i);
 		}
-		
+
 		glEnd();
 	}
 
@@ -163,12 +163,13 @@ update_status ModuleScene::Update(float dt)
 
 		std::vector<const GameObject*> gameObjects;
 		TestGameObjectsCulling(candidates, gameObjects);
+		TestGameObjectsCulling(nonStatic, gameObjects);
 		App->moduleEditor->ReadTimer(cullingTimer_optimized);
 
 		for (uint i = 0; i < gameObjects.size(); i++)
 		{
 			if (gameObjects[i]->name != "root");
-				gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+			gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
 		}
 		gameObjects.clear();
 	}
@@ -204,7 +205,36 @@ void ModuleScene::SaveConfig(Config& config) const
 
 void ModuleScene::SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds)
 {
-	gameObject->isStatic = isStatic;
+	if (gameObject->isStatic != isStatic)
+	{
+		gameObject->SetStatic(isStatic);
+
+		if (isStatic == true)
+		{
+			GameObject* it = gameObject->parent;
+			while (it != nullptr)
+			{
+				SetStaticGameObject(it, isStatic, false);
+				it = it->parent;
+			}
+
+			quadtree->AddGameObject(gameObject);
+
+			for (std::vector<const GameObject*>::iterator it = nonStatic.begin(); it != nonStatic.end(); it++)
+			{
+				if ((*it) == gameObject)
+				{
+					nonStatic.erase(it);
+					break;
+				}
+			}
+		}
+		else
+		{
+			quadtree->RemoveGameObject(gameObject);
+			nonStatic.push_back(gameObject);
+		}
+	}
 
 	if (allChilds)
 	{
@@ -212,22 +242,6 @@ void ModuleScene::SetStaticGameObject(GameObject* gameObject, bool isStatic, boo
 		{
 			SetStaticGameObject(gameObject->childs[i], isStatic, allChilds);
 		}
-	}
-
-	if (isStatic == true)
-	{
-		GameObject* it = gameObject->parent;
-		while (it != nullptr)
-		{
-			it->SetStatic(isStatic);
-			it = it->parent;
-		}
-		
-		quadtree->AddGameObject(gameObject);
-	}
-	else
-	{
-		quadtree->RemoveGameObject(gameObject);
 	}
 }
 
@@ -272,9 +286,11 @@ void ModuleScene::LoadScene(Config& node)
 		{
 			quadtree->AddGameObject(newGameObjects[i]);
 		}
+		else
+		{
+			nonStatic.push_back(newGameObjects[i]);
+		}
 	}
-
-
 }
 
 void ModuleScene::LoadScene(const char* file)
@@ -304,6 +320,7 @@ bool ModuleScene::DeleteGameObject(GameObject* gameObject)
 {
 	if (gameObject->toRemove == true)
 	{
+		App->OnRemoveGameObject(gameObject);
 		RELEASE(gameObject);
 		return true;
 	}
@@ -316,6 +333,25 @@ bool ModuleScene::DeleteGameObject(GameObject* gameObject)
 				gameObject->childs.erase(it);
 			}
 		}
+	}
+}
+
+void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
+{
+	if (quadtree->RemoveGameObject(gameObject) == false)
+	{
+		bool erased = false;
+		for (std::vector<const GameObject*>::iterator it = nonStatic.begin(); it != nonStatic.end(); it++)
+		{
+			if (*it == gameObject)
+			{
+				nonStatic.erase(it);
+				erased = true;
+				break;
+			}
+		}
+		if (erased == false)
+			LOG("[warning] deleted GameObject not found in quadtree nor non-static vector");
 	}
 }
 

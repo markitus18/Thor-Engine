@@ -93,10 +93,10 @@ bool QuadtreeNode::AddGameObject(const GameObject* gameObject)
 		}
 		else
 		{
-			if (SendToChilds(gameObject))
-				return true;
+			if (!SendToChilds(gameObject))
+				bucket.push_back(gameObject);
 		}
-
+		return true;
 	}
 	else
 	{

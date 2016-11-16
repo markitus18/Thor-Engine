@@ -2,15 +2,10 @@
 #define __MODULE_SCENE_H__
 
 #include "Module.h"
-#include "p2DynArray.h"
 #include "Globals.h"
-#include "Primitive.h"
 #include "Timer.h"
 
-//#include "MathGeoLib/src/MathBuildConfig.h"
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
-
-#include <list>
 
 class GameObject;
 class Config;
@@ -43,21 +38,24 @@ public:
 	void LoadGameObject(const char* file); //Calls module import to load a Game Object file
 
 	GameObject* CreateGameObject(const char* name);
-	void DeleteToRemoveGameObjects();
-	bool DeleteGameObject(GameObject* gameObject);
+
+	void DeleteGameObject(GameObject* gameObject);
 	void OnRemoveGameObject(GameObject* gameObject);
+
 	//GameObject primitives creation ---------
 	void CreateCamera();
 
 	//----------------------------------------
+
 private:
 	void TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final);
+	void UpdateAllGameObjects(GameObject* gameObject);
 	void DrawAllGameObjects(GameObject* gameObject);
 	void GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const;
 	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
 	void DeleteAllGameObjects();
 	void CreateDefaultScene();
-
+	void DeleteToRemoveGameObjects();
 public:
 	bool reset = false;
 	std::string current_scene = "Untitled";
@@ -67,6 +65,7 @@ private:
 	GameObject* root = nullptr;
 	std::vector<const GameObject*> nonStatic;
 
+	std::vector<GameObject*> toRemove;
 
 	uint cullingTimer_library = 0;
 	uint cullingTimer_normal = 0;

@@ -3,6 +3,10 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 #include "ModuleCamera3D.h"
+#include "C_Camera.h"
+#include "C_Transform.h"
+#include "C_Mesh.h"	
+#include "C_Material.h"
 
 #include "ImGui\imgui.h"
 
@@ -99,7 +103,7 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 		//else
 		if (ImGui::Button("delete"))
 		{
-			gameObject->toRemove = true;
+			App->scene->DeleteGameObject(gameObject);
 		}
 		ImGui::EndPopup();
 	}

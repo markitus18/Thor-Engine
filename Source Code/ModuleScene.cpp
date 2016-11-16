@@ -10,6 +10,9 @@
 #include "ModuleFileSystem.h"
 
 #include "GameObject.h"
+#include "C_Camera.h"
+#include "C_Transform.h"
+
 #include <gl/GL.h>
 #include <gl/GLU.h>
 //#include <stdio.h>
@@ -152,7 +155,7 @@ update_status ModuleScene::Update(float dt)
 		drawGrid = !drawGrid;
 	}
 
-	root->Update();
+	UpdateAllGameObjects(root);
 
 	if (App->renderer3D->culling_camera)
 	{
@@ -185,6 +188,7 @@ update_status ModuleScene::Update(float dt)
 
 update_status ModuleScene::PostUpdate(float dt)
 {
+	DeleteToRemoveGameObjects();
 	return UPDATE_CONTINUE;
 }
 
@@ -311,29 +315,16 @@ GameObject* ModuleScene::CreateGameObject(const char* name)
 	return new GameObject(root, name);
 }
 
-void ModuleScene::DeleteToRemoveGameObjects()
+void ModuleScene::DeleteGameObject(GameObject* gameObject)
 {
-
-}
-
-bool ModuleScene::DeleteGameObject(GameObject* gameObject)
-{
-	if (gameObject->toRemove == true)
+	for (uint i = 0; i < toRemove.size(); i++)
 	{
-		App->OnRemoveGameObject(gameObject);
-		RELEASE(gameObject);
-		return true;
+		if (toRemove[i] == gameObject)
+			return;
 	}
-	else
-	{
-		for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
-		{
-			if (DeleteGameObject(*it))
-			{
-				gameObject->childs.erase(it);
-			}
-		}
-	}
+	toRemove.push_back(gameObject);
+	for (uint i = 0; i < gameObject->childs.size(); i++)
+		DeleteGameObject(gameObject->childs[i]);
 }
 
 void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
@@ -373,6 +364,11 @@ void ModuleScene::TestGameObjectsCulling(std::vector<const GameObject*>& vector,
 			final.push_back(vector[i]);
 		}
 	}
+}
+
+void ModuleScene::UpdateAllGameObjects(GameObject* gameObject)
+{
+	root->Update();
 }
 
 void ModuleScene::DrawAllGameObjects(GameObject* gameObject)
@@ -426,4 +422,12 @@ void ModuleScene::DeleteAllGameObjects()
 void ModuleScene::CreateDefaultScene()
 {
 	App->LoadScene("ProjectSettings/Untitled.scene");
+}
+
+void ModuleScene::DeleteToRemoveGameObjects()
+{
+	for (std::vector<GameObject*>::iterator it = toRemove.begin(); it != toRemove.end(); it++)
+	{
+		App->OnRemoveGameObject(*it);
+	}
 }

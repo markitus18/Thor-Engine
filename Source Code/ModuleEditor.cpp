@@ -315,7 +315,7 @@ void ModuleEditor::DeleteSelectedGameObjects()
 {
 	for (uint i = 0; i < panelHierarchy->selectedGameObjects.size(); i++)
 	{
-		panelHierarchy->selectedGameObjects[i]->toRemove = true;
+		App->scene->DeleteGameObject(panelHierarchy->selectedGameObjects[i]);
 	}
 }
 

@@ -5,6 +5,8 @@
 
 #include "C_Material.h"
 #include "GameObject.h"
+#include "C_Mesh.h"
+#include "C_Transform.h"
 
 #include "ModuleMaterials.h"
 #include "ModuleMeshes.h"

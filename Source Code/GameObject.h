@@ -5,13 +5,14 @@
 #include "MathGeoLib/src/MathGeoLib.h"
 
 #include <vector>
+#include "Component.h"
 
 #include "C_Mesh.h"
 #include "C_Material.h"
 #include "C_Camera.h"
 #include "C_Transform.h"
-#include "Component.h"
 
+class C_Transform;
 
 class GameObject
 {
@@ -94,7 +95,6 @@ public:
 	std::vector<GameObject*>	childs;
 	bool						active = true;
 	bool						isStatic = false;
-	bool						toRemove = false;
 
 	unsigned long long			uid = 0;
 private:

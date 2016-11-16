@@ -3,9 +3,9 @@
     "Window": {},
     "Camera": {
         "Position": [
-            136.675568,
-            123.855515,
-            -119.030434
+            193.182922,
+            90.819443,
+            -89.821671
         ],
         "Reference": [
             -4.490003,
@@ -64,7 +64,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -89,7 +89,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -114,7 +114,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -139,7 +139,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_004",
                 "Material": "06 - Default"
             },
@@ -164,7 +164,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_001",
                 "Material": "Building_dnt"
             },
@@ -189,7 +189,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_007",
                 "Material": "building_16"
             },
@@ -214,7 +214,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_008",
                 "Material": "building_025"
             },
@@ -239,7 +239,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "Line002",
                 "Material": "20 - Defaulta"
             },
@@ -264,7 +264,7 @@
                     0.996635
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "Plane001",
                 "Material": "20 - Default"
             },
@@ -289,7 +289,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -314,7 +314,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "No name",
                 "Material": "orig_orig_orig_17 - Default"
             },
@@ -339,7 +339,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "No name",
                 "Material": "orig_orig_orig_17 - Default"
             },
@@ -364,7 +364,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_011",
                 "Material": "building_16"
             },
@@ -389,7 +389,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_013",
                 "Material": "3db _ building 06"
             },
@@ -414,7 +414,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_014",
                 "Material": "06 - Default"
             },
@@ -439,7 +439,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -464,7 +464,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "No name",
                 "Material": "orig_orig_orig_17 - Default"
             },
@@ -489,7 +489,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "No name",
                 "Material": "orig_orig_orig_17 - Default"
             },
@@ -514,7 +514,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -539,7 +539,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "No name",
                 "Material": "orig_orig_orig_17 - Default"
             },
@@ -564,7 +564,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "No name",
                 "Material": "orig_orig_orig_17 - Default"
             },
@@ -589,7 +589,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_022",
                 "Material": "09 - Default"
             },
@@ -614,7 +614,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_023",
                 "Material": "building_16"
             },
@@ -639,7 +639,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_024",
                 "Material": "building_025"
             },
@@ -664,7 +664,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_026",
                 "Material": "09 - Default"
             },
@@ -689,7 +689,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_028",
                 "Material": "Material #0"
             },
@@ -714,7 +714,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "Object010",
                 "Material": "21 - Default"
             },
@@ -739,7 +739,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_030",
                 "Material": "Material #0"
             },
@@ -764,7 +764,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_031",
                 "Material": "Material #0"
             },
@@ -789,7 +789,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_032",
                 "Material": "06 - Default"
             },
@@ -814,7 +814,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_033",
                 "Material": "3db _ building 06"
             },
@@ -839,7 +839,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_034",
                 "Material": "09 - Default"
             },
@@ -864,7 +864,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_035",
                 "Material": "Material #0"
             },
@@ -889,7 +889,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_036",
                 "Material": "3db _ building 06"
             },
@@ -914,7 +914,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_037",
                 "Material": "09 - Default"
             },
@@ -939,7 +939,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_038",
                 "Material": "09 - Default"
             },
@@ -964,7 +964,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_039",
                 "Material": "Material #0"
             },
@@ -989,7 +989,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_040",
                 "Material": "Material #0"
             },
@@ -1014,7 +1014,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "City_building_041",
                 "Material": "Building_dnt"
             },
@@ -1039,7 +1039,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -1064,7 +1064,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -1089,7 +1089,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             },
@@ -1114,7 +1114,7 @@
                     1
                 ],
                 "Active": true,
-                "Static": false,
+                "Static": true,
                 "Mesh": "",
                 "Material": ""
             }

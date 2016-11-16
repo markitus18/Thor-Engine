@@ -1,9 +1,12 @@
 #include "GameObject.h"
 #include "OpenGL.h"
 #include "Globals.h"
-#include "C_Camera.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+
+
+
+
 
 GameObject::GameObject()
 {

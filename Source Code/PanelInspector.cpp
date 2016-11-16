@@ -7,6 +7,9 @@
 #include "ModuleInput.h"
 #include "OpenGL.h"
 #include "C_Camera.h"
+#include "C_Transform.h"
+#include "C_Material.h"
+
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 

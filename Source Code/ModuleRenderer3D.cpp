@@ -297,8 +297,6 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 		glDrawElements(GL_TRIANGLES, mesh.mesh->num_indices, GL_UNSIGNED_INT, nullptr);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glEnable(GL_LIGHTING);
 		glLineWidth(1);
 		glColor4f(1, 1, 1, 1);
@@ -346,12 +344,12 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 		{
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glFrontFace(GL_CCW);
 		//------------------------------------------
 	}
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glPopMatrix();
 }
 

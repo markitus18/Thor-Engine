@@ -268,14 +268,3 @@ void GameObject::UpdateAABB()
 		obb = aabb;
 	}
 }
-
-//void GameObject::GetComponents(Component::Type type, std::vector<Component*>& vec)
-//{
-//	for (uint i = 0; i < components.size(); i++)
-//	{
-//		if (components[i]->GetType() == type)
-//		{
-//			vec.push_back(components[i]);
-//		}
-//	}
-//}

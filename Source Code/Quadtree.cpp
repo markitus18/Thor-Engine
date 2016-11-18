@@ -38,8 +38,9 @@ bool Quadtree::RemoveGameObject(const GameObject* gameObject)
 				return true;
 			}
 		}
+		return false;
 	}
-	return false;
+	return true;
 }
 
 QuadtreeNode::QuadtreeNode(const AABB& box) : box(box)

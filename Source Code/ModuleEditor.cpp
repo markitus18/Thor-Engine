@@ -386,11 +386,15 @@ void ModuleEditor::ResetScene()
 
 void ModuleEditor::OnRemoveGameObject(GameObject* gameObject)
 {
-	for (std::vector<GameObject*>::iterator it = panelHierarchy->selectedGameObjects.begin(); it != panelHierarchy->selectedGameObjects.end(); it++)
+	for (std::vector<GameObject*>::iterator it = panelHierarchy->selectedGameObjects.begin(); it != panelHierarchy->selectedGameObjects.end();)
 	{
 		if (*it == gameObject)
 		{
-			panelHierarchy->selectedGameObjects.erase(it);
+			it = panelHierarchy->selectedGameObjects.erase(it);
+		}
+		else
+		{
+			it++;
 		}
 	}
 }

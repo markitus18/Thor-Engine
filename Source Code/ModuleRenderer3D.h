@@ -75,6 +75,7 @@ public:
 	void ReleaseBuffers(C_Material* material);
 	//----------------------------------------------
 
+	void OnRemoveGameObject(GameObject* gameObject);
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
 	int window_width;

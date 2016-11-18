@@ -81,11 +81,11 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 
 	if (ImGui::IsItemHovered())
 	{
-		if (ImGui::IsMouseClicked(1))
+		if (ImGui::GetIO().MouseClicked[1])
 		{
-			ImGui::OpenPopup("GameObjectPopup");
+			ImGui::OpenPopup(gameObject->name.c_str());
+			LOG("Opening popup");
 		}
-
 
 
 		if (ImGui::IsMouseDoubleClicked(0))
@@ -96,11 +96,8 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 		}
 
 	}
-	if (ImGui::BeginPopup("GameObjectPopup"))
+	if (ImGui::BeginPopup(gameObject->name.c_str()))
 	{
-		//if (ImGui::IsItemHovered() == false)
-		//ImGui::CloseCurrentPopup();
-		//else
 		if (ImGui::Button("delete"))
 		{
 			App->scene->DeleteGameObject(gameObject);

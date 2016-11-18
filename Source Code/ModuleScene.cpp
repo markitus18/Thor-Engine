@@ -317,18 +317,23 @@ GameObject* ModuleScene::CreateGameObject(const char* name)
 
 void ModuleScene::DeleteGameObject(GameObject* gameObject)
 {
+	bool add = true;
 	for (uint i = 0; i < toRemove.size(); i++)
 	{
 		if (toRemove[i] == gameObject)
 			return;
 	}
 	toRemove.push_back(gameObject);
+	App->OnRemoveGameObject(gameObject);
 	for (uint i = 0; i < gameObject->childs.size(); i++)
+	{
 		DeleteGameObject(gameObject->childs[i]);
+	}
 }
 
 void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
 {
+	//Remove from quadtree // non-static vector
 	if (quadtree->RemoveGameObject(gameObject) == false)
 	{
 		bool erased = false;
@@ -343,6 +348,16 @@ void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
 		}
 		if (erased == false)
 			LOG("[warning] deleted GameObject not found in quadtree nor non-static vector");
+	}
+
+	//Removing parent child
+	if (gameObject->parent)
+	{
+		GameObject* parent = gameObject->parent;
+		for (std::vector<GameObject*>::iterator it = parent->childs.begin(); it != parent->childs.end();)
+		{
+			*it == gameObject ? it = parent->childs.erase(it) : it++;
+		}
 	}
 }
 
@@ -428,6 +443,7 @@ void ModuleScene::DeleteToRemoveGameObjects()
 {
 	for (std::vector<GameObject*>::iterator it = toRemove.begin(); it != toRemove.end(); it++)
 	{
-		App->OnRemoveGameObject(*it);
+		RELEASE(*it);
 	}
+	toRemove.clear();
 }

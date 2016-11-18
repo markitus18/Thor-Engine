@@ -260,6 +260,9 @@ uint ModuleMaterials::LoadTexture(const char* path)
 
 		ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
 		ret = ilutGLBindTexImage();
+
+		ilDeleteImages(1, &ImageName);
+		RELEASE_ARRAY(buffer);
 	}
 
 	return ret;

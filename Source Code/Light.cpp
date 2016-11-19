@@ -24,9 +24,7 @@ void Light::Render()
 	if(on)
 	{
 		float pos[] = {position.x, position.y, position.z, 1.0f};
-		GLfloat lmodel_ambient[] = { 0.7, 0.7, 0.7, 1.0 };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-		//glLightfv(ref, GL_POSITION, pos);
+		glLightfv(ref, GL_POSITION, pos);
 	}
 }
 

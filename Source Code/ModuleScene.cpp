@@ -216,7 +216,7 @@ void ModuleScene::SetStaticGameObject(GameObject* gameObject, bool isStatic, boo
 		if (isStatic == true)
 		{
 			GameObject* it = gameObject->parent;
-			while (it != nullptr)
+			while (it != nullptr && it->name != "root")
 			{
 				SetStaticGameObject(it, isStatic, false);
 				it = it->parent;
@@ -272,6 +272,7 @@ void ModuleScene::SaveScene(Config& node) const
 void ModuleScene::LoadScene(Config& node)
 {
 	DeleteAllGameObjects();
+	quadtree->Clear();
 	std::vector<GameObject*> roots;
 	std::vector<GameObject*> newGameObjects;
 
@@ -325,14 +326,16 @@ void ModuleScene::DeleteGameObject(GameObject* gameObject)
 	}
 	toRemove.push_back(gameObject);
 	App->OnRemoveGameObject(gameObject);
-	for (uint i = 0; i < gameObject->childs.size(); i++)
+
+	while (gameObject->childs.empty() == false) //"DeleteGameObject" will remove the gameObject from the childs list
 	{
-		DeleteGameObject(gameObject->childs[i]);
+		DeleteGameObject(gameObject->childs[0]);
 	}
 }
 
 void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
 {
+	LOG("Onremove call");
 	//Remove from quadtree // non-static vector
 	if (quadtree->RemoveGameObject(gameObject) == false)
 	{

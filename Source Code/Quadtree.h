@@ -15,6 +15,7 @@ public:
 	void Draw();
 	void AddGameObject(const GameObject* gameObject);
 	bool RemoveGameObject(const GameObject* gameObject);
+	void Clear();
 	template<typename PRIMITIVE>
 	void CollectCandidates(std::vector<const GameObject*>& gameObjects, const PRIMITIVE& primitive)
 	{

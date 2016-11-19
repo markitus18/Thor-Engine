@@ -97,20 +97,20 @@ bool ModuleRenderer3D::Init(Config& config)
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-		
-		lights[0].ref = GL_LIGHT0;
-		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
-		lights[0].Init();
-		
-		GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
+		GLfloat lmodel_ambient[] = { 1.4, 1.4, 1.4, 1.0 };
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
 
-		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
+		//lights[0].ref = GL_LIGHT0;
+		//lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
+		//lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+		//lights[0].SetPos(0.0f, 0.0f, 2.5f);
+		//lights[0].Init();
+		
+		//GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
+		//glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
+
+		//GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+		//glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
@@ -121,7 +121,7 @@ bool ModuleRenderer3D::Init(Config& config)
 	//	glEnable(GL_BLEND);
 	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		lights[0].Active(true);
+		//lights[0].Active(true);
 
 		glShadeModel(GL_SMOOTH);
 	}
@@ -148,6 +148,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(camera->GetOpenGLViewMatrix());
+
 	// light 0 on cam pos
 	//lights[0].SetPos(App->camera->GetCamera()->frustum.pos.x, App->camera->GetCamera()->frustum.pos.y, App->camera->GetCamera()->frustum.pos.z);
 
@@ -297,8 +298,6 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 		glDrawElements(GL_TRIANGLES, mesh.mesh->num_indices, GL_UNSIGNED_INT, nullptr);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glEnable(GL_LIGHTING);
 		glLineWidth(1);
 		glColor4f(1, 1, 1, 1);
@@ -346,8 +345,6 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 		{
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glFrontFace(GL_CCW);
 		//------------------------------------------
 	}

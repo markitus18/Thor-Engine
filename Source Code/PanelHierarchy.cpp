@@ -101,6 +101,7 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 		if (ImGui::Button("delete"))
 		{
 			App->scene->DeleteGameObject(gameObject);
+			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
 	}

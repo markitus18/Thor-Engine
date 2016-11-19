@@ -19,16 +19,28 @@ C_Mesh::~C_Mesh()
 void C_Mesh::ReleaseBuffers()
 {
 	if (id_vertices != 0)
+	{
 		glDeleteBuffers(1, (GLuint*)&id_vertices);
+		LOG("ID Vertices: %i", id_vertices);
+	}
 
 	if (id_indices != 0)
+	{
 		glDeleteBuffers(1, (GLuint*)&id_indices);
+		LOG("ID Indices: %i", id_indices);
+	}
 
 	if (id_normals != 0)
+	{
 		glDeleteBuffers(1, (GLuint*)&id_normals);
+		LOG("ID Normals: %i", id_normals);
+	}
 
 	if (id_tex_coords != 0)
+	{
 		glDeleteBuffers(1, (GLuint*)&id_tex_coords);
+		LOG("ID TexCoords: %i", id_tex_coords);
+	}
 }
 
 void C_Mesh::LoadBuffers()

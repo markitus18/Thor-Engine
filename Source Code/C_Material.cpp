@@ -11,6 +11,7 @@ C_Material::~C_Material()
 {
 	//TODO: Temporal, want to move GL functions to Loaders and GameObject
 	glDeleteBuffers(1, &texture_id);
+	LOG("Texture id %i", texture_id);
 }
 
 Component::Type C_Material::GetType()

@@ -13,7 +13,7 @@ C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObjec
 C_Mesh::~C_Mesh()
 {
 	//TODO: think a way of doing it on renderer. Store a vector with all loaded meshes?
-	//ReleaseBuffers();
+	ReleaseBuffers();
 }
 
 void C_Mesh::ReleaseBuffers()

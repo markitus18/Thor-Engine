@@ -55,6 +55,7 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
 
 	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());
+	bool openAndChilds = (nodeOpen && !gameObject->childs.empty());
 
 	if (gameObject->IsParentActive() == false)
 		ImGui::PopStyleColor();
@@ -111,7 +112,7 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 		{
 			DrawGameObject(gameObject->childs[i], default_flags);
 		}
-		if (!gameObject->childs.empty())
+		if (openAndChilds)
 			ImGui::TreePop();
 	}
 }

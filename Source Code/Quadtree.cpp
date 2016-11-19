@@ -28,9 +28,7 @@ void Quadtree::AddGameObject(const GameObject* gameObject)
 
 bool Quadtree::RemoveGameObject(const GameObject* gameObject)
 {
-	if (root->RemoveGameObject(gameObject) == true)
-		return true;
-	else
+	if (root->RemoveGameObject(gameObject) == false)
 	{
 		for (std::vector<const GameObject*>::iterator it = out_of_tree.begin(); it < out_of_tree.end(); it++)
 		{
@@ -42,6 +40,7 @@ bool Quadtree::RemoveGameObject(const GameObject* gameObject)
 		}
 		return false;
 	}
+	return true;
 }
 
 QuadtreeNode::QuadtreeNode(const AABB& box) : box(box)
@@ -114,7 +113,6 @@ bool QuadtreeNode::RemoveGameObject(const GameObject* gameObject)
 	{
 		if (*it == gameObject)
 		{
-			LOG("GameObject removed from quadtree");
 			bucket.erase(it);
 			TryRemovingChilds();
 			return true;
@@ -128,6 +126,7 @@ bool QuadtreeNode::RemoveGameObject(const GameObject* gameObject)
 			TryRemovingChilds();
 			return true;
 		}
+
 	}
 	return false;
 }

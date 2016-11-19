@@ -33,6 +33,14 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene",
 {
 	root = new GameObject(nullptr, "root");
 	root->uid = 0;
+
+	//TODO: This should nto be here
+	//TMP camera for testing purposes
+	//camera = new GameObject(root, "Camera");
+	//camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
+	//camera->CreateComponent(Component::Type::Camera);
+	//camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
+	//camera->uid = random.Int();
 }
 
 ModuleScene::~ModuleScene()
@@ -208,7 +216,7 @@ void ModuleScene::SetStaticGameObject(GameObject* gameObject, bool isStatic, boo
 		if (isStatic == true)
 		{
 			GameObject* it = gameObject->parent;
-			while (it != nullptr && it->name != "root")
+			while (it != nullptr)
 			{
 				SetStaticGameObject(it, isStatic, false);
 				it = it->parent;
@@ -309,6 +317,7 @@ GameObject* ModuleScene::CreateGameObject(const char* name)
 
 void ModuleScene::DeleteGameObject(GameObject* gameObject)
 {
+	bool add = true;
 	for (uint i = 0; i < toRemove.size(); i++)
 	{
 		if (toRemove[i] == gameObject)
@@ -325,13 +334,9 @@ void ModuleScene::DeleteGameObject(GameObject* gameObject)
 void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
 {
 	//Remove from quadtree // non-static vector
-	bool erased = false;
-	if (gameObject->isStatic)
+	if (quadtree->RemoveGameObject(gameObject) == false)
 	{
-		erased = quadtree->RemoveGameObject(gameObject);
-	}
-	else
-	{
+		bool erased = false;
 		for (std::vector<const GameObject*>::iterator it = nonStatic.begin(); it != nonStatic.end(); it++)
 		{
 			if (*it == gameObject)
@@ -341,9 +346,9 @@ void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
 				break;
 			}
 		}
-	}
 		if (erased == false)
 			LOG("[warning] deleted GameObject not found in quadtree nor non-static vector");
+	}
 
 	//Removing parent child
 	if (gameObject->parent)

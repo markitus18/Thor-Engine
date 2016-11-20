@@ -109,6 +109,11 @@ const AABB& GameObject::GetAABB() const
 	return aabb;
 }
 
+const OBB& GameObject::GetOBB() const
+{
+	return obb;
+}
+
 bool GameObject::HasFlippedNormals() const
 {
 	if (parent)

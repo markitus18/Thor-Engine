@@ -26,6 +26,7 @@ public:
 
 	void OnUpdateTransform();
 	const AABB& GetAABB() const;
+	const OBB& GetOBB() const;
 	bool HasFlippedNormals() const;
 	bool IsParentActive() const;
 

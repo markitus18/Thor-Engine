@@ -7,8 +7,13 @@
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 #include "Config.h"
+#include "OpenGL.h"
+#include "Quadtree.h"
+#include "ModuleScene.h"
+#include "PanelHierarchy.h"
 
 #include <vector>
+#include <map>
 
 
 
@@ -64,8 +69,26 @@ update_status ModuleCamera3D::Update(float dt)
 		Move_Keyboard(dt);
 
 	if (App->moduleEditor->UsingMouse() == false)
+	{
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		{
+			OnClick();
+		}
 		Move_Mouse();
+	}
 
+	glColor4f(1, 0, 0, 1);
+
+	//Between-planes right
+	GLfloat pointA[3] = { lastRay.a.x, lastRay.a.y, lastRay.a.z };
+	GLfloat pointB[3] = { lastRay.b.x, lastRay.b.y, lastRay.b.z };
+
+	glBegin(GL_LINES);
+	glVertex3fv(pointA);
+	glVertex3fv(pointB);
+	glEnd();
+
+	glColor4f(1, 1, 1, 1);
 	return UPDATE_CONTINUE;
 }
 
@@ -199,4 +222,63 @@ void ModuleCamera3D::Zoom(float zoom)
 	float distance = reference.Distance(camera->frustum.Pos());
 	vec newPos = camera->frustum.Pos() + camera->frustum.Front() * zoom * distance * 0.05f;
 	camera->frustum.SetPos(newPos);
+}
+
+void ModuleCamera3D::OnClick()
+{
+	uint mouseX = App->input->GetMouseX();
+	uint mouseY = App->input->GetMouseY();
+
+	uint screen_width = App->renderer3D->window_width;
+	uint screen_height = App->renderer3D->window_height;
+
+	float mouseNormX = (float)App->input->GetMouseX() / (float)App->renderer3D->window_width;
+	float mouseNormY = (float)App->input->GetMouseY() / (float)App->renderer3D->window_height;
+
+	//Normalizing mouse position in range of -1 / 1, -1, -1 being at the bottom left corner
+	mouseNormX = (mouseNormX - 0.5) / 0.5;
+	mouseNormY = -((mouseNormY - 0.5) / 0.5);
+
+	LOG("Camera click ray: mouseX %f, mouseY %f", mouseNormX, mouseNormY);
+	lastRay = App->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
+
+	std::map<float, const GameObject*> candidates;
+	App->scene->quadtree->CollectCandidates(candidates, lastRay);
+
+	const GameObject* toSelect = nullptr;
+	for (std::map<float, const GameObject*>::iterator it = candidates.begin(); it != candidates.end() && toSelect == nullptr; it++)
+	{
+		//Testing triangle by triangle
+		const C_Mesh* mesh = it->second->GetComponent<C_Mesh>();
+		if (mesh)
+		{
+			LineSegment local = lastRay;
+			local.Transform(it->second->GetComponent<C_Transform>()->GetGlobalTransform().Inverted());
+			for (uint v = 0; v < mesh->num_indices; v += 3)
+			{
+				uint indexA = mesh->indices[v] * 3;
+				vec a(&mesh->vertices[indexA]);
+
+				uint indexB = mesh->indices[v + 1] * 3;
+				vec b(&mesh->vertices[indexB]);
+
+				uint indexC = mesh->indices[v + 2] * 3;
+				vec c(&mesh->vertices[indexC]);
+
+				Triangle triangle(a, b, c);
+
+				if (local.Intersects(triangle, nullptr, nullptr))
+				{
+					toSelect = it->second;
+					break;
+				}
+			}
+		}
+	}
+	if (toSelect == nullptr)
+	{
+		LOG("GameObject selection not found");
+	}
+	App->moduleEditor->panelHierarchy->SelectSingle((GameObject*)toSelect);
+
 }

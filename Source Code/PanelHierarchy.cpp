@@ -132,8 +132,11 @@ void PanelHierarchy::SelectSingle(GameObject* gameObject)
 	{
 		UnselectAll();
 	}
-	gameObject->Select();
-	selectedGameObjects.push_back(gameObject);
+	if (gameObject)
+	{
+		gameObject->Select();
+		selectedGameObjects.push_back(gameObject);
+	}
 }
 
 void PanelHierarchy::AddSelect(GameObject* gameObject)

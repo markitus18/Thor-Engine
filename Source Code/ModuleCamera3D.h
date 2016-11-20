@@ -41,10 +41,13 @@ private:
 	void Orbit(float motion_x, float motion_y);
 	void Zoom(float zoom);
 
+	void OnClick();
+
 private:
 
 	float3 reference;
 	C_Camera* camera = nullptr;
+	LineSegment lastRay;
 };
 
 #endif //__MODULE_CAMERA_H__

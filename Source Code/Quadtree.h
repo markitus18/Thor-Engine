@@ -3,6 +3,7 @@
 
 #include "MathGeoLib\src\MathGeoLib.h"
 #include "Globals.h"
+#include <map>
 
 class GameObject;
 class QuadtreeNode;
@@ -21,6 +22,13 @@ public:
 	{
 		root->CollectCandidates(gameObjects, primitive);
 	}
+
+	template<typename PRIMITIVE>
+	void CollectCandidates(std::map<float, const GameObject*>& gameObjects, const PRIMITIVE& primitive)
+	{
+		root->CollectCandidates(gameObjects, primitive);
+	}
+
 private:
 	QuadtreeNode* root;
 	std::vector<const GameObject*> out_of_tree;
@@ -41,6 +49,9 @@ public:
 
 	template<typename PRIMITIVE>
 	void CollectCandidates(std::vector<const GameObject*>& gameObjects, const PRIMITIVE& primitive);
+
+	template<typename PRIMITIVE>
+	void CollectCandidates(std::map<float, const GameObject*>& gameObjects, const PRIMITIVE& primitive);
 
 private:
 	void Split();
@@ -77,5 +88,24 @@ void QuadtreeNode::CollectCandidates(std::vector<const GameObject*>& gameObjects
 		}
 	}
 }
+
+template<typename PRIMITIVE>
+void QuadtreeNode::CollectCandidates(std::map<float, const GameObject*>& gameObjects, const PRIMITIVE& primitive)
+{
+	if (primitive.Intersects(box))
+	{
+		float hit_near, hit_far;
+		for (uint i = 0; i < bucket.size(); i++)
+		{
+			if (primitive.Intersects(bucket[i]->GetAABB(), hit_near, hit_far))
+				gameObjects[hit_near] = bucket[i];
+		}
+		for (uint i = 0; i < childs.size(); i++)
+		{
+			childs[i].CollectCandidates(gameObjects, primitive);
+		}
+	}
+}
+
 
 #endif

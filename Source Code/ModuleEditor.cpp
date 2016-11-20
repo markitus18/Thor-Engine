@@ -374,6 +374,14 @@ void ModuleEditor::StopTimer(uint index)
 	panelConfiguration->StopTimer(index);
 }
 
+void ModuleEditor::SelectGameObject(GameObject* gameObject, bool selectSingle)
+{
+	if (selectSingle)
+		panelHierarchy->SelectSingle(gameObject);
+	else
+		panelHierarchy->AddSelect(gameObject);
+}
+
 void ModuleEditor::LoadScene(Config& root)
 {
 	panelHierarchy->selectedGameObjects.clear();

@@ -242,43 +242,5 @@ void ModuleCamera3D::OnClick()
 	LOG("Camera click ray: mouseX %f, mouseY %f", mouseNormX, mouseNormY);
 	lastRay = App->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 
-	std::map<float, const GameObject*> candidates;
-	App->scene->quadtree->CollectCandidates(candidates, lastRay);
-
-	const GameObject* toSelect = nullptr;
-	for (std::map<float, const GameObject*>::iterator it = candidates.begin(); it != candidates.end() && toSelect == nullptr; it++)
-	{
-		//Testing triangle by triangle
-		const C_Mesh* mesh = it->second->GetComponent<C_Mesh>();
-		if (mesh)
-		{
-			LineSegment local = lastRay;
-			local.Transform(it->second->GetComponent<C_Transform>()->GetGlobalTransform().Inverted());
-			for (uint v = 0; v < mesh->num_indices; v += 3)
-			{
-				uint indexA = mesh->indices[v] * 3;
-				vec a(&mesh->vertices[indexA]);
-
-				uint indexB = mesh->indices[v + 1] * 3;
-				vec b(&mesh->vertices[indexB]);
-
-				uint indexC = mesh->indices[v + 2] * 3;
-				vec c(&mesh->vertices[indexC]);
-
-				Triangle triangle(a, b, c);
-
-				if (local.Intersects(triangle, nullptr, nullptr))
-				{
-					toSelect = it->second;
-					break;
-				}
-			}
-		}
-	}
-	if (toSelect == nullptr)
-	{
-		LOG("GameObject selection not found");
-	}
-	App->moduleEditor->panelHierarchy->SelectSingle((GameObject*)toSelect);
-
+	App->scene->OnClickSelection(lastRay);
 }

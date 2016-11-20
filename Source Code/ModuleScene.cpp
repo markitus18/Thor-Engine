@@ -364,6 +364,61 @@ void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
 	}
 }
 
+void ModuleScene::OnClickSelection(const LineSegment& segment)
+{
+	//Collecting quadtree GameObjects
+	std::map<float, const GameObject*> candidates;
+	App->scene->quadtree->CollectCandidates(candidates, segment);
+
+	//Collecting non-static GameObjects
+	for (uint i = 0; i < nonStatic.size(); i++)
+	{
+		if (segment.Intersects(nonStatic[i]->GetAABB()))
+		{
+			float hit_near, hit_far;
+			if (segment.Intersects(nonStatic[i]->GetOBB(), hit_near, hit_far))
+				candidates[hit_near] = nonStatic[i];
+		}
+	}
+
+
+	const GameObject* toSelect = nullptr;
+	for (std::map<float, const GameObject*>::iterator it = candidates.begin(); it != candidates.end() && toSelect == nullptr; it++)
+	{
+		//Testing triangle by triangle
+		const C_Mesh* mesh = it->second->GetComponent<C_Mesh>();
+		if (mesh)
+		{
+			LineSegment local = segment;
+			local.Transform(it->second->GetComponent<C_Transform>()->GetGlobalTransform().Inverted());
+			for (uint v = 0; v < mesh->num_indices; v += 3)
+			{
+				uint indexA = mesh->indices[v] * 3;
+				vec a(&mesh->vertices[indexA]);
+
+				uint indexB = mesh->indices[v + 1] * 3;
+				vec b(&mesh->vertices[indexB]);
+
+				uint indexC = mesh->indices[v + 2] * 3;
+				vec c(&mesh->vertices[indexC]);
+
+				Triangle triangle(a, b, c);
+
+				if (local.Intersects(triangle, nullptr, nullptr))
+				{
+					toSelect = it->second;
+					break;
+				}
+			}
+		}
+	}
+	if (toSelect == nullptr)
+	{
+		LOG("GameObject selection not found");
+	}
+	App->moduleEditor->SelectGameObject((GameObject*)toSelect);
+}
+
 void ModuleScene::CreateCamera()
 {
 	GameObject* camera = new GameObject(root, "Camera");

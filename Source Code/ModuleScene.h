@@ -6,6 +6,7 @@
 #include "Timer.h"
 
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
+#include "MathGeoLib/src/Geometry/LineSegment.h"
 
 class GameObject;
 class Config;
@@ -28,6 +29,7 @@ public:
 
 	void SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds);
 
+	//Scene and prefab save / load ------------------------------------------------
 	void SaveConfig(Config& config) const;
 	void LoadConfig(Config& config);
 
@@ -36,11 +38,16 @@ public:
 	void LoadScene(const char* file); //Calls application and prepares to load
 
 	void LoadGameObject(const char* file); //Calls module import to load a Game Object file
+	//Endof Scene and prefab save / load ------------------------------------------
 
+	//GameObject management -------------------------------------------------------
 	GameObject* CreateGameObject(const char* name);
 
 	void DeleteGameObject(GameObject* gameObject);
 	void OnRemoveGameObject(GameObject* gameObject);
+
+	void OnClickSelection(const LineSegment& segment);
+	//Endof GameObject management -------------------------------------------------
 
 	//GameObject primitives creation ---------
 	void CreateCamera();

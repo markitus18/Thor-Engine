@@ -43,6 +43,10 @@ public:
 	void StopTimer(uint index);
 	//------------------------------------
 
+	//GameObject stuff -------------------
+	void SelectGameObject(GameObject* gameObject, bool selectSingle = true);
+	//------------------------------------
+
 	void LoadScene(Config& root);
 	void ResetScene();
 

@@ -97,7 +97,7 @@ void QuadtreeNode::CollectCandidates(std::map<float, const GameObject*>& gameObj
 		float hit_near, hit_far;
 		for (uint i = 0; i < bucket.size(); i++)
 		{
-			if (primitive.Intersects(bucket[i]->GetAABB(), hit_near, hit_far))
+			if (primitive.Intersects(bucket[i]->GetOBB(), hit_near, hit_far))
 				gameObjects[hit_near] = bucket[i];
 		}
 		for (uint i = 0; i < childs.size(); i++)

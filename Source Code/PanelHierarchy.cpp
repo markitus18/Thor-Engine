@@ -54,6 +54,12 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 	if (gameObject->IsParentActive() == false)
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
 
+	if (gameObject->beenSelected == true)
+	{
+		ImGui::SetNextTreeNodeOpen(true);
+		LOG("Opening next tree node");
+	}
+
 	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());
 	bool openAndChilds = (nodeOpen && !gameObject->childs.empty());
 
@@ -136,13 +142,33 @@ void PanelHierarchy::SelectSingle(GameObject* gameObject)
 	{
 		gameObject->Select();
 		selectedGameObjects.push_back(gameObject);
+
+		GameObject* it = gameObject->parent;
+		while (it != nullptr)
+		{
+			it->beenSelected = true;
+			it->wasSelected = false;
+			it = it->parent;
+		}
 	}
 }
 
 void PanelHierarchy::AddSelect(GameObject* gameObject)
 {
-	gameObject->Select();
-	selectedGameObjects.push_back(gameObject);
+	if (gameObject)
+	{
+		gameObject->Select();
+		selectedGameObjects.push_back(gameObject);
+
+		GameObject* it = gameObject->parent;
+		while (it != nullptr && it->name != "root")
+		{
+			it->beenSelected = true;
+			it->wasSelected = false;
+			it = it->parent;
+		}
+	}
+
 }
 
 void PanelHierarchy::UnselectSingle(GameObject* gameObject)

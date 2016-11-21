@@ -98,6 +98,9 @@ public:
 	bool						isStatic = false;
 
 	unsigned long long			uid = 0;
+
+	bool						beenSelected = false;
+	bool						wasSelected = false;
 private:
 	bool						flipped_normals = false;
 

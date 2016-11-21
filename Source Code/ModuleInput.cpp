@@ -152,8 +152,8 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 	}
 
-	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
-		return UPDATE_STOP;
+	//if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
+	//	return UPDATE_STOP;
 
 	infiniteHorizontal = false;
 

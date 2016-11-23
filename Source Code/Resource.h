@@ -1,8 +1,11 @@
 #ifndef __RESOURCE_H__
 #define __RESOURCE_H__
 
+#include <string>
+
 class Resource
 {
+public:
 	enum Type
 	{
 		MESH,
@@ -10,7 +13,6 @@ class Resource
 		BONE,
 	};
 
-public:
 	Resource(Type type);
 	~Resource();
 
@@ -19,6 +21,9 @@ public:
 private:
 	unsigned long long ID;
 	Type type;
+
+	std::string resource_file;
+	std::string original_file;
 
 };
 

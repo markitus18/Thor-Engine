@@ -181,6 +181,7 @@
     <ClInclude Include="Source Code\M_Materials.h" />
     <ClInclude Include="Source Code\M_Meshes.h" />
     <ClInclude Include="Source Code\M_Renderer3D.h" />
+    <ClInclude Include="Source Code\M_Resources.h" />
     <ClInclude Include="Source Code\M_Scene.h" />
     <ClInclude Include="Source Code\M_Editor.h" />
     <ClInclude Include="Source Code\M_Window.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Source Code\Primitive.h" />
     <ClInclude Include="Source Code\Quadtree.h" />
     <ClInclude Include="Source Code\Resource.h" />
+    <ClInclude Include="Source Code\R_Mesh.h" />
     <ClInclude Include="Source Code\Timer.h" />
     <ClInclude Include="Source Code\P_Console.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
@@ -265,6 +267,7 @@
     <ClCompile Include="Source Code\M_Materials.cpp" />
     <ClCompile Include="Source Code\M_Meshes.cpp" />
     <ClCompile Include="Source Code\M_Renderer3D.cpp" />
+    <ClCompile Include="Source Code\M_Resources.cpp" />
     <ClCompile Include="Source Code\M_Scene.cpp" />
     <ClCompile Include="Source Code\M_Editor.cpp" />
     <ClCompile Include="Source Code\M_Window.cpp" />
@@ -277,6 +280,7 @@
     <ClCompile Include="Source Code\Primitive.cpp" />
     <ClCompile Include="Source Code\Quadtree.cpp" />
     <ClCompile Include="Source Code\Resource.cpp" />
+    <ClCompile Include="Source Code\R_Mesh.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
     <ClCompile Include="Source Code\P_Console.cpp" />
   </ItemGroup>

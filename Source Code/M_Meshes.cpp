@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "C_Mesh.h"
+#include "R_Mesh.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -35,7 +36,57 @@ bool M_Meshes::CleanUp()
 C_Mesh* M_Meshes::ImportMesh(const aiMesh* from, const char* file)
 {
 	C_Mesh* mesh = new C_Mesh;
+	R_Mesh* resMesh = new R_Mesh;
 
+#pragma region Resource
+	resMesh->num_vertices = from->mNumVertices;
+	resMesh->num_vertices = from->mNumVertices;
+	resMesh->vertices = new float[resMesh->num_vertices * 3];
+	memcpy(resMesh->vertices, from->mVertices, sizeof(float) * resMesh->num_vertices * 3);
+	LOG("New resource mesh with %d vertices", resMesh->num_vertices);
+
+	//Loading mesh faces data
+	if (from->HasFaces())
+	{
+		resMesh->num_indices = from->mNumFaces * 3;
+		resMesh->indices = new uint[resMesh->num_indices];
+		for (uint i = 0; i < from->mNumFaces; i++)
+		{
+			if (from->mFaces[i].mNumIndices != 3)
+			{
+				LOG("[warning], geometry face with != 3 indices!");
+			}
+			else
+			{
+				//Copying each face, we skip 3 slots in indices because an aiFace is made of 3 uints
+				memcpy(&resMesh->indices[i * 3], from->mFaces[i].mIndices, 3 * sizeof(uint));
+			}
+		}
+	}
+
+	//Loading mesh normals data ------------------
+	if (from->HasNormals())
+	{
+		resMesh->num_normals = from->mNumVertices;
+		resMesh->normals = new float[resMesh->num_normals * 3];
+		memcpy(resMesh->normals, from->mNormals, sizeof(float) * resMesh->num_normals * 3);
+	}
+
+	//Loading mesh texture coordinates -----------
+	if (from->HasTextureCoords(0))
+	{
+		resMesh->num_tex_coords = resMesh->num_vertices;
+		resMesh->tex_coords = new float[from->mNumVertices * 2];
+
+		for (unsigned int i = 0; i < resMesh->num_tex_coords; i++)
+		{
+			resMesh->tex_coords[i * 2] = from->mTextureCoords[0][i].x;
+			resMesh->tex_coords[i * 2 + 1] = from->mTextureCoords[0][i].y;
+		}
+	}
+#pragma endregion
+
+	//-----------------------------------------------------------------
 	//Loading mesh vertices data
 	mesh->num_vertices = from->mNumVertices;
 	mesh->vertices = new float[mesh->num_vertices * 3];

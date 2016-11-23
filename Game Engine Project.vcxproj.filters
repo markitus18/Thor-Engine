@@ -214,12 +214,6 @@
     <ClCompile Include="Source Code\M_Window.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\M_Materials.cpp">
-      <Filter>Source Code\GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\M_Meshes.cpp">
-      <Filter>Source Code\GameObjects\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\P_Buttons.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
@@ -238,8 +232,14 @@
     <ClCompile Include="Source Code\R_Mesh.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\M_Materials.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Meshes.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="Source Code\M_Resources.cpp">
-      <Filter>Source Code\Modules</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -573,12 +573,6 @@
     <ClInclude Include="Source Code\M_Window.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\M_Materials.h">
-      <Filter>Source Code\GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Meshes.h">
-      <Filter>Source Code\GameObjects\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\P_Buttons.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
@@ -597,8 +591,14 @@
     <ClInclude Include="Source Code\R_Mesh.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\M_Meshes.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Materials.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="Source Code\M_Resources.h">
-      <Filter>Source Code\Modules</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

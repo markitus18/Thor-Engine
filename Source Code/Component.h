@@ -13,7 +13,7 @@ public:
 	enum Type
 	{
 		None,
-		Transform, //?
+		Transform,
 		Mesh,
 		Material,
 		Camera,
@@ -37,6 +37,7 @@ public:
 protected:
 	bool active;
 	Type type;
+	unsigned long long resourceID;
 
 
 };

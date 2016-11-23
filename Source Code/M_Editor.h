@@ -18,7 +18,7 @@ class M_Editor : public Module
 {
 public:
 
-	M_Editor(Application* app, bool start_enabled = true);
+	M_Editor(bool start_enabled = true);
 	~M_Editor();
 
 	bool Init(Config& config);

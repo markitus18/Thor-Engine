@@ -5,14 +5,13 @@
 #include "SDL/include/SDL.h"
 #include <string>
 
-class Application;
 class Config;
 
 class M_Window : public Module
 {
 public:
 
-	M_Window(Application* app, bool start_enabled = true);
+	M_Window(bool start_enabled = true);
 
 	// Destructor
 	virtual ~M_Window();

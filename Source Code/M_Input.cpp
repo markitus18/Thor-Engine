@@ -10,7 +10,7 @@
 #include "Assimp/include/types.h"
 #define MAX_KEYS 300
 
-M_Input::M_Input(Application* app, bool start_enabled) : Module("Input", start_enabled)
+M_Input::M_Input(bool start_enabled) : Module("Input", start_enabled)
 {
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);

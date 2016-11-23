@@ -41,7 +41,7 @@ struct RenderBox
 class M_Renderer3D : public Module
 {
 public:
-	M_Renderer3D(Application* app, bool start_enabled = true);
+	M_Renderer3D(bool start_enabled = true);
 	~M_Renderer3D();
 
 	bool Init(Config& config);

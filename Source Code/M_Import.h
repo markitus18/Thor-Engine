@@ -19,7 +19,7 @@ class M_Import : public Module
 {
 public:
 
-	M_Import(Application* app, bool start_enabled = true);
+	M_Import(bool start_enabled = true);
 	~M_Import();
 
 	void ImportFile(char* path);

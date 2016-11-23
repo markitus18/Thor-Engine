@@ -32,7 +32,7 @@
 
 #include <unordered_map>
 
-M_Import::M_Import(Application* app, bool start_enabled) : Module("Importer", start_enabled)
+M_Import::M_Import(bool start_enabled) : Module("Importer", start_enabled)
 {}
 
 // Destructor

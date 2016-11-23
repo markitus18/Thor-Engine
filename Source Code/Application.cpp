@@ -18,20 +18,20 @@
 
 Application::Application()
 {
-	fileSystem = new M_FileSystem(this);
-	window = new M_Window(this);
-	input = new M_Input(this);
-	audio = new M_Audio(this, true);
+	fileSystem = new M_FileSystem();
+	window = new M_Window();
+	input = new M_Input();
+	audio = new M_Audio();
 
-	scene = new M_Scene(this, true);
+	scene = new M_Scene();
 
-	renderer3D = new M_Renderer3D(this);
-	camera = new M_Camera3D(this);
+	renderer3D = new M_Renderer3D();
+	camera = new M_Camera3D();
 
-	moduleEditor = new M_Editor(this);
-	moduleImport = new M_Import(this);
-	moduleMaterials = new M_Materials(this);
-	moduleMeshes = new M_Meshes(this);
+	moduleEditor = new M_Editor();
+	moduleImport = new M_Import();
+	moduleMaterials = new M_Materials();
+	moduleMeshes = new M_Meshes();
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order

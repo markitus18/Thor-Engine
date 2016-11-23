@@ -15,7 +15,7 @@ class Quadtree;
 class M_Scene : public Module
 {
 public:
-	M_Scene(Application* app, bool start_enabled = true);
+	M_Scene(bool start_enabled = true);
 	~M_Scene();
 
 	bool Init(Config& config);

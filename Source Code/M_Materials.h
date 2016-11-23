@@ -11,7 +11,7 @@ struct aiMaterial;
 class M_Materials : public Module
 {
 public:
-	M_Materials(Application* app, bool start_enabled = true);
+	M_Materials(bool start_enabled = true);
 	~M_Materials();
 
 	bool Init();

@@ -17,7 +17,7 @@
 
 
 
-M_Camera3D::M_Camera3D(Application* app, bool start_enabled) : Module("Camera", start_enabled)
+M_Camera3D::M_Camera3D(bool start_enabled) : Module("Camera", start_enabled)
 {
 	camera = new C_Camera(nullptr);
 

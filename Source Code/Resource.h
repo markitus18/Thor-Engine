@@ -5,11 +5,13 @@
 
 class Resource
 {
+friend class M_Resources;
+
 public:
 	enum Type
 	{
 		MESH,
-		MATERIAL,
+		TEXTURE,
 		BONE,
 	};
 
@@ -18,7 +20,7 @@ public:
 
 	Type GetType() const;
 
-private:
+protected:
 	unsigned long long ID;
 	Type type;
 

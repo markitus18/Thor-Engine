@@ -16,7 +16,7 @@ class M_FileSystem : public Module
 {
 public:
 
-	M_FileSystem(Application* app, bool start_enabled = true);// const char* game_path = nullptr);
+	M_FileSystem(bool start_enabled = true);// const char* game_path = nullptr);
 
 	// Destructor
 	~M_FileSystem();

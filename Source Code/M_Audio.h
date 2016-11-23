@@ -13,7 +13,7 @@ class M_Audio : public Module
 {
 public:
 
-	M_Audio(Application* app, bool start_enabled = true);
+	M_Audio(bool start_enabled = true);
 	~M_Audio();
 
 	bool Init(Config& config);

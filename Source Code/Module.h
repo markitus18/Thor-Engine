@@ -4,7 +4,6 @@
 #include "Globals.h"
 #include <string>
 
-class Application;
 class Config;
 class GameObject;
 

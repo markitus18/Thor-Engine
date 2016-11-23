@@ -29,7 +29,7 @@
 
 //#include <GLFW/glfw3.h>
 
-M_Scene::M_Scene(Application* app, bool start_enabled) : Module("Scene", start_enabled)
+M_Scene::M_Scene(bool start_enabled) : Module("Scene", start_enabled)
 {
 	root = new GameObject(nullptr, "root");
 	root->uid = 0;

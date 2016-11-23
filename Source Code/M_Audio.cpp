@@ -3,7 +3,7 @@
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
-M_Audio::M_Audio(Application* app, bool start_enabled) : Module("Audio", start_enabled), music(nullptr)
+M_Audio::M_Audio(bool start_enabled) : Module("Audio", start_enabled), music(nullptr)
 {}
 
 // Destructor

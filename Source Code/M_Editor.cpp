@@ -20,7 +20,7 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
 
-M_Editor::M_Editor(Application* app, bool start_enabled) : Module("Editor", start_enabled)
+M_Editor::M_Editor(bool start_enabled) : Module("Editor", start_enabled)
 {
 
 }

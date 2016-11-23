@@ -20,7 +20,7 @@ class M_Input : public Module
 {
 public:
 	
-	M_Input(Application* app, bool start_enabled = true);
+	M_Input(bool start_enabled = true);
 	~M_Input();
 
 	bool Init(Config& config);

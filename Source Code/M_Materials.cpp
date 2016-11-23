@@ -22,7 +22,7 @@
 
 
 
-M_Materials::M_Materials(Application* app, bool start_enabled) : Module("Materials", start_enabled)
+M_Materials::M_Materials(bool start_enabled) : Module("Materials", start_enabled)
 {
 
 }

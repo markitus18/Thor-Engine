@@ -3,7 +3,7 @@
 #include "M_Window.h"
 #include "SDL\include\SDL_video.h"
 
-M_Window::M_Window(Application* app, bool start_enabled) : Module("Window", start_enabled)
+M_Window::M_Window(bool start_enabled) : Module("Window", start_enabled)
 {
 	window = nullptr;
 	screen_surface = nullptr;

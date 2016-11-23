@@ -1,7 +1,7 @@
 #include "PanelInspector.h"
 
 #include "Application.h"
-#include "ModuleEditor.h"
+#include "M_Editor.h"
 #include "PanelHierarchy.h"
 #include "GameObject.h"
 #include "ModuleInput.h"
@@ -11,7 +11,7 @@
 #include "C_Material.h"
 
 #include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
+#include "M_Camera3D.h"
 
 #include "ModuleScene.h"
 #include "Quadtree.h"

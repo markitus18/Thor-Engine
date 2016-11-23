@@ -1,17 +1,17 @@
 #include "Application.h"
-#include "ModuleAudio.h"
+#include "M_Audio.h"
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
-ModuleAudio::ModuleAudio(Application* app, bool start_enabled) : Module("Audio", start_enabled), music(nullptr)
+M_Audio::M_Audio(Application* app, bool start_enabled) : Module("Audio", start_enabled), music(nullptr)
 {}
 
 // Destructor
-ModuleAudio::~ModuleAudio()
+M_Audio::~M_Audio()
 {}
 
 // Called before render is available
-bool ModuleAudio::Init(Config& config)
+bool M_Audio::Init(Config& config)
 {
 	LOG("Loading Audio Mixer");
 	bool ret = true;
@@ -44,7 +44,7 @@ bool ModuleAudio::Init(Config& config)
 }
 
 // Called before quitting
-bool ModuleAudio::CleanUp()
+bool M_Audio::CleanUp()
 {
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
@@ -68,7 +68,7 @@ bool ModuleAudio::CleanUp()
 }
 
 // Play a music file
-bool ModuleAudio::PlayMusic(const char* path, float fade_time)
+bool M_Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
 	
@@ -119,7 +119,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 }
 
 // Load WAV
-unsigned int ModuleAudio::LoadFx(const char* path)
+unsigned int M_Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
 
@@ -139,7 +139,7 @@ unsigned int ModuleAudio::LoadFx(const char* path)
 }
 
 // Play WAV
-bool ModuleAudio::PlayFx(unsigned int id, int repeat)
+bool M_Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 

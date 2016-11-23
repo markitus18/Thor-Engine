@@ -136,9 +136,6 @@
     <ClCompile Include="Source Code\Timer.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleAudio.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\ModuleInput.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -172,9 +169,6 @@
     <ClCompile Include="Source Code\Panel.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleEditor.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\PanelHierarchy.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
@@ -205,9 +199,6 @@
     <ClCompile Include="Source Code\C_Camera.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleCamera3D.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\C_Transform.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
@@ -220,9 +211,6 @@
     <ClCompile Include="Source Code\ModuleMeshes.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleFileSystem.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\External Libraries\parson\parson.c">
       <Filter>Source Code\External Libraries\parson</Filter>
     </ClCompile>
@@ -234,6 +222,18 @@
     </ClCompile>
     <ClCompile Include="Source Code\Resource.cpp">
       <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Audio.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Camera3D.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Editor.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_FileSystem.cpp">
+      <Filter>Source Code\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -462,9 +462,6 @@
     <ClInclude Include="Source Code\Module.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleAudio.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\ModuleInput.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
@@ -534,9 +531,6 @@
     <ClInclude Include="Source Code\Panel.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleEditor.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\PanelHierarchy.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
@@ -567,9 +561,6 @@
     <ClInclude Include="Source Code\C_Camera.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleCamera3D.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\C_Transform.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
@@ -582,9 +573,6 @@
     <ClInclude Include="Source Code\ModuleMeshes.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleFileSystem.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\External Libraries\parson\parson.h">
       <Filter>Source Code\External Libraries\parson</Filter>
     </ClInclude>
@@ -596,6 +584,18 @@
     </ClInclude>
     <ClInclude Include="Source Code\Resource.h">
       <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Audio.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Camera3D.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Editor.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_FileSystem.h">
+      <Filter>Source Code\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

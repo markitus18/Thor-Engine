@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
-#include "ModuleCamera3D.h"
+#include "M_Camera3D.h"
 #include "C_Camera.h"
 #include "C_Transform.h"
 #include "C_Mesh.h"	

@@ -10,15 +10,15 @@
 
 class Module;
 
-class ModuleFileSystem;
+class M_FileSystem;
 class ModuleWindow;
 class ModuleInput;
-class ModuleAudio;
+class M_Audio;
 class ModuleScene;
 
 class ModuleRenderer3D;
-class ModuleCamera3D;
-class ModuleEditor;
+class M_Camera3D;
+class M_Editor;
 class ModuleImport;
 class ModuleMaterials;
 class ModuleMeshes;
@@ -28,16 +28,16 @@ class GameObject;
 class Application
 {
 public:
-	ModuleFileSystem* fileSystem;
+	M_FileSystem* fileSystem;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
-	ModuleAudio* audio = nullptr;
+	M_Audio* audio = nullptr;
 	ModuleScene* scene = nullptr;
 
 	ModuleRenderer3D* renderer3D = nullptr;
-	ModuleCamera3D* camera = nullptr;
+	M_Camera3D* camera = nullptr;
 
-	ModuleEditor* moduleEditor = nullptr;
+	M_Editor* moduleEditor = nullptr;
 	ModuleImport* moduleImport = nullptr;
 	ModuleMaterials* moduleMaterials = nullptr;
 	ModuleMeshes* moduleMeshes = nullptr;

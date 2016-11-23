@@ -12,14 +12,14 @@ struct aiFileIO;
 //struct BASS_FILEPROCS;
 class Config;
 
-class ModuleFileSystem : public Module
+class M_FileSystem : public Module
 {
 public:
 
-	ModuleFileSystem(Application* app, bool start_enabled = true);// const char* game_path = nullptr);
+	M_FileSystem(Application* app, bool start_enabled = true);// const char* game_path = nullptr);
 
 	// Destructor
-	~ModuleFileSystem();
+	~M_FileSystem();
 
 	// Called before render is available
 	bool Init(Config& config);

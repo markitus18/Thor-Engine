@@ -10,7 +10,7 @@
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-#include "ModuleFileSystem.h"
+#include "M_FileSystem.h"
 
 ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module("Meshes", start_enabled)
 {

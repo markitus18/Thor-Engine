@@ -8,12 +8,12 @@
 
 class Config;
 
-class ModuleAudio : public Module
+class M_Audio : public Module
 {
 public:
 
-	ModuleAudio(Application* app, bool start_enabled = true);
-	~ModuleAudio();
+	M_Audio(Application* app, bool start_enabled = true);
+	~M_Audio();
 
 	bool Init(Config& config);
 	bool CleanUp();

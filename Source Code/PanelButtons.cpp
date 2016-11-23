@@ -1,6 +1,6 @@
 #include "PanelButtons.h"
 #include "Application.h"
-#include "ModuleEditor.h"
+#include "M_Editor.h"
 
 PanelButtons::PanelButtons()
 {

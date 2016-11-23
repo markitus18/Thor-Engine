@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleEditor.h"
+#include "M_Editor.h"
 #include "ModuleWindow.h"
 
 #include "SDL/include/SDL_mouse.h"
@@ -152,8 +152,8 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 	}
 
-	//if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
-	//	return UPDATE_STOP;
+	if(quit == true)// || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
+		return UPDATE_STOP;
 
 	infiniteHorizontal = false;
 

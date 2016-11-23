@@ -1,5 +1,5 @@
-#ifndef __ModuleEditor_H__
-#define __ModuleEditor_H__
+#ifndef __M_Editor_H__
+#define __M_Editor_H__
 
 #include "Module.h"
 #include "ImGui\imgui.h"
@@ -14,12 +14,12 @@ class PanelButtons;
 
 class Config;
 
-class ModuleEditor : public Module
+class M_Editor : public Module
 {
 public:
 
-	ModuleEditor(Application* app, bool start_enabled = true);
-	~ModuleEditor();
+	M_Editor(Application* app, bool start_enabled = true);
+	~M_Editor();
 
 	bool Init(Config& config);
 	update_status PreUpdate(float dt);

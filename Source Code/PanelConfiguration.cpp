@@ -1,7 +1,7 @@
 #include "PanelConfiguration.h"
 #include "Application.h"
 #include "ModuleInput.h"
-#include "ModuleCamera3D.h"
+#include "M_Camera3D.h"
 
 PanelConfiguration::PanelConfiguration()
 {

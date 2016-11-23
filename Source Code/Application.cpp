@@ -1,14 +1,14 @@
 #include "Application.h"
 
 #include "Module.h"
-#include "ModuleFileSystem.h"
+#include "M_FileSystem.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleAudio.h"
+#include "M_Audio.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModuleEditor.h"
+#include "M_Camera3D.h"
+#include "M_Editor.h"
 #include "ModuleImport.h"
 #include "ModuleMaterials.h"
 #include "ModuleMeshes.h"
@@ -18,17 +18,17 @@
 
 Application::Application()
 {
-	fileSystem = new ModuleFileSystem(this);
+	fileSystem = new M_FileSystem(this);
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
+	audio = new M_Audio(this, true);
 
 	scene = new ModuleScene(this, true);
 
 	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
+	camera = new M_Camera3D(this);
 
-	moduleEditor = new ModuleEditor(this);
+	moduleEditor = new M_Editor(this);
 	moduleImport = new ModuleImport(this);
 	moduleMaterials = new ModuleMaterials(this);
 	moduleMeshes = new ModuleMeshes(this);

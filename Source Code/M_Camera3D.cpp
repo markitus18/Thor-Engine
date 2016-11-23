@@ -1,6 +1,6 @@
 #include "Application.h"
-#include "ModuleCamera3D.h"
-#include "ModuleEditor.h"
+#include "M_Camera3D.h"
+#include "M_Editor.h"
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "C_Camera.h"
@@ -17,7 +17,7 @@
 
 
 
-ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module("Camera", start_enabled)
+M_Camera3D::M_Camera3D(Application* app, bool start_enabled) : Module("Camera", start_enabled)
 {
 	camera = new C_Camera(nullptr);
 
@@ -31,13 +31,13 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module("C
 	camera->update_projection = true;
 }
 
-ModuleCamera3D::~ModuleCamera3D()
+M_Camera3D::~M_Camera3D()
 {
 	RELEASE(camera);
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::Init(Config& config)
+bool M_Camera3D::Init(Config& config)
 {
 	App->renderer3D->camera = camera;
 
@@ -45,7 +45,7 @@ bool ModuleCamera3D::Init(Config& config)
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::Start()
+bool M_Camera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
@@ -54,7 +54,7 @@ bool ModuleCamera3D::Start()
 }
 
 // -----------------------------------------------------------------
-bool ModuleCamera3D::CleanUp()
+bool M_Camera3D::CleanUp()
 {
 	LOG("Cleaning camera");
 
@@ -63,7 +63,7 @@ bool ModuleCamera3D::CleanUp()
 }
 
 // -----------------------------------------------------------------
-update_status ModuleCamera3D::Update(float dt)
+update_status M_Camera3D::Update(float dt)
 {
 	if (App->moduleEditor->UsingKeyboard() == false)
 		Move_Keyboard(dt);
@@ -93,44 +93,44 @@ update_status ModuleCamera3D::Update(float dt)
 }
 
 // -----------------------------------------------------------------
-float3 ModuleCamera3D::GetPosition() const
+float3 M_Camera3D::GetPosition() const
 {
 	return camera->frustum.Pos();
 }
 
-float3 ModuleCamera3D::GetReference() const
+float3 M_Camera3D::GetReference() const
 {
 	return reference;
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Look(const float3& position)
+void M_Camera3D::Look(const float3& position)
 {
 	camera->Look(position);
 	reference = position;
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::CenterOn(const float3& position, float distance)
+void M_Camera3D::CenterOn(const float3& position, float distance)
 {
 	float3 v = camera->frustum.Front().Neg();
 	camera->frustum.SetPos(position + (v * distance));
 	reference = position;
 }
 
-void ModuleCamera3D::SetNewTarget(const float3& new_target)
+void M_Camera3D::SetNewTarget(const float3& new_target)
 {
 	float distance = reference.Distance(new_target);
 	CenterOn(new_target, distance);
 }
 
-void ModuleCamera3D::Match(const C_Camera* camera)
+void M_Camera3D::Match(const C_Camera* camera)
 {
 	this->camera->Match(camera);
 	reference = this->camera->frustum.Pos() + this->camera->frustum.Front() * 40;
 }
 
-void ModuleCamera3D::SetPosition(float3 position)
+void M_Camera3D::SetPosition(float3 position)
 {
 	float3 difference = position - camera->frustum.Pos();
 	camera->frustum.SetPos(position);
@@ -138,12 +138,12 @@ void ModuleCamera3D::SetPosition(float3 position)
 }
 
 // -----------------------------------------------------------------
-C_Camera * ModuleCamera3D::GetCamera() const
+C_Camera * M_Camera3D::GetCamera() const
 {
 	return camera;
 }
 
-void ModuleCamera3D::SaveScene(Config& root) const
+void M_Camera3D::SaveScene(Config& root) const
 {
 	float3 position = camera->frustum.Pos();
 	Config_Array pos = root.SetArray("Position");
@@ -153,7 +153,7 @@ void ModuleCamera3D::SaveScene(Config& root) const
 	ref.AddFloat3(reference);
 }
 
-void ModuleCamera3D::LoadScene(Config& root)
+void M_Camera3D::LoadScene(Config& root)
 {
 	camera->frustum.SetPos(root.GetArray("Position").GetFloat3(0));
 	reference = root.GetArray("Reference").GetFloat3(0);
@@ -161,11 +161,11 @@ void ModuleCamera3D::LoadScene(Config& root)
 	camera->update_projection = true;
 }
 
-void ModuleCamera3D::Move_Keyboard(float dt)
+void M_Camera3D::Move_Keyboard(float dt)
 {
 }
 
-void ModuleCamera3D::Move_Mouse()
+void M_Camera3D::Move_Mouse()
 {
 	// Check motion for lookat / Orbit cameras
 	int motion_x, motion_y;
@@ -197,7 +197,7 @@ void ModuleCamera3D::Move_Mouse()
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Orbit(float dx, float dy)
+void M_Camera3D::Orbit(float dx, float dy)
 {
 	//Procedure: create a vector from camera position to reference position
 	//Rotate that vector according to our mouse motion
@@ -217,14 +217,14 @@ void ModuleCamera3D::Orbit(float dx, float dy)
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Zoom(float zoom)
+void M_Camera3D::Zoom(float zoom)
 {
 	float distance = reference.Distance(camera->frustum.Pos());
 	vec newPos = camera->frustum.Pos() + camera->frustum.Front() * zoom * distance * 0.05f;
 	camera->frustum.SetPos(newPos);
 }
 
-void ModuleCamera3D::OnClick()
+void M_Camera3D::OnClick()
 {
 	uint mouseX = App->input->GetMouseX();
 	uint mouseY = App->input->GetMouseY();

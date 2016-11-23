@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "ModuleEditor.h"
+#include "M_Editor.h"
 #include "ModuleWindow.h"
 
 #include "ModuleInput.h"
@@ -12,7 +12,7 @@
 #include "PanelButtons.h"
 
 #include "ModuleScene.h"
-#include "ModuleFileSystem.h"
+#include "M_FileSystem.h"
 
 #include "GameObject.h"
 #include "OpenGL.h"
@@ -20,15 +20,15 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
 
-ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module("Editor", start_enabled)
+M_Editor::M_Editor(Application* app, bool start_enabled) : Module("Editor", start_enabled)
 {
 
 }
 
-ModuleEditor::~ModuleEditor()
+M_Editor::~M_Editor()
 {}
 
-bool ModuleEditor::Init(Config& config)
+bool M_Editor::Init(Config& config)
 {
 	ImGui_ImplSdlGL3_Init(App->window->window);
 
@@ -79,7 +79,7 @@ bool ModuleEditor::Init(Config& config)
 	return true;
 }
 
-update_status ModuleEditor::PreUpdate(float dt)
+update_status M_Editor::PreUpdate(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
 	ImGuiIO& io = ImGui::GetIO();
@@ -90,7 +90,7 @@ update_status ModuleEditor::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleEditor::Draw()
+void M_Editor::Draw()
 {
 	DrawPanels();
 
@@ -200,7 +200,7 @@ void ModuleEditor::Draw()
 	ImGui::Render();
 }
 
-bool ModuleEditor::CleanUp()
+bool M_Editor::CleanUp()
 {
 	if (panelConsole)
 	{
@@ -236,18 +236,18 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-void ModuleEditor::Log(const char* input)
+void M_Editor::Log(const char* input)
 {
 	if (panelConsole != nullptr)
 		panelConsole->AddLog(input);
 }
 
-void ModuleEditor::GetEvent(SDL_Event* event)
+void M_Editor::GetEvent(SDL_Event* event)
 {
 	ImGui_ImplSdlGL3_ProcessEvent(event);
 }
 
-void ModuleEditor::DrawPanels()
+void M_Editor::DrawPanels()
 {
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize;
 	if (panelHierarchy != nullptr)
@@ -276,7 +276,7 @@ void ModuleEditor::DrawPanels()
 	}
 }
 
-void ModuleEditor::ShowAboutWindow()
+void M_Editor::ShowAboutWindow()
 {
 	ImGui::SetNextWindowSize(ImVec2(600, 100));
 	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoResize);
@@ -287,7 +287,7 @@ void ModuleEditor::ShowAboutWindow()
 	ImGui::End();
 }
 
-void ModuleEditor::ShowFileNameWindow()
+void M_Editor::ShowFileNameWindow()
 {
 	ImGui::SetNextWindowSize(ImVec2(400, 100));
 	ImGui::Begin("File Name", &show_fileName_window, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoResize);
@@ -311,7 +311,7 @@ void ModuleEditor::ShowFileNameWindow()
 	ImGui::End();
 }
 
-void ModuleEditor::DeleteSelectedGameObjects()
+void M_Editor::DeleteSelectedGameObjects()
 {
 	for (uint i = 0; i < panelHierarchy->selectedGameObjects.size(); i++)
 	{
@@ -319,7 +319,7 @@ void ModuleEditor::DeleteSelectedGameObjects()
 	}
 }
 
-void ModuleEditor::OpenFileNameWindow()
+void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
 	std::string file, extension;
@@ -328,13 +328,13 @@ void ModuleEditor::OpenFileNameWindow()
 	strcpy_s(fileName, 50, str.c_str());
 }
 
-void ModuleEditor::UpdateFPSData(int fps, int ms)
+void M_Editor::UpdateFPSData(int fps, int ms)
 {
 	if (panelConfiguration)
 		panelConfiguration->UpdateFPSData(fps, ms);
 }
 
-void ModuleEditor::OnResize(int screen_width, int screen_height)
+void M_Editor::OnResize(int screen_width, int screen_height)
 {
 	panelConsole->UpdatePosition(screen_width, screen_height);
 	panelHierarchy->UpdatePosition(screen_width, screen_height);
@@ -343,38 +343,38 @@ void ModuleEditor::OnResize(int screen_width, int screen_height)
 	panelButtons->UpdatePosition(screen_width, screen_height);
 }
 
-bool ModuleEditor::UsingKeyboard() const
+bool M_Editor::UsingKeyboard() const
 {
 	return using_keyboard;
 }
 
-bool ModuleEditor::UsingMouse() const
+bool M_Editor::UsingMouse() const
 {
 	return using_mouse;
 }
 
 //Timer management -------------------
-uint ModuleEditor::AddTimer(const char* text, const char* tag)
+uint M_Editor::AddTimer(const char* text, const char* tag)
 {
 	return panelConfiguration->AddTimer(text, tag);
 }
 
-void ModuleEditor::StartTimer(uint index)
+void M_Editor::StartTimer(uint index)
 {
 	panelConfiguration->StartTimer(index);
 }
 
-void ModuleEditor::ReadTimer(uint index)
+void M_Editor::ReadTimer(uint index)
 {
 	panelConfiguration->ReadTimer(index);
 }
 
-void ModuleEditor::StopTimer(uint index)
+void M_Editor::StopTimer(uint index)
 {
 	panelConfiguration->StopTimer(index);
 }
 
-void ModuleEditor::SelectGameObject(GameObject* gameObject, bool selectSingle)
+void M_Editor::SelectGameObject(GameObject* gameObject, bool selectSingle)
 {
 	if (selectSingle)
 		panelHierarchy->SelectSingle(gameObject);
@@ -382,17 +382,17 @@ void ModuleEditor::SelectGameObject(GameObject* gameObject, bool selectSingle)
 		panelHierarchy->AddSelect(gameObject);
 }
 
-void ModuleEditor::LoadScene(Config& root)
+void M_Editor::LoadScene(Config& root)
 {
 	panelHierarchy->selectedGameObjects.clear();
 }
 
-void ModuleEditor::ResetScene()
+void M_Editor::ResetScene()
 {
 	panelHierarchy->selectedGameObjects.clear();
 }
 
-void ModuleEditor::OnRemoveGameObject(GameObject* gameObject)
+void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 {
 	for (std::vector<GameObject*>::iterator it = panelHierarchy->selectedGameObjects.begin(); it != panelHierarchy->selectedGameObjects.end();)
 	{

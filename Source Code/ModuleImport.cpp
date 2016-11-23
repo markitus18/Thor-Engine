@@ -10,7 +10,7 @@
 
 #include "ModuleMaterials.h"
 #include "ModuleMeshes.h"
-#include "ModuleFileSystem.h"
+#include "M_FileSystem.h"
 #include "Config.h"
 
 #include "Assimp/include/cimport.h"

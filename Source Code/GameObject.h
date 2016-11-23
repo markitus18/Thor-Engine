@@ -100,7 +100,8 @@ public:
 	unsigned long long			uid = 0;
 
 	bool						beenSelected = false;
-	bool						wasSelected = false;
+	bool						hierarchyOpen = false;
+
 private:
 	bool						flipped_normals = false;
 

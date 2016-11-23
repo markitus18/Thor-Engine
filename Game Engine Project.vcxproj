@@ -196,6 +196,7 @@
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\Primitive.h" />
     <ClInclude Include="Source Code\Quadtree.h" />
+    <ClInclude Include="Source Code\Resource.h" />
     <ClInclude Include="Source Code\Timer.h" />
     <ClInclude Include="Source Code\PanelConsole.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\Primitive.cpp" />
     <ClCompile Include="Source Code\Quadtree.cpp" />
+    <ClCompile Include="Source Code\Resource.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
     <ClCompile Include="Source Code\PanelConsole.cpp" />
   </ItemGroup>

@@ -122,6 +122,7 @@ void ModuleImport::LoadGameObjectConfig(Config& config, std::vector<GameObject*>
 
 		gameObject->active = gameObject_node.GetBool("Active");
 		gameObject->isStatic = gameObject_node.GetBool("Static");
+		gameObject->beenSelected = gameObject->hierarchyOpen = gameObject_node.GetBool("OpenInHierarchy", false);
 
 		//Mesh load
 		std::string meshPath = gameObject_node.GetString("Mesh");
@@ -178,6 +179,8 @@ void ModuleImport::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 
 	config.SetBool("Active", gameObject->active);
 	config.SetBool("Static", gameObject->isStatic);
+	config.SetBool("OpenInHierarchy", gameObject->hierarchyOpen);
+
 	//A thought: each component type will have a folder, same number as their enumeration
 	//Transform = 01 // Mesh = 02 // Material = 03 ...
 	//Each component will go indexed by a number also, not a file name: mesh path would be Library/02/02.mesh

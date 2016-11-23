@@ -49,14 +49,6 @@ void GameObject::Update()
 		}
 	}
 
-	if (beenSelected)
-	{
-		if (wasSelected)
-			beenSelected = wasSelected = false;
-		else
-			wasSelected = true;
-	}
-
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)

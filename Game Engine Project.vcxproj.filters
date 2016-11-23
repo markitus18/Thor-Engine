@@ -232,6 +232,9 @@
     <ClCompile Include="Source Code\Quadtree.cpp">
       <Filter>Source Code\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\Resource.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -591,6 +594,9 @@
     <ClInclude Include="Source Code\Quadtree.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\Resource.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -643,6 +649,9 @@
     </Filter>
     <Filter Include="Source Code\External Libraries\parson">
       <UniqueIdentifier>{ba2abca1-375c-41b2-ae5c-bb3ea88488dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Resources">
+      <UniqueIdentifier>{879429dc-d135-49b9-bacf-adbd6f013298}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

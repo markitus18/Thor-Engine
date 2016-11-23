@@ -61,7 +61,8 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 	}
 
 	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());
-	bool openAndChilds = (nodeOpen && !gameObject->childs.empty());
+	gameObject->hierarchyOpen = gameObject->childs.empty() ? false : nodeOpen;
+	//bool openAndChilds = (gameObject->hierarchyOpen && !gameObject->childs.empty());
 
 	if (gameObject->IsParentActive() == false)
 		ImGui::PopStyleColor();
@@ -112,15 +113,18 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 		}
 		ImGui::EndPopup();
 	}
-	if (nodeOpen)
+	if (gameObject->hierarchyOpen)
 	{
 		for (uint i = 0; i < gameObject->childs.size(); i++)
 		{
 			DrawGameObject(gameObject->childs[i], default_flags);
 		}
-		if (openAndChilds)
+		if (gameObject->hierarchyOpen)
 			ImGui::TreePop();
 	}
+	//In case GameObject had been selected in the last frame, since we opened tree node, reset the selection flag
+	if (gameObject->beenSelected == true)
+		gameObject->beenSelected = false;
 }
 
 void PanelHierarchy::UpdatePosition(int screen_width, int screen_height)
@@ -147,7 +151,6 @@ void PanelHierarchy::SelectSingle(GameObject* gameObject)
 		while (it != nullptr)
 		{
 			it->beenSelected = true;
-			it->wasSelected = false;
 			it = it->parent;
 		}
 	}
@@ -164,7 +167,6 @@ void PanelHierarchy::AddSelect(GameObject* gameObject)
 		while (it != nullptr && it->name != "root")
 		{
 			it->beenSelected = true;
-			it->wasSelected = false;
 			it = it->parent;
 		}
 	}

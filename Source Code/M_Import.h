@@ -15,12 +15,12 @@ class C_Material;
 
 class Config;
 
-class ModuleImport : public Module
+class M_Import : public Module
 {
 public:
 
-	ModuleImport(Application* app, bool start_enabled = true);
-	~ModuleImport();
+	M_Import(Application* app, bool start_enabled = true);
+	~M_Import();
 
 	void ImportFile(char* path);
 	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path, std::vector<GameObject*>& vector);

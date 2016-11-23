@@ -7,11 +7,11 @@
 struct C_Mesh;
 struct aiMesh;
 
-class ModuleMeshes : public Module
+class M_Meshes : public Module
 {
 	public:
-		ModuleMeshes(Application* app, bool start_enabled = true);
-		~ModuleMeshes();
+		M_Meshes(Application* app, bool start_enabled = true);
+		~M_Meshes();
 
 		bool Init();
 		bool CleanUp();

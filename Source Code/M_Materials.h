@@ -8,11 +8,11 @@
 class C_Material;
 struct aiMaterial;
 
-class ModuleMaterials : public Module
+class M_Materials : public Module
 {
 public:
-	ModuleMaterials(Application* app, bool start_enabled = true);
-	~ModuleMaterials();
+	M_Materials(Application* app, bool start_enabled = true);
+	~M_Materials();
 
 	bool Init();
 	bool CleanUp();

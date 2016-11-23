@@ -2,16 +2,16 @@
 
 #include "Module.h"
 #include "M_FileSystem.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
+#include "M_Window.h"
+#include "M_Input.h"
 #include "M_Audio.h"
-#include "ModuleScene.h"
-#include "ModuleRenderer3D.h"
+#include "M_Scene.h"
+#include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 #include "M_Editor.h"
-#include "ModuleImport.h"
-#include "ModuleMaterials.h"
-#include "ModuleMeshes.h"
+#include "M_Import.h"
+#include "M_Materials.h"
+#include "M_Meshes.h"
 #include "Config.h"
 
 #include "parson/parson.h"
@@ -19,19 +19,19 @@
 Application::Application()
 {
 	fileSystem = new M_FileSystem(this);
-	window = new ModuleWindow(this);
-	input = new ModuleInput(this);
+	window = new M_Window(this);
+	input = new M_Input(this);
 	audio = new M_Audio(this, true);
 
-	scene = new ModuleScene(this, true);
+	scene = new M_Scene(this, true);
 
-	renderer3D = new ModuleRenderer3D(this);
+	renderer3D = new M_Renderer3D(this);
 	camera = new M_Camera3D(this);
 
 	moduleEditor = new M_Editor(this);
-	moduleImport = new ModuleImport(this);
-	moduleMaterials = new ModuleMaterials(this);
-	moduleMeshes = new ModuleMeshes(this);
+	moduleImport = new M_Import(this);
+	moduleMaterials = new M_Materials(this);
+	moduleMeshes = new M_Meshes(this);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order

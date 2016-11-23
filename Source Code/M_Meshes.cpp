@@ -1,4 +1,4 @@
-#include "ModuleMeshes.h"
+#include "M_Meshes.h"
 #include "Application.h"
 
 #include "C_Mesh.h"
@@ -12,27 +12,27 @@
 
 #include "M_FileSystem.h"
 
-ModuleMeshes::ModuleMeshes(Application* app, bool start_enabled) : Module("Meshes", start_enabled)
+M_Meshes::M_Meshes(Application* app, bool start_enabled) : Module("Meshes", start_enabled)
 {
 
 }
 
-ModuleMeshes::~ModuleMeshes()
+M_Meshes::~M_Meshes()
 {
 
 }
 
-bool ModuleMeshes::Init()
-{
-	return true;
-}
-
-bool ModuleMeshes::CleanUp()
+bool M_Meshes::Init()
 {
 	return true;
 }
 
-C_Mesh* ModuleMeshes::ImportMesh(const aiMesh* from, const char* file)
+bool M_Meshes::CleanUp()
+{
+	return true;
+}
+
+C_Mesh* M_Meshes::ImportMesh(const aiMesh* from, const char* file)
 {
 	C_Mesh* mesh = new C_Mesh;
 
@@ -91,7 +91,7 @@ C_Mesh* ModuleMeshes::ImportMesh(const aiMesh* from, const char* file)
 	return mesh;
 }
 
-void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
+void M_Meshes::SaveMesh(const C_Mesh& mesh, const char* path)
 {
 	// amount of indices / vertices / normals / texture_coords
 	uint ranges[4] = { mesh.num_indices, mesh.num_vertices, mesh.num_normals, mesh.num_tex_coords };
@@ -154,7 +154,7 @@ void ModuleMeshes::SaveMesh(const C_Mesh& mesh, const char* path)
 	RELEASE_ARRAY(data);
 }
 
-C_Mesh* ModuleMeshes::LoadMesh(const char* path)
+C_Mesh* M_Meshes::LoadMesh(const char* path)
 {
 	std::string full_path = "Library/Meshes/";
 	full_path.append(path);// .append(".mesh");

@@ -1,12 +1,12 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleScene.h"
+#include "M_Scene.h"
 #include "Primitive.h"
 #include "M_Camera3D.h"
-#include "ModuleInput.h"
-#include "ModuleImport.h"
+#include "M_Input.h"
+#include "M_Import.h"
 #include "M_Editor.h"
-#include "ModuleRenderer3D.h"
+#include "M_Renderer3D.h"
 #include "M_FileSystem.h"
 
 #include "GameObject.h"
@@ -19,8 +19,8 @@
 #include "C_Camera.h"
 #include "Intersections.h"
 #include "Config.h"
-#include "ModuleMeshes.h"
-#include "ModuleMaterials.h"
+#include "M_Meshes.h"
+#include "M_Materials.h"
 
 #include "Quadtree.h"
 
@@ -29,7 +29,7 @@
 
 //#include <GLFW/glfw3.h>
 
-ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene", start_enabled)
+M_Scene::M_Scene(Application* app, bool start_enabled) : Module("Scene", start_enabled)
 {
 	root = new GameObject(nullptr, "root");
 	root->uid = 0;
@@ -43,11 +43,11 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module("Scene",
 	//camera->uid = random.Int();
 }
 
-ModuleScene::~ModuleScene()
+M_Scene::~M_Scene()
 {
 }
 
-bool ModuleScene::Init(Config& config)
+bool M_Scene::Init(Config& config)
 {
 	std::string newScene = config.GetString("Current Scene");
 
@@ -67,7 +67,7 @@ bool ModuleScene::Init(Config& config)
 }
 
 // Load assets
-bool ModuleScene::Start()
+bool M_Scene::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
@@ -80,7 +80,7 @@ bool ModuleScene::Start()
 }
 
 // Load assets
-bool ModuleScene::CleanUp()
+bool M_Scene::CleanUp()
 {
 	LOG("Unloading scene");
 
@@ -90,7 +90,7 @@ bool ModuleScene::CleanUp()
 }
 
 // Update
-update_status ModuleScene::Update(float dt)
+update_status M_Scene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
 	{
@@ -186,28 +186,28 @@ update_status ModuleScene::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleScene::PostUpdate(float dt)
+update_status M_Scene::PostUpdate(float dt)
 {
 	DeleteToRemoveGameObjects();
 	return UPDATE_CONTINUE;
 }
 
-GameObject* ModuleScene::GetRoot()
+GameObject* M_Scene::GetRoot()
 {
 	return root;
 }
 
-const GameObject* ModuleScene::GetRoot() const
+const GameObject* M_Scene::GetRoot() const
 {
 	return root;
 }
 
-void ModuleScene::SaveConfig(Config& config) const
+void M_Scene::SaveConfig(Config& config) const
 {
 	config.SetString("Current Scene", current_scene.c_str());
 }
 
-void ModuleScene::SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds)
+void M_Scene::SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds)
 {
 	if (gameObject->isStatic != isStatic)
 	{
@@ -249,7 +249,7 @@ void ModuleScene::SetStaticGameObject(GameObject* gameObject, bool isStatic, boo
 	}
 }
 
-void ModuleScene::LoadConfig(Config& config)
+void M_Scene::LoadConfig(Config& config)
 {
 	std::string newScene = config.GetString("Current Scene");
 
@@ -260,7 +260,7 @@ void ModuleScene::LoadConfig(Config& config)
 	}
 }
 
-void ModuleScene::SaveScene(Config& node) const
+void M_Scene::SaveScene(Config& node) const
 {
 	//Store all gameObjects in a vector
 	std::vector<GameObject*> gameObjects;
@@ -269,7 +269,7 @@ void ModuleScene::SaveScene(Config& node) const
 	App->moduleImport->SaveGameObjectConfig(node, gameObjects);
 }
 
-void ModuleScene::LoadScene(Config& node)
+void M_Scene::LoadScene(Config& node)
 {
 	DeleteAllGameObjects();
 	quadtree->Clear();
@@ -298,25 +298,25 @@ void ModuleScene::LoadScene(Config& node)
 	}
 }
 
-void ModuleScene::LoadScene(const char* file)
+void M_Scene::LoadScene(const char* file)
 {
 	current_scene = file;
 	App->LoadScene(file);
 }
 
-void ModuleScene::LoadGameObject(const char* file)
+void M_Scene::LoadGameObject(const char* file)
 {
 	GameObject* gameObject = App->moduleImport->LoadGameObject(file);
 	gameObject->parent = root;
 	root->childs.push_back(gameObject);
 }
 
-GameObject* ModuleScene::CreateGameObject(const char* name)
+GameObject* M_Scene::CreateGameObject(const char* name)
 {
 	return new GameObject(root, name);
 }
 
-void ModuleScene::DeleteGameObject(GameObject* gameObject)
+void M_Scene::DeleteGameObject(GameObject* gameObject)
 {
 	bool add = true;
 	for (uint i = 0; i < toRemove.size(); i++)
@@ -333,7 +333,7 @@ void ModuleScene::DeleteGameObject(GameObject* gameObject)
 	}
 }
 
-void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
+void M_Scene::OnRemoveGameObject(GameObject* gameObject)
 {
 	LOG("Onremove call");
 	//Remove from quadtree // non-static vector
@@ -364,7 +364,7 @@ void ModuleScene::OnRemoveGameObject(GameObject* gameObject)
 	}
 }
 
-void ModuleScene::OnClickSelection(const LineSegment& segment)
+void M_Scene::OnClickSelection(const LineSegment& segment)
 {
 	//Collecting quadtree GameObjects
 	std::map<float, const GameObject*> candidates;
@@ -419,7 +419,7 @@ void ModuleScene::OnClickSelection(const LineSegment& segment)
 	App->moduleEditor->SelectGameObject((GameObject*)toSelect);
 }
 
-void ModuleScene::CreateCamera()
+void M_Scene::CreateCamera()
 {
 	GameObject* camera = new GameObject(root, "Camera");
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
@@ -428,7 +428,7 @@ void ModuleScene::CreateCamera()
 	camera->uid = random.Int();
 }
 
-void ModuleScene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)
+void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)
 {
 	for (uint i = 0; i < vector.size(); i++)
 	{
@@ -439,12 +439,12 @@ void ModuleScene::TestGameObjectsCulling(std::vector<const GameObject*>& vector,
 	}
 }
 
-void ModuleScene::UpdateAllGameObjects(GameObject* gameObject)
+void M_Scene::UpdateAllGameObjects(GameObject* gameObject)
 {
 	root->Update();
 }
 
-void ModuleScene::DrawAllGameObjects(GameObject* gameObject)
+void M_Scene::DrawAllGameObjects(GameObject* gameObject)
 {
 	if (gameObject->name != "root");
 		gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
@@ -455,7 +455,7 @@ void ModuleScene::DrawAllGameObjects(GameObject* gameObject)
 	}
 }
 
-void ModuleScene::GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const
+void M_Scene::GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const
 {
 	if (gameObject->name != "root")
 		vector.push_back(gameObject);
@@ -465,7 +465,7 @@ void ModuleScene::GettAllGameObjects(std::vector<GameObject*>& vector, GameObjec
 	}
 }
 
-void ModuleScene::FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret)
+void M_Scene::FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret)
 {
 	if (gameObject->uid == id)
 	{
@@ -483,7 +483,7 @@ void ModuleScene::FindGameObjectByID(uint id, GameObject* gameObject, GameObject
 
 }
 
-void ModuleScene::DeleteAllGameObjects()
+void M_Scene::DeleteAllGameObjects()
 {
 	for (uint i = 0; i < root->childs.size(); i++)
 	{
@@ -492,12 +492,12 @@ void ModuleScene::DeleteAllGameObjects()
 	root->childs.clear();
 }
 
-void ModuleScene::CreateDefaultScene()
+void M_Scene::CreateDefaultScene()
 {
 	App->LoadScene("ProjectSettings/Untitled.scene");
 }
 
-void ModuleScene::DeleteToRemoveGameObjects()
+void M_Scene::DeleteToRemoveGameObjects()
 {
 	for (std::vector<GameObject*>::iterator it = toRemove.begin(); it != toRemove.end(); it++)
 	{

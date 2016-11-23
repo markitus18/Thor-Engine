@@ -1,19 +1,19 @@
-#include "PanelConsole.h"
+#include "P_Console.h"
 #include "Globals.h"
 
 #include <stdlib.h>
 
-PanelConsole::PanelConsole()
+P_Console::P_Console()
 {
 	ClearLog();
 }
 
-PanelConsole::~PanelConsole()
+P_Console::~P_Console()
 {
 	ClearLog();
 }
 
-void PanelConsole::ClearLog()
+void P_Console::ClearLog()
 {
 	for (int i = 0; i < items.Size; i++)
 		free(items[i]);
@@ -21,21 +21,21 @@ void PanelConsole::ClearLog()
 	scrollToBottom = true;
 }
 
-void PanelConsole::AddLog(const char* input)
+void P_Console::AddLog(const char* input)
 {
 	items.push_back(strdup(input));
 	scrollToBottom = true;
 }
 
-void PanelConsole::Draw(ImGuiWindowFlags flags)
+void P_Console::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
-		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
-		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
+		ImGui::SetNextWindowPos(position);
+		ImGui::SetNextWindowSize(size);
 		
 		flags |= ImGuiWindowFlags_NoTitleBar;
-		if (!ImGui::Begin("Console", &active, ImVec2(size.x, size.y), 1.0f, flags))
+		if (!ImGui::Begin("Console", &active, size, 1.0f, flags))
 		{
 			ImGui::End();
 			return;
@@ -74,7 +74,7 @@ void PanelConsole::Draw(ImGuiWindowFlags flags)
 	}
 }
 
-void PanelConsole::UpdatePosition(int screen_width, int screen_height)
+void P_Console::UpdatePosition(int screen_width, int screen_height)
 {
 	position.x = 0;
 	position.y = (screen_height * (0.75));

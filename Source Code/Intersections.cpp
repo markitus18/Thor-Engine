@@ -4,7 +4,7 @@
 //TMP
 #include "Application.h"
 #include "M_Editor.h"
-#include "PanelConfiguration.h"
+#include "P_Configuration.h"
 
 bool Intersects(const Frustum& frustum, const AABB& box)
 {

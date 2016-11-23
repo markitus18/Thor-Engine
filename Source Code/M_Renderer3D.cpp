@@ -1,30 +1,30 @@
 #include "Application.h"
-#include "ModuleRenderer3D.h"
+#include "M_Renderer3D.h"
 #include "M_Camera3D.h"
-#include "ModuleWindow.h"
+#include "M_Window.h"
 #include "C_Camera.h"
 #include "C_Material.h"
 #include "C_Mesh.h"
 #include "Gizmos.h"
 #include "M_Editor.h"
 #include "OpenGL.h"
-#include "ModuleImport.h"
+#include "M_Import.h"
 #include "GameObject.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
 
-ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module("Renderer", start_enabled)
+M_Renderer3D::M_Renderer3D(Application* app, bool start_enabled) : Module("Renderer", start_enabled)
 {
 }
 
 // Destructor
-ModuleRenderer3D::~ModuleRenderer3D()
+M_Renderer3D::~M_Renderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init(Config& config)
+bool M_Renderer3D::Init(Config& config)
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
@@ -136,7 +136,7 @@ bool ModuleRenderer3D::Init(Config& config)
 }
 
 // PreUpdate: clear buffer
-update_status ModuleRenderer3D::PreUpdate(float dt)
+update_status M_Renderer3D::PreUpdate(float dt)
 {
 	if (camera->update_projection)
 	{
@@ -160,7 +160,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 }
 
 // PostUpdate present buffer to screen
-update_status ModuleRenderer3D::PostUpdate(float dt)
+update_status M_Renderer3D::PostUpdate(float dt)
 {
 	DrawAllScene();
 	App->moduleEditor->Draw();
@@ -170,7 +170,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 }
 
 // Called before quitting
-bool ModuleRenderer3D::CleanUp()
+bool M_Renderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
 
@@ -180,7 +180,7 @@ bool ModuleRenderer3D::CleanUp()
 }
 
 
-void ModuleRenderer3D::OnResize(int width, int height)
+void M_Renderer3D::OnResize(int width, int height)
 {
 	window_width = width;
 	window_height = height;
@@ -190,7 +190,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	UpdateProjectionMatrix();
 }
 
-void ModuleRenderer3D::UpdateProjectionMatrix()
+void M_Renderer3D::UpdateProjectionMatrix()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -201,7 +201,7 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::SetActiveCamera(C_Camera* camera)
+void M_Renderer3D::SetActiveCamera(C_Camera* camera)
 {
 	if (this->camera)
 	{
@@ -215,12 +215,12 @@ void ModuleRenderer3D::SetActiveCamera(C_Camera* camera)
 	UpdateProjectionMatrix();
 }
 
-C_Camera* ModuleRenderer3D::GetActiveCamera()
+C_Camera* M_Renderer3D::GetActiveCamera()
 {
 	return camera;
 }
 
-void ModuleRenderer3D::SetCullingCamera(C_Camera* camera)
+void M_Renderer3D::SetCullingCamera(C_Camera* camera)
 {
 	if (culling_camera)
 	{
@@ -234,7 +234,7 @@ void ModuleRenderer3D::SetCullingCamera(C_Camera* camera)
 
 }
 
-void ModuleRenderer3D::DrawAllScene()
+void M_Renderer3D::DrawAllScene()
 {
 	App->moduleEditor->StartTimer(mesh_draw_timer);
 	DrawAllMeshes();
@@ -245,12 +245,12 @@ void ModuleRenderer3D::DrawAllScene()
 	App->moduleEditor->ReadTimer(box_draw_timer);
 }
 
-void ModuleRenderer3D::AddMesh(float4x4 transform, const C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
+void M_Renderer3D::AddMesh(float4x4 transform, const C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
 {
 	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected, flippedNormals));
 }
 
-void ModuleRenderer3D::DrawAllMeshes()
+void M_Renderer3D::DrawAllMeshes()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -265,7 +265,7 @@ void ModuleRenderer3D::DrawAllMeshes()
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
+void M_Renderer3D::DrawMesh(const RenderMesh& mesh)
 {
 	glPushMatrix();
 	glMultMatrixf((float*)&mesh.transform);
@@ -352,22 +352,22 @@ void ModuleRenderer3D::DrawMesh(const RenderMesh& mesh)
 	glPopMatrix();
 }
 
-void ModuleRenderer3D::AddAABB(const AABB& box, const Color& color)
+void M_Renderer3D::AddAABB(const AABB& box, const Color& color)
 {
 	aabb.push_back(RenderBox<AABB>(&box, color));
 }
 
-void ModuleRenderer3D::AddOBB(const OBB& box, const Color& color)
+void M_Renderer3D::AddOBB(const OBB& box, const Color& color)
 {
 	obb.push_back(RenderBox<OBB>(&box, color));
 }
 
-void ModuleRenderer3D::AddFrustum(const Frustum& box, const Color& color)
+void M_Renderer3D::AddFrustum(const Frustum& box, const Color& color)
 {
 	frustum.push_back(RenderBox<Frustum>(&box, color));
 }
 
-void ModuleRenderer3D::DrawAllBox()
+void M_Renderer3D::DrawAllBox()
 {
 	glDisable(GL_LIGHTING);
 	glBegin(GL_LINES);
@@ -395,7 +395,7 @@ void ModuleRenderer3D::DrawAllBox()
 }
 
 //Component buffers management -----------------
-void ModuleRenderer3D::LoadBuffers(C_Mesh* mesh)
+void M_Renderer3D::LoadBuffers(C_Mesh* mesh)
 {
 	glGenBuffers(1, (GLuint*)&mesh->id_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
@@ -420,17 +420,17 @@ void ModuleRenderer3D::LoadBuffers(C_Mesh* mesh)
 	}
 }
 
-void ModuleRenderer3D::LoadBuffers(C_Material* material)
+void M_Renderer3D::LoadBuffers(C_Material* material)
 {
 
 }
 
-void ModuleRenderer3D::ReleaseBuffers(C_Mesh* mesh)
+void M_Renderer3D::ReleaseBuffers(C_Mesh* mesh)
 {
 
 }
 
-void ModuleRenderer3D::ReleaseBuffers(C_Material* material)
+void M_Renderer3D::ReleaseBuffers(C_Material* material)
 {
 	if (material->texture_id)
 	{
@@ -439,7 +439,7 @@ void ModuleRenderer3D::ReleaseBuffers(C_Material* material)
 	}
 }
 
-void ModuleRenderer3D::OnRemoveGameObject(GameObject* gameObject)
+void M_Renderer3D::OnRemoveGameObject(GameObject* gameObject)
 {
 	for (std::vector<RenderMesh>::iterator it = meshes.begin(); it != meshes.end();)
 	{

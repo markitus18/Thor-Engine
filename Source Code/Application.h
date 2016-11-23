@@ -1,7 +1,6 @@
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__
 
-#include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
 #include "PerfTimer.h"
@@ -11,17 +10,17 @@
 class Module;
 
 class M_FileSystem;
-class ModuleWindow;
-class ModuleInput;
+class M_Window;
+class M_Input;
 class M_Audio;
-class ModuleScene;
+class M_Scene;
 
-class ModuleRenderer3D;
+class M_Renderer3D;
 class M_Camera3D;
 class M_Editor;
-class ModuleImport;
-class ModuleMaterials;
-class ModuleMeshes;
+class M_Import;
+class M_Materials;
+class M_Meshes;
 
 class GameObject;
 
@@ -29,18 +28,18 @@ class Application
 {
 public:
 	M_FileSystem* fileSystem;
-	ModuleWindow* window = nullptr;
-	ModuleInput* input = nullptr;
+	M_Window* window = nullptr;
+	M_Input* input = nullptr;
 	M_Audio* audio = nullptr;
-	ModuleScene* scene = nullptr;
+	M_Scene* scene = nullptr;
 
-	ModuleRenderer3D* renderer3D = nullptr;
+	M_Renderer3D* renderer3D = nullptr;
 	M_Camera3D* camera = nullptr;
 
 	M_Editor* moduleEditor = nullptr;
-	ModuleImport* moduleImport = nullptr;
-	ModuleMaterials* moduleMaterials = nullptr;
-	ModuleMeshes* moduleMeshes = nullptr;
+	M_Import* moduleImport = nullptr;
+	M_Materials* moduleMaterials = nullptr;
+	M_Meshes* moduleMeshes = nullptr;
 
 private:
 

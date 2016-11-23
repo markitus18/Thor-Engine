@@ -7,11 +7,11 @@
 class GameObject;
 typedef int ImGuiTreeNodeFlags;
 
-class PanelHierarchy : public Panel
+class P_Hierarchy : public Panel
 {
 public:
-	PanelHierarchy();
-	~PanelHierarchy();
+	P_Hierarchy();
+	~P_Hierarchy();
 
 	void Draw(ImGuiWindowFlags flags);
 	void DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags);

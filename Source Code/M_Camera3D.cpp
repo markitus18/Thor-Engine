@@ -1,16 +1,16 @@
 #include "Application.h"
 #include "M_Camera3D.h"
 #include "M_Editor.h"
-#include "ModuleInput.h"
-#include "ModuleWindow.h"
+#include "M_Input.h"
+#include "M_Window.h"
 #include "C_Camera.h"
-#include "ModuleRenderer3D.h"
+#include "M_Renderer3D.h"
 #include "GameObject.h"
 #include "Config.h"
 #include "OpenGL.h"
 #include "Quadtree.h"
-#include "ModuleScene.h"
-#include "PanelHierarchy.h"
+#include "M_Scene.h"
+#include "P_Hierarchy.h"
 
 #include <vector>
 #include <map>

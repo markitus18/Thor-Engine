@@ -6,11 +6,11 @@
 
 class GameObject;
 
-class PanelInspector : public Panel
+class P_Inspector : public Panel
 {
 public:
-	PanelInspector();
-	~PanelInspector();
+	P_Inspector();
+	~P_Inspector();
 
 	void Draw(ImGuiWindowFlags flags);
 

@@ -3,11 +3,11 @@
 
 #include "Panel.h"
 
-class PanelButtons : public Panel
+class P_Buttons : public Panel
 {
 public:
-	PanelButtons();
-	~PanelButtons();
+	P_Buttons();
+	~P_Buttons();
 
 	void Draw(ImGuiWindowFlags flags);
 	void UpdatePosition(int, int);

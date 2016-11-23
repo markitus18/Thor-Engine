@@ -136,18 +136,6 @@
     <ClCompile Include="Source Code\Timer.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleInput.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\ModuleRenderer3D.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\ModuleScene.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\ModuleWindow.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Light.cpp">
       <Filter>Source Code\Helpers</Filter>
     </ClCompile>
@@ -160,22 +148,10 @@
     <ClCompile Include="Source Code\PerfTimer.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\ModuleImport.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\GameObject.cpp">
       <Filter>Source Code\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Panel.cpp">
-      <Filter>Source Code\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\PanelHierarchy.cpp">
-      <Filter>Source Code\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\PanelConsole.cpp">
-      <Filter>Source Code\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\PanelInspector.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Component.cpp">
@@ -186,15 +162,6 @@
     </ClCompile>
     <ClCompile Include="Source Code\C_Material.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\ModuleMaterials.cpp">
-      <Filter>Source Code\GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\PanelConfiguration.cpp">
-      <Filter>Source Code\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\PanelButtons.cpp">
-      <Filter>Source Code\Editor</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\C_Camera.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
@@ -207,9 +174,6 @@
     </ClCompile>
     <ClCompile Include="Source Code\Intersections.cpp">
       <Filter>Source Code\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\ModuleMeshes.cpp">
-      <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\External Libraries\parson\parson.c">
       <Filter>Source Code\External Libraries\parson</Filter>
@@ -234,6 +198,42 @@
     </ClCompile>
     <ClCompile Include="Source Code\M_FileSystem.cpp">
       <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Import.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Input.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Renderer3D.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Scene.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Window.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Materials.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Meshes.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\P_Buttons.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\P_Configuration.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\P_Console.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\P_Hierarchy.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\P_Inspector.cpp">
+      <Filter>Source Code\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -456,19 +456,7 @@
     <ClInclude Include="Source Code\Timer.h">
       <Filter>Source Code\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\ModuleWindow.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Module.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\ModuleInput.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\ModuleRenderer3D.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\ModuleScene.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Light.h">
@@ -477,16 +465,7 @@
     <ClInclude Include="Source Code\Primitive.h">
       <Filter>Source Code\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\p2List.h">
-      <Filter>Source Code\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\p2Point.h">
-      <Filter>Source Code\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Color.h">
-      <Filter>Source Code\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\p2DynArray.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Globals.h">
@@ -497,9 +476,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\OpenGL.h">
       <Filter>Source Code\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\ModuleImport.h">
-      <Filter>Source Code\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\GameObject.h">
       <Filter>Source Code\GameObjects</Filter>
@@ -531,15 +507,6 @@
     <ClInclude Include="Source Code\Panel.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\PanelHierarchy.h">
-      <Filter>Source Code\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\PanelConsole.h">
-      <Filter>Source Code\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\PanelInspector.h">
-      <Filter>Source Code\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Component.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
@@ -548,15 +515,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\C_Material.h">
       <Filter>Source Code\GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\ModuleMaterials.h">
-      <Filter>Source Code\GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\PanelConfiguration.h">
-      <Filter>Source Code\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\PanelButtons.h">
-      <Filter>Source Code\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\C_Camera.h">
       <Filter>Source Code\GameObjects\Components</Filter>
@@ -569,9 +527,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\Intersections.h">
       <Filter>Source Code\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\ModuleMeshes.h">
-      <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\External Libraries\parson\parson.h">
       <Filter>Source Code\External Libraries\parson</Filter>
@@ -596,6 +551,42 @@
     </ClInclude>
     <ClInclude Include="Source Code\M_FileSystem.h">
       <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Import.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Input.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Renderer3D.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Scene.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Window.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Materials.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Meshes.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\P_Buttons.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\P_Configuration.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\P_Console.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\P_Hierarchy.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\P_Inspector.h">
+      <Filter>Source Code\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

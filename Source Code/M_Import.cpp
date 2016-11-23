@@ -1,15 +1,15 @@
 
 #include "Application.h"
-#include "ModuleImport.h"
-#include "ModuleScene.h"
+#include "M_Import.h"
+#include "M_Scene.h"
 
 #include "C_Material.h"
 #include "GameObject.h"
 #include "C_Mesh.h"
 #include "C_Transform.h"
 
-#include "ModuleMaterials.h"
-#include "ModuleMeshes.h"
+#include "M_Materials.h"
+#include "M_Meshes.h"
 #include "M_FileSystem.h"
 #include "Config.h"
 
@@ -28,19 +28,19 @@
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
 #include "MathGeoLib\src\MathGeoLib.h"
-#include "ModuleInput.h"
+#include "M_Input.h"
 
 #include <unordered_map>
 
-ModuleImport::ModuleImport(Application* app, bool start_enabled) : Module("Importer", start_enabled)
+M_Import::M_Import(Application* app, bool start_enabled) : Module("Importer", start_enabled)
 {}
 
 // Destructor
-ModuleImport::~ModuleImport()
+M_Import::~M_Import()
 {}
 
 // Called before render is available
-bool ModuleImport::Init(Config& config)
+bool M_Import::Init(Config& config)
 {
 	LOG("Loading Module Import");
 
@@ -51,12 +51,12 @@ bool ModuleImport::Init(Config& config)
 
 	return true;
 }
-update_status ModuleImport::Update(float dt)
+update_status M_Import::Update(float dt)
 {
 	return UPDATE_CONTINUE;
 }
 
-void ModuleImport::SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects)
+void M_Import::SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects)
 {
 	Config_Array array = config.SetArray("GameObjects");
 
@@ -66,7 +66,7 @@ void ModuleImport::SaveGameObjectConfig(Config& config, std::vector<GameObject*>
 	}
 }
 
-GameObject* ModuleImport::LoadGameObject(const char* path)
+GameObject* M_Import::LoadGameObject(const char* path)
 {
 	std::string full_path = "Library/GameObjects/";
 	full_path.append(path);// .append(".mesh");
@@ -85,7 +85,7 @@ GameObject* ModuleImport::LoadGameObject(const char* path)
 	return nullptr;
 }
 
-void ModuleImport::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& roots)
+void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& roots)
 {
 	std::vector<GameObject*> not_parented_GameObjects;
 	std::unordered_map<unsigned long long, GameObject*> createdGameObjects;
@@ -157,7 +157,7 @@ void ModuleImport::LoadGameObjectConfig(Config& config, std::vector<GameObject*>
 	}
 }
 
-void ModuleImport::SaveGameObjectSingle(Config& config, GameObject* gameObject)
+void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 {
 	config.SetNumber("UID", gameObject->uid);
 
@@ -199,7 +199,7 @@ void ModuleImport::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	config.SetString("Material", matLibFile.c_str());
 }
 
-void ModuleImport::ImportFile(char* path)
+void M_Import::ImportFile(char* path)
 {
 	LOG("Entering mesh load");
 	const aiScene* file = aiImportFileEx(path, aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
@@ -236,7 +236,7 @@ void ModuleImport::ImportFile(char* path)
 	}
 }
 
-GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path, std::vector<GameObject*>& vector)
+GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path, std::vector<GameObject*>& vector)
 {
 	aiVector3D		translation;
 	aiVector3D		scaling;
@@ -334,7 +334,7 @@ GameObject* ModuleImport::LoadFBX(const aiScene* scene, const aiNode* node, Game
 }
 
 // Called before quitting
-bool ModuleImport::CleanUp()
+bool M_Import::CleanUp()
 {
 	return true;
 }

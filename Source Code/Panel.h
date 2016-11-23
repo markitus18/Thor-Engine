@@ -1,7 +1,6 @@
 #ifndef __PANEL_H__
 #define __PANEL_H__
 
-#include "p2Point.h"
 #include "ImGui\imgui.h"
 #include "Color.h"
 #include "Globals.h"
@@ -25,8 +24,8 @@ public:
 	virtual void UpdatePosition(int, int);
 
 protected:
-	p2Point<int> position;
-	p2Point<int> size;
+	ImVec2 position;
+	ImVec2 size;
 
 public:
 	bool active = true;

@@ -1,4 +1,4 @@
-#include "ModuleMaterials.h"
+#include "M_Materials.h"
 
 #include "Application.h"
 #include "M_FileSystem.h"
@@ -22,22 +22,22 @@
 
 
 
-ModuleMaterials::ModuleMaterials(Application* app, bool start_enabled) : Module("Materials", start_enabled)
+M_Materials::M_Materials(Application* app, bool start_enabled) : Module("Materials", start_enabled)
 {
 
 }
 
-ModuleMaterials::~ModuleMaterials()
+M_Materials::~M_Materials()
 {
 
 }
 
-bool ModuleMaterials::Init()
+bool M_Materials::Init()
 {
 	return true;
 }
 
-bool ModuleMaterials::CleanUp()
+bool M_Materials::CleanUp()
 {
 	return true;
 }
@@ -45,7 +45,7 @@ bool ModuleMaterials::CleanUp()
 /*Search for a material with same texture path
 if a material is found, returns the material
 otherwise returns nullptr*/
-C_Material* ModuleMaterials::Exists(const char* texture_path) const
+C_Material* M_Materials::Exists(const char* texture_path) const
 {
 	std::list<C_Material*>::const_iterator it = materials.begin();
 	while (it != materials.end())
@@ -57,7 +57,7 @@ C_Material* ModuleMaterials::Exists(const char* texture_path) const
 	return nullptr;
 }
 
-C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::string& path)
+C_Material* M_Materials::ImportMaterial(const aiMaterial* from, const std::string& path)
 {
 	uint numTextures = from->GetTextureCount(aiTextureType_DIFFUSE);
 	std::string texture_file = "", texture_extension = "";
@@ -93,7 +93,7 @@ C_Material* ModuleMaterials::ImportMaterial(const aiMaterial* from, const std::s
 	return material;
 }
 
-void ModuleMaterials::SaveMaterial(const C_Material* material, const char* path)
+void M_Materials::SaveMaterial(const C_Material* material, const char* path)
 {
 	uint size = sizeof(uint) + material->texture_path.size() + sizeof(float) * 4; //Color size
 
@@ -133,7 +133,7 @@ void ModuleMaterials::SaveMaterial(const C_Material* material, const char* path)
 	RELEASE_ARRAY(data);
 }
 
-C_Material* ModuleMaterials::LoadMaterial(const char* path)
+C_Material* M_Materials::LoadMaterial(const char* path)
 {
 	std::string full_path = "Library/Materials/";
 	full_path.append(path);// .append(".mesh");
@@ -194,7 +194,7 @@ C_Material* ModuleMaterials::LoadMaterial(const char* path)
 
 }
 
-void ModuleMaterials::ImportTexture(const char* path)
+void M_Materials::ImportTexture(const char* path)
 {
 	std::string ret = "";
 
@@ -241,7 +241,7 @@ void ModuleMaterials::ImportTexture(const char* path)
 	}
 }
 
-uint ModuleMaterials::LoadTexture(const char* path)
+uint M_Materials::LoadTexture(const char* path)
 {
 	uint ret = 0;
 

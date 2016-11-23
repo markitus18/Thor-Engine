@@ -1,21 +1,21 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleWindow.h"
+#include "M_Window.h"
 #include "SDL\include\SDL_video.h"
 
-ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module("Window", start_enabled)
+M_Window::M_Window(Application* app, bool start_enabled) : Module("Window", start_enabled)
 {
 	window = nullptr;
 	screen_surface = nullptr;
 }
 
 // Destructor
-ModuleWindow::~ModuleWindow()
+M_Window::~M_Window()
 {
 }
 
 // Called before render is available
-bool ModuleWindow::Init(Config& config)
+bool M_Window::Init(Config& config)
 {
 
 	LOG("Init SDL window & surface");
@@ -81,7 +81,7 @@ bool ModuleWindow::Init(Config& config)
 }
 
 // Called before quitting
-bool ModuleWindow::CleanUp()
+bool M_Window::CleanUp()
 {
 	LOG("Destroying SDL window and quitting all SDL systems");
 
@@ -96,7 +96,7 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-void ModuleWindow::SetTitle(const char* new_title)
+void M_Window::SetTitle(const char* new_title)
 {
 	SDL_SetWindowTitle(window, new_title);
 }

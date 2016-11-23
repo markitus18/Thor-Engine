@@ -6,11 +6,11 @@
 #include <string>
 #include <vector>
 
-class PanelConsole;
-class PanelHierarchy;
-class PanelInspector;
-class PanelConfiguration;
-class PanelButtons;
+class P_Console;
+class P_Hierarchy;
+class P_Inspector;
+class P_Configuration;
+class P_Buttons;
 
 class Config;
 
@@ -63,11 +63,11 @@ private:
 	//TODO: move into private
 public:
 	//Panels
-	PanelHierarchy*		panelHierarchy = nullptr;
-	PanelConsole*		panelConsole = nullptr;
-	PanelInspector*		panelInspector = nullptr;
-	PanelConfiguration* panelConfiguration = nullptr;
-	PanelButtons*		panelButtons = nullptr;
+	P_Hierarchy*		panelHierarchy = nullptr;
+	P_Console*		panelConsole = nullptr;
+	P_Inspector*		panelInspector = nullptr;
+	P_Configuration* panelConfiguration = nullptr;
+	P_Buttons*		panelButtons = nullptr;
 
 	bool shaded = true;
 	bool wireframe = false;

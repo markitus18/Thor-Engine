@@ -1,6 +1,6 @@
-#include "PanelHierarchy.h"
+#include "P_Hierarchy.h"
 #include "Application.h"
-#include "ModuleScene.h"
+#include "M_Scene.h"
 #include "GameObject.h"
 #include "M_Camera3D.h"
 #include "C_Camera.h"
@@ -10,30 +10,30 @@
 
 #include "ImGui\imgui.h"
 
-PanelHierarchy::PanelHierarchy()
+P_Hierarchy::P_Hierarchy()
 {
 }
 
-PanelHierarchy::~PanelHierarchy()
+P_Hierarchy::~P_Hierarchy()
 {
 
 }
 
-void PanelHierarchy::Draw(ImGuiWindowFlags flags)
+void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
-		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
-		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
+		ImGui::SetNextWindowPos(position);
+		ImGui::SetNextWindowSize(size);
 
-		ImGui::Begin("Hierarchy", &active, ImVec2(size.x, size.y), 1.0f, flags);
+		ImGui::Begin("Hierarchy", &active, size, 1.0f, flags);
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
 		DrawRootChilds(App->scene->GetRoot(), default_flags);
 		ImGui::End();
 	}
 }
 
-void PanelHierarchy::DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
+void P_Hierarchy::DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
 {
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
@@ -41,7 +41,7 @@ void PanelHierarchy::DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags d
 	}
 }
 
-void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
+void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
 {
 	ImGuiTreeNodeFlags gameObject_flag = default_flags;
 	if (gameObject->childs.empty())
@@ -127,7 +127,7 @@ void PanelHierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags d
 		gameObject->beenSelected = false;
 }
 
-void PanelHierarchy::UpdatePosition(int screen_width, int screen_height)
+void P_Hierarchy::UpdatePosition(int screen_width, int screen_height)
 {
 	position.x = 0;
 	position.y = 19;
@@ -136,7 +136,7 @@ void PanelHierarchy::UpdatePosition(int screen_width, int screen_height)
 
 }
 
-void PanelHierarchy::SelectSingle(GameObject* gameObject)
+void P_Hierarchy::SelectSingle(GameObject* gameObject)
 {
 	if (!selectedGameObjects.empty())
 	{
@@ -156,7 +156,7 @@ void PanelHierarchy::SelectSingle(GameObject* gameObject)
 	}
 }
 
-void PanelHierarchy::AddSelect(GameObject* gameObject)
+void P_Hierarchy::AddSelect(GameObject* gameObject)
 {
 	if (gameObject)
 	{
@@ -173,7 +173,7 @@ void PanelHierarchy::AddSelect(GameObject* gameObject)
 
 }
 
-void PanelHierarchy::UnselectSingle(GameObject* gameObject)
+void P_Hierarchy::UnselectSingle(GameObject* gameObject)
 {
 	gameObject->Unselect();
 	std::vector<GameObject*>::iterator it = selectedGameObjects.begin();
@@ -185,7 +185,7 @@ void PanelHierarchy::UnselectSingle(GameObject* gameObject)
 		}
 }
 
-void PanelHierarchy::UnselectAll()
+void P_Hierarchy::UnselectAll()
 {
 	for (uint i = 0; i < selectedGameObjects.size(); i++)
 	{

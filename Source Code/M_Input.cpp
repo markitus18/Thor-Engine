@@ -1,16 +1,16 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleInput.h"
-#include "ModuleRenderer3D.h"
+#include "M_Input.h"
+#include "M_Renderer3D.h"
 #include "M_Editor.h"
-#include "ModuleWindow.h"
+#include "M_Window.h"
 
 #include "SDL/include/SDL_mouse.h"
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
 #define MAX_KEYS 300
 
-ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module("Input", start_enabled)
+M_Input::M_Input(Application* app, bool start_enabled) : Module("Input", start_enabled)
 {
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KEY_STATE) * MAX_KEYS);
@@ -18,13 +18,13 @@ ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module("Input",
 }
 
 // Destructor
-ModuleInput::~ModuleInput()
+M_Input::~M_Input()
 {
 	RELEASE_ARRAY(keyboard);
 }
 
 // Called before render is available
-bool ModuleInput::Init(Config& config)
+bool M_Input::Init(Config& config)
 {
 	LOG("Init SDL input event system");
 	bool ret = true;
@@ -40,7 +40,7 @@ bool ModuleInput::Init(Config& config)
 }
 
 // Called every draw update
-update_status ModuleInput::PreUpdate(float dt)
+update_status M_Input::PreUpdate(float dt)
 {
 	static SDL_Event event;
 
@@ -161,31 +161,31 @@ update_status ModuleInput::PreUpdate(float dt)
 }
 
 // Called before quitting
-bool ModuleInput::CleanUp()
+bool M_Input::CleanUp()
 {
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
 
-void ModuleInput::SetMouseX(int x)
+void M_Input::SetMouseX(int x)
 {
 	SDL_WarpMouseInWindow(App->window->window, x, mouse_y);
 	mouse_x = x;
 }
 
-void ModuleInput::SetMouseY(int y)
+void M_Input::SetMouseY(int y)
 {
 	SDL_WarpMouseInWindow(App->window->window, mouse_x, y);
 	mouse_y = y;
 }
 
-void ModuleInput::InfiniteHorizontal()
+void M_Input::InfiniteHorizontal()
 {
 	infiniteHorizontal = true;
 }
 
-void ModuleInput::ResetImGuiDrag()
+void M_Input::ResetImGuiDrag()
 {
 	//First update mouse position, otherwise in next frame mousePrev will
 	//not be the updated version

@@ -4,7 +4,7 @@
 #include "ImGui\imgui.h"
 #include "Panel.h"
 
-class PanelConsole : public Panel
+class P_Console : public Panel
 {
 private:
 	ImVector<char*>	items;
@@ -12,8 +12,8 @@ private:
 
 public:
 
-	PanelConsole();
-	~PanelConsole();
+	P_Console();
+	~P_Console();
 
 	void ClearLog();
 	void AddLog(const char* input);

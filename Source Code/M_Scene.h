@@ -12,11 +12,11 @@ class GameObject;
 class Config;
 class Quadtree;
 
-class ModuleScene : public Module
+class M_Scene : public Module
 {
 public:
-	ModuleScene(Application* app, bool start_enabled = true);
-	~ModuleScene();
+	M_Scene(Application* app, bool start_enabled = true);
+	~M_Scene();
 
 	bool Init(Config& config);
 	bool Start();

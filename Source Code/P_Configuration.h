@@ -21,11 +21,11 @@ struct ConfigTimer
 	double		timer_read = 0.0f;
 };
 
-class PanelConfiguration : public Panel
+class P_Configuration : public Panel
 {
 public:
-	PanelConfiguration();
-	~PanelConfiguration();
+	P_Configuration();
+	~P_Configuration();
 
 	void Draw(ImGuiWindowFlags flags);
 	void UpdatePosition(int, int);

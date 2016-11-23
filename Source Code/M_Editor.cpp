@@ -1,17 +1,17 @@
 #include "Application.h"
 #include "M_Editor.h"
-#include "ModuleWindow.h"
+#include "M_Window.h"
 
-#include "ModuleInput.h"
+#include "M_Input.h"
 
 //Panels
-#include "PanelHierarchy.h"
-#include "PanelConsole.h"
-#include "PanelInspector.h"
-#include "PanelConfiguration.h"
-#include "PanelButtons.h"
+#include "P_Hierarchy.h"
+#include "P_Console.h"
+#include "P_Inspector.h"
+#include "P_Configuration.h"
+#include "P_Buttons.h"
 
-#include "ModuleScene.h"
+#include "M_Scene.h"
 #include "M_FileSystem.h"
 
 #include "GameObject.h"
@@ -41,11 +41,11 @@ bool M_Editor::Init(Config& config)
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
 
 	//Initializing all panels
-	panelConsole = new PanelConsole();
-	panelHierarchy = new PanelHierarchy();
-	panelInspector = new PanelInspector();
-	panelConfiguration = new PanelConfiguration();
-	panelButtons = new PanelButtons();
+	panelConsole = new P_Console();
+	panelHierarchy = new P_Hierarchy();
+	panelInspector = new P_Inspector();
+	panelConfiguration = new P_Configuration();
+	panelButtons = new P_Buttons();
 	panelConfiguration->Init();
 
 	//Chaning ImGui style

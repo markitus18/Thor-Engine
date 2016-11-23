@@ -1,25 +1,25 @@
-#include "PanelConfiguration.h"
+#include "P_Configuration.h"
 #include "Application.h"
-#include "ModuleInput.h"
+#include "M_Input.h"
 #include "M_Camera3D.h"
 
-PanelConfiguration::PanelConfiguration()
+P_Configuration::P_Configuration()
 {
 }
 
-PanelConfiguration::~PanelConfiguration()
+P_Configuration::~P_Configuration()
 {
 
 }
 
-void PanelConfiguration::Draw(ImGuiWindowFlags flags)
+void P_Configuration::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
-		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
-		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
+		ImGui::SetNextWindowPos(position);
+		ImGui::SetNextWindowSize(size);
 
-		if (!ImGui::Begin("Configuration", &active, ImVec2(size.x, size.y), 1.0f, flags))
+		if (!ImGui::Begin("Configuration", &active, size, 1.0f, flags))
 		{
 			ImGui::End();
 			return;
@@ -89,7 +89,7 @@ void PanelConfiguration::Draw(ImGuiWindowFlags flags)
 	}
 }
 
-void PanelConfiguration::UpdatePosition(int screen_width, int screen_height)
+void P_Configuration::UpdatePosition(int screen_width, int screen_height)
 {
 	position.x = screen_width * (0.80);
 	position.y = screen_height * (0.60);
@@ -98,7 +98,7 @@ void PanelConfiguration::UpdatePosition(int screen_width, int screen_height)
 	size.y = screen_height - position.y;
 }
 
-void PanelConfiguration::Init()
+void P_Configuration::Init()
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -107,7 +107,7 @@ void PanelConfiguration::Init()
 	}
 }
 
-void PanelConfiguration::UpdateFPSData(int fps, int ms)
+void P_Configuration::UpdateFPSData(int fps, int ms)
 {
 	for (int i = 0; i < 99; i++)
 	{
@@ -118,7 +118,7 @@ void PanelConfiguration::UpdateFPSData(int fps, int ms)
 	ms_data[100 - 1] = ms;
 }
 
-uint PanelConfiguration::AddTimer(const char* text, const char* tag)
+uint P_Configuration::AddTimer(const char* text, const char* tag)
 {
 	timers.push_back(ConfigTimer(text));
 
@@ -146,7 +146,7 @@ uint PanelConfiguration::AddTimer(const char* text, const char* tag)
 	return timers.size() - 1;
 }
 
-void PanelConfiguration::StartTimer(uint index)
+void P_Configuration::StartTimer(uint index)
 {
 	if (index < timers.size())
 	{
@@ -154,7 +154,7 @@ void PanelConfiguration::StartTimer(uint index)
 	}
 }
 
-void PanelConfiguration::ReadTimer(uint index)
+void P_Configuration::ReadTimer(uint index)
 {
 	if (index < timers.size())
 	{
@@ -163,7 +163,7 @@ void PanelConfiguration::ReadTimer(uint index)
 }
 
 //TODO: add timer stop function
-void PanelConfiguration::StopTimer(uint index)
+void P_Configuration::StopTimer(uint index)
 {
 	if (index < timers.size())
 	{

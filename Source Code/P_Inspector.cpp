@@ -1,38 +1,38 @@
-#include "PanelInspector.h"
+#include "P_Inspector.h"
 
 #include "Application.h"
 #include "M_Editor.h"
-#include "PanelHierarchy.h"
+#include "P_Hierarchy.h"
 #include "GameObject.h"
-#include "ModuleInput.h"
+#include "M_Input.h"
 #include "OpenGL.h"
 #include "C_Camera.h"
 #include "C_Transform.h"
 #include "C_Material.h"
 
-#include "ModuleRenderer3D.h"
+#include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 
-#include "ModuleScene.h"
+#include "M_Scene.h"
 #include "Quadtree.h"
 
-PanelInspector::PanelInspector()
+P_Inspector::P_Inspector()
 {
 }
 
-PanelInspector::~PanelInspector()
+P_Inspector::~P_Inspector()
 {
 	
 }
 
-void PanelInspector::Draw(ImGuiWindowFlags flags)
+void P_Inspector::Draw(ImGuiWindowFlags flags)
 {
 	if (active)
 	{
-		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
-		ImGui::SetNextWindowSize(ImVec2(size.x, size.y));
+		ImGui::SetNextWindowPos(position);
+		ImGui::SetNextWindowSize(size);
 
-		if (!ImGui::Begin("Inspector", &active, ImVec2(size.x, size.y), 1.0f, flags))
+		if (!ImGui::Begin("Inspector", &active, ImVec2(size), 1.0f, flags))
 		{
 			ImGui::End();
 			return;
@@ -177,10 +177,10 @@ void PanelInspector::Draw(ImGuiWindowFlags flags)
 	}
 }
 
-void PanelInspector::UpdatePosition(int screen_width, int screen_height)
+void P_Inspector::UpdatePosition(int screen_width, int screen_height)
 {
 	position.x = screen_width * (0.80);
 	position.y = 19;
 	size.x = screen_width * (0.20);
-	size.y =screen_height * (0.60) - position.y;
+	size.y = screen_height * (0.60) - position.y;
 }

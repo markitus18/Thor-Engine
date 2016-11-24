@@ -21,6 +21,7 @@ class M_Editor;
 class M_Import;
 class M_Materials;
 class M_Meshes;
+class M_Resources;
 
 class GameObject;
 
@@ -37,6 +38,8 @@ public:
 	M_Camera3D* camera = nullptr;
 
 	M_Editor* moduleEditor = nullptr;
+
+	M_Resources* moduleResources = nullptr;
 	M_Import* moduleImport = nullptr;
 	M_Materials* moduleMaterials = nullptr;
 	M_Meshes* moduleMeshes = nullptr;

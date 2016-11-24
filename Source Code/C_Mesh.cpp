@@ -1,6 +1,7 @@
 #include "C_Mesh.h"
 #include "OpenGL.h"
 #include "GameObject.h"
+#include "R_Mesh.h"
 
 C_Mesh::C_Mesh() : Component(Type::Mesh, nullptr)
 {
@@ -13,9 +14,9 @@ C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObjec
 C_Mesh::~C_Mesh()
 {
 	//TODO: think a way of doing it on renderer. Store a vector with all loaded meshes?
-	ReleaseBuffers();
+	//ReleaseBuffers();
 }
-
+/*
 void C_Mesh::ReleaseBuffers()
 {
 	if (id_vertices != 0)
@@ -38,7 +39,8 @@ void C_Mesh::ReleaseBuffers()
 		glDeleteBuffers(1, (GLuint*)&id_tex_coords);
 	}
 }
-
+*/
+/*
 void C_Mesh::LoadBuffers()
 {
 	glGenBuffers(1, (GLuint*)&id_vertices);
@@ -63,16 +65,10 @@ void C_Mesh::LoadBuffers()
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_tex_coords * 2, tex_coords, GL_STATIC_DRAW);
 	}
 }
-
-void C_Mesh::CreateAABB()
-{
-	aabb.SetNegativeInfinity();
-	aabb.Enclose((math::vec*)vertices, num_vertices);
-}
-
+*/
 const AABB& C_Mesh::GetAABB() const
 {
-	return aabb;
+	return ((R_Mesh*)resource)->aabb;
 }
 
 Component::Type C_Mesh::GetType()

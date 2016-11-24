@@ -28,13 +28,12 @@ public:
 	bool CleanUp();
 	update_status Update(float dt);
 
-	void SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects);
+	void		SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects);
 	GameObject* LoadGameObject(const char* path);
-	void LoadGameObjectConfig(Config& config, std::vector<GameObject*>& nodes);
+	void		LoadGameObjectConfig(Config& config, std::vector<GameObject*>& nodes);
 
 private:
 	void SaveGameObjectSingle(Config& config, GameObject* gameObject);
-	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
 
 private:
 	bool fbx_loaded = false;

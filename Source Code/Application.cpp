@@ -9,6 +9,7 @@
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 #include "M_Editor.h"
+#include "M_Resources.h"
 #include "M_Import.h"
 #include "M_Materials.h"
 #include "M_Meshes.h"
@@ -28,6 +29,7 @@ Application::Application()
 	renderer3D = new M_Renderer3D();
 	camera = new M_Camera3D();
 
+	moduleResources = new M_Resources();
 	moduleEditor = new M_Editor();
 	moduleImport = new M_Import();
 	moduleMaterials = new M_Materials();
@@ -51,6 +53,7 @@ Application::Application()
 
 	AddModule(renderer3D);
 
+	AddModule(moduleResources);
 	AddModule(moduleImport);
 	AddModule(moduleMaterials);
 	AddModule(moduleMeshes);

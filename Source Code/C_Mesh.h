@@ -18,41 +18,12 @@ public:
 	C_Mesh(GameObject* new_GameObject);
 	~C_Mesh();
 
-	void ReleaseBuffers();
-	void LoadBuffers();
-
-	void CreateAABB();
 	const AABB& GetAABB() const;
 
 	void Save();
 	void Load();
+
 	static Component::Type GetType();
-
-public:
-	//Vertices data
-	uint	id_vertices = 0;
-	uint	num_vertices = 0;
-	uint*	indices = nullptr;
-
-	//Indices data
-	uint	id_indices = 0;
-	uint	num_indices = 0;
-	float*	vertices = nullptr;
-
-	//Normals data
-	uint	id_normals = 0;
-	uint	num_normals = 0;
-	float*	normals = nullptr;
-
-	//Texture coords
-	uint	id_tex_coords = 0;
-	uint	num_tex_coords = 0;
-	float*	tex_coords = nullptr;
-
-	std::string libFile = "";
-private:
-
-	AABB	aabb;
 };
 
 #endif

@@ -7,6 +7,8 @@
 #include "MathGeoLib\src\MathGeoLib.h"
 
 class GameObject;
+class Resource;
+
 class Component
 {
 public:
@@ -32,12 +34,22 @@ public:
 	virtual void Save();
 	virtual void Load();
 
+//Resource handling
+	void SetResource(Resource* resource);
+	//Made only for external file importing, it does not set the pointer
+	void SetResource(unsigned long long id);
+	
+	Resource* GetResource();
+	const Resource* GetResource() const;
+
+public:
 	const GameObject* gameObject;
 
 protected:
 	bool active;
 	Type type;
 	unsigned long long resourceID;
+	Resource* resource = nullptr;
 
 
 };

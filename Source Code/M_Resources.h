@@ -6,6 +6,7 @@
 #include <map>
 
 struct aiMesh;
+class R_Mesh;
 
 class M_Resources : public Module
 {
@@ -16,10 +17,7 @@ public:
 	bool Init(Config& config);
 	bool CleanUp();
 
-	unsigned long long ImportRMesh(aiMesh* from);
-
-private:
-	std::string RequestNewPathID(Resource::Type);
+	R_Mesh* ImportRMesh(const aiMesh* from);
 
 private:
 	std::map<unsigned long long, Resource*> resources;

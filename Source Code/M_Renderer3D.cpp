@@ -5,6 +5,7 @@
 #include "C_Camera.h"
 #include "C_Material.h"
 #include "C_Mesh.h"
+#include "R_Mesh.h"
 #include "Gizmos.h"
 #include "M_Editor.h"
 #include "OpenGL.h"
@@ -265,37 +266,39 @@ void M_Renderer3D::DrawAllMeshes()
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void M_Renderer3D::DrawMesh(const RenderMesh& mesh)
+void M_Renderer3D::DrawMesh(const RenderMesh& rMesh)
 {
-	glPushMatrix();
-	glMultMatrixf((float*)&mesh.transform);
+	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
 
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_vertices);
+	glPushMatrix();
+	glMultMatrixf((float*)&rMesh.transform);
+
+	glBindBuffer(GL_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_vertices]);
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.mesh->id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_indices]);
 
-	if (mesh.selected || mesh.parentSelected || mesh.wireframe)
+	if (rMesh.selected || rMesh.parentSelected || rMesh.wireframe)
 	{
-		if (mesh.selected)
+		if (rMesh.selected)
 		{
 			glColor3f(0.71, 0.78, 0.88);
 			glLineWidth(1);
 		}
 
-		else if (mesh.parentSelected)
+		else if (rMesh.parentSelected)
 		{
 			glColor3f(0.51, 0.58, 0.68);
 		}
 
-		else if (mesh.wireframe)
+		else if (rMesh.wireframe)
 		{
 			glColor3f(0, 0, 0);
 		}
 
 		glDisable(GL_LIGHTING);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, mesh.mesh->num_indices, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_LIGHTING);
@@ -303,45 +306,45 @@ void M_Renderer3D::DrawMesh(const RenderMesh& mesh)
 		glColor4f(1, 1, 1, 1);
 	}
 
-	if (mesh.shaded)
+	if (rMesh.shaded)
 	{
-		if (mesh.mesh->num_normals > 0)
+		if (resMesh->buffersSize[R_Mesh::b_normals] > 0)
 		{
-			if (mesh.flippedNormals)
+			if (rMesh.flippedNormals)
 			{
 				glFrontFace(GL_CW);
 			}
 
-			glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_normals);
+			glBindBuffer(GL_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_normals]);
 			glNormalPointer(GL_FLOAT, 0, nullptr);
 		}
 
-		if (mesh.mesh->num_tex_coords > 0)
+		if (resMesh->buffersSize[R_Mesh::b_tex_coords] > 0)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, mesh.mesh->id_tex_coords);
+			glBindBuffer(GL_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_tex_coords]);
 			glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
 		}
 
-		if (mesh.material)
+		if (rMesh.material)
 		{
-			if (mesh.material->texture_id)
+			if (rMesh.material->texture_id)
 			{
-				glBindTexture(GL_TEXTURE_2D, mesh.material->texture_id);
+				glBindTexture(GL_TEXTURE_2D, rMesh.material->texture_id);
 			}
-			glColor4f(mesh.material->color.r, mesh.material->color.g, mesh.material->color.b, mesh.material->color.a);
+			glColor4f(rMesh.material->color.r, rMesh.material->color.g, rMesh.material->color.b, rMesh.material->color.a);
 		}
 
-		glDrawElements(GL_TRIANGLES, mesh.mesh->num_indices, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
 
 		//Back to default OpenGL state --------------
-		if (mesh.material && mesh.material->texture_id)
+		if (rMesh.material && rMesh.material->texture_id)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glColor4f(255, 255, 255, 1.0f);
 		}
 
-		if (mesh.mesh->num_tex_coords > 0)
+		if (resMesh->buffersSize[R_Mesh::b_tex_coords] > 0)
 		{
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
@@ -395,28 +398,28 @@ void M_Renderer3D::DrawAllBox()
 }
 
 //Component buffers management -----------------
-void M_Renderer3D::LoadBuffers(C_Mesh* mesh)
+void M_Renderer3D::LoadBuffers(R_Mesh* mesh)
 {
-	glGenBuffers(1, (GLuint*)&mesh->id_vertices);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_vertices]);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_vertices]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->buffersSize[R_Mesh::b_vertices] * 3, mesh->vertices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, (GLuint*)&mesh->id_indices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+	glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_indices]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_indices]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices], mesh->indices, GL_STATIC_DRAW);
 
-	if (mesh->num_normals > 0)
+	if (mesh->buffersSize[R_Mesh::b_normals] > 0)
 	{
-		glGenBuffers(1, (GLuint*)&mesh->id_normals);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_normals]);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_normals]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->buffersSize[R_Mesh::b_normals] * 3, mesh->normals, GL_STATIC_DRAW);
 	}
 
-	if (mesh->num_tex_coords > 0)
+	if (mesh->buffersSize[R_Mesh::b_tex_coords] > 0)
 	{
-		glGenBuffers(1, (GLuint*)&mesh->id_tex_coords);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_tex_coords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_tex_coords * 2, mesh->tex_coords, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_tex_coords]);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_tex_coords]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->buffersSize[R_Mesh::b_tex_coords] * 2, mesh->tex_coords, GL_STATIC_DRAW);
 	}
 }
 
@@ -425,7 +428,7 @@ void M_Renderer3D::LoadBuffers(C_Material* material)
 
 }
 
-void M_Renderer3D::ReleaseBuffers(C_Mesh* mesh)
+void M_Renderer3D::ReleaseBuffers(R_Mesh* mesh)
 {
 
 }

@@ -19,15 +19,11 @@ class M_Meshes : public Module
 		bool Init();
 		bool CleanUp();
 
-		//FBX conversion
-		C_Mesh* ImportMesh(const aiMesh* mesh, const char* file);
 
-		//Own file format conversion
-		void	SaveMesh(const C_Mesh& mesh, const char* path);
-		C_Mesh* LoadMesh(const char* path);
+		R_Mesh*	ImportMeshResource(const aiMesh* mesh, unsigned long long ID);
 
-		R_Mesh*	ImportMeshResource(const aiMesh* mesh);
-		void	SaveMeshResource(const R_Mesh*, const char* path);
+		bool	SaveMeshResource(const R_Mesh*);
+		R_Mesh* LoadMeshResource(unsigned long long ID);
 
 	private:
 		std::vector<C_Mesh*> meshes;

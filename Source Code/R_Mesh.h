@@ -3,33 +3,37 @@
 
 #include "Resource.h"
 #include "Globals.h"
+#include "MathGeoLib\src\Geometry\AABB.h"
 
 class R_Mesh : public Resource
 {
 public:
+
+	enum Buffers
+	{
+		b_indices,
+		b_vertices,
+		b_normals,
+		b_tex_coords,
+		max_buffer_type, //Warning: this needs to be the last element
+	};
+
 	R_Mesh();
 	~R_Mesh();
 
+	void CreateAABB();
+
 public:
-	//Vertices data
-	uint	id_vertices = 0;
-	uint	num_vertices = 0;
+
+	uint buffers[max_buffer_type];
+	uint buffersSize[max_buffer_type];
+
 	uint*	indices = nullptr;
-
-	//Indices data
-	uint	id_indices = 0;
-	uint	num_indices = 0;
 	float*	vertices = nullptr;
-
-	//Normals data
-	uint	id_normals = 0;
-	uint	num_normals = 0;
 	float*	normals = nullptr;
-
-	//Texture coords
-	uint	id_tex_coords = 0;
-	uint	num_tex_coords = 0;
 	float*	tex_coords = nullptr;
+
+	AABB aabb;
 };
 
 //hashet string

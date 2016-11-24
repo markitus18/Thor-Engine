@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #include "C_Camera.h"
 #include "C_Transform.h"
+#include "R_Mesh.h"
 
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -389,25 +390,30 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 		const C_Mesh* mesh = it->second->GetComponent<C_Mesh>();
 		if (mesh)
 		{
-			LineSegment local = segment;
-			local.Transform(it->second->GetComponent<C_Transform>()->GetGlobalTransform().Inverted());
-			for (uint v = 0; v < mesh->num_indices; v += 3)
+			const R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
+
+			if (rMesh)
 			{
-				uint indexA = mesh->indices[v] * 3;
-				vec a(&mesh->vertices[indexA]);
-
-				uint indexB = mesh->indices[v + 1] * 3;
-				vec b(&mesh->vertices[indexB]);
-
-				uint indexC = mesh->indices[v + 2] * 3;
-				vec c(&mesh->vertices[indexC]);
-
-				Triangle triangle(a, b, c);
-
-				if (local.Intersects(triangle, nullptr, nullptr))
+				LineSegment local = segment;
+				local.Transform(it->second->GetComponent<C_Transform>()->GetGlobalTransform().Inverted());
+				for (uint v = 0; v < rMesh->buffersSize[R_Mesh::b_indices]; v += 3)
 				{
-					toSelect = it->second;
-					break;
+					uint indexA = rMesh->indices[v] * 3;
+					vec a(&rMesh->vertices[indexA]);
+
+					uint indexB = rMesh->indices[v + 1] * 3;
+					vec b(&rMesh->vertices[indexB]);
+
+					uint indexC = rMesh->indices[v + 2] * 3;
+					vec c(&rMesh->vertices[indexC]);
+
+					Triangle triangle(a, b, c);
+
+					if (local.Intersects(triangle, nullptr, nullptr))
+					{
+						toSelect = it->second;
+						break;
+					}
 				}
 			}
 		}

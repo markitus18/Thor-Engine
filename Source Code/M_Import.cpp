@@ -8,6 +8,11 @@
 #include "C_Mesh.h"
 #include "C_Transform.h"
 
+#include "M_Resources.h"
+
+#include "Resource.h"
+#include "R_Mesh.h"
+
 #include "M_Materials.h"
 #include "M_Meshes.h"
 #include "M_FileSystem.h"
@@ -129,7 +134,7 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 
 		if (meshPath != "")
 		{
-			C_Mesh* mesh = App->moduleMeshes->LoadMesh(meshPath.c_str());
+			C_Mesh* mesh = nullptr;// App->moduleMeshes->LoadMesh(meshPath.c_str());
 			if (mesh != nullptr)
 			{
 				gameObject->AddComponent(mesh);
@@ -189,7 +194,11 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	std::string meshLibFile = "";
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
 	if (mesh)
-		meshLibFile = mesh->libFile;
+	{
+		const R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
+		meshLibFile = std::to_string(rMesh->GetID());
+	}
+
 	config.SetString("Mesh", meshLibFile.c_str());
 
 	std::string matLibFile = "";
@@ -314,8 +323,17 @@ GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObje
 			child = gameObject;
 		}
 
-		C_Mesh* mesh = App->moduleMeshes->ImportMesh(newMesh, node_name.c_str());
-		child->AddComponent(mesh);
+		//C_Mesh* mesh = App->moduleMeshes->ImportMesh(newMesh, node_name.c_str());
+
+		R_Mesh* rMesh= App->moduleResources->ImportRMesh(newMesh);
+		if (rMesh != nullptr)
+		{
+			C_Mesh* cMesh = new C_Mesh;
+			cMesh->SetResource(rMesh);
+			child->AddComponent(cMesh);
+		}
+
+		//child->AddComponent(mesh);
 
 
 		//Loading mesh materials ---------

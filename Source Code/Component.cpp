@@ -1,5 +1,5 @@
 #include "Component.h"
-
+#include "Resource.h"
 
 Component::Component(Type type, const GameObject* gameObject) : type(type)
 {
@@ -39,4 +39,36 @@ void Component::Save()
 void Component::Load()
 {
 
+}
+
+void Component::SetResource(Resource* resource)
+{
+	if (this->resource)
+	{
+		this->resource->instances--;
+	}
+	if (resource)
+	{
+		this->resource = resource;
+		resourceID = resource->GetID();
+		resource->instances++;
+	}
+
+}
+
+void Component::SetResource(unsigned long long id)
+{
+	//TODO: find resource by ID
+	resourceID = id;
+}
+
+
+Resource* Component::GetResource()
+{
+	return resource;
+}
+
+const Resource* Component::GetResource() const
+{
+	return resource;
 }

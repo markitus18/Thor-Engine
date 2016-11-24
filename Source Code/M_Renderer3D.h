@@ -9,6 +9,9 @@
 class C_Camera;
 class C_Mesh;
 class C_Material;
+
+class R_Mesh;
+
 class Config;
 
 struct RenderMesh
@@ -68,10 +71,10 @@ public:
 	void DrawAllBox();
 
 	//Component buffers management -----------------
-	void LoadBuffers(C_Mesh* mesh);
+	void LoadBuffers(R_Mesh* mesh);
 	void LoadBuffers(C_Material* material);
 
-	void ReleaseBuffers(C_Mesh* mesh);
+	void ReleaseBuffers(R_Mesh* mesh);
 	void ReleaseBuffers(C_Material* material);
 	//----------------------------------------------
 

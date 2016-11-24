@@ -24,42 +24,25 @@ bool M_Resources::Init(Config& config)
 
 bool M_Resources::CleanUp()
 {
+	for (std::map<unsigned long long, Resource*>::iterator it = resources.begin(); it != resources.end(); )
+	{
+		RELEASE(it->second);
+		it = resources.erase(it);
+	}
+
 	return true;
 }
 
-unsigned long long M_Resources::ImportRMesh(aiMesh* mesh)
+R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh)
 {
-	R_Mesh* resource = App->moduleMeshes->ImportMeshResource(mesh);
-	resource->ID = nextID;
-	std::string path(RequestNewPathID(Resource::Type::MESH));
-
-	if (path != "")
+	unsigned long long ret;
+	R_Mesh* resource = App->moduleMeshes->ImportMeshResource(mesh, nextID);
+	if (resource)
 	{
-		App->moduleMeshes->SaveMeshResource(resource, path.c_str());
+		resources[nextID] = resource;
+		ret = nextID;
+		nextID++;
 	}
-	return path != "" ? resource->ID : 0;
-}
 
-std::string M_Resources::RequestNewPathID(Resource::Type type)
-{
-	std::string path = "";
-	switch (type)
-	{
-		case(Resource::Type::MESH):
-		{
-			path.append("/Library/Meshes/").append(std::to_string(nextID++)).append(".meshResource");
-			break;
-		}
-		case (Resource::Type::TEXTURE):
-		{
-			path.append("/Library/Textures/").append(std::to_string(nextID++)).append(".textureResource");
-			break;
-		}
-		case (Resource::Type::BONE):
-		{
-			path.append("/Library/Bones/").append(std::to_string(nextID++)).append(".boneResource");
-			break;
-		}
-	}
-	return path;
+	return resource;
 }

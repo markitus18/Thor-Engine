@@ -2,10 +2,13 @@
 #define __RESOURCE_H__
 
 #include <string>
+#include "Globals.h"
 
 class Resource
 {
 friend class M_Resources;
+friend class M_Meshes;
+friend class M_Materials;
 
 public:
 	enum Type
@@ -19,6 +22,12 @@ public:
 	~Resource();
 
 	Type GetType() const;
+	unsigned long long GetID() const;
+
+	const char* GetResourceFile() const;
+
+public:
+	uint instances;
 
 protected:
 	unsigned long long ID;

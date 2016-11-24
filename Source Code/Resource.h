@@ -26,6 +26,9 @@ public:
 
 	const char* GetResourceFile() const;
 
+	virtual void LoadOnMemory() {};
+	virtual void FreeMemory() {};
+
 public:
 	uint instances;
 

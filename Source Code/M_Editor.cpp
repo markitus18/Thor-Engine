@@ -374,12 +374,12 @@ void M_Editor::StopTimer(uint index)
 	panelConfiguration->StopTimer(index);
 }
 
-void M_Editor::SelectGameObject(GameObject* gameObject, bool selectSingle)
+void M_Editor::SelectGameObject(GameObject* gameObject, bool selectSingle, bool openTree)
 {
 	if (selectSingle)
-		panelHierarchy->SelectSingle(gameObject);
+		panelHierarchy->SelectSingle(gameObject, openTree);
 	else
-		panelHierarchy->AddSelect(gameObject);
+		panelHierarchy->AddSelect(gameObject, openTree);
 }
 
 void M_Editor::LoadScene(Config& root)

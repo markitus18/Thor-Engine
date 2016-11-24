@@ -16,6 +16,8 @@
 #include "M_Materials.h"
 #include "M_Meshes.h"
 #include "M_FileSystem.h"
+#include "M_Editor.h"
+
 #include "Config.h"
 
 #include "Assimp/include/cimport.h"
@@ -35,7 +37,7 @@
 #include "MathGeoLib\src\MathGeoLib.h"
 #include "M_Input.h"
 
-#include <unordered_map>
+#include <map>
 
 M_Import::M_Import(bool start_enabled) : Module("Importer", start_enabled)
 {}
@@ -93,7 +95,7 @@ GameObject* M_Import::LoadGameObject(const char* path)
 void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& roots)
 {
 	std::vector<GameObject*> not_parented_GameObjects;
-	std::unordered_map<unsigned long long, GameObject*> createdGameObjects;
+	std::map<unsigned long long, GameObject*> createdGameObjects;
 
 	GameObject* ret = nullptr;
 
@@ -109,13 +111,13 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 
 		//Parent setup
 		GameObject* parent = nullptr;
-		std::unordered_map<unsigned long long, GameObject*>::iterator it = createdGameObjects.find(gameObject_node.GetNumber("ParentUID"));
+		std::map<unsigned long long, GameObject*>::iterator it = createdGameObjects.find(gameObject_node.GetNumber("ParentUID"));
 		if (it != createdGameObjects.end())
 			parent = it->second;
 
 		GameObject* gameObject = new GameObject(parent, gameObject_node.GetString("Name").c_str(), position, scale, rotation);
 		gameObject->uid = gameObject_node.GetNumber("UID");
-		createdGameObjects.insert(std::pair<uint, GameObject*>(gameObject->uid, gameObject));
+		createdGameObjects[gameObject->uid] = gameObject;
 
 		if (gameObject_node.GetNumber("ParentUID") == 0)
 		{
@@ -127,16 +129,24 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 
 		gameObject->active = gameObject_node.GetBool("Active");
 		gameObject->isStatic = gameObject_node.GetBool("Static");
+		bool selected = gameObject_node.GetBool("Selected", false);
+		if (selected)
+		{
+			App->moduleEditor->SelectGameObject(gameObject, false);
+		}
+
 		gameObject->beenSelected = gameObject->hierarchyOpen = gameObject_node.GetBool("OpenInHierarchy", false);
 
 		//Mesh load
-		std::string meshPath = gameObject_node.GetString("Mesh");
+		unsigned long long meshID = gameObject_node.GetNumber("MeshID");
 
-		if (meshPath != "")
+		if (meshID > 0)
 		{
-			C_Mesh* mesh = nullptr;// App->moduleMeshes->LoadMesh(meshPath.c_str());
-			if (mesh != nullptr)
+			R_Mesh* rMesh = (R_Mesh*)App->moduleResources->GetResource(meshID, Resource::MESH);
+			if (rMesh)
 			{
+				C_Mesh* mesh = new C_Mesh;
+				mesh->SetResource(rMesh);
 				gameObject->AddComponent(mesh);
 			}
 		}
@@ -184,6 +194,7 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 
 	config.SetBool("Active", gameObject->active);
 	config.SetBool("Static", gameObject->isStatic);
+	config.SetBool("Selected", gameObject->IsSelected());
 	config.SetBool("OpenInHierarchy", gameObject->hierarchyOpen);
 
 	//A thought: each component type will have a folder, same number as their enumeration
@@ -210,7 +221,6 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 
 void M_Import::ImportFile(char* path)
 {
-	LOG("Entering mesh load");
 	const aiScene* file = aiImportFileEx(path, aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
 	if (file)
 	{
@@ -238,6 +248,7 @@ void M_Import::ImportFile(char* path)
 
 		aiReleaseImport(file);
 		RELEASE(rootNode);
+		App->moduleResources->FinishImporting();
 	}
 	else
 	{
@@ -323,18 +334,13 @@ GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObje
 			child = gameObject;
 		}
 
-		//C_Mesh* mesh = App->moduleMeshes->ImportMesh(newMesh, node_name.c_str());
-
-		R_Mesh* rMesh= App->moduleResources->ImportRMesh(newMesh);
+		R_Mesh* rMesh= App->moduleResources->ImportRMesh(newMesh, path);
 		if (rMesh != nullptr)
 		{
 			C_Mesh* cMesh = new C_Mesh;
 			cMesh->SetResource(rMesh);
 			child->AddComponent(cMesh);
 		}
-
-		//child->AddComponent(mesh);
-
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];

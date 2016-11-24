@@ -33,7 +33,7 @@ bool M_Meshes::CleanUp()
 	return true;
 }
 
-R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID)
+R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, const char* file)
 {
 	R_Mesh* resMesh = new R_Mesh;
 
@@ -89,6 +89,7 @@ R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID)
 	std::string full_path("/Library/Meshes/");
 	full_path.append(std::to_string(ID));
 	resMesh->resource_file = full_path;
+	resMesh->original_file = file;
 
 	SaveMeshResource(resMesh);
 	//resMesh->libfile = file;
@@ -104,14 +105,20 @@ R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID)
 bool M_Meshes::SaveMeshResource(const R_Mesh* mesh)
 {
 
-	uint size = sizeof(mesh->buffersSize) + (sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices]) + (sizeof(float) * mesh->buffersSize[R_Mesh::b_vertices] * 3)
+	uint size = sizeof(uint) + mesh->original_file.size() + sizeof(mesh->buffersSize) + (sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices]) + (sizeof(float) * mesh->buffersSize[R_Mesh::b_vertices] * 3)
 	+ (sizeof(float) * mesh->buffersSize[R_Mesh::b_normals] * 3) + (sizeof(float) * mesh->buffersSize[R_Mesh::b_tex_coords] * 2);
 
 	// Allocate buffer size
 	char* data = new char[size];
 	char* cursor = data;
 
-	uint size_after_alloc = sizeof(data);
+	// Store source file: Size + String
+	uint fileSize = mesh->original_file.size();
+	memcpy(cursor, &fileSize, sizeof(uint));
+	cursor += sizeof(uint);
+
+	memcpy(cursor, mesh->original_file.c_str(), mesh->original_file.size());
+	cursor += mesh->original_file.size();
 
 	// First store ranges
 	uint bytes = sizeof(mesh->buffersSize);
@@ -165,7 +172,23 @@ R_Mesh* M_Meshes::LoadMeshResource(unsigned long long ID)
 
 		R_Mesh* mesh = new R_Mesh();
 
-		uint bytes = sizeof(mesh->buffersSize);
+		uint stringSize = 0;
+		uint bytes = sizeof(uint);
+		memcpy(&stringSize, cursor, bytes);
+		cursor += bytes;
+
+		if (stringSize > 0)
+		{
+			char* string = new char[stringSize + 1];
+			bytes = sizeof(char) * stringSize;
+			memcpy(string, cursor, bytes);
+			cursor += bytes;
+			string[stringSize] = '\0';
+			mesh->original_file = string;
+			RELEASE_ARRAY(string);
+		}
+		
+		bytes = sizeof(mesh->buffersSize);
 		memcpy(mesh->buffersSize, cursor, bytes);
 		cursor += bytes;
 
@@ -196,7 +219,7 @@ R_Mesh* M_Meshes::LoadMeshResource(unsigned long long ID)
 			cursor += bytes;
 		}
 
-
+		mesh->ID = ID;
 		mesh->CreateAABB();
 		//mesh->LoadBuffers();
 		mesh->resource_file = full_path;

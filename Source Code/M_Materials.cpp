@@ -115,9 +115,6 @@ void M_Materials::SaveMaterial(const C_Material* material, const char* path)
 	{
 		memcpy(cursor, material->texture_path.c_str(), bytes);
 		cursor += bytes;
-		
-		//memcpy(cursor, "/0", 1);
-		//cursor += 1;
 	}
 
 	float color[4] { material->color.r, material->color.g, material->color.b, material->color.a };
@@ -149,7 +146,6 @@ C_Material* M_Materials::LoadMaterial(const char* path)
 
 		uint pathSize = 0;
 		uint bytes = sizeof(uint);
-		//Problem here, check pathSize
 		memcpy(&pathSize, cursor, bytes);
 		cursor += bytes;
 

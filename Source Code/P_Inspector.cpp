@@ -9,6 +9,7 @@
 #include "C_Camera.h"
 #include "C_Transform.h"
 #include "C_Material.h"
+#include "R_Mesh.h"
 
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -108,16 +109,21 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 			gameObject->GetComponents(materials);
 			if (mesh)
 			{
-				if (ImGui::CollapsingHeader("Mesh", transform_header_flags))
+				R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
+				if (rMesh)
 				{
-					ImGui::Text("Materials");
-					ImGui::Separator();
-					ImGui::Text("Size: %i", materials.size());
-					for (uint i = 0; i < materials.size(); i++)
+					if (ImGui::CollapsingHeader("Mesh", transform_header_flags))
 					{
-						ImGui::Text("Element %i: %s", i, materials[i]->libFile.c_str());
+						ImGui::Text("Materials");
+						ImGui::Separator();
+						ImGui::Text("Size: %i", materials.size());
+						for (uint i = 0; i < materials.size(); i++)
+						{
+							ImGui::Text("Element %i: %s", i, materials[i]->libFile.c_str());
+						}
 					}
 				}
+
 
 				if (materials.size() > 0)
 				{

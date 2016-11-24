@@ -23,6 +23,9 @@ public:
 
 	void CreateAABB();
 
+	void LoadOnMemory();
+	void FreeMemory();
+
 public:
 
 	uint buffers[max_buffer_type];

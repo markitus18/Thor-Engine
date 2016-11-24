@@ -44,7 +44,7 @@ public:
 	//------------------------------------
 
 	//GameObject stuff -------------------
-	void SelectGameObject(GameObject* gameObject, bool selectSingle = true);
+	void SelectGameObject(GameObject* gameObject, bool selectSingle = true, bool openTree = true);
 	//------------------------------------
 
 	void LoadScene(Config& root);

@@ -20,8 +20,8 @@ public:
 	void UpdatePosition(int, int);
 
 	//GameObject selection methods
-	void SelectSingle(GameObject* gameObject);
-	void AddSelect(GameObject* gameObject);
+	void SelectSingle(GameObject* gameObject, bool openTree = true);
+	void AddSelect(GameObject* gameObject, bool openTree = true);
 	void UnselectSingle(GameObject* gameObject);
 	void UnselectAll();
 	

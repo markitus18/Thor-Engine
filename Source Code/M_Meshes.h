@@ -20,7 +20,7 @@ class M_Meshes : public Module
 		bool CleanUp();
 
 
-		R_Mesh*	ImportMeshResource(const aiMesh* mesh, unsigned long long ID);
+		R_Mesh*	ImportMeshResource(const aiMesh* mesh, unsigned long long ID, const char* file);
 
 		bool	SaveMeshResource(const R_Mesh*);
 		R_Mesh* LoadMeshResource(unsigned long long ID);

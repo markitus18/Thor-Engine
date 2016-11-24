@@ -136,7 +136,7 @@ void P_Hierarchy::UpdatePosition(int screen_width, int screen_height)
 
 }
 
-void P_Hierarchy::SelectSingle(GameObject* gameObject)
+void P_Hierarchy::SelectSingle(GameObject* gameObject, bool openTree)
 {
 	if (!selectedGameObjects.empty())
 	{
@@ -147,28 +147,37 @@ void P_Hierarchy::SelectSingle(GameObject* gameObject)
 		gameObject->Select();
 		selectedGameObjects.push_back(gameObject);
 
-		GameObject* it = gameObject->parent;
-		while (it != nullptr)
+		if (openTree)
 		{
-			it->beenSelected = true;
-			it = it->parent;
+			//Opening tree hierarchy node
+			GameObject* it = gameObject->parent;
+			while (it != nullptr)
+			{
+				it->beenSelected = true;
+				it = it->parent;
+			}
 		}
 	}
 }
 
-void P_Hierarchy::AddSelect(GameObject* gameObject)
+void P_Hierarchy::AddSelect(GameObject* gameObject, bool openTree)
 {
 	if (gameObject)
 	{
 		gameObject->Select();
 		selectedGameObjects.push_back(gameObject);
 
-		GameObject* it = gameObject->parent;
-		while (it != nullptr && it->name != "root")
+		if (openTree)
 		{
-			it->beenSelected = true;
-			it = it->parent;
+			//Opening tree hierarchy node
+			GameObject* it = gameObject->parent;
+			while (it != nullptr && it->name != "root")
+			{
+				it->beenSelected = true;
+				it = it->parent;
+			}
 		}
+
 	}
 
 }

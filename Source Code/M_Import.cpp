@@ -196,10 +196,10 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	if (mesh)
 	{
 		const R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
-		meshLibFile = std::to_string(rMesh->GetID());
+		config.SetNumber("MeshID", rMesh->GetID());
 	}
-
-	config.SetString("Mesh", meshLibFile.c_str());
+	else
+		config.SetNumber("MeshID", 0);
 
 	std::string matLibFile = "";
 	C_Material* mat = gameObject->GetComponent<C_Material>();

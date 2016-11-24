@@ -1,7 +1,7 @@
 {
     "GameObjects": [
         {
-            "UID": 1225639367,
+            "UID": 1554224967,
             "ParentUID": 0,
             "Name": "Street_environment_V01",
             "Translation": [
@@ -23,12 +23,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 2123140009,
-            "ParentUID": 1225639367,
+            "UID": 1437906118,
+            "ParentUID": 1554224967,
             "Name": "Sky001",
             "Translation": [
                 18.153732,
@@ -49,12 +49,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 1683659932,
-            "ParentUID": 1225639367,
+            "UID": 1364152726,
+            "ParentUID": 1554224967,
             "Name": "Dummy001",
             "Translation": [
                 0,
@@ -75,12 +75,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 1988221571,
-            "ParentUID": 1683659932,
+            "UID": 1212648271,
+            "ParentUID": 1364152726,
             "Name": "City_building_004",
             "Translation": [
                 -41.475891,
@@ -101,12 +101,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "1",
+            "MeshID": 1,
             "Material": "06 - Default"
         },
         {
-            "UID": 1620559912,
-            "ParentUID": 1683659932,
+            "UID": 1760660780,
+            "ParentUID": 1364152726,
             "Name": "City_building_001",
             "Translation": [
                 17.707165,
@@ -127,12 +127,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "2",
+            "MeshID": 2,
             "Material": "Building_dnt"
         },
         {
-            "UID": 505787266,
-            "ParentUID": 1683659932,
+            "UID": 597593620,
+            "ParentUID": 1364152726,
             "Name": "City_building_007",
             "Translation": [
                 16.010492,
@@ -153,12 +153,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "3",
+            "MeshID": 3,
             "Material": "building_16"
         },
         {
-            "UID": 1125886327,
-            "ParentUID": 1683659932,
+            "UID": 1864724689,
+            "ParentUID": 1364152726,
             "Name": "City_building_008",
             "Translation": [
                 40.979996,
@@ -179,12 +179,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "4",
+            "MeshID": 4,
             "Material": "building_025"
         },
         {
-            "UID": 31372920,
-            "ParentUID": 1683659932,
+            "UID": 21177131,
+            "ParentUID": 1364152726,
             "Name": "Line002",
             "Translation": [
                 -2.159772,
@@ -205,12 +205,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "5",
+            "MeshID": 5,
             "Material": "20 - Defaulta"
         },
         {
-            "UID": 223194321,
-            "ParentUID": 1683659932,
+            "UID": 1199255509,
+            "ParentUID": 1364152726,
             "Name": "Plane001",
             "Translation": [
                 -0.028603,
@@ -231,12 +231,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "6",
+            "MeshID": 6,
             "Material": "20 - Default"
         },
         {
-            "UID": 1967636296,
-            "ParentUID": 1683659932,
+            "UID": 1351080376,
+            "ParentUID": 1364152726,
             "Name": "City_building_010",
             "Translation": [
                 25.154011,
@@ -257,12 +257,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 824721686,
-            "ParentUID": 1967636296,
+            "UID": 1635635249,
+            "ParentUID": 1351080376,
             "Name": "No name",
             "Translation": [
                 0,
@@ -283,12 +283,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "7",
+            "MeshID": 7,
             "Material": "orig_orig_orig_17 - Default"
         },
         {
-            "UID": 678231167,
-            "ParentUID": 1967636296,
+            "UID": 2093804807,
+            "ParentUID": 1351080376,
             "Name": "No name",
             "Translation": [
                 0,
@@ -309,12 +309,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "8",
+            "MeshID": 8,
             "Material": "orig_orig_orig_17 - Default"
         },
         {
-            "UID": 261647471,
-            "ParentUID": 1683659932,
+            "UID": 1594509787,
+            "ParentUID": 1364152726,
             "Name": "City_building_011",
             "Translation": [
                 30.134541,
@@ -335,12 +335,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "9",
+            "MeshID": 9,
             "Material": "building_16"
         },
         {
-            "UID": 1202284637,
-            "ParentUID": 1683659932,
+            "UID": 1493716356,
+            "ParentUID": 1364152726,
             "Name": "City_building_013",
             "Translation": [
                 -42.288055,
@@ -361,12 +361,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "10",
+            "MeshID": 10,
             "Material": "3db _ building 06"
         },
         {
-            "UID": 1788603458,
-            "ParentUID": 1683659932,
+            "UID": 2130815101,
+            "ParentUID": 1364152726,
             "Name": "City_building_014",
             "Translation": [
                 -19.439707,
@@ -387,12 +387,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "11",
+            "MeshID": 11,
             "Material": "06 - Default"
         },
         {
-            "UID": 374594476,
-            "ParentUID": 1683659932,
+            "UID": 1307811961,
+            "ParentUID": 1364152726,
             "Name": "City_building_016",
             "Translation": [
                 34.270424,
@@ -413,12 +413,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 600604428,
-            "ParentUID": 374594476,
+            "UID": 17387628,
+            "ParentUID": 1307811961,
             "Name": "No name",
             "Translation": [
                 0,
@@ -439,12 +439,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "12",
+            "MeshID": 12,
             "Material": "orig_orig_orig_17 - Default"
         },
         {
-            "UID": 1026791051,
-            "ParentUID": 374594476,
+            "UID": 1510755727,
+            "ParentUID": 1307811961,
             "Name": "No name",
             "Translation": [
                 0,
@@ -465,12 +465,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "13",
+            "MeshID": 13,
             "Material": "orig_orig_orig_17 - Default"
         },
         {
-            "UID": 784120335,
-            "ParentUID": 1683659932,
+            "UID": 870406701,
+            "ParentUID": 1364152726,
             "Name": "City_building_017",
             "Translation": [
                 44.260082,
@@ -491,12 +491,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 60052648,
-            "ParentUID": 784120335,
+            "UID": 891379275,
+            "ParentUID": 870406701,
             "Name": "No name",
             "Translation": [
                 0,
@@ -517,12 +517,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "14",
+            "MeshID": 14,
             "Material": "orig_orig_orig_17 - Default"
         },
         {
-            "UID": 1922229346,
-            "ParentUID": 784120335,
+            "UID": 734073769,
+            "ParentUID": 870406701,
             "Name": "No name",
             "Translation": [
                 0,
@@ -543,12 +543,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "15",
+            "MeshID": 15,
             "Material": "orig_orig_orig_17 - Default"
         },
         {
-            "UID": 643384120,
-            "ParentUID": 1683659932,
+            "UID": 1134040243,
+            "ParentUID": 1364152726,
             "Name": "City_building_022",
             "Translation": [
                 -20.831324,
@@ -569,12 +569,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "16",
+            "MeshID": 16,
             "Material": "09 - Default"
         },
         {
-            "UID": 831909394,
-            "ParentUID": 1683659932,
+            "UID": 779475948,
+            "ParentUID": 1364152726,
             "Name": "City_building_023",
             "Translation": [
                 42.130642,
@@ -595,12 +595,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "17",
+            "MeshID": 17,
             "Material": "building_16"
         },
         {
-            "UID": 729960084,
-            "ParentUID": 1683659932,
+            "UID": 983216018,
+            "ParentUID": 1364152726,
             "Name": "City_building_024",
             "Translation": [
                 -20.572771,
@@ -621,12 +621,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "18",
+            "MeshID": 18,
             "Material": "building_025"
         },
         {
-            "UID": 350501909,
-            "ParentUID": 1683659932,
+            "UID": 1441141053,
+            "ParentUID": 1364152726,
             "Name": "City_building_026",
             "Translation": [
                 31.511889,
@@ -647,12 +647,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "19",
+            "MeshID": 19,
             "Material": "09 - Default"
         },
         {
-            "UID": 436725628,
-            "ParentUID": 1683659932,
+            "UID": 1097779426,
+            "ParentUID": 1364152726,
             "Name": "City_building_028",
             "Translation": [
                 13.387990,
@@ -673,12 +673,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "20",
+            "MeshID": 20,
             "Material": "Material #0"
         },
         {
-            "UID": 1201472762,
-            "ParentUID": 1683659932,
+            "UID": 1705904463,
+            "ParentUID": 1364152726,
             "Name": "Object010",
             "Translation": [
                 -2.503353,
@@ -699,12 +699,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "21",
+            "MeshID": 21,
             "Material": "21 - Default"
         },
         {
-            "UID": 1099628905,
-            "ParentUID": 1683659932,
+            "UID": 191521188,
+            "ParentUID": 1364152726,
             "Name": "City_building_030",
             "Translation": [
                 -42.807240,
@@ -725,12 +725,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "22",
+            "MeshID": 22,
             "Material": "Material #0"
         },
         {
-            "UID": 1619463102,
-            "ParentUID": 1683659932,
+            "UID": 170665525,
+            "ParentUID": 1364152726,
             "Name": "City_building_031",
             "Translation": [
                 -34.679482,
@@ -751,12 +751,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "23",
+            "MeshID": 23,
             "Material": "Material #0"
         },
         {
-            "UID": 1454189548,
-            "ParentUID": 1683659932,
+            "UID": 2024980821,
+            "ParentUID": 1364152726,
             "Name": "City_building_032",
             "Translation": [
                 -29.478403,
@@ -777,12 +777,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "24",
+            "MeshID": 24,
             "Material": "06 - Default"
         },
         {
-            "UID": 1161467140,
-            "ParentUID": 1683659932,
+            "UID": 1035796938,
+            "ParentUID": 1364152726,
             "Name": "City_building_033",
             "Translation": [
                 -32.361496,
@@ -803,12 +803,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "25",
+            "MeshID": 25,
             "Material": "3db _ building 06"
         },
         {
-            "UID": 1154509802,
-            "ParentUID": 1683659932,
+            "UID": 717754238,
+            "ParentUID": 1364152726,
             "Name": "City_building_034",
             "Translation": [
                 16.049517,
@@ -829,12 +829,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "26",
+            "MeshID": 26,
             "Material": "09 - Default"
         },
         {
-            "UID": 2108985126,
-            "ParentUID": 1683659932,
+            "UID": 970821755,
+            "ParentUID": 1364152726,
             "Name": "City_building_035",
             "Translation": [
                 13.387990,
@@ -855,12 +855,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "27",
+            "MeshID": 27,
             "Material": "Material #0"
         },
         {
-            "UID": 1901544562,
-            "ParentUID": 1683659932,
+            "UID": 1828582824,
+            "ParentUID": 1364152726,
             "Name": "City_building_036",
             "Translation": [
                 -31.216331,
@@ -881,12 +881,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "28",
+            "MeshID": 28,
             "Material": "3db _ building 06"
         },
         {
-            "UID": 1509564393,
-            "ParentUID": 1683659932,
+            "UID": 639228250,
+            "ParentUID": 1364152726,
             "Name": "City_building_037",
             "Translation": [
                 -20.317694,
@@ -907,12 +907,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "29",
+            "MeshID": 29,
             "Material": "09 - Default"
         },
         {
-            "UID": 1680404520,
-            "ParentUID": 1683659932,
+            "UID": 1406376469,
+            "ParentUID": 1364152726,
             "Name": "City_building_038",
             "Translation": [
                 -41.649002,
@@ -933,12 +933,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "30",
+            "MeshID": 30,
             "Material": "09 - Default"
         },
         {
-            "UID": 828965654,
-            "ParentUID": 1683659932,
+            "UID": 966746931,
+            "ParentUID": 1364152726,
             "Name": "City_building_039",
             "Translation": [
                 -42.807240,
@@ -959,12 +959,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "31",
+            "MeshID": 31,
             "Material": "Material #0"
         },
         {
-            "UID": 1942267656,
-            "ParentUID": 1683659932,
+            "UID": 1603102524,
+            "ParentUID": 1364152726,
             "Name": "City_building_040",
             "Translation": [
                 -34.679482,
@@ -985,12 +985,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "32",
+            "MeshID": 32,
             "Material": "Material #0"
         },
         {
-            "UID": 2013677727,
-            "ParentUID": 1683659932,
+            "UID": 580721520,
+            "ParentUID": 1364152726,
             "Name": "City_building_041",
             "Translation": [
                 30.695278,
@@ -1011,12 +1011,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "33",
+            "MeshID": 33,
             "Material": "Building_dnt"
         },
         {
-            "UID": 82104366,
-            "ParentUID": 1225639367,
+            "UID": 1885805498,
+            "ParentUID": 1554224967,
             "Name": "Camera001",
             "Translation": [
                 -78.312431,
@@ -1037,12 +1037,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 1734080619,
-            "ParentUID": 1225639367,
+            "UID": 956849619,
+            "ParentUID": 1554224967,
             "Name": "Camera001.Target",
             "Translation": [
                 -28.132622,
@@ -1063,12 +1063,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 1191108353,
-            "ParentUID": 1225639367,
+            "UID": 1884594459,
+            "ParentUID": 1554224967,
             "Name": "Spot001",
             "Translation": [
                 -66.721268,
@@ -1089,12 +1089,12 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         },
         {
-            "UID": 1073615308,
-            "ParentUID": 1225639367,
+            "UID": 394965633,
+            "ParentUID": 1554224967,
             "Name": "Spot001.Target",
             "Translation": [
                 28.890945,
@@ -1115,7 +1115,7 @@
             "Active": true,
             "Static": false,
             "OpenInHierarchy": false,
-            "Mesh": "",
+            "MeshID": 0,
             "Material": ""
         }
     ]

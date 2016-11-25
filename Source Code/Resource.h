@@ -15,6 +15,7 @@ public:
 	{
 		MESH,
 		TEXTURE,
+		MATERIAL,
 		BONE,
 	};
 

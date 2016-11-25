@@ -7,7 +7,11 @@
 #include <vector>
 
 struct aiMesh;
+struct aiMaterial;
+
 class R_Mesh;
+class R_Texture;
+class R_Material;
 
 class M_Resources : public Module
 {
@@ -19,6 +23,8 @@ public:
 	bool CleanUp();
 
 	R_Mesh* ImportRMesh(const aiMesh* from, const char* source_file);
+	R_Texture* ImportRTexture(const char* buffer, const char* path, uint size);
+	R_Material* ImportRMaterial(const aiMaterial* mat, const char* source_file);
 
 	Resource* GetResource(unsigned long long ID, Resource::Type type);
 
@@ -28,7 +34,7 @@ private:
 	std::map<unsigned long long, Resource*> resources;
 	std::vector<Resource*> importingResources;
 
-	unsigned long long nextID = 1;
+	unsigned long long nextID = 0;
 };
 
 #endif

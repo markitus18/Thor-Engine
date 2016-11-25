@@ -195,7 +195,9 @@
     <ClInclude Include="Source Code\Primitive.h" />
     <ClInclude Include="Source Code\Quadtree.h" />
     <ClInclude Include="Source Code\Resource.h" />
+    <ClInclude Include="Source Code\R_Material.h" />
     <ClInclude Include="Source Code\R_Mesh.h" />
+    <ClInclude Include="Source Code\R_Texture.h" />
     <ClInclude Include="Source Code\Timer.h" />
     <ClInclude Include="Source Code\P_Console.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
@@ -280,7 +282,9 @@
     <ClCompile Include="Source Code\Primitive.cpp" />
     <ClCompile Include="Source Code\Quadtree.cpp" />
     <ClCompile Include="Source Code\Resource.cpp" />
+    <ClCompile Include="Source Code\R_Material.cpp" />
     <ClCompile Include="Source Code\R_Mesh.cpp" />
+    <ClCompile Include="Source Code\R_Texture.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
     <ClCompile Include="Source Code\P_Console.cpp" />
   </ItemGroup>

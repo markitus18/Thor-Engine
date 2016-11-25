@@ -12,6 +12,7 @@
 
 #include "Resource.h"
 #include "R_Mesh.h"
+#include "R_Material.h"
 
 #include "M_Materials.h"
 #include "M_Meshes.h"
@@ -58,6 +59,7 @@ bool M_Import::Init(Config& config)
 
 	return true;
 }
+
 update_status M_Import::Update(float dt)
 {
 	return UPDATE_CONTINUE;
@@ -151,17 +153,31 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 			}
 		}
 
-		//Material load
-		std::string matPath = gameObject_node.GetString("Material");
+		unsigned long long materialID = gameObject_node.GetNumber("MaterialID");
 
-		if (matPath != "")
+		if (materialID > 0)
 		{
-			C_Material* mat = App->moduleMaterials->LoadMaterial(matPath.c_str());
-			if (mat != nullptr)
+			R_Material* rMaterial = (R_Material*)App->moduleResources->GetResource(materialID, Resource::MATERIAL);
+			if (rMaterial)
 			{
-				gameObject->AddComponent(mat);
+				//TODO: create default constructor
+				C_Material* cMaterial = new C_Material(nullptr);
+				cMaterial->SetResource(rMaterial);
+				gameObject->AddComponent(cMaterial);
 			}
 		}
+
+		////Material load
+		//std::string matPath = gameObject_node.GetString("Material");
+
+		//if (matPath != "")
+		//{
+		//	C_Material* mat = App->moduleMaterials->LoadMaterial(matPath.c_str());
+		//	if (mat != nullptr)
+		//	{
+		//		gameObject->AddComponent(mat);
+		//	}
+		//}
 	}
 
 	//Security method if any game object is left without a parent
@@ -202,7 +218,6 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	//Each component will go indexed by a number also, not a file name: mesh path would be Library/02/02.mesh
 
 	//TMP for mesh storage
-	std::string meshLibFile = "";
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
 	if (mesh)
 	{
@@ -212,11 +227,14 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	else
 		config.SetNumber("MeshID", 0);
 
-	std::string matLibFile = "";
 	C_Material* mat = gameObject->GetComponent<C_Material>();
 	if (mat)
-		matLibFile = mat->libFile;
-	config.SetString("Material", matLibFile.c_str());
+	{
+		const R_Material* rMaterial = (R_Material*)mat->GetResource();
+		config.SetNumber("MaterialID", rMaterial->GetID());
+	}
+	else
+		config.SetNumber("MaterialID", 0);
 }
 
 void M_Import::ImportFile(char* path)
@@ -226,6 +244,7 @@ void M_Import::ImportFile(char* path)
 	{
 		LOG("Starting scene load %s", path);
 		std::vector<GameObject*> createdGameObjects;
+		//TODO CHANGE LOADFBX FNC NAME
 		GameObject* rootNode = LoadFBX(file, file->mRootNode, nullptr, path, createdGameObjects);
 		
 		Config config;
@@ -344,8 +363,15 @@ GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObje
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
-		C_Material* go_mat = App->moduleMaterials->ImportMaterial(material, path);
-		child->AddComponent(go_mat);
+		R_Material* rMaterial = App->moduleResources->ImportRMaterial(material, path);
+		if (rMaterial != nullptr)
+		{
+			C_Material* cMaterial = new C_Material(nullptr);
+			cMaterial->SetResource(rMaterial);
+			child->AddComponent(cMaterial);
+		}
+		//C_Material* go_mat = App->moduleMaterials->ImportMaterial(material, path);
+		//child->AddComponent(go_mat);
 		//--------------------------------
 
 	}

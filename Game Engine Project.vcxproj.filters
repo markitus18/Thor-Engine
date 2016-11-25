@@ -241,6 +241,12 @@
     <ClCompile Include="Source Code\M_Resources.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\R_Texture.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\R_Material.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -598,6 +604,12 @@
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\M_Resources.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Texture.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Material.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
   </ItemGroup>

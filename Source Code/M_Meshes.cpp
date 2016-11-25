@@ -160,7 +160,7 @@ bool M_Meshes::SaveMeshResource(const R_Mesh* mesh)
 
 R_Mesh* M_Meshes::LoadMeshResource(unsigned long long ID)
 {
-	std::string full_path = "Library/Meshes/";
+	std::string full_path = "/Library/Meshes/";
 	full_path.append(std::to_string(ID));// .append(".mesh");
 
 	char* buffer;

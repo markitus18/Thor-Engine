@@ -3,9 +3,13 @@
 
 //Loaders
 #include "M_Meshes.h"
+#include "M_Materials.h"
 
 //Resources
 #include "R_Mesh.h"
+#include "R_Texture.h"
+#include "R_Material.h"
+
 
 M_Resources::M_Resources(bool start_enabled) : Module("Resources", start_enabled)
 {
@@ -36,15 +40,35 @@ bool M_Resources::CleanUp()
 
 R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file)
 {
-	unsigned long long ret;
-	R_Mesh* resource = App->moduleMeshes->ImportMeshResource(mesh, nextID, source_file);
+	R_Mesh* resource = App->moduleMeshes->ImportMeshResource(mesh, ++nextID, source_file);
 	if (resource)
 	{
 		importingResources.push_back(resource);
-		ret = nextID;
-		nextID++;
+		//nextID++;
 	}
 
+	return resource;
+}
+
+R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_file, uint size)
+{
+	R_Texture* resource = App->moduleMaterials->ImportTextureResource(buffer, ++nextID, source_file, size);
+	if (resource)
+	{
+		importingResources.push_back(resource);
+		//nextID++;
+	}
+	return resource;
+}
+
+R_Material* M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file)
+{
+	R_Material* resource = App->moduleMaterials->ImportMaterialResource(mat, ++nextID, source_file);
+	if (resource)
+	{
+		importingResources.push_back(resource);
+		//nextID++;
+	}
 	return resource;
 }
 
@@ -71,7 +95,12 @@ Resource* M_Resources::GetResource(unsigned long long ID, Resource::Type type)
 			}
 			case (Resource::TEXTURE):
 			{
+				ret = App->moduleMaterials->LoadTextureResource(ID);
 				break;
+			}
+			case (Resource::MATERIAL):
+			{
+				ret = App->moduleMaterials->LoadMaterialResource(ID);
 			}
 			case (Resource::BONE):
 			{

@@ -11,6 +11,8 @@
 #include "OpenGL.h"
 #include "M_Import.h"
 #include "GameObject.h"
+#include "R_Material.h"
+#include "R_Texture.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -328,17 +330,21 @@ void M_Renderer3D::DrawMesh(const RenderMesh& rMesh)
 
 		if (rMesh.material)
 		{
-			if (rMesh.material->texture_id)
+			R_Material* mat = (R_Material*)rMesh.material->GetResource();
+			if (mat->texture)
 			{
-				glBindTexture(GL_TEXTURE_2D, rMesh.material->texture_id);
+				if (mat->texture->buffer)
+				{
+					glBindTexture(GL_TEXTURE_2D, mat->texture->buffer);
+				}
 			}
-			glColor4f(rMesh.material->color.r, rMesh.material->color.g, rMesh.material->color.b, rMesh.material->color.a);
+			glColor4f(mat->color.r, mat->color.g, mat->color.b, mat->color.a);
 		}
 
 		glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
 
 		//Back to default OpenGL state --------------
-		if (rMesh.material && rMesh.material->texture_id)
+		if (rMesh.material)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glColor4f(255, 255, 255, 1.0f);

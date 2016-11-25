@@ -5,6 +5,9 @@
 
 #include "C_Material.h"
 #include "Color.h"
+#include "R_Texture.h"
+#include "R_Material.h"
+#include "M_Resources.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -45,18 +48,7 @@ bool M_Materials::CleanUp()
 /*Search for a material with same texture path
 if a material is found, returns the material
 otherwise returns nullptr*/
-C_Material* M_Materials::Exists(const char* texture_path) const
-{
-	std::list<C_Material*>::const_iterator it = materials.begin();
-	while (it != materials.end())
-	{
-		if ((*it)->texture_path == texture_path)
-			return (*it);
-		it++;
-	}
-	return nullptr;
-}
-
+/*
 C_Material* M_Materials::ImportMaterial(const aiMaterial* from, const std::string& path)
 {
 	uint numTextures = from->GetTextureCount(aiTextureType_DIFFUSE);
@@ -201,10 +193,6 @@ void M_Materials::ImportTexture(const char* path)
 	
 	if (size > 0)
 	{
-		ILuint ImageName;
-		ilGenImages(1, &ImageName);
-		ilBindImage(ImageName);
-
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
 			ilEnable(IL_FILE_OVERWRITE);
@@ -230,8 +218,6 @@ void M_Materials::ImportTexture(const char* path)
 					RELEASE_ARRAY(saveBuffer);
 				}
 			}
-
-			ilDeleteImages(1, &ImageName);
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -262,4 +248,225 @@ uint M_Materials::LoadTexture(const char* path)
 	}
 
 	return ret;
+}
+*/
+
+R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned long long ID, const char* source_file)
+{
+	uint numTextures = mat->GetTextureCount(aiTextureType_DIFFUSE);
+	std::string texture_fileName = "", texture_extension = "";
+	std::string texture_file;
+	std::string texture_path;
+
+	if (numTextures > 0)
+	{
+		aiString aiStr;
+		aiReturn ret = mat->GetTexture(aiTextureType_DIFFUSE, 0, &aiStr);
+		App->fileSystem->SplitFilePath(aiStr.C_Str(), nullptr, &texture_fileName, &texture_extension);
+	}
+
+	texture_file = texture_fileName + std::string(".") + texture_extension;
+	texture_path = "/Assets/Textures/";
+	texture_path.append(texture_file);
+
+	aiColor4D color;
+	mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+
+	R_Material* material = new R_Material;
+
+	if (texture_file != "" && texture_file != ("."))
+	{
+		char* buffer = nullptr;
+		uint size = App->fileSystem->Load(texture_path.c_str(), &buffer);
+
+		if (size > 0)
+		{
+			R_Texture* rTex = App->moduleResources->ImportRTexture(buffer, texture_path.c_str(), size);
+			material->textureID = rTex->ID;
+			//SAVE MATERIAL RESOURCE
+		}
+
+		//std::string save_texture_path;
+		//App->fileSystem->SplitFilePath(texture_path.c_str(), nullptr, &save_texture_path);
+		//material->texture_path = save_texture_path;
+	}
+
+	material->color = Color(color.r, color.g, color.b, color.a);
+	material->ID = ID;
+
+	aiString matName;
+	mat->Get(AI_MATKEY_NAME, matName);
+
+	//BREAK HERE
+	std::string name = matName.C_Str();
+	material->name = name;// std::string(matName.C_Str());
+	//aiString mat_name;
+	//mat->Get(AI_MATKEY_NAME, material->name);
+	SaveMaterialResource(material);
+	//material = LoadMaterial(mat_name.C_Str());
+	return material;
+}
+
+bool M_Materials::SaveMaterialResource(const R_Material* mat)
+{
+	//Name size, name string, texture resource ID, color
+	uint size = sizeof(uint) + mat->name.size() + sizeof(unsigned long long) + sizeof(float) * 4;
+
+	char* data = new char[size];
+	char* cursor = data;
+
+	// Store mat name lenght
+	uint bytes = sizeof(uint);
+	uint path_size = mat->name.size();
+	memcpy(cursor, &path_size, bytes);
+	cursor += bytes;
+
+	// Store mat name
+	bytes = mat->name.size();
+
+	if (bytes)
+	{
+		memcpy(cursor, mat->name.c_str(), bytes);
+		cursor += bytes;
+	}
+
+	bytes = sizeof(unsigned long long);
+	memcpy(cursor, &mat->textureID, bytes);
+	cursor += bytes;
+
+	float color[4]{ mat->color.r, mat->color.g, mat->color.b, mat->color.a };
+	bytes = sizeof(float) * 4;
+	memcpy(cursor, color, bytes);
+	cursor += bytes;
+
+	std::string full_path = ("/Library/Materials/");
+	full_path.append(std::to_string(mat->ID));
+
+	uint ret = App->fileSystem->Save(full_path.c_str(), data, size);
+
+	RELEASE_ARRAY(data);
+
+	return ret > 0;
+}
+
+R_Material* M_Materials::LoadMaterialResource(unsigned long long ID)
+{
+	//TODO: MATERIAL SAVE FILE ORIGIN
+	std::string full_path = "/Library/Materials/";
+	full_path.append(std::to_string(ID));
+
+	char* buffer;
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	R_Material* material = nullptr;
+
+	if (size > 0)
+	{
+		char* cursor = buffer;
+
+		material = new R_Material;
+
+		uint nameSize = 0;
+		uint bytes = sizeof(uint);
+		memcpy(&nameSize, cursor, bytes);
+		cursor += bytes;
+
+		if (nameSize > 0)
+		{
+			char* name = new char[nameSize + 1];
+			bytes = sizeof(char) * nameSize;
+			memcpy(name, cursor, bytes);
+			cursor += bytes;
+
+			name[nameSize] = '\0';
+			material->name = name;
+			RELEASE_ARRAY(name);
+		}
+
+		bytes = sizeof(unsigned long long);
+		memcpy(&material->textureID, cursor, bytes);
+		cursor += bytes;
+
+		float color[4];
+		bytes = sizeof(float) * 4;
+		memcpy(color, cursor, bytes);
+		cursor += bytes;
+
+		material->color = Color(color[0], color[1], color[2], color[3]);
+
+		material->texture = (R_Texture*)App->moduleResources->GetResource(material->textureID, Resource::TEXTURE);
+		material->resource_file = full_path;
+		material->ID = ID;
+
+		RELEASE_ARRAY(buffer);
+	}
+	return material;
+}
+
+R_Texture* M_Materials::ImportTextureResource(const char* buffer, unsigned long long ID, const char* file, uint size)
+{
+	R_Texture* resTexture = nullptr;
+
+	std::string full_path("/Library/Textures/");
+	full_path.append(std::to_string(ID));
+
+	if (buffer != nullptr)
+	{
+		//PROBLEM HERE
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			ilEnable(IL_FILE_OVERWRITE);
+
+			ILuint saveBufferSize;
+			ILubyte* saveBuffer;
+
+			ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+			saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
+
+			if (saveBufferSize > 0)
+			{
+				saveBuffer = new ILubyte[saveBufferSize];
+				if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+				{
+					App->fileSystem->Save(full_path.c_str(), saveBuffer, saveBufferSize);
+					RELEASE_ARRAY(saveBuffer);
+
+					resTexture = new R_Texture;
+					resTexture->original_file = file;
+					resTexture->resource_file = full_path;
+					resTexture->ID = ID;
+				}
+			}
+		}
+	}
+
+	return resTexture;
+}
+
+R_Texture* M_Materials::LoadTextureResource(unsigned long long ID)
+{
+	//TODO: TEXTURE SHOULD LOAD ORIGINAL FILE
+	std::string full_path = "/Library/Textures/";
+	full_path.append(std::to_string(ID));// .append(".mesh");
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	R_Texture* rTexture = nullptr;
+	if (size > 0)
+	{
+		rTexture = new R_Texture;
+
+		ILuint ImageName;
+		ilGenImages(1, &ImageName);
+		ilBindImage(ImageName);
+
+		ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
+		rTexture->buffer = ilutGLBindTexImage();
+
+		ilDeleteImages(1, &ImageName);
+		RELEASE_ARRAY(buffer);
+	}
+
+	return rTexture;
 }

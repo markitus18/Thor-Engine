@@ -10,6 +10,8 @@
 #include "C_Transform.h"
 #include "C_Material.h"
 #include "R_Mesh.h"
+#include "R_Material.h"
+#include "R_Texture.h"
 
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -129,10 +131,11 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 				{
 					for (uint i = 0; i < materials.size(); i++)
 					{
-						if (ImGui::CollapsingHeader(materials[i]->libFile.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+						R_Material* rMat = (R_Material*)materials[i]->GetResource();
+						if (ImGui::CollapsingHeader("NothingYet", ImGuiTreeNodeFlags_DefaultOpen))
 						{
 							ImGui::Text(materials[i]->texture_file.c_str());
-							ImGui::Image((ImTextureID)materials[i]->texture_id, ImVec2(128, 128));
+							ImGui::Image((ImTextureID)rMat->texture->buffer, ImVec2(128, 128));
 						}
 					}
 				}

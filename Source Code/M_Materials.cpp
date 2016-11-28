@@ -258,6 +258,8 @@ R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned 
 	std::string texture_file;
 	std::string texture_path;
 
+	R_Material* material = new R_Material;
+
 	if (numTextures > 0)
 	{
 		aiString aiStr;
@@ -272,8 +274,6 @@ R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned 
 	aiColor4D color;
 	mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 
-	R_Material* material = new R_Material;
-
 	if (texture_file != "" && texture_file != ("."))
 	{
 		char* buffer = nullptr;
@@ -283,12 +283,7 @@ R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned 
 		{
 			R_Texture* rTex = App->moduleResources->ImportRTexture(buffer, texture_path.c_str(), size);
 			material->textureID = rTex->ID;
-			//SAVE MATERIAL RESOURCE
 		}
-
-		//std::string save_texture_path;
-		//App->fileSystem->SplitFilePath(texture_path.c_str(), nullptr, &save_texture_path);
-		//material->texture_path = save_texture_path;
 	}
 
 	material->color = Color(color.r, color.g, color.b, color.a);
@@ -297,13 +292,11 @@ R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned 
 	aiString matName;
 	mat->Get(AI_MATKEY_NAME, matName);
 
-	//BREAK HERE
-	std::string name = matName.C_Str();
-	material->name = name;// std::string(matName.C_Str());
-	//aiString mat_name;
-	//mat->Get(AI_MATKEY_NAME, material->name);
+	material->name = matName.C_Str();
+	material->original_file = source_file;
+
 	SaveMaterialResource(material);
-	//material = LoadMaterial(mat_name.C_Str());
+
 	return material;
 }
 

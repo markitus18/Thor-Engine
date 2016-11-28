@@ -3,6 +3,8 @@
 
 #include "Resource.h"
 #include "Color.h"
+#include "Globals.h"
+
 #include <string>
 
 class R_Texture;
@@ -14,9 +16,8 @@ public:
 	~R_Material();
 
 public:
-	std::string name;
 	R_Texture* texture;
-	unsigned long long textureID;
+	uint64 textureID;
 	Color color;
 };
 

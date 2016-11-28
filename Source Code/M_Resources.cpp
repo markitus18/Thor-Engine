@@ -38,13 +38,21 @@ bool M_Resources::CleanUp()
 	return true;
 }
 
-R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file)
+R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name)
 {
-	R_Mesh* resource = App->moduleMeshes->ImportMeshResource(mesh, ++nextID, source_file);
+	R_Mesh* resource = nullptr;
+
+	//First we find if that resource has already been imported
+	resource = (R_Mesh*)FindResourceInLibrary(source_file, name, Resource::MESH);
+	if (resource != nullptr)
+		return resource;
+
+	//If its not imported, import it
+	resource = App->moduleMeshes->ImportMeshResource(mesh, ++nextID, source_file, name);
 	if (resource)
 	{
+		existingResources[resource->ID] = GetMetaInfo(resource);
 		importingResources.push_back(resource);
-		//nextID++;
 	}
 
 	return resource;
@@ -52,31 +60,47 @@ R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file)
 
 R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_file, uint size)
 {
-	R_Texture* resource = App->moduleMaterials->ImportTextureResource(buffer, ++nextID, source_file, size);
+	R_Texture* resource = nullptr;
+
+	//First we find if that resource has already been imported
+	resource = (R_Texture*)FindResourceInLibrary(source_file, "", Resource::TEXTURE);
+	if (resource != nullptr)
+		return resource;
+
+	//If its not imported, import it
+	resource = App->moduleMaterials->ImportTextureResource(buffer, ++nextID, source_file, size);
 	if (resource)
 	{
+		existingResources[resource->ID] = GetMetaInfo(resource);
 		importingResources.push_back(resource);
-		//nextID++;
 	}
 	return resource;
 }
 
-R_Material* M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file)
+R_Material* M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name)
 {
-	R_Material* resource = App->moduleMaterials->ImportMaterialResource(mat, ++nextID, source_file);
+	R_Material* resource = nullptr;
+
+	//First we find if that resource has already been imported
+	resource = (R_Material*)FindResourceInLibrary(source_file, name, Resource::MATERIAL);
+	if (resource != nullptr)
+		return resource;
+
+	//If its not imported, import it
+	resource = App->moduleMaterials->ImportMaterialResource(mat, ++nextID, source_file);
 	if (resource)
 	{
+		existingResources[resource->ID] = GetMetaInfo(resource);
 		importingResources.push_back(resource);
-		//nextID++;
 	}
 	return resource;
 }
 
-Resource* M_Resources::GetResource(unsigned long long ID, Resource::Type type)
+Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 {
 	Resource* ret = nullptr;
 	//First find if the wanted resource is loaded
-	std::map<unsigned long long, Resource*>::iterator it = resources.find(ID);
+	std::map<uint64, Resource*>::iterator it = resources.find(ID);
 	if (it != resources.end())
 	{
 		ret = it->second;
@@ -124,4 +148,27 @@ void M_Resources::FinishImporting()
 		RELEASE(*it);
 		it = importingResources.erase(it);
 	}
+}
+
+Resource* M_Resources::FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type)
+{
+	for (std::map<uint64, ResourceMeta>::iterator it = existingResources.begin(); it != existingResources.end(); it++)
+	{
+		if (it->second.Compare(original_file, name))
+		{
+			return GetResource(it->first, type);
+		}
+	}
+	return nullptr;
+}
+
+ResourceMeta M_Resources::GetMetaInfo(Resource* resource)
+{
+	ResourceMeta ret;
+
+	ret.original_file = resource->original_file;
+	ret.resource_name = resource->name;
+	ret.type = resource->type;
+
+	return ret;
 }

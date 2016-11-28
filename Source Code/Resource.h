@@ -9,6 +9,7 @@ class Resource
 friend class M_Resources;
 friend class M_Meshes;
 friend class M_Materials;
+friend struct ResourceMeta;
 
 public:
 	enum Type
@@ -37,8 +38,9 @@ protected:
 	unsigned long long ID;
 	Type type;
 
-	std::string resource_file;
-	std::string original_file;
+	std::string resource_file = "";
+	std::string original_file = "";
+	std::string name = "";
 
 };
 

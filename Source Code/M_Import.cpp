@@ -166,18 +166,6 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 				gameObject->AddComponent(cMaterial);
 			}
 		}
-
-		////Material load
-		//std::string matPath = gameObject_node.GetString("Material");
-
-		//if (matPath != "")
-		//{
-		//	C_Material* mat = App->moduleMaterials->LoadMaterial(matPath.c_str());
-		//	if (mat != nullptr)
-		//	{
-		//		gameObject->AddComponent(mat);
-		//	}
-		//}
 	}
 
 	//Security method if any game object is left without a parent
@@ -343,7 +331,9 @@ GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObje
 		{
 			node_name = newMesh->mName.C_Str();
 			if (node_name == "")
-				node_name = "No name";
+				node_name = gameObject->name + "_submesh";
+			if (i > 0)
+				node_name.append("(" +std::to_string(i) + ")");
 			child = new GameObject(gameObject, node_name.c_str());
 			child->uid = random.Int();
 			vector.push_back(child);
@@ -353,7 +343,7 @@ GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObje
 			child = gameObject;
 		}
 
-		R_Mesh* rMesh= App->moduleResources->ImportRMesh(newMesh, path);
+		R_Mesh* rMesh= App->moduleResources->ImportRMesh(newMesh, path, child->name.c_str());
 		if (rMesh != nullptr)
 		{
 			C_Mesh* cMesh = new C_Mesh;
@@ -363,7 +353,9 @@ GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObje
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
-		R_Material* rMaterial = App->moduleResources->ImportRMaterial(material, path);
+		aiString matName;
+		material->Get(AI_MATKEY_NAME, matName);
+		R_Material* rMaterial = App->moduleResources->ImportRMaterial(material, path, matName.C_Str());
 		if (rMaterial != nullptr)
 		{
 			C_Material* cMaterial = new C_Material(nullptr);

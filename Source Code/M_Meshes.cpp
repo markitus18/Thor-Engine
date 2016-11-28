@@ -33,7 +33,7 @@ bool M_Meshes::CleanUp()
 	return true;
 }
 
-R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, const char* file)
+R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, const char* file, const char* name)
 {
 	R_Mesh* resMesh = new R_Mesh;
 
@@ -85,6 +85,7 @@ R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, 
 
 	resMesh->CreateAABB();
 	resMesh->ID = ID;
+	resMesh->name = name;
 
 	std::string full_path("/Library/Meshes/");
 	full_path.append(std::to_string(ID));
@@ -158,7 +159,7 @@ bool M_Meshes::SaveMeshResource(const R_Mesh* mesh)
 	return ret > 0;
 }
 
-R_Mesh* M_Meshes::LoadMeshResource(unsigned long long ID)
+R_Mesh* M_Meshes::LoadMeshResource(u64 ID)
 {
 	std::string full_path = "/Library/Meshes/";
 	full_path.append(std::to_string(ID));// .append(".mesh");

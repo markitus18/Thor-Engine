@@ -21,17 +21,9 @@ struct ResourceMeta
 
 	bool Compare(const char* file, const char* name)
 	{
-		if (original_file == file)
-		{
-			if (std::string(name) != "")
-			{
-				if (resource_name == name)
-					return true;
-			}
-			else
-				return true;
-		}
+		return (original_file == file && resource_name == name);
 	}
+
 };
 
 class M_Resources : public Module
@@ -52,6 +44,9 @@ public:
 	void FinishImporting();
 
 private:
+	void SaveResourcesData();
+	void LoadResourcesData();
+
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
 
@@ -66,7 +61,9 @@ private:
 	//All resources imported
 	std::map<uint64, ResourceMeta> existingResources;
 
-	unsigned long long nextID = 0;
+	std::string metaFile = "/ProjectSettings/Resources.JSON";
+
+	uint64 nextID = 0;
 };
 
 #endif

@@ -134,8 +134,11 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 						R_Material* rMat = (R_Material*)materials[i]->GetResource();
 						if (ImGui::CollapsingHeader("NothingYet", ImGuiTreeNodeFlags_DefaultOpen))
 						{
-							ImGui::Text(materials[i]->texture_file.c_str());
-							ImGui::Image((ImTextureID)rMat->texture->buffer, ImVec2(128, 128));
+							if (rMat->texture != nullptr)
+							{
+								ImGui::Text(materials[i]->texture_file.c_str());
+								ImGui::Image((ImTextureID)rMat->texture->buffer, ImVec2(128, 128));
+							}
 						}
 					}
 				}

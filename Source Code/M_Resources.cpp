@@ -10,6 +10,8 @@
 #include "R_Texture.h"
 #include "R_Material.h"
 
+#include "M_FileSystem.h"
+#include "Config.h"
 
 M_Resources::M_Resources(bool start_enabled) : Module("Resources", start_enabled)
 {
@@ -23,11 +25,13 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
+	LoadResourcesData();
 	return true;
 }
 
 bool M_Resources::CleanUp()
 {
+	SaveResourcesData();
 	for (std::map<unsigned long long, Resource*>::iterator it = resources.begin(); it != resources.end(); )
 	{
 		it->second->FreeMemory();
@@ -147,6 +151,49 @@ void M_Resources::FinishImporting()
 	{
 		RELEASE(*it);
 		it = importingResources.erase(it);
+	}
+}
+
+void M_Resources::SaveResourcesData()
+{
+	Config config;
+	Config_Array array = config.SetArray("Resources");
+
+	for (std::map<uint64, ResourceMeta>::iterator it = existingResources.begin(); it != existingResources.end(); it++)
+	{
+		Config node = array.AddNode();
+		node.SetNumber("ID", it->first);
+		node.SetString("OriginalFile", it->second.original_file.c_str());
+		node.SetString("ResourceName", it->second.resource_name.c_str());
+	}
+
+	config.SetNumber("NextID", nextID);
+
+	char* buffer = nullptr;
+	uint size = config.Serialize(&buffer);
+	App->fileSystem->Save(metaFile.c_str(), buffer, size);
+}
+
+void M_Resources::LoadResourcesData()
+{
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(metaFile.c_str(), &buffer);
+	if (size > 0 && buffer != nullptr)
+	{
+		Config config(buffer);
+		Config_Array array = config.GetArray("Resources");
+
+		for (uint i = 0; i < array.GetSize(); i++)
+		{
+			Config node = array.GetNode(i);
+			ResourceMeta meta;
+			meta.original_file = node.GetString("OriginalFile");
+			meta.resource_name = node.GetString("ResourceName");
+
+			existingResources[node.GetNumber("ID")] = meta;
+		}
+
+		nextID = config.GetNumber("NextID");
 	}
 }
 

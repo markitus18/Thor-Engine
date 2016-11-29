@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "Timer.h"
+#include "Time.h"
 #include "PerfTimer.h"
 #include <string>
 #include <vector>

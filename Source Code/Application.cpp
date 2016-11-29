@@ -109,12 +109,15 @@ bool Application::Init()
 	frameTimer.Start();
 	frame_ms_cap = (float)1000 / (float)maxFPS;
 
+	Time::Start();
+
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	Time::PreUpdate();
 	dt = frameTimer.ReadSec();
 	frameTimer.Start();
 }
@@ -122,6 +125,7 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	Time::Update();
 	float frame_ms = frameTimer.Read();
 	if (frame_ms > 0 && frame_ms < frame_ms_cap)
 	{

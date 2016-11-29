@@ -35,7 +35,7 @@ enum update_status
 #define WIN_RESIZABLE true
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
-#define VSYNC true
+#define VSYNC false
 #define TITLE "Thor Engine"
 #define ORGANIZATION "UPC"
 

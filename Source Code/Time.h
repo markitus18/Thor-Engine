@@ -7,18 +7,29 @@ class Time
 {
 public:
 
-	static void Start();
+	static void Start(int maxFPS);
 	static void PreUpdate(float dt);
 	static void Update();
 
 	static void Play();
 	static void Pause();
+	static void Resume();
 
 public:
+
+	//Engine variables -----
+
+
+	//----------------------
+
+	//In-game variables ----
+	static float deltaTime;
+
 	static float scaleTime;
 	static float time;
 
 	static Timer gameTimer;
+	//----------------------
 
 private:
 	static bool running;

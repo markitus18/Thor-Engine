@@ -1,21 +1,26 @@
 #include "Time.h"
 
+float Time::deltaTime;
+
 float Time::scaleTime = 1;
 float Time::time;
 
-bool Time::running = true;
+bool Time::running = false;
 
 Timer Time::gameTimer;
 
 void Time::Start(int maxFPS)
 {
 	running = true;
+	gameTimer.Start();
+	time = 0;
 }
 
 void Time::PreUpdate(float dt)
 {
 	deltaTime = running ? dt : 0;
-	time = gameTimer.ReadSec();
+	if (running)
+		time = gameTimer.ReadSec();
 }
 
 void Time::Update()
@@ -38,4 +43,10 @@ void Time::Resume()
 {
 	running = true;
 	gameTimer.Resume();
+}
+
+void Time::Stop()
+{
+	running = false;
+	gameTimer.Stop();
 }

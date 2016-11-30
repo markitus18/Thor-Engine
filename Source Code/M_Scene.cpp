@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "M_Scene.h"
-#include "Primitive.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Import.h"
@@ -27,6 +26,8 @@
 
 #include <windows.h>
 #include <shobjidl.h> 
+
+#include "Time.h"
 
 //#include <GLFW/glfw3.h>
 
@@ -432,6 +433,18 @@ void M_Scene::CreateCamera()
 	camera->CreateComponent(Component::Type::Camera);
 	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
 	camera->uid = random.Int();
+}
+
+void M_Scene::Play()
+{
+	Time::Start(60);
+	App->SaveScene("tmp.scene");
+}
+
+void M_Scene::Stop()
+{
+	Time::Stop();
+	App->LoadScene("tmp.scene");
 }
 
 void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)

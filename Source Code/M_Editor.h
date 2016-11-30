@@ -54,7 +54,9 @@ public:
 
 private:
 	void DrawPanels();
+
 	void ShowAboutWindow();
+	void ShowPlayWindow();
 
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();
@@ -68,6 +70,8 @@ public:
 	P_Inspector*		panelInspector = nullptr;
 	P_Configuration* panelConfiguration = nullptr;
 	P_Buttons*		panelButtons = nullptr;
+
+	ImVec2 playWindow;
 
 	bool shaded = true;
 	bool wireframe = false;

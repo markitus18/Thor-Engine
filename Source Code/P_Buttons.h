@@ -11,6 +11,9 @@ public:
 
 	void Draw(ImGuiWindowFlags flags);
 	void UpdatePosition(int, int);
+
+private:
+	ImVec2 wirePosition;
 };
 
 

@@ -14,6 +14,7 @@ public:
 	static void Play();
 	static void Pause();
 	static void Resume();
+	static void Stop();
 
 public:
 
@@ -29,9 +30,7 @@ public:
 	static float time;
 
 	static Timer gameTimer;
-	//----------------------
-
-private:
 	static bool running;
+	//----------------------
 };
 #endif //__TIME_H__

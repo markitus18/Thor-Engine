@@ -54,6 +54,9 @@ public:
 
 	//----------------------------------------
 
+	void Play();
+	void Stop();
+
 private:
 	void TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final);
 	void UpdateAllGameObjects(GameObject* gameObject);

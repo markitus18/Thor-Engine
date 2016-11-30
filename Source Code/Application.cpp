@@ -109,7 +109,7 @@ bool Application::Init()
 	frameTimer.Start();
 	frame_ms_cap = (float)1000 / (float)maxFPS;
 
-	Time::Start();
+	//Time::Start(maxFPS);
 
 	return ret;
 }
@@ -117,9 +117,9 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	Time::PreUpdate();
 	dt = frameTimer.ReadSec();
 	frameTimer.Start();
+	Time::PreUpdate(dt);
 }
 
 // ---------------------------------------------

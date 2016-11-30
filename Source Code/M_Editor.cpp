@@ -20,6 +20,8 @@
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
 
+#include "Time.h"
+
 M_Editor::M_Editor(bool start_enabled) : Module("Editor", start_enabled)
 {
 
@@ -101,6 +103,8 @@ void M_Editor::Draw()
 		ImGui::ShowTestWindow(&show_Demo_window);
 	if (show_fileName_window)
 		ShowFileNameWindow();
+
+	ShowPlayWindow();
 
 	// -----------------------------
 	if (ImGui::BeginMainMenuBar())
@@ -197,6 +201,7 @@ void M_Editor::Draw()
 	}
 	//----------------------------
 
+	
 	ImGui::Render();
 }
 
@@ -287,6 +292,37 @@ void M_Editor::ShowAboutWindow()
 	ImGui::End();
 }
 
+void M_Editor::ShowPlayWindow()
+{
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	//ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
+	ImGui::SetNextWindowSize(ImVec2(400, 200));
+	ImGui::SetNextWindowPos(playWindow);
+
+	bool open = true;
+	if (ImGui::Begin("PlayButton", &open, flags))
+	{
+		std::string name = Time::running ? "Stop" : "Play";
+		if (ImGui::Button(name.c_str()))
+		{
+			Time::running ? App->scene->Stop() : App->scene->Play();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Pause"))
+		{
+
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Frame"))
+		{
+
+		}
+		ImGui::End();
+	}
+
+	//ImGui::PopStyleColor();
+}
+
 void M_Editor::ShowFileNameWindow()
 {
 	ImGui::SetNextWindowSize(ImVec2(400, 100));
@@ -341,6 +377,9 @@ void M_Editor::OnResize(int screen_width, int screen_height)
 	panelInspector->UpdatePosition(screen_width, screen_height);
 	panelConfiguration->UpdatePosition(screen_width, screen_height);
 	panelButtons->UpdatePosition(screen_width, screen_height);
+
+	playWindow.x = screen_width / 2 - 100;
+	playWindow.y = screen_height / 20;
 }
 
 bool M_Editor::UsingKeyboard() const

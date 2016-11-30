@@ -15,7 +15,7 @@ P_Buttons::~P_Buttons()
 void P_Buttons::Draw(ImGuiWindowFlags default_flags)
 {
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
+	//ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
 	ImGui::SetNextWindowPos(position);
 
 	bool open = true;
@@ -27,7 +27,8 @@ void P_Buttons::Draw(ImGuiWindowFlags default_flags)
 		ImGui::End();
 	}
 
-	ImGui::PopStyleColor();
+	
+	//ImGui::PopStyleColor();
 }
 
 void P_Buttons::UpdatePosition(int screen_width, int screen_height)

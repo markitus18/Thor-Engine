@@ -65,6 +65,7 @@ private:
 
 	bool save_scene = false;
 	bool load_scene = false;
+	bool tmpScene = false;
 
 	std::string scene_to_save;
 	std::string scene_to_load;
@@ -89,7 +90,7 @@ public:
 	void SetTitleName(const char* new_name);
 
 	void OpenSceneWindow();
-	void SaveScene(const char* file);
+	void SaveScene(const char* file, bool tmp = false);
 	void LoadScene(const char* file);
 
 	void OnRemoveGameObject(GameObject* gameObject);

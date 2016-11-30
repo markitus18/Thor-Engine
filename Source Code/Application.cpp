@@ -229,9 +229,10 @@ void Application::OpenSceneWindow()
 
 }
 
-void Application::SaveScene(const char* scene)
+void Application::SaveScene(const char* scene, bool tmp)
 {
 	scene_to_save = scene;
+	tmpScene = tmp;
 	save_scene = true;
 }
 
@@ -305,17 +306,25 @@ void Application::SaveSceneNow()
 	uint size = config.Serialize(&buffer);
 
 	std::string extension = "";
-	std::string full_path = "Assets/";
+	std::string full_path = "";
 
 	fileSystem->SplitFilePath(scene_to_save.c_str(), nullptr, nullptr, &extension);
 
 	if (extension != "scene")
 		scene_to_save.append(".scene");
 	
-	full_path.append(scene_to_save);
+	if (tmpScene == false)
+	{
+		full_path.append("/Assets/");
+		scene->current_scene = scene_to_save;
+		UpdateSceneName();
+	}
+	else
+	{
+		full_path.append("/Library/Tmp/");
+	}
 
-	scene->current_scene = scene_to_save;
-	UpdateSceneName();
+	full_path.append(scene_to_save);
 
 	fileSystem->Save(full_path.c_str(), buffer, size);
 	RELEASE_ARRAY(buffer);
@@ -333,7 +342,7 @@ void Application::LoadSceneNow()
 
 		if (size > 0)
 		{
-			if (scene_to_load.find("ProjectSettings/") == scene_to_load.npos)
+			if (tmpScene == false && scene_to_load.find("ProjectSettings/") == scene_to_load.npos)
 				scene->current_scene = scene_to_load;
 			
 			Config config(buffer);
@@ -352,8 +361,12 @@ void Application::LoadSceneNow()
 	{
 		LOG("[error] File '%s' not found", scene_to_load.c_str());
 	}
-
+	
 	RELEASE_ARRAY(buffer);
-	UpdateSceneName();
+
+	if (tmpScene == false)
+		UpdateSceneName();
+
 	load_scene = false;
+	tmpScene = false;
 }

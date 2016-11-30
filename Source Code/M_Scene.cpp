@@ -438,7 +438,7 @@ void M_Scene::CreateCamera()
 void M_Scene::Play()
 {
 	Time::Start(60);
-	App->SaveScene("tmp.scene");
+	App->SaveScene("tmp.scene", true);
 }
 
 void M_Scene::Stop()

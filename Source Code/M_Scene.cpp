@@ -21,6 +21,7 @@
 #include "Config.h"
 #include "M_Meshes.h"
 #include "M_Materials.h"
+#include "M_Resources.h"
 
 #include "Quadtree.h"
 
@@ -103,7 +104,8 @@ update_status M_Scene::Update(float dt)
 	{
 		//Import "external" file into project: creates all own-format files (and then loads them by now)
 		std::string file = "Models/Street_environment_V01.FBX";
-		App->moduleImport->ImportFile("Models/Street_environment_V01.FBX");
+		App->moduleResources->ImportScene(file.c_str());
+		//App->moduleImport->ImportFile("Models/Street_environment_V01.FBX");
 
 		std::string fileName;
 		App->fileSystem->SplitFilePath(file.c_str(), nullptr, &fileName);

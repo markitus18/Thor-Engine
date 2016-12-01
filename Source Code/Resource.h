@@ -10,6 +10,7 @@ friend class M_Resources;
 friend class M_Meshes;
 friend class M_Materials;
 friend struct ResourceMeta;
+friend class M_Import;
 
 public:
 	enum Type
@@ -18,6 +19,7 @@ public:
 		TEXTURE,
 		MATERIAL,
 		BONE,
+		PREFAB,
 	};
 
 	Resource(Type type);

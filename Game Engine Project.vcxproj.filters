@@ -250,6 +250,9 @@
     <ClCompile Include="Source Code\Time.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\R_Prefab.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -617,6 +620,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\Time.h">
       <Filter>Source Code\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Prefab.h">
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

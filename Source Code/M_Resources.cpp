@@ -4,14 +4,18 @@
 //Loaders
 #include "M_Meshes.h"
 #include "M_Materials.h"
+#include "M_Import.h"
 
 //Resources
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Material.h"
+#include "R_Prefab.h"
 
 #include "M_FileSystem.h"
 #include "Config.h"
+
+#include <Windows.h>
 
 M_Resources::M_Resources(bool start_enabled) : Module("Resources", start_enabled)
 {
@@ -40,6 +44,25 @@ bool M_Resources::CleanUp()
 	}
 
 	return true;
+}
+
+void M_Resources::ImportScene(const char* source_file)
+{
+	R_Prefab* resource = nullptr;
+
+	resource = (R_Prefab*)FindResourceInLibrary(source_file, "", Resource::PREFAB);
+	//if (resource != nullptr)
+		//return resource;
+
+	resource = App->moduleImport->ImportFile(source_file, ++nextID);
+	if (resource)
+	{
+		existingResources[resource->ID] = GetMetaInfo(resource);
+		//TODO: simply release resource?
+		importingResources.push_back(resource);
+		SaveMetaInfo(resource);
+	}
+	//return resource;
 }
 
 R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name)
@@ -77,6 +100,7 @@ R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_fi
 	{
 		existingResources[resource->ID] = GetMetaInfo(resource);
 		importingResources.push_back(resource);
+		SaveMetaInfo(resource);
 	}
 	return resource;
 }
@@ -218,4 +242,50 @@ ResourceMeta M_Resources::GetMetaInfo(Resource* resource)
 	ret.type = resource->type;
 
 	return ret;
+}
+
+void M_Resources::SaveMetaInfo(const Resource* resource)
+{
+	Config config;
+
+	config.SetNode("Metadata");
+	config.SetNumber("ResourceID", resource->ID);
+	
+	//Getting file modification date
+	std::string global_path = "";
+	App->fileSystem->GetRealDir(resource->original_file.c_str(), global_path);
+	HANDLE hFile;
+	hFile = CreateFile(global_path.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	if (hFile != INVALID_HANDLE_VALUE)
+	{
+		FILETIME creationTime, lpLastAccesTime, lastWriteTime;
+
+		bool error = GetFileTime(hFile, &creationTime, &lpLastAccesTime, &lastWriteTime);
+		if (error != false)
+		{
+			SYSTEMTIME systemTime;
+			bool res = FileTimeToSystemTime(&lastWriteTime, &systemTime);
+			if (res != false)
+			{
+				config.SetNumber("Day", systemTime.wDay);
+				config.SetNumber("Hour", systemTime.wHour);
+				config.SetNumber("Minutes", systemTime.wMinute);
+				config.SetNumber("Seconds", systemTime.wSecond);
+			}
+		}
+		CloseHandle(hFile);
+	}
+	else
+	{
+		LOG("Could not fild file date");
+	}
+	
+	char* buffer = nullptr;
+	uint size = config.Serialize(&buffer);
+	if (size > 0)
+	{
+		std::string path = resource->original_file + ".meta";
+		App->fileSystem->Save(path.c_str(), buffer, size);
+	}
 }

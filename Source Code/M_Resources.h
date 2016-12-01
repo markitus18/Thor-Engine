@@ -35,6 +35,7 @@ public:
 	bool Init(Config& config);
 	bool CleanUp();
 
+	void ImportScene(const char* source_file);
 	R_Mesh* ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
 	R_Texture* ImportRTexture(const char* buffer, const char* path, uint size);
 	R_Material* ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
@@ -49,6 +50,8 @@ private:
 
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
+
+	void SaveMetaInfo(const Resource* resource);
 
 private:
 	//Resources loaded in memory

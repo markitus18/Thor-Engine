@@ -164,6 +164,13 @@ PathNode M_FileSystem::GetAllFiles(const char* directory) const
 	return root;
 }
 
+void M_FileSystem::GetRealDir(const char* path, std::string& output) const
+{
+	output = PHYSFS_getBaseDir();
+	output.append(*PHYSFS_getSearchPath());
+	output.append(PHYSFS_getRealDir(path)).append(path);
+}
+
 void M_FileSystem::NormalizePath(char * full_path) const
 {
 	int len = strlen(full_path);

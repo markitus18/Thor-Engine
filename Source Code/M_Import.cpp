@@ -20,6 +20,8 @@
 #include "M_Editor.h"
 
 #include "Config.h"
+#include "R_Prefab.h"
+#include "Resource.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -225,13 +227,16 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 		config.SetNumber("MaterialID", 0);
 }
 
-void M_Import::ImportFile(char* path)
+R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 {
+	R_Prefab* ret = nullptr;
+
 	const aiScene* file = aiImportFileEx(path, aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
 	if (file)
 	{
 		LOG("Starting scene load %s", path);
 		std::vector<GameObject*> createdGameObjects;
+
 		//TODO CHANGE LOADFBX FNC NAME
 		GameObject* rootNode = LoadFBX(file, file->mRootNode, nullptr, path, createdGameObjects);
 		
@@ -250,6 +255,12 @@ void M_Import::ImportFile(char* path)
 			full_path.append(fileName);
 			App->fileSystem->Save(full_path.c_str(), buffer, size);
 
+			ret = new R_Prefab();
+			ret->ID = ID;
+			ret->resource_file = full_path.c_str();
+			ret->original_file = path;
+			ret->name = fileName;
+
 			RELEASE_ARRAY(buffer);
 		}
 
@@ -261,9 +272,11 @@ void M_Import::ImportFile(char* path)
 	{
 		LOG("File not found");
 	}
+
+	return ret;
 }
 
-GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path, std::vector<GameObject*>& vector)
+GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector)
 {
 	aiVector3D		translation;
 	aiVector3D		scaling;

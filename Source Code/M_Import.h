@@ -12,6 +12,7 @@ struct aiMaterial;
 class GameObject;
 class C_Mesh;
 class C_Material;
+class R_Prefab;
 
 class Config;
 
@@ -22,8 +23,8 @@ public:
 	M_Import(bool start_enabled = true);
 	~M_Import();
 
-	void ImportFile(char* path);
-	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, char* path, std::vector<GameObject*>& vector);
+	R_Prefab* ImportFile(const char* path, Uint32 ID);
+	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector);
 	bool Init(Config& config);
 	bool CleanUp();
 	update_status Update(float dt);

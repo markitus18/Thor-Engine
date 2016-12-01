@@ -259,7 +259,1352 @@
             "ID": 52,
             "OriginalFile": "Models\/Street_environment_V01.FBX",
             "ResourceName": "City_building_041"
+        },
+        {
+            "ID": 53,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Street_environment_V01"
+        },
+        {
+            "ID": 54,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_004"
+        },
+        {
+            "ID": 55,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 56,
+            "OriginalFile": "\/Assets\/Textures\/building03_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 57,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_001"
+        },
+        {
+            "ID": 58,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Building_dnt"
+        },
+        {
+            "ID": 59,
+            "OriginalFile": "\/Assets\/Textures\/Building_V02_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 60,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_007"
+        },
+        {
+            "ID": 61,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 62,
+            "OriginalFile": "\/Assets\/Textures\/building_016_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 63,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_008"
+        },
+        {
+            "ID": 64,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_025"
+        },
+        {
+            "ID": 65,
+            "OriginalFile": "\/Assets\/Textures\/building_025_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 66,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Line002"
+        },
+        {
+            "ID": 67,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "20 - Defaulta"
+        },
+        {
+            "ID": 68,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Plane001"
+        },
+        {
+            "ID": 69,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "20 - Default"
+        },
+        {
+            "ID": 70,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_010_submesh"
+        },
+        {
+            "ID": 71,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 72,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 73,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_010_submesh(1)"
+        },
+        {
+            "ID": 74,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 75,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 76,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_011"
+        },
+        {
+            "ID": 77,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 78,
+            "OriginalFile": "\/Assets\/Textures\/building_016_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 79,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_013"
+        },
+        {
+            "ID": 80,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 81,
+            "OriginalFile": "\/Assets\/Textures\/building 06_ c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 82,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_014"
+        },
+        {
+            "ID": 83,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 84,
+            "OriginalFile": "\/Assets\/Textures\/building03_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 85,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_016_submesh"
+        },
+        {
+            "ID": 86,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 87,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 88,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_016_submesh(1)"
+        },
+        {
+            "ID": 89,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 90,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 91,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_017_submesh"
+        },
+        {
+            "ID": 92,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 93,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 94,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_017_submesh(1)"
+        },
+        {
+            "ID": 95,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 96,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 97,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_022"
+        },
+        {
+            "ID": 98,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 99,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 100,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_023"
+        },
+        {
+            "ID": 101,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 102,
+            "OriginalFile": "\/Assets\/Textures\/building_016_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 103,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_024"
+        },
+        {
+            "ID": 104,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_025"
+        },
+        {
+            "ID": 105,
+            "OriginalFile": "\/Assets\/Textures\/building_025_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 106,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_026"
+        },
+        {
+            "ID": 107,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 108,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 109,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_028"
+        },
+        {
+            "ID": 110,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 111,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 112,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Object010"
+        },
+        {
+            "ID": 113,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "21 - Default"
+        },
+        {
+            "ID": 114,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_030"
+        },
+        {
+            "ID": 115,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 116,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 117,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_031"
+        },
+        {
+            "ID": 118,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 119,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 120,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_032"
+        },
+        {
+            "ID": 121,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 122,
+            "OriginalFile": "\/Assets\/Textures\/building03_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 123,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_033"
+        },
+        {
+            "ID": 124,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 125,
+            "OriginalFile": "\/Assets\/Textures\/building 06_ c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 126,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_034"
+        },
+        {
+            "ID": 127,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 128,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 129,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_035"
+        },
+        {
+            "ID": 130,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 131,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 132,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_036"
+        },
+        {
+            "ID": 133,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 134,
+            "OriginalFile": "\/Assets\/Textures\/building 06_ c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 135,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_037"
+        },
+        {
+            "ID": 136,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 137,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 138,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_038"
+        },
+        {
+            "ID": 139,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 140,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 141,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_039"
+        },
+        {
+            "ID": 142,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 143,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 144,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_040"
+        },
+        {
+            "ID": 145,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 146,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 147,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_041"
+        },
+        {
+            "ID": 148,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Building_dnt"
+        },
+        {
+            "ID": 149,
+            "OriginalFile": "\/Assets\/Textures\/Building_V02_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 150,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Street_environment_V01"
+        },
+        {
+            "ID": 151,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_004"
+        },
+        {
+            "ID": 152,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 153,
+            "OriginalFile": "\/Assets\/Textures\/building03_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 154,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_001"
+        },
+        {
+            "ID": 155,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Building_dnt"
+        },
+        {
+            "ID": 156,
+            "OriginalFile": "\/Assets\/Textures\/Building_V02_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 157,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_007"
+        },
+        {
+            "ID": 158,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 159,
+            "OriginalFile": "\/Assets\/Textures\/building_016_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 160,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_008"
+        },
+        {
+            "ID": 161,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_025"
+        },
+        {
+            "ID": 162,
+            "OriginalFile": "\/Assets\/Textures\/building_025_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 163,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Line002"
+        },
+        {
+            "ID": 164,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "20 - Defaulta"
+        },
+        {
+            "ID": 165,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Plane001"
+        },
+        {
+            "ID": 166,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "20 - Default"
+        },
+        {
+            "ID": 167,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_010_submesh"
+        },
+        {
+            "ID": 168,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 169,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 170,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_010_submesh(1)"
+        },
+        {
+            "ID": 171,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 172,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_011"
+        },
+        {
+            "ID": 173,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 174,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_013"
+        },
+        {
+            "ID": 175,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 176,
+            "OriginalFile": "\/Assets\/Textures\/building 06_ c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 177,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_014"
+        },
+        {
+            "ID": 178,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 179,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_016_submesh"
+        },
+        {
+            "ID": 180,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 181,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_016_submesh(1)"
+        },
+        {
+            "ID": 182,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 183,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_017_submesh"
+        },
+        {
+            "ID": 184,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 185,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_017_submesh(1)"
+        },
+        {
+            "ID": 186,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 187,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_022"
+        },
+        {
+            "ID": 188,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 189,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 190,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_023"
+        },
+        {
+            "ID": 191,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 192,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_024"
+        },
+        {
+            "ID": 193,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_025"
+        },
+        {
+            "ID": 194,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_026"
+        },
+        {
+            "ID": 195,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 196,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_028"
+        },
+        {
+            "ID": 197,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 198,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 199,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Object010"
+        },
+        {
+            "ID": 200,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "21 - Default"
+        },
+        {
+            "ID": 201,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_030"
+        },
+        {
+            "ID": 202,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 203,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_031"
+        },
+        {
+            "ID": 204,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 205,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_032"
+        },
+        {
+            "ID": 206,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 207,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_033"
+        },
+        {
+            "ID": 208,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 209,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_034"
+        },
+        {
+            "ID": 210,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 211,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_035"
+        },
+        {
+            "ID": 212,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 213,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_036"
+        },
+        {
+            "ID": 214,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 215,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_037"
+        },
+        {
+            "ID": 216,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 217,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_038"
+        },
+        {
+            "ID": 218,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 219,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_039"
+        },
+        {
+            "ID": 220,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 221,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_040"
+        },
+        {
+            "ID": 222,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 223,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_041"
+        },
+        {
+            "ID": 224,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Building_dnt"
+        },
+        {
+            "ID": 225,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Street_environment_V01"
+        },
+        {
+            "ID": 226,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_004"
+        },
+        {
+            "ID": 227,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 228,
+            "OriginalFile": "\/Assets\/Textures\/building03_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 229,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_001"
+        },
+        {
+            "ID": 230,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Building_dnt"
+        },
+        {
+            "ID": 231,
+            "OriginalFile": "\/Assets\/Textures\/Building_V02_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 232,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_007"
+        },
+        {
+            "ID": 233,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 234,
+            "OriginalFile": "\/Assets\/Textures\/building_016_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 235,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_008"
+        },
+        {
+            "ID": 236,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_025"
+        },
+        {
+            "ID": 237,
+            "OriginalFile": "\/Assets\/Textures\/building_025_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 238,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Line002"
+        },
+        {
+            "ID": 239,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "20 - Defaulta"
+        },
+        {
+            "ID": 240,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Plane001"
+        },
+        {
+            "ID": 241,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "20 - Default"
+        },
+        {
+            "ID": 242,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_010_submesh"
+        },
+        {
+            "ID": 243,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 244,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 245,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_010_submesh(1)"
+        },
+        {
+            "ID": 246,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 247,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 248,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_011"
+        },
+        {
+            "ID": 249,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 250,
+            "OriginalFile": "\/Assets\/Textures\/building_016_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 251,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_013"
+        },
+        {
+            "ID": 252,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 253,
+            "OriginalFile": "\/Assets\/Textures\/building 06_ c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 254,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_014"
+        },
+        {
+            "ID": 255,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 256,
+            "OriginalFile": "\/Assets\/Textures\/building03_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 257,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_016_submesh"
+        },
+        {
+            "ID": 258,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 259,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 260,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_016_submesh(1)"
+        },
+        {
+            "ID": 261,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 262,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 263,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_017_submesh"
+        },
+        {
+            "ID": 264,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 265,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 266,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_017_submesh(1)"
+        },
+        {
+            "ID": 267,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "orig_orig_orig_17 - Default"
+        },
+        {
+            "ID": 268,
+            "OriginalFile": "\/Assets\/Textures\/building 01_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 269,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_022"
+        },
+        {
+            "ID": 270,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 271,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 272,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_023"
+        },
+        {
+            "ID": 273,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_16"
+        },
+        {
+            "ID": 274,
+            "OriginalFile": "\/Assets\/Textures\/building_016_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 275,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_024"
+        },
+        {
+            "ID": 276,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "building_025"
+        },
+        {
+            "ID": 277,
+            "OriginalFile": "\/Assets\/Textures\/building_025_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 278,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_026"
+        },
+        {
+            "ID": 279,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 280,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 281,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_028"
+        },
+        {
+            "ID": 282,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 283,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 284,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Object010"
+        },
+        {
+            "ID": 285,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "21 - Default"
+        },
+        {
+            "ID": 286,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_030"
+        },
+        {
+            "ID": 287,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 288,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 289,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_031"
+        },
+        {
+            "ID": 290,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 291,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 292,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_032"
+        },
+        {
+            "ID": 293,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "06 - Default"
+        },
+        {
+            "ID": 294,
+            "OriginalFile": "\/Assets\/Textures\/building03_c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 295,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_033"
+        },
+        {
+            "ID": 296,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 297,
+            "OriginalFile": "\/Assets\/Textures\/building 06_ c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 298,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_034"
+        },
+        {
+            "ID": 299,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 300,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 301,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_035"
+        },
+        {
+            "ID": 302,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 303,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 304,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_036"
+        },
+        {
+            "ID": 305,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "3db _ building 06"
+        },
+        {
+            "ID": 306,
+            "OriginalFile": "\/Assets\/Textures\/building 06_ c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 307,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_037"
+        },
+        {
+            "ID": 308,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 309,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 310,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_038"
+        },
+        {
+            "ID": 311,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "09 - Default"
+        },
+        {
+            "ID": 312,
+            "OriginalFile": "\/Assets\/Textures\/building05 _c.tga",
+            "ResourceName": ""
+        },
+        {
+            "ID": 313,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_039"
+        },
+        {
+            "ID": 314,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 315,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 316,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_040"
+        },
+        {
+            "ID": 317,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Material #0"
+        },
+        {
+            "ID": 318,
+            "OriginalFile": "\/Assets\/Textures\/Building_V01_C.png",
+            "ResourceName": ""
+        },
+        {
+            "ID": 319,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "City_building_041"
+        },
+        {
+            "ID": 320,
+            "OriginalFile": "Models\/Street_environment_V01.FBX",
+            "ResourceName": "Building_dnt"
+        },
+        {
+            "ID": 321,
+            "OriginalFile": "\/Assets\/Textures\/Building_V02_C.png",
+            "ResourceName": ""
         }
     ],
-    "NextID": 52
+    "NextID": 321
 } 

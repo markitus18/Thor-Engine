@@ -43,7 +43,8 @@ public:
 	void DiscoverFiles(const char* directory, std::vector<std::string>& file_list, std::vector<std::string>& dir_list) const;
 	void GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& file_list) const;
 	PathNode GetAllFiles(const char* directory) const;
-
+	void GetRealDir(const char* path, std::string& output) const;
+	
 	void NormalizePath(char* path) const;
 	void SplitFilePath(const char* full_path, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;
 

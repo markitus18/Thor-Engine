@@ -419,10 +419,6 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 			}
 		}
 	}
-	if (toSelect == nullptr)
-	{
-		LOG("GameObject selection not found");
-	}
 	App->moduleEditor->SelectGameObject((GameObject*)toSelect);
 }
 

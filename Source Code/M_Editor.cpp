@@ -295,8 +295,8 @@ void M_Editor::ShowAboutWindow()
 void M_Editor::ShowPlayWindow()
 {
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	//ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
-	ImGui::SetNextWindowSize(ImVec2(400, 200));
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
+	ImGui::SetNextWindowSize(ImVec2(150, 30));
 	ImGui::SetNextWindowPos(playWindow);
 
 	bool open = true;
@@ -320,7 +320,7 @@ void M_Editor::ShowPlayWindow()
 		ImGui::End();
 	}
 
-	//ImGui::PopStyleColor();
+	ImGui::PopStyleColor();
 }
 
 void M_Editor::ShowFileNameWindow()

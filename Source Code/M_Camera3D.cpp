@@ -239,7 +239,6 @@ void M_Camera3D::OnClick()
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
 	mouseNormY = -((mouseNormY - 0.5) / 0.5);
 
-	LOG("Camera click ray: mouseX %f, mouseY %f", mouseNormX, mouseNormY);
 	lastRay = App->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 
 	App->scene->OnClickSelection(lastRay);

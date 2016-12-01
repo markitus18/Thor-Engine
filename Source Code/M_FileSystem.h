@@ -12,6 +12,13 @@ struct aiFileIO;
 //struct BASS_FILEPROCS;
 class Config;
 
+struct PathNode
+{
+	PathNode() : path("") {};
+	std::string path;
+	std::vector<PathNode> children;
+};
+
 class M_FileSystem : public Module
 {
 public:
@@ -35,6 +42,7 @@ public:
 	const char* GetWriteDir() const;
 	void DiscoverFiles(const char* directory, std::vector<std::string>& file_list, std::vector<std::string>& dir_list) const;
 	void GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& file_list) const;
+	PathNode GetAllFiles(const char* directory) const;
 
 	void NormalizePath(char* path) const;
 	void SplitFilePath(const char* full_path, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;

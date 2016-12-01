@@ -209,12 +209,13 @@ const char* Application::GetOrganizationName() const
 void Application::UpdateSceneName()
 {
 	std::string windowTitle = title;
-	std::string sceneName = "";
-	std::string sceneExtension = "";
-	App->fileSystem->SplitFilePath
-	(scene->current_scene.c_str(), nullptr, &sceneName, &sceneExtension);
-	windowTitle.append(" - ").append(sceneName + std::string(".") + sceneExtension);
-
+	std::string sceneName = "", sceneExtension = "";
+	App->fileSystem->SplitFilePath(scene->current_scene.c_str(), nullptr, &sceneName, &sceneExtension);
+	windowTitle.append(" - ").append(sceneName);
+	if (sceneExtension != "")
+	{
+		windowTitle.append((".") + sceneExtension);
+	}
 	window->SetTitle(windowTitle.c_str());
 }
 
@@ -315,18 +316,11 @@ void Application::SaveSceneNow()
 	
 	if (tmpScene == false)
 	{
-		full_path.append("/Assets/");
 		scene->current_scene = scene_to_save;
 		UpdateSceneName();
 	}
-	else
-	{
-		full_path.append("/Library/Tmp/");
-	}
 
-	full_path.append(scene_to_save);
-
-	fileSystem->Save(full_path.c_str(), buffer, size);
+	fileSystem->Save(scene_to_save.c_str(), buffer, size);
 	RELEASE_ARRAY(buffer);
 
 	save_scene = false;

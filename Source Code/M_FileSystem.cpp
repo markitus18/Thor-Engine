@@ -115,13 +115,13 @@ void M_FileSystem::DiscoverFiles(const char* directory, vector<string> & file_li
 	char **rc = PHYSFS_enumerateFiles(directory);
 	char **i;
 
-	string dir(directory);
+	//string dir(directory);
 
 	for (i = rc; *i != nullptr; i++)
 	{
-		if (PHYSFS_isDirectory((dir + *i).c_str()))
-			dir_list.push_back(*i);
-		else
+		//if (PHYSFS_isDirectory((dir + *i).c_str()))
+		//	dir_list.push_back(*i);
+		//else
 			file_list.push_back(*i);
 	}
 
@@ -142,6 +142,26 @@ void M_FileSystem::GetAllFilesWithExtension(const char* directory, const char* e
 		if (ext == extension)
 			file_list.push_back(files[i]);
 	}
+}
+
+PathNode M_FileSystem::GetAllFiles(const char* directory) const
+{
+	PathNode root;
+	if (Exists(directory))
+	{
+		root.path = directory;
+		std::vector<string> file_list, dir_list;
+		DiscoverFiles(directory, file_list, dir_list);	
+
+		for (uint i = 0; i < file_list.size(); i++)
+		{
+			std::string str = directory;
+			str.append("/").append(file_list[i]);
+
+			root.children.push_back(GetAllFiles(str.c_str()));
+		}
+	}
+	return root;
 }
 
 void M_FileSystem::NormalizePath(char * full_path) const

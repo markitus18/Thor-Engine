@@ -274,6 +274,7 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 				config.SetNumber("Seconds", systemTime.wSecond);
 			}
 		}
+		//Warning: It is important to close the handle. Filesystem won't be able to access it otherwise
 		CloseHandle(hFile);
 	}
 	else

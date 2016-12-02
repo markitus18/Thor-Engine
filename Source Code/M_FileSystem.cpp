@@ -374,7 +374,7 @@ bool M_FileSystem::Remove(const char * file)
 
 	if (file != nullptr)
 	{
-		if (PHYSFS_delete(file) == 0)
+		if (PHYSFS_delete(file) != 0)
 		{
 			LOG("File deleted: [%s]", file);
 			ret = true;

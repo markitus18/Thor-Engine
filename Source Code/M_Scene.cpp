@@ -102,7 +102,7 @@ update_status M_Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 	{
-		LoadGameObject("Street_environment_V01.FBX");
+		LoadGameObject("Street_environment_V01");
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
@@ -316,8 +316,15 @@ void M_Scene::LoadScene(const char* file)
 void M_Scene::LoadGameObject(const char* file)
 {
 	GameObject* gameObject = App->moduleImport->LoadGameObject(file);
-	gameObject->parent = root;
-	root->childs.push_back(gameObject);
+	if (gameObject != nullptr)
+	{
+		gameObject->parent = root;
+		root->childs.push_back(gameObject);
+	}
+	else
+	{
+		LOG("[error] File '%s' could not be loaded");
+	}
 }
 
 GameObject* M_Scene::CreateGameObject(const char* name)

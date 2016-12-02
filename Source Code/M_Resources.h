@@ -34,6 +34,7 @@ public:
 	~M_Resources();
 
 	bool Init(Config& config);
+	bool Start();
 	bool CleanUp();
 
 	//Import a file existing in assets creating the resources
@@ -59,6 +60,12 @@ private:
 	void SaveMetaInfo(const Resource* resource);
 	void UpdateAssetsImport();
 	void UpdateAssetsFolder(const PathNode& node);
+
+	//Remove all .meta files in assets TODO: fix fileSystem removing error
+	void ClearMetaData();
+
+	//Remove all .meta files in a folder
+	void RemoveMetaFromFolder(PathNode node);
 
 private:
 	//Resources loaded in memory

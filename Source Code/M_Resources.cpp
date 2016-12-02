@@ -29,7 +29,16 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
+	//char* buffer = nullptr;
+	//uint size = App->fileSystem->Load("/Assets/Textures/building03_c.tga", &buffer);
 	LoadResourcesData();
+	//UpdateAssetsImport();
+	return true;
+}
+
+bool M_Resources::Start()
+{
+	//ClearMetaData();
 	UpdateAssetsImport();
 	return true;
 }
@@ -65,8 +74,6 @@ void M_Resources::ImportFileFromAssets(const char* path)
 			break;
 		}
 	}
-
-
 }
 
 void M_Resources::ImportScene(const char* source_file)
@@ -159,7 +166,7 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 	}
 	else
 	{
-		
+	
 		//If resource is not loaded, search in library
 		switch (type)
 		{
@@ -329,7 +336,9 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 void M_Resources::UpdateAssetsImport()
 {
 	//Getting all files in assets
-	PathNode assets = App->fileSystem->GetAllFiles("Assets");
+	std::vector<std::string> ignore_extensions;
+	ignore_extensions.push_back("meta");
+	PathNode assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_extensions);
 	UpdateAssetsFolder(assets);
 }
 
@@ -349,6 +358,32 @@ void M_Resources::UpdateAssetsFolder(const PathNode& node)
 		for (uint i = 0; i < node.children.size(); i++)
 		{
 			UpdateAssetsFolder(node.children[i]);
+		}
+	}
+}
+
+void M_Resources::ClearMetaData()
+{
+	//Getting all .meta in assets
+	std::vector<std::string> filter_extensions;
+	filter_extensions.push_back("meta");
+	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_extensions, nullptr);
+	RemoveMetaFromFolder(assets);
+}
+
+void M_Resources::RemoveMetaFromFolder(PathNode node)
+{
+	if (node.file == true)
+	{
+		App->fileSystem->Remove(node.path.c_str());
+	}
+
+	//If node folder has something inside
+	else if (node.leaf == false)
+	{
+		for (uint i = 0; i < node.children.size(); i++)
+		{
+			RemoveMetaFromFolder(node.children[i]);
 		}
 	}
 }

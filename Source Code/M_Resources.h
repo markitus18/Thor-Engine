@@ -12,6 +12,7 @@ struct aiMaterial;
 class R_Mesh;
 class R_Texture;
 class R_Material;
+struct PathNode;
 
 struct ResourceMeta
 {
@@ -35,12 +36,16 @@ public:
 	bool Init(Config& config);
 	bool CleanUp();
 
+	//Import a file existing in assets creating the resources
+	void ImportFileFromAssets(const char* path);
+
 	void ImportScene(const char* source_file);
 	R_Mesh* ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
 	R_Texture* ImportRTexture(const char* buffer, const char* path, uint size);
 	R_Material* ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
 
 	Resource* GetResource(uint64 ID, Resource::Type type);
+	Resource::Type GetTypeFromPath(const char* path);
 
 	void FinishImporting();
 
@@ -52,6 +57,8 @@ private:
 	ResourceMeta	GetMetaInfo(Resource* resource);
 
 	void SaveMetaInfo(const Resource* resource);
+	void UpdateAssetsImport();
+	void UpdateAssetsFolder(const PathNode& node);
 
 private:
 	//Resources loaded in memory

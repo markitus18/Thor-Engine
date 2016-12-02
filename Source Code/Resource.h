@@ -20,6 +20,7 @@ public:
 		MATERIAL,
 		BONE,
 		PREFAB,
+		UNKNOWN,
 	};
 
 	Resource(Type type);

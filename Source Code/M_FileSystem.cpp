@@ -29,6 +29,7 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 	CreateDir("Library/Meshes");
 	CreateDir("Library/Materials");
 	CreateDir("Library/Textures");
+	CreateDir("Library/GameObjects");
 
 	// Generate IO interfaces
 	CreateAssimpIO();
@@ -55,6 +56,9 @@ bool M_FileSystem::Init(Config& config)
 	//	LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
 	SDL_free(write_path);
+
+	std::vector<std::string> filter;
+	filter.push_back(std::string("FBX"));
 
 	return ret;
 }
@@ -144,7 +148,7 @@ void M_FileSystem::GetAllFilesWithExtension(const char* directory, const char* e
 	}
 }
 
-PathNode M_FileSystem::GetAllFiles(const char* directory) const
+PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::string>* filter_ext, std::vector<std::string>* ignore_ext) const
 {
 	PathNode root;
 	if (Exists(directory))
@@ -155,11 +159,30 @@ PathNode M_FileSystem::GetAllFiles(const char* directory) const
 
 		for (uint i = 0; i < file_list.size(); i++)
 		{
-			std::string str = directory;
-			str.append("/").append(file_list[i]);
+			//Filtering extensions
+			bool filter = true, discard = false;
+			bool hasExtension = HasExtension(file_list[i].c_str());
+			if (hasExtension == true)
+			{
+				if (filter_ext != nullptr)
+				{
+					filter = HasExtension(file_list[i].c_str(), *filter_ext);
+				}
+				if (ignore_ext != nullptr)
+				{
+					discard = HasExtension(file_list[i].c_str(), *ignore_ext);
+				}
+			}
+			if (filter == true && discard == false)
+			{
+				std::string str = directory;
+				str.append("/").append(file_list[i]);
 
-			root.children.push_back(GetAllFiles(str.c_str()));
+				root.children.push_back(GetAllFiles(str.c_str(), filter_ext, ignore_ext));
+			}
 		}
+		root.file = HasExtension(root.path.c_str());
+		root.leaf = root.children.empty() == true;
 	}
 	return root;
 }
@@ -167,8 +190,37 @@ PathNode M_FileSystem::GetAllFiles(const char* directory) const
 void M_FileSystem::GetRealDir(const char* path, std::string& output) const
 {
 	output = PHYSFS_getBaseDir();
+
 	output.append(*PHYSFS_getSearchPath());
 	output.append(PHYSFS_getRealDir(path)).append(path);
+}
+
+bool M_FileSystem::HasExtension(const char* path) const
+{
+	std::string ext = "";
+	SplitFilePath(path, nullptr, nullptr, &ext);
+	return ext != "";
+}
+
+bool M_FileSystem::HasExtension(const char* path, std::string extension) const
+{
+	std::string ext = "";
+	SplitFilePath(path, nullptr, nullptr, &ext);
+	return ext == extension;
+}
+
+bool M_FileSystem::HasExtension(const char* path, std::vector<std::string> extensions) const
+{
+	std::string ext = "";
+	SplitFilePath(path, nullptr, nullptr, &ext);
+	if (ext == "")
+		return true;
+	for (uint i = 0; i < extensions.size(); i++)
+	{
+		if (extensions[i] == ext)
+			return true;
+	}
+	return false;
 }
 
 void M_FileSystem::NormalizePath(char * full_path) const

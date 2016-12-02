@@ -17,6 +17,9 @@ struct PathNode
 	PathNode() : path("") {};
 	std::string path;
 	std::vector<PathNode> children;
+
+	bool leaf = true;
+	bool file = true;
 };
 
 class M_FileSystem : public Module
@@ -42,9 +45,13 @@ public:
 	const char* GetWriteDir() const;
 	void DiscoverFiles(const char* directory, std::vector<std::string>& file_list, std::vector<std::string>& dir_list) const;
 	void GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& file_list) const;
-	PathNode GetAllFiles(const char* directory) const;
+	PathNode GetAllFiles(const char* directory, std::vector<std::string>* filter_ext = nullptr, std::vector<std::string>* ignore_ext = nullptr) const;
 	void GetRealDir(const char* path, std::string& output) const;
 	
+	bool HasExtension(const char* path) const;
+	bool HasExtension(const char* path, std::string extension) const;
+	bool HasExtension(const char* path, std::vector<std::string> extensions) const;
+
 	void NormalizePath(char* path) const;
 	void SplitFilePath(const char* full_path, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;
 

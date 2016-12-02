@@ -282,7 +282,8 @@ R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned 
 		if (size > 0)
 		{
 			R_Texture* rTex = App->moduleResources->ImportRTexture(buffer, texture_path.c_str(), size);
-			material->textureID = rTex->ID;
+			if (rTex != nullptr)
+				material->textureID = rTex->ID;
 		}
 	}
 

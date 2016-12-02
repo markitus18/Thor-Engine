@@ -100,6 +100,11 @@ update_status M_Scene::Update(float dt)
 		CreateCamera();
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	{
+		LoadGameObject("Street_environment_V01.FBX");
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
 		//Import "external" file into project: creates all own-format files (and then loads them by now)

@@ -30,6 +30,7 @@ M_Resources::~M_Resources()
 bool M_Resources::Init(Config& config)
 {
 	LoadResourcesData();
+	UpdateAssetsImport();
 	return true;
 }
 
@@ -46,13 +47,35 @@ bool M_Resources::CleanUp()
 	return true;
 }
 
+void M_Resources::ImportFileFromAssets(const char* path)
+{
+	Resource::Type type = GetTypeFromPath(path);
+	switch (type)
+	{
+		case (Resource::TEXTURE):
+		{
+			char* buffer = nullptr;
+			uint size = App->fileSystem->Load(path, &buffer);
+			ImportRTexture(buffer, path, size);
+			break;
+		}
+		case (Resource::PREFAB):
+		{
+			ImportScene(path);
+			break;
+		}
+	}
+
+
+}
+
 void M_Resources::ImportScene(const char* source_file)
 {
 	R_Prefab* resource = nullptr;
 
 	resource = (R_Prefab*)FindResourceInLibrary(source_file, "", Resource::PREFAB);
-	//if (resource != nullptr)
-		//return resource;
+	if (resource != nullptr)
+		return;// resource;
 
 	resource = App->moduleImport->ImportFile(source_file, ++nextID);
 	if (resource)
@@ -167,6 +190,18 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 		}
 	}
 	return ret;
+}
+
+Resource::Type M_Resources::GetTypeFromPath(const char* path)
+{
+	std::string ext = "";
+	App->fileSystem->SplitFilePath(path, nullptr, nullptr, &ext);
+
+	if (ext == "FBX" || ext == "fbx")
+		return Resource::PREFAB;
+	if (ext == "tga" || ext == "png" || ext == "jpg")
+		return Resource::TEXTURE;
+	return Resource::UNKNOWN;
 }
 
 void M_Resources::FinishImporting()
@@ -288,5 +323,32 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	{
 		std::string path = resource->original_file + ".meta";
 		App->fileSystem->Save(path.c_str(), buffer, size);
+	}
+}
+
+void M_Resources::UpdateAssetsImport()
+{
+	//Getting all files in assets
+	PathNode assets = App->fileSystem->GetAllFiles("Assets");
+	UpdateAssetsFolder(assets);
+}
+
+void M_Resources::UpdateAssetsFolder(const PathNode& node)
+{
+	//If node is a file
+	if (node.file == true)
+	{
+		if (App->fileSystem->Exists(std::string(node.path + ".meta").c_str()) == false)
+		{
+			ImportFileFromAssets(node.path.c_str());
+		}
+	}
+	//If node folder has something inside
+	else if (node.leaf == false)
+	{
+		for (uint i = 0; i < node.children.size(); i++)
+		{
+			UpdateAssetsFolder(node.children[i]);
+		}
 	}
 }

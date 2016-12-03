@@ -238,7 +238,7 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 		std::vector<GameObject*> createdGameObjects;
 
 		//TODO CHANGE LOADFBX FNC NAME
-		GameObject* rootNode = LoadFBX(file, file->mRootNode, nullptr, path, createdGameObjects);
+		GameObject* rootNode = CreateGameObjects(file, file->mRootNode, nullptr, path, createdGameObjects);
 		
 		Config config;
 		SaveGameObjectConfig(config, createdGameObjects);
@@ -276,7 +276,7 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 	return ret;
 }
 
-GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector)
+GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector)
 {
 	aiVector3D		translation;
 	aiVector3D		scaling;
@@ -372,18 +372,16 @@ GameObject* M_Import::LoadFBX(const aiScene* scene, const aiNode* node, GameObje
 		if (rMaterial != nullptr)
 		{
 			C_Material* cMaterial = new C_Material(nullptr);
-			cMaterial->SetResource(rMaterial);
+			cMaterial->SetResource(rMaterial->ID);
 			child->AddComponent(cMaterial);
 		}
-		//C_Material* go_mat = App->moduleMaterials->ImportMaterial(material, path);
-		//child->AddComponent(go_mat);
 		//--------------------------------
 
 	}
 	// ------------------------------------------------------------
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
-		GameObject* new_child = LoadFBX(scene, node->mChildren[i], gameObject, path, vector);
+		GameObject* new_child = CreateGameObjects(scene, node->mChildren[i], gameObject, path, vector);
 	}
 	return gameObject;
 }

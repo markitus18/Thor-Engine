@@ -24,7 +24,7 @@ public:
 	~M_Import();
 
 	R_Prefab* ImportFile(const char* path, Uint32 ID);
-	GameObject* LoadFBX(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector);
+	GameObject* CreateGameObjects(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector);
 	bool Init(Config& config);
 	bool CleanUp();
 	update_status Update(float dt);

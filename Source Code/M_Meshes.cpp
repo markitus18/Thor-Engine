@@ -106,20 +106,28 @@ R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, 
 bool M_Meshes::SaveMeshResource(const R_Mesh* mesh)
 {
 
-	uint size = sizeof(uint) + mesh->original_file.size() + sizeof(mesh->buffersSize) + (sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices]) + (sizeof(float) * mesh->buffersSize[R_Mesh::b_vertices] * 3)
+	uint size = sizeof(uint) * 2 + mesh->original_file.size() + mesh->name.size() + sizeof(mesh->buffersSize) + (sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices]) + (sizeof(float) * mesh->buffersSize[R_Mesh::b_vertices] * 3)
 	+ (sizeof(float) * mesh->buffersSize[R_Mesh::b_normals] * 3) + (sizeof(float) * mesh->buffersSize[R_Mesh::b_tex_coords] * 2);
 
 	// Allocate buffer size
 	char* data = new char[size];
 	char* cursor = data;
 
-	// Store source file: Size + String
+	// Store source file and name: Sizes
 	uint fileSize = mesh->original_file.size();
 	memcpy(cursor, &fileSize, sizeof(uint));
 	cursor += sizeof(uint);
 
+	uint nameSize = mesh->name.size();
+	memcpy(cursor, &nameSize, sizeof(uint));
+	cursor += sizeof(uint);
+
+	// Store source file and name: Strings
 	memcpy(cursor, mesh->original_file.c_str(), mesh->original_file.size());
 	cursor += mesh->original_file.size();
+
+	memcpy(cursor, mesh->name.c_str(), mesh->name.size());
+	cursor += mesh->name.size();
 
 	// First store ranges
 	uint bytes = sizeof(mesh->buffersSize);
@@ -162,7 +170,7 @@ bool M_Meshes::SaveMeshResource(const R_Mesh* mesh)
 R_Mesh* M_Meshes::LoadMeshResource(u64 ID)
 {
 	std::string full_path = "/Library/Meshes/";
-	full_path.append(std::to_string(ID));// .append(".mesh");
+	full_path.append(std::to_string(ID));
 
 	char* buffer;
 	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
@@ -178,6 +186,10 @@ R_Mesh* M_Meshes::LoadMeshResource(u64 ID)
 		memcpy(&stringSize, cursor, bytes);
 		cursor += bytes;
 
+		uint nameSize = 0;
+		memcpy(&nameSize, cursor, sizeof(uint));
+		cursor += sizeof(uint);
+
 		if (stringSize > 0)
 		{
 			char* string = new char[stringSize + 1];
@@ -189,6 +201,17 @@ R_Mesh* M_Meshes::LoadMeshResource(u64 ID)
 			RELEASE_ARRAY(string);
 		}
 		
+		if (nameSize > 0)
+		{
+			char* string = new char[nameSize + 1];
+			bytes = sizeof(char) * nameSize;
+			memcpy(string, cursor, bytes);
+			cursor += bytes;
+			string[nameSize] = '\0';
+			mesh->name = string;
+			RELEASE_ARRAY(string);
+		}
+
 		bytes = sizeof(mesh->buffersSize);
 		memcpy(mesh->buffersSize, cursor, bytes);
 		cursor += bytes;

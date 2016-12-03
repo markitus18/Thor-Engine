@@ -94,6 +94,10 @@ public:
 
 	GameObject*					parent = nullptr;
 	std::vector<GameObject*>	childs;
+
+	//TODO: this for when prefabs (apply / revert) get implemented
+	Resource*					link = nullptr;
+
 	bool						active = true;
 	bool						isStatic = false;
 

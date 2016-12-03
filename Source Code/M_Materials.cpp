@@ -230,9 +230,8 @@ R_Texture* M_Materials::ImportTextureResource(const char* buffer, unsigned long 
 
 R_Texture* M_Materials::LoadTextureResource(unsigned long long ID)
 {
-	//TODO: TEXTURE SHOULD LOAD ORIGINAL FILE
 	std::string full_path = "/Library/Textures/";
-	full_path.append(std::to_string(ID));// .append(".mesh");
+	full_path.append(std::to_string(ID));
 
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);

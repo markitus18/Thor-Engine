@@ -36,14 +36,6 @@ M_Scene::M_Scene(bool start_enabled) : Module("Scene", start_enabled)
 {
 	root = new GameObject(nullptr, "root");
 	root->uid = 0;
-
-	//TODO: This should nto be here
-	//TMP camera for testing purposes
-	//camera = new GameObject(root, "Camera");
-	//camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
-	//camera->CreateComponent(Component::Type::Camera);
-	//camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
-	//camera->uid = random.Int();
 }
 
 M_Scene::~M_Scene()
@@ -102,19 +94,15 @@ update_status M_Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 	{
-		LoadGameObject("Street_environment_V01");
+		App->moduleResources->LoadPrefab("Assets/Models/Street_environment_V01.FBX");
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
-		//Import "external" file into project: creates all own-format files (and then loads them by now)
-		std::string file = "Models/Street_environment_V01.FBX";
+		//Imports asset in project and loads it in scene
+		std::string file = "Assets/Models/Street_environment_V01.FBX";
 		App->moduleResources->ImportScene(file.c_str());
-		//App->moduleImport->ImportFile("Models/Street_environment_V01.FBX");
-
-		std::string fileName;
-		App->fileSystem->SplitFilePath(file.c_str(), nullptr, &fileName);
-		LoadGameObject(fileName.c_str());
+		App->moduleResources->LoadPrefab(file.c_str());
 	}
 
 #pragma region WindowTest
@@ -139,6 +127,7 @@ update_status M_Scene::Update(float dt)
 	}
 #pragma endregion
 
+	glColor4f(1.0, 1.0, 1.0, 1.0);
 	if (drawGrid)
 	{
 		//TODO: Move this into a mesh "prefab" or a renderer method
@@ -313,13 +302,28 @@ void M_Scene::LoadScene(const char* file)
 	App->LoadScene(file);
 }
 
-void M_Scene::LoadGameObject(const char* file)
+void M_Scene::LoadGameObject(uint64 ID)
 {
-	GameObject* gameObject = App->moduleImport->LoadGameObject(file);
+	GameObject* gameObject = App->moduleImport->LoadGameObject(ID);
 	if (gameObject != nullptr)
 	{
 		gameObject->parent = root;
 		root->childs.push_back(gameObject);
+
+		std::vector<GameObject*> newGameObjects;
+		GettAllGameObjects(newGameObjects, gameObject);
+
+		for (uint i = 0; i < newGameObjects.size(); i++)
+		{
+			if (newGameObjects[i]->isStatic)
+			{
+				quadtree->AddGameObject(newGameObjects[i]);
+			}
+			else
+			{
+				nonStatic.push_back(newGameObjects[i]);
+			}
+		}
 	}
 	else
 	{
@@ -384,7 +388,7 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 {
 	//Collecting quadtree GameObjects
 	std::map<float, const GameObject*> candidates;
-	App->scene->quadtree->CollectCandidates(candidates, segment);
+	quadtree->CollectCandidates(candidates, segment);
 
 	//Collecting non-static GameObjects
 	for (uint i = 0; i < nonStatic.size(); i++)

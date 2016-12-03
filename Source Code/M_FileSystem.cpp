@@ -192,7 +192,7 @@ void M_FileSystem::GetRealDir(const char* path, std::string& output) const
 	output = PHYSFS_getBaseDir();
 
 	output.append(*PHYSFS_getSearchPath());
-	output.append(PHYSFS_getRealDir(path)).append(path);
+	output.append(PHYSFS_getRealDir(path)).append("/").append(path);
 }
 
 bool M_FileSystem::HasExtension(const char* path) const

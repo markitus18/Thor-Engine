@@ -14,6 +14,7 @@
 
 #include "M_FileSystem.h"
 #include "Config.h"
+#include "M_Scene.h"
 
 #include <Windows.h>
 
@@ -38,7 +39,7 @@ bool M_Resources::Init(Config& config)
 
 bool M_Resources::Start()
 {
-	//ClearMetaData();
+	ClearMetaData();
 	UpdateAssetsImport();
 	return true;
 }
@@ -80,7 +81,9 @@ void M_Resources::ImportScene(const char* source_file)
 {
 	R_Prefab* resource = nullptr;
 
-	resource = (R_Prefab*)FindResourceInLibrary(source_file, "", Resource::PREFAB);
+	std::string name = "";
+	App->fileSystem->SplitFilePath(source_file, nullptr, &name);
+	resource = (R_Prefab*)FindResourceInLibrary(source_file, name.c_str(), Resource::PREFAB);
 	if (resource != nullptr)
 		return;// resource;
 
@@ -88,8 +91,8 @@ void M_Resources::ImportScene(const char* source_file)
 	if (resource)
 	{
 		existingResources[resource->ID] = GetMetaInfo(resource);
+		resources[resource->ID] = resource;
 		//TODO: simply release resource?
-		importingResources.push_back(resource);
 		SaveMetaInfo(resource);
 	}
 	//return resource;
@@ -165,36 +168,54 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 		LOG("Getting resource already loaded");
 	}
 	else
-	{
-	
-		//If resource is not loaded, search in library
-		switch (type)
+	{	//If resource is not loaded, search in library
+		std::map<uint64, ResourceMeta>::iterator it = existingResources.find(ID);
+		if (it != existingResources.end())
 		{
-			case (Resource::MESH):
+			switch (type)
 			{
-				ret = App->moduleMeshes->LoadMeshResource(ID);
-				break;
+				case (Resource::MESH):
+				{
+					ret = App->moduleMeshes->LoadMeshResource(ID);
+					resources[ID] = ret;
+					break;
+				}
+				case (Resource::TEXTURE):
+				{
+					ret = App->moduleMaterials->LoadTextureResource(ID);
+					resources[ID] = ret;
+					break;
+				}
+				case (Resource::MATERIAL):
+				{
+					ret = App->moduleMaterials->LoadMaterialResource(ID);
+					resources[ID] = ret;
+					break;
+				}
+				case (Resource::PREFAB):
+				{
+					//App->moduleImport->
+					break;
+				}
+				case (Resource::BONE):
+				{
+					break;
+				}
 			}
-			case (Resource::TEXTURE):
-			{
-				ret = App->moduleMaterials->LoadTextureResource(ID);
-				break;
-			}
-			case (Resource::MATERIAL):
-			{
-				ret = App->moduleMaterials->LoadMaterialResource(ID);
-			}
-			case (Resource::BONE):
-			{
-				break;
-			}
-		}
 
-		if (ret != nullptr)
-		{
-			ret->LoadOnMemory();
-			LOG("Resource load from library correctly");
+			if (ret != nullptr)
+			{
+				ret->original_file = it->second.original_file;
+				ret->name = it->second.resource_name;
+				ret->LoadOnMemory();
+				LOG("Resource load from library correctly");
+			}
 		}
+		else
+		{
+			LOG("Could not find resource ID %lld", ID);
+		}
+	
 	}
 	return ret;
 }
@@ -209,6 +230,20 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path)
 	if (ext == "tga" || ext == "png" || ext == "jpg")
 		return Resource::TEXTURE;
 	return Resource::UNKNOWN;
+}
+
+void M_Resources::LoadPrefab(const char* path)
+{
+	//By now we will asume everytime we want to load an fbx into the scene, it has already been imported
+	for (std::map<uint64, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++)
+	{
+		if (it->second->original_file == path && it->second->type == Resource::PREFAB)
+		{
+			App->scene->LoadGameObject(it->first);
+			return;
+		}
+	}
+	LOG("Could not find file '%s' loaded in resources", path);
 }
 
 void M_Resources::FinishImporting()
@@ -296,9 +331,22 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	//Getting file modification date
 	std::string global_path = "";
 	App->fileSystem->GetRealDir(resource->original_file.c_str(), global_path);
-	HANDLE hFile;
-	hFile = CreateFile(global_path.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
+	SaveFileDate(global_path.c_str(), config);
+	
+	char* buffer = nullptr;
+	uint size = config.Serialize(&buffer);
+	if (size > 0)
+	{
+		std::string path = resource->original_file + ".meta";
+		App->fileSystem->Save(path.c_str(), buffer, size);
+	}
+}
+
+void M_Resources::SaveFileDate(const char* path, Config& config)
+{
+	HANDLE hFile;
+	hFile = CreateFile(path, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		FILETIME creationTime, lpLastAccesTime, lastWriteTime;
@@ -321,15 +369,7 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	}
 	else
 	{
-		LOG("Could not fild file date");
-	}
-	
-	char* buffer = nullptr;
-	uint size = config.Serialize(&buffer);
-	if (size > 0)
-	{
-		std::string path = resource->original_file + ".meta";
-		App->fileSystem->Save(path.c_str(), buffer, size);
+		LOG("[warning] Could not find file '%s' date", path);
 	}
 }
 

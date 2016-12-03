@@ -2151,7 +2151,7 @@ float3x4 OBB::WorldToLocal() const
 float3x4 OBB::LocalToWorld() const
 {
 	// To produce a normalized local->world matrix, do the following.
-	
+	/*
 	float3x4 m;
 	vec x = axis[0] * r.x;
 	vec y = axis[1] * r.y;
@@ -2161,8 +2161,8 @@ float3x4 OBB::LocalToWorld() const
 	m.SetCol(2, 2.f * z);
 	m.SetCol(3, pos - x - y - z);
 	return m;
+	*/
 	
-	/*
 	assume2(axis[0].IsNormalized(), axis[0], axis[0].LengthSq());
 	assume2(axis[1].IsNormalized(), axis[1], axis[1].LengthSq());
 	assume2(axis[2].IsNormalized(), axis[2], axis[2].LengthSq());
@@ -2173,7 +2173,7 @@ float3x4 OBB::LocalToWorld() const
 	vec p = pos - axis[0] * r.x - axis[1] * r.y - axis[2] * r.z;
 	m.SetCol(3, p.ptr());
 	assume(m.IsOrthonormal());
-	return m;*/
+	return m;
 }
 
 /// The implementation of this function is from Christer Ericson's Real-Time Collision Detection, p.133.

@@ -45,9 +45,14 @@ public:
 	R_Texture* ImportRTexture(const char* buffer, const char* path, uint size);
 	R_Material* ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
 
+	///Getting a resource by ID
+	//Resource PREFAB creates a new GameObject in the scene
 	Resource* GetResource(uint64 ID, Resource::Type type);
 	Resource::Type GetTypeFromPath(const char* path);
 
+	void LoadPrefab(const char* path);
+
+	//Release all imported resources data
 	void FinishImporting();
 
 private:
@@ -58,6 +63,8 @@ private:
 	ResourceMeta	GetMetaInfo(Resource* resource);
 
 	void SaveMetaInfo(const Resource* resource);
+	void SaveFileDate(const char* path, Config& config);
+
 	void UpdateAssetsImport();
 	void UpdateAssetsFolder(const PathNode& node);
 

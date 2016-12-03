@@ -1,7 +1,7 @@
 {
     "GameObjects": [
         {
-            "UID": 183237416,
+            "UID": 1053851472,
             "ParentUID": 0,
             "Name": "Street_environment_V01",
             "Translation": [
@@ -28,8 +28,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 1119276156,
-            "ParentUID": 183237416,
+            "UID": 1414532357,
+            "ParentUID": 1053851472,
             "Name": "Sky001",
             "Translation": [
                 18.153732,
@@ -55,8 +55,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 1533641834,
-            "ParentUID": 183237416,
+            "UID": 1852142571,
+            "ParentUID": 1053851472,
             "Name": "Dummy001",
             "Translation": [
                 0,
@@ -82,8 +82,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 791196074,
-            "ParentUID": 1533641834,
+            "UID": 214867829,
+            "ParentUID": 1852142571,
             "Name": "City_building_004",
             "Translation": [
                 -41.475891,
@@ -109,8 +109,8 @@
             "MaterialID": 3
         },
         {
-            "UID": 906322404,
-            "ParentUID": 1533641834,
+            "UID": 2089521454,
+            "ParentUID": 1852142571,
             "Name": "City_building_001",
             "Translation": [
                 17.707165,
@@ -136,8 +136,8 @@
             "MaterialID": 6
         },
         {
-            "UID": 1707572730,
-            "ParentUID": 1533641834,
+            "UID": 1883417507,
+            "ParentUID": 1852142571,
             "Name": "City_building_007",
             "Translation": [
                 16.010492,
@@ -163,8 +163,8 @@
             "MaterialID": 9
         },
         {
-            "UID": 373821057,
-            "ParentUID": 1533641834,
+            "UID": 58769027,
+            "ParentUID": 1852142571,
             "Name": "City_building_008",
             "Translation": [
                 40.979996,
@@ -190,8 +190,8 @@
             "MaterialID": 12
         },
         {
-            "UID": 441491404,
-            "ParentUID": 1533641834,
+            "UID": 602081232,
+            "ParentUID": 1852142571,
             "Name": "Line002",
             "Translation": [
                 -2.159772,
@@ -217,8 +217,8 @@
             "MaterialID": 15
         },
         {
-            "UID": 139598373,
-            "ParentUID": 1533641834,
+            "UID": 764147279,
+            "ParentUID": 1852142571,
             "Name": "Plane001",
             "Translation": [
                 -0.028603,
@@ -244,8 +244,8 @@
             "MaterialID": 17
         },
         {
-            "UID": 1614823958,
-            "ParentUID": 1533641834,
+            "UID": 1085324128,
+            "ParentUID": 1852142571,
             "Name": "City_building_010",
             "Translation": [
                 25.154011,
@@ -271,8 +271,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 594892174,
-            "ParentUID": 1614823958,
+            "UID": 2138995793,
+            "ParentUID": 1085324128,
             "Name": "City_building_010_submesh",
             "Translation": [
                 0,
@@ -298,8 +298,8 @@
             "MaterialID": 19
         },
         {
-            "UID": 618430012,
-            "ParentUID": 1614823958,
+            "UID": 1772603238,
+            "ParentUID": 1085324128,
             "Name": "City_building_010_submesh(1)",
             "Translation": [
                 0,
@@ -325,8 +325,8 @@
             "MaterialID": 19
         },
         {
-            "UID": 816226749,
-            "ParentUID": 1533641834,
+            "UID": 967290649,
+            "ParentUID": 1852142571,
             "Name": "City_building_011",
             "Translation": [
                 30.134541,
@@ -352,8 +352,8 @@
             "MaterialID": 9
         },
         {
-            "UID": 1957708862,
-            "ParentUID": 1533641834,
+            "UID": 802587756,
+            "ParentUID": 1852142571,
             "Name": "City_building_013",
             "Translation": [
                 -42.288055,
@@ -379,8 +379,8 @@
             "MaterialID": 24
         },
         {
-            "UID": 1156573506,
-            "ParentUID": 1533641834,
+            "UID": 1585149183,
+            "ParentUID": 1852142571,
             "Name": "City_building_014",
             "Translation": [
                 -19.439707,
@@ -406,8 +406,8 @@
             "MaterialID": 3
         },
         {
-            "UID": 1904716961,
-            "ParentUID": 1533641834,
+            "UID": 486650313,
+            "ParentUID": 1852142571,
             "Name": "City_building_016",
             "Translation": [
                 34.270424,
@@ -433,8 +433,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 1184339531,
-            "ParentUID": 1904716961,
+            "UID": 231942654,
+            "ParentUID": 486650313,
             "Name": "City_building_016_submesh",
             "Translation": [
                 0,
@@ -460,8 +460,8 @@
             "MaterialID": 19
         },
         {
-            "UID": 120377539,
-            "ParentUID": 1904716961,
+            "UID": 1149972341,
+            "ParentUID": 486650313,
             "Name": "City_building_016_submesh(1)",
             "Translation": [
                 0,
@@ -487,8 +487,8 @@
             "MaterialID": 19
         },
         {
-            "UID": 1323452125,
-            "ParentUID": 1533641834,
+            "UID": 1886508954,
+            "ParentUID": 1852142571,
             "Name": "City_building_017",
             "Translation": [
                 44.260082,
@@ -514,8 +514,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 127036443,
-            "ParentUID": 1323452125,
+            "UID": 540035914,
+            "ParentUID": 1886508954,
             "Name": "City_building_017_submesh",
             "Translation": [
                 0,
@@ -541,8 +541,8 @@
             "MaterialID": 19
         },
         {
-            "UID": 1066539757,
-            "ParentUID": 1323452125,
+            "UID": 1844160565,
+            "ParentUID": 1886508954,
             "Name": "City_building_017_submesh(1)",
             "Translation": [
                 0,
@@ -568,8 +568,8 @@
             "MaterialID": 19
         },
         {
-            "UID": 22359778,
-            "ParentUID": 1533641834,
+            "UID": 697892676,
+            "ParentUID": 1852142571,
             "Name": "City_building_022",
             "Translation": [
                 -20.831324,
@@ -595,8 +595,8 @@
             "MaterialID": 32
         },
         {
-            "UID": 1931943710,
-            "ParentUID": 1533641834,
+            "UID": 1168482421,
+            "ParentUID": 1852142571,
             "Name": "City_building_023",
             "Translation": [
                 42.130642,
@@ -622,8 +622,8 @@
             "MaterialID": 9
         },
         {
-            "UID": 509771359,
-            "ParentUID": 1533641834,
+            "UID": 2086600434,
+            "ParentUID": 1852142571,
             "Name": "City_building_024",
             "Translation": [
                 -20.572771,
@@ -649,8 +649,8 @@
             "MaterialID": 12
         },
         {
-            "UID": 1477034617,
-            "ParentUID": 1533641834,
+            "UID": 382546905,
+            "ParentUID": 1852142571,
             "Name": "City_building_026",
             "Translation": [
                 31.511889,
@@ -676,8 +676,8 @@
             "MaterialID": 32
         },
         {
-            "UID": 372633562,
-            "ParentUID": 1533641834,
+            "UID": 205882911,
+            "ParentUID": 1852142571,
             "Name": "City_building_028",
             "Translation": [
                 13.387990,
@@ -703,8 +703,8 @@
             "MaterialID": 38
         },
         {
-            "UID": 1518764242,
-            "ParentUID": 1533641834,
+            "UID": 1468286653,
+            "ParentUID": 1852142571,
             "Name": "Object010",
             "Translation": [
                 -2.503353,
@@ -730,8 +730,8 @@
             "MaterialID": 41
         },
         {
-            "UID": 85481296,
-            "ParentUID": 1533641834,
+            "UID": 1215987666,
+            "ParentUID": 1852142571,
             "Name": "City_building_030",
             "Translation": [
                 -42.807240,
@@ -757,8 +757,8 @@
             "MaterialID": 38
         },
         {
-            "UID": 616122979,
-            "ParentUID": 1533641834,
+            "UID": 176962552,
+            "ParentUID": 1852142571,
             "Name": "City_building_031",
             "Translation": [
                 -34.679482,
@@ -784,8 +784,8 @@
             "MaterialID": 38
         },
         {
-            "UID": 1259555781,
-            "ParentUID": 1533641834,
+            "UID": 196149953,
+            "ParentUID": 1852142571,
             "Name": "City_building_032",
             "Translation": [
                 -29.478403,
@@ -811,8 +811,8 @@
             "MaterialID": 3
         },
         {
-            "UID": 1185787403,
-            "ParentUID": 1533641834,
+            "UID": 307366540,
+            "ParentUID": 1852142571,
             "Name": "City_building_033",
             "Translation": [
                 -32.361496,
@@ -838,8 +838,8 @@
             "MaterialID": 24
         },
         {
-            "UID": 2138426289,
-            "ParentUID": 1533641834,
+            "UID": 1638822632,
+            "ParentUID": 1852142571,
             "Name": "City_building_034",
             "Translation": [
                 16.049517,
@@ -865,8 +865,8 @@
             "MaterialID": 32
         },
         {
-            "UID": 777870900,
-            "ParentUID": 1533641834,
+            "UID": 664297362,
+            "ParentUID": 1852142571,
             "Name": "City_building_035",
             "Translation": [
                 13.387990,
@@ -892,8 +892,8 @@
             "MaterialID": 38
         },
         {
-            "UID": 907318854,
-            "ParentUID": 1533641834,
+            "UID": 838818010,
+            "ParentUID": 1852142571,
             "Name": "City_building_036",
             "Translation": [
                 -31.216331,
@@ -919,8 +919,8 @@
             "MaterialID": 24
         },
         {
-            "UID": 214457829,
-            "ParentUID": 1533641834,
+            "UID": 678377692,
+            "ParentUID": 1852142571,
             "Name": "City_building_037",
             "Translation": [
                 -20.317694,
@@ -946,8 +946,8 @@
             "MaterialID": 32
         },
         {
-            "UID": 1462198865,
-            "ParentUID": 1533641834,
+            "UID": 1872929908,
+            "ParentUID": 1852142571,
             "Name": "City_building_038",
             "Translation": [
                 -41.649002,
@@ -973,8 +973,8 @@
             "MaterialID": 32
         },
         {
-            "UID": 432377777,
-            "ParentUID": 1533641834,
+            "UID": 46079028,
+            "ParentUID": 1852142571,
             "Name": "City_building_039",
             "Translation": [
                 -42.807240,
@@ -1000,8 +1000,8 @@
             "MaterialID": 38
         },
         {
-            "UID": 1294932518,
-            "ParentUID": 1533641834,
+            "UID": 1874923417,
+            "ParentUID": 1852142571,
             "Name": "City_building_040",
             "Translation": [
                 -34.679482,
@@ -1027,8 +1027,8 @@
             "MaterialID": 38
         },
         {
-            "UID": 985850971,
-            "ParentUID": 1533641834,
+            "UID": 1397215709,
+            "ParentUID": 1852142571,
             "Name": "City_building_041",
             "Translation": [
                 30.695278,
@@ -1054,8 +1054,8 @@
             "MaterialID": 6
         },
         {
-            "UID": 205610224,
-            "ParentUID": 183237416,
+            "UID": 988118130,
+            "ParentUID": 1053851472,
             "Name": "Camera001",
             "Translation": [
                 -78.312431,
@@ -1081,8 +1081,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 1810897849,
-            "ParentUID": 183237416,
+            "UID": 1281180732,
+            "ParentUID": 1053851472,
             "Name": "Camera001.Target",
             "Translation": [
                 -28.132622,
@@ -1108,8 +1108,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 2049197153,
-            "ParentUID": 183237416,
+            "UID": 1350464427,
+            "ParentUID": 1053851472,
             "Name": "Spot001",
             "Translation": [
                 -66.721268,
@@ -1135,8 +1135,8 @@
             "MaterialID": 0
         },
         {
-            "UID": 1226384215,
-            "ParentUID": 183237416,
+            "UID": 1702322860,
+            "ParentUID": 1053851472,
             "Name": "Spot001.Target",
             "Translation": [
                 28.890945,

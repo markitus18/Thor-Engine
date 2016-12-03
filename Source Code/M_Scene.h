@@ -37,7 +37,7 @@ public:
 	void LoadScene(Config& node); //Load itself
 	void LoadScene(const char* file); //Calls application and prepares to load
 
-	void LoadGameObject(const char* file); //Calls module import to load a Game Object file
+	void LoadGameObject(uint64 ID); //Calls module import to load a Game Object file
 	//Endof Scene and prefab save / load ------------------------------------------
 
 	//GameObject management -------------------------------------------------------

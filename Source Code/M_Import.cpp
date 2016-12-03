@@ -77,10 +77,10 @@ void M_Import::SaveGameObjectConfig(Config& config, std::vector<GameObject*>& ga
 	}
 }
 
-GameObject* M_Import::LoadGameObject(const char* path)
+GameObject* M_Import::LoadGameObject(uint64 ID)
 {
 	std::string full_path = "Library/GameObjects/";
-	full_path.append(path);// .append(".mesh");
+	full_path.append(std::to_string(ID));// .append(".mesh");
 
 	char* buffer;
 	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
@@ -252,7 +252,7 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 			App->fileSystem->SplitFilePath(path, nullptr, &fileName);
 
 			std::string full_path = "/Library/GameObjects/";
-			full_path.append(fileName);
+			full_path.append(std::to_string(ID));
 			App->fileSystem->Save(full_path.c_str(), buffer, size);
 
 			ret = new R_Prefab();

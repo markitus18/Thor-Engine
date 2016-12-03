@@ -41,7 +41,18 @@ bool M_Resources::Start()
 {
 	ClearMetaData();
 	UpdateAssetsImport();
+	updateAssets.Start();
 	return true;
+}
+
+update_status M_Resources::Update(float dt)
+{
+	if (updateAssets.ReadSec() > 5)
+	{
+		UpdateAssetsImport();
+		updateAssets.Start();
+	}
+	return UPDATE_CONTINUE;
 }
 
 bool M_Resources::CleanUp()
@@ -359,6 +370,8 @@ void M_Resources::SaveFileDate(const char* path, Config& config)
 			if (res != false)
 			{
 				config.SetNumber("Day", systemTime.wDay);
+				config.SetNumber("Month", systemTime.wMonth);
+				config.SetNumber("Year", systemTime.wYear);
 				config.SetNumber("Hour", systemTime.wHour);
 				config.SetNumber("Minutes", systemTime.wMinute);
 				config.SetNumber("Seconds", systemTime.wSecond);
@@ -390,6 +403,19 @@ void M_Resources::UpdateAssetsFolder(const PathNode& node)
 		if (App->fileSystem->Exists(std::string(node.path + ".meta").c_str()) == false)
 		{
 			ImportFileFromAssets(node.path.c_str());
+		}
+		else
+		{
+			if (IsFileModified(node.path.c_str()))
+			{
+				LOG("File modified: %s", node.path.c_str());
+			}
+			else
+			{
+				LOG("File not modified: %s", node.path.c_str());
+			}
+			//Check if the file has been modified -> reimport with same uid
+
 		}
 	}
 	//If node folder has something inside
@@ -426,4 +452,54 @@ void M_Resources::RemoveMetaFromFolder(PathNode node)
 			RemoveMetaFromFolder(node.children[i]);
 		}
 	}
+}
+
+bool M_Resources::IsFileModified(const char* path)
+{
+	bool ret = false;
+
+	std::string meta_file = path;
+	meta_file.append(".meta");
+
+	std::string full_path = "";
+	App->fileSystem->GetRealDir(path, full_path);
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(meta_file.c_str(), &buffer);
+
+	if (size > 0)
+	{
+		Config config(buffer);
+
+		//Opening file data
+		HANDLE hFile;
+		hFile = CreateFile(full_path.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hFile != INVALID_HANDLE_VALUE)
+		{
+			FILETIME creationTime, lpLastAccesTime, lastWriteTime;
+
+			bool error = GetFileTime(hFile, &creationTime, &lpLastAccesTime, &lastWriteTime);
+			if (error != false)
+			{
+				SYSTEMTIME systemTime;
+				bool res = FileTimeToSystemTime(&lastWriteTime, &systemTime);
+				if (res != false)
+				{
+					uint day = config.GetNumber("Day", 0);
+					if (day != 0)
+					{
+						ret = !(config.GetNumber("Day") == systemTime.wDay && config.GetNumber("Month") == systemTime.wMonth && config.GetNumber("Year") == systemTime.wYear
+							&& config.GetNumber("Hour") == systemTime.wHour && config.GetNumber("Minutes") == systemTime.wMinute && config.GetNumber("Seconds") == systemTime.wSecond);
+					}
+					else
+					{
+						LOG("Could not get .meta date from '%s'", path);
+					}
+				}
+			}
+			//Warning: It is important to close the handle. Filesystem won't be able to access it otherwise
+			CloseHandle(hFile);
+		}
+	}
+	return ret;
 }

@@ -3,6 +3,8 @@
 
 #include "Module.h"
 #include "Resource.h"
+#include "Timer.h"
+
 #include <map>
 #include <vector>
 
@@ -35,6 +37,7 @@ public:
 
 	bool Init(Config& config);
 	bool Start();
+	update_status Update(float dt);
 	bool CleanUp();
 
 	//Import a file existing in assets creating the resources
@@ -62,6 +65,7 @@ private:
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
 
+	//Meta data management -----------------------------------------------------
 	void SaveMetaInfo(const Resource* resource);
 	void SaveFileDate(const char* path, Config& config);
 
@@ -74,6 +78,8 @@ private:
 	//Remove all .meta files in a folder
 	void RemoveMetaFromFolder(PathNode node);
 
+	bool IsFileModified(const char* path);
+	//---------------------------------------------------------------------------
 private:
 	//Resources loaded in memory
 	std::map<uint64, Resource*> resources;
@@ -88,6 +94,8 @@ private:
 	std::string metaFile = "/ProjectSettings/Resources.JSON";
 
 	uint64 nextID = 0;
+
+	Timer updateAssets;
 };
 
 #endif

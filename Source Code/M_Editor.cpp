@@ -312,11 +312,11 @@ void M_Editor::ShowPlayWindow()
 		{
 
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Frame"))
-		{
+		//ImGui::SameLine();
+		//if (ImGui::Button("Frame"))
+		//{
 
-		}
+		//}
 		ImGui::End();
 	}
 
@@ -378,7 +378,7 @@ void M_Editor::OnResize(int screen_width, int screen_height)
 	panelConfiguration->UpdatePosition(screen_width, screen_height);
 	panelButtons->UpdatePosition(screen_width, screen_height);
 
-	playWindow.x = screen_width / 2 - 100;
+	playWindow.x = screen_width / 2 - 90;
 	playWindow.y = screen_height / 20;
 }
 

@@ -41,12 +41,12 @@ public:
 	bool CleanUp();
 
 	//Import a file existing in assets creating the resources
-	void ImportFileFromAssets(const char* path);
+	void ImportFileFromAssets(const char* path, uint64 ID = 0);
 
-	void ImportScene(const char* source_file);
-	R_Mesh* ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
-	R_Texture* ImportRTexture(const char* buffer, const char* path, uint size);
-	R_Material* ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
+	void ImportScene(const char* source_file, uint64 ID = 0);
+	R_Mesh* ImportRMesh(const aiMesh* from, const char* source_file, const char* name, uint64 ID = 0);
+	R_Texture* ImportRTexture(const char* buffer, const char* path, uint size, uint64 ID = 0);
+	R_Material* ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID = 0);
 
 	///Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene
@@ -65,6 +65,8 @@ private:
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
 
+	void SubstituteTexture(R_Texture* dst, R_Texture* src);
+
 	//Meta data management -----------------------------------------------------
 	void SaveMetaInfo(const Resource* resource);
 	void SaveFileDate(const char* path, Config& config);
@@ -79,7 +81,10 @@ private:
 	void RemoveMetaFromFolder(PathNode node);
 
 	bool IsFileModified(const char* path);
+	uint64 GetIDFromMeta(const char* path);
 	//---------------------------------------------------------------------------
+
+	void DeleteResource(uint64 ID);
 private:
 	//Resources loaded in memory
 	std::map<uint64, Resource*> resources;

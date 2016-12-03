@@ -18,6 +18,7 @@
 
 #include "M_Scene.h"
 #include "Quadtree.h"
+#include "M_Resources.h"
 
 P_Inspector::P_Inspector()
 {
@@ -121,7 +122,8 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 						ImGui::Text("Size: %i", materials.size());
 						for (uint i = 0; i < materials.size(); i++)
 						{
-							ImGui::Text("Element %i: %s", i, materials[i]->libFile.c_str());
+							R_Material* rMat = (R_Material*)materials[i]->GetResource();
+							ImGui::Text("Element %i: %s", i, rMat->GetName());
 						}
 					}
 				}
@@ -134,10 +136,15 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 						R_Material* rMat = (R_Material*)materials[i]->GetResource();
 						if (ImGui::CollapsingHeader("NothingYet", ImGuiTreeNodeFlags_DefaultOpen))
 						{
-							if (rMat->texture != nullptr)
+							if (rMat->textureID != 0)
 							{
-								ImGui::Text(materials[i]->texture_file.c_str());
-								ImGui::Image((ImTextureID)rMat->texture->buffer, ImVec2(128, 128));
+								R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(rMat->textureID, Resource::TEXTURE);
+								if (rTex)
+								{
+									//ImGui::Text(rTex->GetResourceFile());
+									ImGui::Image((ImTextureID)rTex->buffer, ImVec2(128, 128));
+								}
+		
 							}
 						}
 					}

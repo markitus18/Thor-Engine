@@ -30,10 +30,8 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	//char* buffer = nullptr;
-	//uint size = App->fileSystem->Load("/Assets/Textures/building03_c.tga", &buffer);
 	LoadResourcesData();
-	//UpdateAssetsImport();
+	UpdateAssetsImport();
 	return true;
 }
 
@@ -68,7 +66,7 @@ bool M_Resources::CleanUp()
 	return true;
 }
 
-void M_Resources::ImportFileFromAssets(const char* path)
+void M_Resources::ImportFileFromAssets(const char* path, uint64 ID)
 {
 	Resource::Type type = GetTypeFromPath(path);
 	switch (type)
@@ -77,7 +75,7 @@ void M_Resources::ImportFileFromAssets(const char* path)
 		{
 			char* buffer = nullptr;
 			uint size = App->fileSystem->Load(path, &buffer);
-			ImportRTexture(buffer, path, size);
+			ImportRTexture(buffer, path, size, ID);
 			break;
 		}
 		case (Resource::PREFAB):
@@ -88,7 +86,7 @@ void M_Resources::ImportFileFromAssets(const char* path)
 	}
 }
 
-void M_Resources::ImportScene(const char* source_file)
+void M_Resources::ImportScene(const char* source_file, uint64 ID)
 {
 	R_Prefab* resource = nullptr;
 
@@ -109,17 +107,22 @@ void M_Resources::ImportScene(const char* source_file)
 	//return resource;
 }
 
-R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name)
+R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name, uint64 ID)
 {
 	R_Mesh* resource = nullptr;
 
-	//First we find if that resource has already been imported
-	resource = (R_Mesh*)FindResourceInLibrary(source_file, name, Resource::MESH);
-	if (resource != nullptr)
-		return resource;
+	//If ID is not 0 it means we have a resource imported, but we want to reimport it
+	if (ID == 0)
+	{
+		//First we find if that resource has already been imported
+		resource = (R_Mesh*)FindResourceInLibrary(source_file, name, Resource::MESH);
+		if (resource != nullptr)
+			return resource;
+	}
 
 	//If its not imported, import it
-	resource = App->moduleMeshes->ImportMeshResource(mesh, ++nextID, source_file, name);
+	uint64 newID = ID == 0 ? ++nextID : ID;
+	resource = App->moduleMeshes->ImportMeshResource(mesh, newID, source_file, name);
 	if (resource)
 	{
 		existingResources[resource->ID] = GetMetaInfo(resource);
@@ -129,19 +132,31 @@ R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, co
 	return resource;
 }
 
-R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_file, uint size)
+R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_file, uint size, uint64 ID)
 {
 	R_Texture* resource = nullptr;
 
-	//First we find if that resource has already been imported
-	resource = (R_Texture*)FindResourceInLibrary(source_file, "", Resource::TEXTURE);
-	if (resource != nullptr)
-		return resource;
+	//If ID is not 0 it means we have a resource imported, but we want to reimport it
+	if (ID == 0)
+	{
+		//First we find if that resource has already been imported
+		resource = (R_Texture*)FindResourceInLibrary(source_file, "", Resource::TEXTURE);
+		if (resource != nullptr)
+			return resource;
+	}
 
 	//If its not imported, import it
-	resource = App->moduleMaterials->ImportTextureResource(buffer, ++nextID, source_file, size);
+	uint64 newID = ID == 0 ? ++nextID : ID;
+	resource = App->moduleMaterials->ImportTextureResource(buffer, newID, source_file, size);
 	if (resource)
 	{
+		if (ID != 0)
+		{
+			R_Texture* oldTexture = (R_Texture*)GetResource(newID, Resource::TEXTURE);
+			SubstituteTexture(oldTexture, resource);
+			//resource = oldTexture;
+		}
+
 		existingResources[resource->ID] = GetMetaInfo(resource);
 		importingResources.push_back(resource);
 		SaveMetaInfo(resource);
@@ -149,7 +164,7 @@ R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_fi
 	return resource;
 }
 
-R_Material* M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name)
+R_Material* M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID)
 {
 	R_Material* resource = nullptr;
 
@@ -176,7 +191,6 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 	if (it != resources.end())
 	{
 		ret = it->second;
-		LOG("Getting resource already loaded");
 	}
 	else
 	{	//If resource is not loaded, search in library
@@ -332,6 +346,19 @@ ResourceMeta M_Resources::GetMetaInfo(Resource* resource)
 	return ret;
 }
 
+void M_Resources::SubstituteTexture(R_Texture* dst, R_Texture* src)
+{
+	int instances = dst->instances;
+
+	resources.erase(dst->ID);
+	//TODO: buffers break when releasing them
+	//dst->FreeMemory();
+	RELEASE(dst);
+
+	resources[src->ID] = src;
+	src->LoadOnMemory();
+}
+
 void M_Resources::SaveMetaInfo(const Resource* resource)
 {
 	Config config;
@@ -409,13 +436,10 @@ void M_Resources::UpdateAssetsFolder(const PathNode& node)
 			if (IsFileModified(node.path.c_str()))
 			{
 				LOG("File modified: %s", node.path.c_str());
+				std::string meta_file = node.path + (".meta");
+				uint64 id = GetIDFromMeta(meta_file.c_str());
+				ImportFileFromAssets(node.path.c_str(), id);
 			}
-			else
-			{
-				LOG("File not modified: %s", node.path.c_str());
-			}
-			//Check if the file has been modified -> reimport with same uid
-
 		}
 	}
 	//If node folder has something inside
@@ -502,4 +526,25 @@ bool M_Resources::IsFileModified(const char* path)
 		}
 	}
 	return ret;
+}
+
+uint64 M_Resources::GetIDFromMeta(const char* path)
+{
+	uint64 ret = 0;
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(path, &buffer);
+	
+	if (size > 0)
+	{
+		Config config(buffer);
+		ret = config.GetNumber("ResourceID");
+	}
+
+	return ret;
+}
+
+void M_Resources::DeleteResource(uint64 ID)
+{
+
 }

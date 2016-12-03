@@ -14,14 +14,6 @@ public:
 	~C_Material();
 
 	static Component::Type GetType();
-
-public:
-	uint texture_id = 0;
-	std::string texture_path;
-	std::string texture_file;
-	Color color;
-
-	std::string libFile = "";
 };
 
 #endif // __C_MATERIAL_H__

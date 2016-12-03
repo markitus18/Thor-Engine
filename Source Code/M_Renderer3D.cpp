@@ -13,6 +13,7 @@
 #include "GameObject.h"
 #include "R_Material.h"
 #include "R_Texture.h"
+#include "M_Resources.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -331,11 +332,12 @@ void M_Renderer3D::DrawMesh(const RenderMesh& rMesh)
 		if (rMesh.material)
 		{
 			R_Material* mat = (R_Material*)rMesh.material->GetResource();
-			if (mat->texture)
+			if (mat->textureID)
 			{
-				if (mat->texture->buffer)
+				R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID, Resource::TEXTURE);
+				if (rTex && rTex->buffer != 0)
 				{
-					glBindTexture(GL_TEXTURE_2D, mat->texture->buffer);
+					glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 				}
 			}
 			glColor4f(mat->color.r, mat->color.g, mat->color.b, mat->color.a);
@@ -439,11 +441,11 @@ void M_Renderer3D::ReleaseBuffers(R_Mesh* mesh)
 
 }
 
-void M_Renderer3D::ReleaseBuffers(C_Material* material)
+void M_Renderer3D::ReleaseBuffers(R_Texture* texture)
 {
-	if (material->texture_id)
+	if (texture)
 	{
-		glDeleteBuffers(1, &material->texture_id);
+		glDeleteBuffers(1, &texture->buffer);
 
 	}
 }

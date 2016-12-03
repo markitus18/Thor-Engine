@@ -57,7 +57,6 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 	if (gameObject->beenSelected == true)
 	{
 		ImGui::SetNextTreeNodeOpen(true);
-		LOG("Opening next tree node");
 	}
 
 	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());

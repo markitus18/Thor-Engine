@@ -11,6 +11,7 @@ class C_Mesh;
 class C_Material;
 
 class R_Mesh;
+class R_Texture;
 
 class Config;
 
@@ -75,7 +76,7 @@ public:
 	void LoadBuffers(C_Material* material);
 
 	void ReleaseBuffers(R_Mesh* mesh);
-	void ReleaseBuffers(C_Material* material);
+	void ReleaseBuffers(R_Texture* texture);
 	//----------------------------------------------
 
 	void OnRemoveGameObject(GameObject* gameObject);

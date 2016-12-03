@@ -16,8 +16,7 @@ public:
 	~R_Material();
 
 public:
-	R_Texture* texture;
-	uint64 textureID;
+	uint64 textureID = 0;
 	Color color;
 };
 

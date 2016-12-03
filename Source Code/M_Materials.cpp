@@ -182,7 +182,6 @@ R_Material* M_Materials::LoadMaterialResource(unsigned long long ID)
 
 		material->color = Color(color[0], color[1], color[2], color[3]);
 
-		material->texture = (R_Texture*)App->moduleResources->GetResource(material->textureID, Resource::TEXTURE);
 		material->resource_file = full_path;
 		material->ID = ID;
 
@@ -221,6 +220,7 @@ R_Texture* M_Materials::ImportTextureResource(const char* buffer, unsigned long 
 				resTexture->original_file = file;
 				resTexture->resource_file = full_path;
 				resTexture->ID = ID;
+				resTexture->buffer = ilutGLBindTexImage();
 			}
 		}
 	}
@@ -240,7 +240,7 @@ R_Texture* M_Materials::LoadTextureResource(unsigned long long ID)
 	if (size > 0)
 	{
 		rTexture = new R_Texture;
-
+		rTexture->ID = ID;
 		ILuint ImageName;
 		ilGenImages(1, &ImageName);
 		ilBindImage(ImageName);

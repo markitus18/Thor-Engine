@@ -53,7 +53,6 @@ void Component::SetResource(Resource* resource)
 		resourceID = resource->GetID();
 		resource->instances++;
 	}
-
 }
 
 void Component::SetResource(unsigned long long id)

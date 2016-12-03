@@ -30,16 +30,17 @@ public:
 	unsigned long long GetID() const;
 
 	const char* GetResourceFile() const;
+	const char* GetName() const;
 
 	virtual void LoadOnMemory() {};
 	virtual void FreeMemory() {};
 
 public:
-	uint instances;
+	uint instances = 0;
 
 protected:
-	unsigned long long ID;
-	Type type;
+	unsigned long long ID = 0;
+	Type type = UNKNOWN;
 
 	std::string resource_file = "";
 	std::string original_file = "";

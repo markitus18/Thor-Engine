@@ -16,7 +16,7 @@ void R_Texture::LoadOnMemory()
 
 }
 
-void R_Texture::ReleaseMemory()
+void R_Texture::FreeMemory()
 {
 	glDeleteBuffers(1, &buffer);
 }

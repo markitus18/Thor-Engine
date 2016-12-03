@@ -10,7 +10,7 @@ public:
 	~R_Texture();
 
 	void LoadOnMemory();
-	void ReleaseMemory();
+	void FreeMemory();
 
 public:
 	uint buffer;

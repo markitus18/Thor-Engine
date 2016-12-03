@@ -24,3 +24,8 @@ const char* Resource::GetResourceFile() const
 {
 	return resource_file.c_str();
 }
+
+const char* Resource::GetName() const
+{
+	return name.c_str();
+}

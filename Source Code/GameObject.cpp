@@ -190,6 +190,7 @@ Component* GameObject::CreateComponent(Component::Type type)
 			if (!HasComponent(Component::Type::Camera))
 			{
 				new_component = new C_Camera(this);
+				new_component->OnUpdateTransform(transform->GetGlobalTransform(), float4x4::identity);
 				break;
 			}
 		}

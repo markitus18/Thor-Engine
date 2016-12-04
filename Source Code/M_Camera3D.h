@@ -31,7 +31,7 @@ public:
 	C_Camera* GetCamera() const;
 
 	void SaveScene(Config& root) const;
-	void LoadScene(Config& root);
+	void LoadScene(Config& root, bool tmp = false);
 
 private:
 

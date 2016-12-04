@@ -157,12 +157,15 @@ void M_Camera3D::SaveScene(Config& root) const
 	ref.AddFloat3(reference);
 }
 
-void M_Camera3D::LoadScene(Config& root)
+void M_Camera3D::LoadScene(Config& root, bool tmp)
 {
-	camera->frustum.SetPos(root.GetArray("Position").GetFloat3(0));
-	reference = root.GetArray("Reference").GetFloat3(0);
-	Look(reference);
-	camera->update_projection = true;
+	if (tmp == false)
+	{
+		camera->frustum.SetPos(root.GetArray("Position").GetFloat3(0));
+		reference = root.GetArray("Reference").GetFloat3(0);
+		Look(reference);
+		camera->update_projection = true;
+	}
 }
 
 void M_Camera3D::Move_Keyboard(float dt)

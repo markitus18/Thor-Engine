@@ -199,9 +199,6 @@
     <ClCompile Include="Source Code\M_FileSystem.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\M_Import.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\M_Input.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -232,15 +229,6 @@
     <ClCompile Include="Source Code\R_Mesh.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\M_Materials.cpp">
-      <Filter>Source Code\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\M_Meshes.cpp">
-      <Filter>Source Code\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\M_Resources.cpp">
-      <Filter>Source Code\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\R_Texture.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
@@ -255,6 +243,18 @@
     </ClCompile>
     <ClCompile Include="Source Code\P_Resources.cpp">
       <Filter>Source Code\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Materials.cpp">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Meshes.cpp">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Resources.cpp">
+      <Filter>Source Code\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Import.cpp">
+      <Filter>Source Code\Modules\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -573,9 +573,6 @@
     <ClInclude Include="Source Code\M_FileSystem.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\M_Import.h">
-      <Filter>Source Code\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\M_Input.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
@@ -606,15 +603,6 @@
     <ClInclude Include="Source Code\R_Mesh.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\M_Meshes.h">
-      <Filter>Source Code\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Materials.h">
-      <Filter>Source Code\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Resources.h">
-      <Filter>Source Code\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\R_Texture.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
@@ -629,6 +617,18 @@
     </ClInclude>
     <ClInclude Include="Source Code\P_Resources.h">
       <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Materials.h">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Meshes.h">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Resources.h">
+      <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Import.h">
+      <Filter>Source Code\Modules\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -685,6 +685,9 @@
     </Filter>
     <Filter Include="External Libraries\parson">
       <UniqueIdentifier>{ba2abca1-375c-41b2-ae5c-bb3ea88488dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Modules\Resources">
+      <UniqueIdentifier>{3150bfbf-0070-4964-814c-181000b057ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

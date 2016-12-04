@@ -120,6 +120,10 @@ void M_Editor::Draw()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if (ImGui::MenuItem("New Scene"))
+			{
+				App->scene->CreateDefaultScene();
+			}
 
 			if (ImGui::BeginMenu("Open Scene"))
 			{
@@ -177,6 +181,7 @@ void M_Editor::Draw()
 
 			if (ImGui::BeginMenu("Load Imported Scene"))
 			{
+				//TODO: avoid doing this every frame
 				PathNode assets = App->moduleResources->CollectImportedScenes();
 				DisplayScenesWindows(assets);
 
@@ -468,7 +473,7 @@ void M_Editor::SelectGameObject(GameObject* gameObject, bool selectSingle, bool 
 		panelHierarchy->AddSelect(gameObject, openTree);
 }
 
-void M_Editor::LoadScene(Config& root)
+void M_Editor::LoadScene(Config& root, bool tmp)
 {
 	panelHierarchy->selectedGameObjects.clear();
 }

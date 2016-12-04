@@ -268,7 +268,7 @@ void M_Scene::SaveScene(Config& node) const
 	App->moduleImport->SaveGameObjectConfig(node, gameObjects);
 }
 
-void M_Scene::LoadScene(Config& node)
+void M_Scene::LoadScene(Config& node, bool tmp)
 {
 	DeleteAllGameObjects();
 	quadtree->Clear();
@@ -452,13 +452,13 @@ void M_Scene::CreateCamera()
 void M_Scene::Play()
 {
 	Time::Start(60);
-	App->SaveScene("tmp.scene", true);
+	App->SaveScene("ProjectSettings/tmp.scene", true);
 }
 
 void M_Scene::Stop()
 {
 	Time::Stop();
-	App->LoadScene("tmp.scene");
+	App->LoadScene("ProjectSettings/tmp.scene");
 }
 
 void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)

@@ -343,7 +343,7 @@ void Application::LoadSceneNow()
 
 			for (uint i = 0; i < list_modules.size(); i++)
 			{
-				list_modules[i]->LoadScene(config.GetNode(list_modules[i]->name.c_str()));
+				list_modules[i]->LoadScene(config.GetNode(list_modules[i]->name.c_str()), tmpScene);
 			}
 		}
 		else

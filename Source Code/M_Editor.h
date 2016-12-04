@@ -49,7 +49,7 @@ public:
 	void SelectGameObject(GameObject* gameObject, bool selectSingle = true, bool openTree = true);
 	//------------------------------------
 
-	void LoadScene(Config& root);
+	void LoadScene(Config& root, bool tmp = false);
 	void ResetScene();
 
 	void OnRemoveGameObject(GameObject* gameObject) override;

@@ -87,7 +87,7 @@ public:
 	virtual void SaveScene(Config& root) const
 	{}
 
-	virtual void LoadScene(Config& root)
+	virtual void LoadScene(Config& root, bool tmp = false)
 	{}
 
 	virtual void OnRemoveGameObject(GameObject* gameObject)

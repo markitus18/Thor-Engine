@@ -168,6 +168,12 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 				gameObject->AddComponent(cMaterial);
 			}
 		}
+
+		bool camera = gameObject_node.GetNumber("Camera");
+		if (camera == true)
+		{
+			gameObject->CreateComponent(Component::Camera);
+		}
 	}
 
 	//Security method if any game object is left without a parent
@@ -225,6 +231,16 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	}
 	else
 		config.SetNumber("MaterialID", 0);
+
+	C_Camera* cam = gameObject->GetComponent<C_Camera>();
+	if (cam)
+	{
+		config.SetNumber("Camera", 1);
+	}
+	else
+	{
+		config.SetNumber("Camera", 0);
+	}
 }
 
 R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)

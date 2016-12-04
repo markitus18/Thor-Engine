@@ -34,7 +34,7 @@ public:
 	void LoadConfig(Config& config);
 
 	void SaveScene(Config& node) const;
-	void LoadScene(Config& node); //Load itself
+	void LoadScene(Config& node, bool tmp = false); //Load itself
 	void LoadScene(const char* file); //Calls application and prepares to load
 
 	void LoadGameObject(uint64 ID); //Calls module import to load a Game Object file
@@ -57,6 +57,8 @@ public:
 	void Play();
 	void Stop();
 
+	void CreateDefaultScene();
+
 private:
 	void TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final);
 	void UpdateAllGameObjects(GameObject* gameObject);
@@ -64,7 +66,7 @@ private:
 	void GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const;
 	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
 	void DeleteAllGameObjects();
-	void CreateDefaultScene();
+
 	void DeleteToRemoveGameObjects();
 
 public:

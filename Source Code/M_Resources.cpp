@@ -269,6 +269,15 @@ void M_Resources::LoadPrefab(const char* path)
 			return;
 		}
 	}
+	for (std::map<uint64, ResourceMeta>::const_iterator it = existingResources.begin(); it != existingResources.end(); it++)
+	{
+		if (it->second.original_file == path && it->second.type == Resource::PREFAB)
+		{
+			App->scene->LoadGameObject(it->first);
+			return;
+		}
+	}
+
 	LOG("Could not find file '%s' loaded in resources", path);
 }
 
@@ -292,6 +301,7 @@ void M_Resources::SaveResourcesData()
 		node.SetNumber("ID", it->first);
 		node.SetString("OriginalFile", it->second.original_file.c_str());
 		node.SetString("ResourceName", it->second.resource_name.c_str());
+		node.SetNumber("Type", static_cast<int>(it->second.type));
 	}
 
 	config.SetNumber("NextID", nextID);
@@ -320,7 +330,7 @@ void M_Resources::LoadResourcesData()
 				ResourceMeta meta;
 				meta.original_file = node.GetString("OriginalFile");
 				meta.resource_name = node.GetString("ResourceName");
-
+				meta.type = static_cast<Resource::Type>((int)node.GetNumber("Type"));
 				existingResources[node.GetNumber("ID")] = meta;
 			}
 

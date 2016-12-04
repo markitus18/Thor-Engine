@@ -16,7 +16,7 @@
 #include "Config.h"
 #include "M_Scene.h"
 
-#include <Windows.h>
+#include <time.h>
 
 M_Resources::M_Resources(bool start_enabled) : Module("Resources", start_enabled)
 {
@@ -30,14 +30,15 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	LoadResourcesData();
-	UpdateAssetsImport();
+	//LoadResourcesData();
+	//UpdateAssetsImport();
+	ClearMetaData();
 	return true;
 }
 
 bool M_Resources::Start()
 {
-	ClearMetaData();
+	LoadResourcesData();
 	UpdateAssetsImport();
 	updateAssets.Start();
 	return true;
@@ -101,14 +102,14 @@ void M_Resources::ImportScene(const char* source_file, uint64 ID)
 	{
 		existingResources[resource->ID] = GetMetaInfo(resource);
 		resources[resource->ID] = resource;
-		//TODO: simply release resource?
 		SaveMetaInfo(resource);
 	}
 	//return resource;
 }
 
-R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name, uint64 ID)
+uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name, uint64 ID)
 {
+	uint64 ret = 0;
 	R_Mesh* resource = nullptr;
 
 	//If ID is not 0 it means we have a resource imported, but we want to reimport it
@@ -117,7 +118,7 @@ R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, co
 		//First we find if that resource has already been imported
 		resource = (R_Mesh*)FindResourceInLibrary(source_file, name, Resource::MESH);
 		if (resource != nullptr)
-			return resource;
+			return resource->ID;
 	}
 
 	//If its not imported, import it
@@ -126,14 +127,16 @@ R_Mesh* M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, co
 	if (resource)
 	{
 		existingResources[resource->ID] = GetMetaInfo(resource);
-		importingResources.push_back(resource);
+		resources[resource->ID] = resource;
+		ret = resource->ID;
 	}
 
-	return resource;
+	return ret;
 }
 
-R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_file, uint size, uint64 ID)
+uint64 M_Resources::ImportRTexture(const char* buffer, const char* source_file, uint size, uint64 ID)
 {
+	uint64 ret = 0;
 	R_Texture* resource = nullptr;
 
 	//If ID is not 0 it means we have a resource imported, but we want to reimport it
@@ -142,7 +145,7 @@ R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_fi
 		//First we find if that resource has already been imported
 		resource = (R_Texture*)FindResourceInLibrary(source_file, "", Resource::TEXTURE);
 		if (resource != nullptr)
-			return resource;
+			return resource->ID;;
 	}
 
 	//If its not imported, import it
@@ -158,29 +161,33 @@ R_Texture* M_Resources::ImportRTexture(const char* buffer, const char* source_fi
 		}
 
 		existingResources[resource->ID] = GetMetaInfo(resource);
-		importingResources.push_back(resource);
 		SaveMetaInfo(resource);
+		ret = resource->ID;
 	}
-	return resource;
+	return ret;
 }
 
-R_Material* M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID)
+uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID)
 {
+	uint64 ret = 0;
 	R_Material* resource = nullptr;
-
+	
 	//First we find if that resource has already been imported
 	resource = (R_Material*)FindResourceInLibrary(source_file, name, Resource::MATERIAL);
 	if (resource != nullptr)
-		return resource;
+	{
+		return resource->ID;
+	}
 
 	//If its not imported, import it
 	resource = App->moduleMaterials->ImportMaterialResource(mat, ++nextID, source_file);
 	if (resource)
 	{
 		existingResources[resource->ID] = GetMetaInfo(resource);
-		importingResources.push_back(resource);
+		resources[resource->ID] = resource;
+		ret = resource->ID;
 	}
-	return resource;
+	return ret;
 }
 
 Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
@@ -192,7 +199,7 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 	{
 		ret = it->second;
 	}
-	else
+	else if (type != Resource::UNKNOWN)
 	{	//If resource is not loaded, search in library
 		std::map<uint64, ResourceMeta>::iterator it = existingResources.find(ID);
 		if (it != existingResources.end())
@@ -271,15 +278,6 @@ void M_Resources::LoadPrefab(const char* path)
 	LOG("Could not find file '%s' loaded in resources", path);
 }
 
-void M_Resources::FinishImporting()
-{
-	for (std::vector<Resource*>::iterator it = importingResources.begin(); it != importingResources.end(); /**/)
-	{
-		RELEASE(*it);
-		it = importingResources.erase(it);
-	}
-}
-
 void M_Resources::SaveResourcesData()
 {
 	Config config;
@@ -302,25 +300,62 @@ void M_Resources::SaveResourcesData()
 
 void M_Resources::LoadResourcesData()
 {
-	char* buffer = nullptr;
-	uint size = App->fileSystem->Load(metaFile.c_str(), &buffer);
-	if (size > 0 && buffer != nullptr)
+	bool json_file = true;
+	if (json_file)
 	{
-		Config config(buffer);
-		Config_Array array = config.GetArray("Resources");
-
-		for (uint i = 0; i < array.GetSize(); i++)
+#pragma region JSON_File
+		char* buffer = nullptr;
+		uint size = App->fileSystem->Load(metaFile.c_str(), &buffer);
+		if (size > 0 && buffer != nullptr)
 		{
-			Config node = array.GetNode(i);
-			ResourceMeta meta;
-			meta.original_file = node.GetString("OriginalFile");
-			meta.resource_name = node.GetString("ResourceName");
+			Config config(buffer);
+			Config_Array array = config.GetArray("Resources");
 
-			existingResources[node.GetNumber("ID")] = meta;
+			for (uint i = 0; i < array.GetSize(); i++)
+			{
+				Config node = array.GetNode(i);
+				ResourceMeta meta;
+				meta.original_file = node.GetString("OriginalFile");
+				meta.resource_name = node.GetString("ResourceName");
+
+				existingResources[node.GetNumber("ID")] = meta;
+			}
+
+			nextID = config.GetNumber("NextID");
 		}
-
-		nextID = config.GetNumber("NextID");
+#pragma endregion
 	}
+	else
+	{
+#pragma region Meta_Files
+		std::vector<std::string> filter_ext;
+		filter_ext.push_back("meta");
+
+		//TODO: to be able to do this it is necessary to create ".material" files, otherwise
+		//there is no .meta file for the material and thus the material resource is not found
+		PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_ext);
+		LoadMetaFromFolder(assets);
+
+#pragma endregion
+	}
+}
+
+void M_Resources::LoadMetaFromFolder(PathNode node)
+{
+	if (node.file == true)
+	{
+		LoadMetaInfo(node.path.c_str());
+	}
+
+	//If node folder has something inside
+	else if (node.leaf == false)
+	{
+		for (uint i = 0; i < node.children.size(); i++)
+		{
+			LoadMetaFromFolder(node.children[i]);
+		}
+	}
+
 }
 
 Resource* M_Resources::FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type)
@@ -346,6 +381,26 @@ ResourceMeta M_Resources::GetMetaInfo(Resource* resource)
 	return ret;
 }
 
+bool M_Resources::LoadMetaInfo(const char* file)
+{
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(file, &buffer);
+	ResourceMeta meta;
+	if (size > 0)
+	{
+		Config config(buffer);
+
+		meta.original_file = file;
+		meta.resource_name = config.GetString("ResourceName");
+		meta.id = config.GetNumber("ResourceID");
+		meta.type = static_cast<Resource::Type>((int)(config.GetNumber("Type")));
+
+		existingResources[meta.id] = meta;
+		return true;
+	}
+	return false;
+}
+
 void M_Resources::SubstituteTexture(R_Texture* dst, R_Texture* src)
 {
 	int instances = dst->instances;
@@ -365,7 +420,9 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 
 	config.SetNode("Metadata");
 	config.SetNumber("ResourceID", resource->ID);
-	
+	config.SetString("ResourceName", resource->name.c_str());
+	config.SetNumber("Type", static_cast<int>(resource->GetType()));
+
 	//Getting file modification date
 	std::string global_path = "";
 	App->fileSystem->GetRealDir(resource->original_file.c_str(), global_path);
@@ -383,34 +440,18 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 
 void M_Resources::SaveFileDate(const char* path, Config& config)
 {
-	HANDLE hFile;
-	hFile = CreateFile(path, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (hFile != INVALID_HANDLE_VALUE)
-	{
-		FILETIME creationTime, lpLastAccesTime, lastWriteTime;
+	struct tm* clock;
+	struct stat attr;
 
-		bool error = GetFileTime(hFile, &creationTime, &lpLastAccesTime, &lastWriteTime);
-		if (error != false)
-		{
-			SYSTEMTIME systemTime;
-			bool res = FileTimeToSystemTime(&lastWriteTime, &systemTime);
-			if (res != false)
-			{
-				config.SetNumber("Day", systemTime.wDay);
-				config.SetNumber("Month", systemTime.wMonth);
-				config.SetNumber("Year", systemTime.wYear);
-				config.SetNumber("Hour", systemTime.wHour);
-				config.SetNumber("Minutes", systemTime.wMinute);
-				config.SetNumber("Seconds", systemTime.wSecond);
-			}
-		}
-		//Warning: It is important to close the handle. Filesystem won't be able to access it otherwise
-		CloseHandle(hFile);
-	}
-	else
-	{
-		LOG("[warning] Could not find file '%s' date", path);
-	}
+	stat(path, &attr);
+	clock = gmtime(&(attr.st_mtime));
+	
+	config.SetNumber("Day", clock->tm_mday);
+	config.SetNumber("Month", clock->tm_mon);
+	config.SetNumber("Year", clock->tm_year);
+	config.SetNumber("Hour", clock->tm_hour);
+	config.SetNumber("Minutes", clock->tm_min);
+	config.SetNumber("Seconds", clock->tm_sec);
 }
 
 void M_Resources::UpdateAssetsImport()
@@ -496,33 +537,17 @@ bool M_Resources::IsFileModified(const char* path)
 		Config config(buffer);
 
 		//Opening file data
-		HANDLE hFile;
-		hFile = CreateFile(full_path.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (hFile != INVALID_HANDLE_VALUE)
-		{
-			FILETIME creationTime, lpLastAccesTime, lastWriteTime;
+		struct tm* clock;
+		struct stat attr;
 
-			bool error = GetFileTime(hFile, &creationTime, &lpLastAccesTime, &lastWriteTime);
-			if (error != false)
-			{
-				SYSTEMTIME systemTime;
-				bool res = FileTimeToSystemTime(&lastWriteTime, &systemTime);
-				if (res != false)
-				{
-					uint day = config.GetNumber("Day", 0);
-					if (day != 0)
-					{
-						ret = !(config.GetNumber("Day") == systemTime.wDay && config.GetNumber("Month") == systemTime.wMonth && config.GetNumber("Year") == systemTime.wYear
-							&& config.GetNumber("Hour") == systemTime.wHour && config.GetNumber("Minutes") == systemTime.wMinute && config.GetNumber("Seconds") == systemTime.wSecond);
-					}
-					else
-					{
-						LOG("Could not get .meta date from '%s'", path);
-					}
-				}
-			}
-			//Warning: It is important to close the handle. Filesystem won't be able to access it otherwise
-			CloseHandle(hFile);
+		stat(path, &attr);
+		clock = gmtime(&(attr.st_mtime));
+
+		uint day = config.GetNumber("Day", 0);
+		if (day != 0)
+		{
+			ret = !(config.GetNumber("Day") == clock->tm_mday && config.GetNumber("Month") == clock->tm_mon && config.GetNumber("Year") == clock->tm_year
+				&& config.GetNumber("Hour") == clock->tm_hour && config.GetNumber("Minutes") == clock->tm_min && config.GetNumber("Seconds") == clock->tm_sec);
 		}
 	}
 	return ret;

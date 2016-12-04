@@ -116,7 +116,7 @@ void M_Editor::Draw()
 			{
 				//TODO: avoid doing this every frame
 				sceneList.clear();
-				App->fileSystem->GetAllFilesWithExtension("Assets", "scene", sceneList);
+				App->fileSystem->GetAllFilesWithExtension("", "scene", sceneList);
 				
 				for (uint i = 0; i < sceneList.size(); i++)
 				{
@@ -148,6 +148,7 @@ void M_Editor::Draw()
 			if (ImGui::MenuItem("Exit          "))
 			{
 				ImGui::EndMenu();
+				ImGui::EndMainMenuBar();
 				return;
 			}
 			ImGui::EndMenu();
@@ -308,9 +309,10 @@ void M_Editor::ShowPlayWindow()
 			Time::running ? App->scene->Stop() : App->scene->Play();
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Pause"))
+		std::string name2 = Time::paused ? "Resmue" : "Pause";
+		if (ImGui::Button(name2.c_str()))
 		{
-
+			Time::paused ? Time::Resume() : Time::Pause();
 		}
 		//ImGui::SameLine();
 		//if (ImGui::Button("Frame"))

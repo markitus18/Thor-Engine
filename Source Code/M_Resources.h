@@ -21,6 +21,7 @@ struct ResourceMeta
 	Resource::Type type;
 	std::string original_file;
 	std::string resource_name;
+	uint64 id;
 
 	bool Compare(const char* file, const char* name)
 	{
@@ -44,26 +45,25 @@ public:
 	void ImportFileFromAssets(const char* path, uint64 ID = 0);
 
 	void ImportScene(const char* source_file, uint64 ID = 0);
-	R_Mesh* ImportRMesh(const aiMesh* from, const char* source_file, const char* name, uint64 ID = 0);
-	R_Texture* ImportRTexture(const char* buffer, const char* path, uint size, uint64 ID = 0);
-	R_Material* ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID = 0);
+	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name, uint64 ID = 0);
+	uint64 ImportRTexture(const char* buffer, const char* path, uint size, uint64 ID = 0);
+	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID = 0);
 
 	///Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene
-	Resource* GetResource(uint64 ID, Resource::Type type);
+	Resource* GetResource(uint64 ID, Resource::Type type = Resource::UNKNOWN);
 	Resource::Type GetTypeFromPath(const char* path);
 
 	void LoadPrefab(const char* path);
 
-	//Release all imported resources data
-	void FinishImporting();
-
 private:
 	void SaveResourcesData();
 	void LoadResourcesData();
+	void LoadMetaFromFolder(PathNode node);
 
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
+	bool			LoadMetaInfo(const char* file);
 
 	void SubstituteTexture(R_Texture* dst, R_Texture* src);
 
@@ -89,16 +89,12 @@ private:
 	//Resources loaded in memory
 	std::map<uint64, Resource*> resources;
 
-	//Resources used for an importing file. Deleted after
-	//importion is completed
-	std::vector<Resource*> importingResources;
-
 	//All resources imported
 	std::map<uint64, ResourceMeta> existingResources;
 
 	std::string metaFile = "/ProjectSettings/Resources.JSON";
 
-	uint64 nextID = 0;
+	uint64 nextID = 5;
 
 	Timer updateAssets;
 };

@@ -266,7 +266,6 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 
 		aiReleaseImport(file);
 		RELEASE(rootNode);
-		App->moduleResources->FinishImporting();
 	}
 	else
 	{
@@ -356,23 +355,22 @@ GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node
 			child = gameObject;
 		}
 
-		R_Mesh* rMesh= App->moduleResources->ImportRMesh(newMesh, path, child->name.c_str());
-		if (rMesh != nullptr)
+		uint64 rMesh= App->moduleResources->ImportRMesh(newMesh, path, child->name.c_str());
+		if (rMesh != 0)
 		{
-			C_Mesh* cMesh = new C_Mesh;
+			C_Mesh* cMesh = (C_Mesh*)child->CreateComponent(Component::Mesh);
 			cMesh->SetResource(rMesh);
-			child->AddComponent(cMesh);
 		}
 
 		//Loading mesh materials ---------
 		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
 		aiString matName;
 		material->Get(AI_MATKEY_NAME, matName);
-		R_Material* rMaterial = App->moduleResources->ImportRMaterial(material, path, matName.C_Str());
-		if (rMaterial != nullptr)
+		uint64 rMaterial = App->moduleResources->ImportRMaterial(material, path, matName.C_Str());
+		if (rMaterial != 0)
 		{
 			C_Material* cMaterial = new C_Material(nullptr);
-			cMaterial->SetResource(rMaterial->ID);
+			cMaterial->SetResource(rMaterial);
 			child->AddComponent(cMaterial);
 		}
 		//--------------------------------

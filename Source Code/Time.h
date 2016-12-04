@@ -30,6 +30,7 @@ public:
 	static float time;
 
 	static Timer gameTimer;
+	static bool paused;
 	static bool running;
 	//----------------------
 };

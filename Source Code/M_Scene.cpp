@@ -102,7 +102,7 @@ update_status M_Scene::Update(float dt)
 		//Imports asset in project and loads it in scene
 		std::string file = "Assets/Models/Street_environment_V01.FBX";
 		App->moduleResources->ImportScene(file.c_str());
-		App->moduleResources->LoadPrefab(file.c_str());
+		//App->moduleResources->LoadPrefab(file.c_str());
 	}
 
 #pragma region WindowTest
@@ -355,7 +355,6 @@ void M_Scene::DeleteGameObject(GameObject* gameObject)
 
 void M_Scene::OnRemoveGameObject(GameObject* gameObject)
 {
-	LOG("Onremove call");
 	//Remove from quadtree // non-static vector
 	if (quadtree->RemoveGameObject(gameObject) == false)
 	{

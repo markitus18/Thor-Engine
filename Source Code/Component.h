@@ -49,7 +49,6 @@ protected:
 	bool active;
 	Type type;
 	unsigned long long resourceID;
-	Resource* resource = nullptr;
 
 
 };

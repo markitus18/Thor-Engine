@@ -91,7 +91,8 @@ R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, 
 	full_path.append(std::to_string(ID));
 	resMesh->resource_file = full_path;
 	resMesh->original_file = file;
-
+	resMesh->CreateAABB();
+	resMesh->LoadOnMemory();
 	SaveMeshResource(resMesh);
 	//resMesh->libfile = file;
 	//mesh->CreateAABB();

@@ -6,6 +6,7 @@ float Time::scaleTime = 1;
 float Time::time;
 
 bool Time::running = false;
+bool Time::paused = false;
 
 Timer Time::gameTimer;
 
@@ -35,13 +36,13 @@ void Time::Play()
 
 void Time::Pause()
 {
-	running = false;
+	paused = true;
 	gameTimer.Stop();
 }
 
 void Time::Resume()
 {
-	running = true;
+	paused = false;
 	gameTimer.Resume();
 }
 

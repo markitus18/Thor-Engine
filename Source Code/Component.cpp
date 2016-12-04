@@ -1,5 +1,7 @@
 #include "Component.h"
 #include "Resource.h"
+#include "Application.h"
+#include "M_Resources.h"
 
 Component::Component(Type type, const GameObject* gameObject) : type(type)
 {
@@ -43,13 +45,12 @@ void Component::Load()
 
 void Component::SetResource(Resource* resource)
 {
-	if (this->resource)
+	Resource* oldResource = GetResource();
+	if (oldResource != nullptr)
+		oldResource->instances--;
+
+	if (resource != nullptr)
 	{
-		this->resource->instances--;
-	}
-	if (resource)
-	{
-		this->resource = resource;
 		resourceID = resource->GetID();
 		resource->instances++;
 	}
@@ -58,16 +59,22 @@ void Component::SetResource(Resource* resource)
 void Component::SetResource(unsigned long long id)
 {
 	//TODO: find resource by ID
+	Resource* oldResource = GetResource();
+	if (oldResource != nullptr)
+		oldResource->instances--;
+
 	resourceID = id;
+	Resource* newResource = GetResource();
+	newResource->instances++;
 }
 
 
 Resource* Component::GetResource()
 {
-	return resource;
+	return App->moduleResources->GetResource(resourceID);
 }
 
 const Resource* Component::GetResource() const
 {
-	return resource;
+	return App->moduleResources->GetResource(resourceID);
 }

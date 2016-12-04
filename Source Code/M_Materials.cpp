@@ -75,9 +75,9 @@ R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned 
 
 		if (size > 0)
 		{
-			R_Texture* rTex = App->moduleResources->ImportRTexture(buffer, texture_path.c_str(), size);
-			if (rTex != nullptr)
-				material->textureID = rTex->ID;
+			uint64 rTex = App->moduleResources->ImportRTexture(buffer, texture_path.c_str(), size);
+			if (rTex != 0)
+				material->textureID = rTex;
 		}
 	}
 

@@ -173,6 +173,7 @@ Component* GameObject::CreateComponent(Component::Type type)
 			if (!HasComponent(Component::Type::Mesh))
 			{
 				new_component = new C_Mesh(this);
+				break;
 			}
 		}
 		case(Component::Type::Material):
@@ -181,6 +182,7 @@ Component* GameObject::CreateComponent(Component::Type type)
 			if (mesh)
 			{
 				new_component = new C_Material(this);
+				break;
 			}
 		}
 		case(Component::Type::Camera):
@@ -188,6 +190,7 @@ Component* GameObject::CreateComponent(Component::Type type)
 			if (!HasComponent(Component::Type::Camera))
 			{
 				new_component = new C_Camera(this);
+				break;
 			}
 		}
 	}

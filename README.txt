@@ -2,13 +2,36 @@ THOR ENGINE
 	Simple 3D game engine for edutational purposes
 
 USAGE
-	- Camera movement
+	- Camera movement:
 		Use clicked mouse wheel to move camera position
 		Use mouse right button to rotate camera
 		Use mouse wheel to zoom in and out
 		Double click on an item on the hierarchy to focus the camera
 		on it
 
+	- Resources:
+		- All files in /Assets/ are loaded at te beggining of the execution.
+		- If new files are addded in /Assets/, they will be imported after a while
+		- If a texture is changed in /Assets/, it will be reimported after a while.
+		  Not handling FBX modifications yet.
+
+		- To load an imported asset in the current open scene use the menu Assets->LoadImportedScene
+		  in the main menu bar
+
+		- WARNING: Do not erase nor modify the following files:
+			- Any .meta file in /Assets/
+			- /Library/ folder
+			- /ProjectSettings/ folder or its files
+
+			- If a .meta file or /Library/ file is erased, remove /Library/, all .meta files
+			  and /ProjectSettings/Resources.JSON and all scenes.
+	
+	- Camera culling:
+		- To test camera culling create a new camera in the menu Assets->Create->Camera
+
+	- Mouse GameObject selection:
+		- To test picking correctly, remove "Plane002" or any plane in scene. It causes trouble in
+		  detecting the ray collision
 
 LICENCE
 

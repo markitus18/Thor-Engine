@@ -11,8 +11,10 @@ class P_Hierarchy;
 class P_Inspector;
 class P_Configuration;
 class P_Buttons;
+class P_Resources;
 
 class Config;
+struct PathNode;
 
 class M_Editor : public Module
 {
@@ -54,6 +56,8 @@ public:
 
 private:
 	void DrawPanels();
+	void DisplayScenesWindows(const PathNode& folder);
+	//void DisplayFolderTree();
 
 	void ShowAboutWindow();
 	void ShowPlayWindow();
@@ -66,10 +70,11 @@ private:
 public:
 	//Panels
 	P_Hierarchy*		panelHierarchy = nullptr;
-	P_Console*		panelConsole = nullptr;
+	P_Console*			panelConsole = nullptr;
 	P_Inspector*		panelInspector = nullptr;
-	P_Configuration* panelConfiguration = nullptr;
-	P_Buttons*		panelButtons = nullptr;
+	P_Configuration*	panelConfiguration = nullptr;
+	P_Buttons*			panelButtons = nullptr;
+	P_Resources*		panelResources = nullptr;
 
 	ImVec2 playWindow;
 

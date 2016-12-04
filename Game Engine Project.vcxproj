@@ -193,6 +193,7 @@
     <ClInclude Include="Source Code\P_Inspector.h" />
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\Primitive.h" />
+    <ClInclude Include="Source Code\P_Resources.h" />
     <ClInclude Include="Source Code\Quadtree.h" />
     <ClInclude Include="Source Code\Resource.h" />
     <ClInclude Include="Source Code\R_Material.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="Source Code\M_Editor.cpp" />
     <ClCompile Include="Source Code\M_Window.cpp" />
     <ClCompile Include="Source Code\Panel.cpp" />
+    <ClCompile Include="Source Code\P_Resources.cpp" />
     <ClCompile Include="Source Code\P_Buttons.cpp" />
     <ClCompile Include="Source Code\P_Configuration.cpp" />
     <ClCompile Include="Source Code\P_Hierarchy.cpp" />

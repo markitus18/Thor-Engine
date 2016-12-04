@@ -34,7 +34,7 @@ void P_Console::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowPos(position);
 		ImGui::SetNextWindowSize(size);
 		
-		flags |= ImGuiWindowFlags_NoTitleBar;
+		//flags |= ImGuiWindowFlags_NoTitleBar;
 		if (!ImGui::Begin("Console", &active, size, 1.0f, flags))
 		{
 			ImGui::End();
@@ -43,7 +43,6 @@ void P_Console::Draw(ImGuiWindowFlags flags)
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing
-
 
 
 		//TODO URGENT: print only items being seen :/  //can be done?
@@ -76,9 +75,9 @@ void P_Console::Draw(ImGuiWindowFlags flags)
 
 void P_Console::UpdatePosition(int screen_width, int screen_height)
 {
-	position.x = 0;
+	position.x = screen_width * 0.20;
 	position.y = (screen_height * (0.75));
 
 	size.y = screen_height - position.y;
-	size.x = screen_width * (0.80);
+	size.x = screen_width * (0.80) - position.x;
 }

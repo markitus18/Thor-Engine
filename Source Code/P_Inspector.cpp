@@ -134,17 +134,22 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 					for (uint i = 0; i < materials.size(); i++)
 					{
 						R_Material* rMat = (R_Material*)materials[i]->GetResource();
-						if (ImGui::CollapsingHeader("NothingYet", ImGuiTreeNodeFlags_DefaultOpen))
+						if (ImGui::CollapsingHeader(rMat->GetName(), ImGuiTreeNodeFlags_DefaultOpen))
 						{
 							if (rMat->textureID != 0)
 							{
 								R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(rMat->textureID, Resource::TEXTURE);
 								if (rTex)
 								{
-									//ImGui::Text(rTex->GetResourceFile());
+									ImGui::Text(rTex->GetName());
 									ImGui::Image((ImTextureID)rTex->buffer, ImVec2(128, 128));
 								}
-		
+							}
+
+							float color[3]  = { rMat->color.r, rMat->color.g, rMat->color.b };
+							if (ImGui::ColorEdit3("Color", color))
+							{
+								rMat->color.Set(color[0], color[1], color[2]);
 							}
 						}
 					}

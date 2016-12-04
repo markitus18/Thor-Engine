@@ -30,9 +30,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	//LoadResourcesData();
-	//UpdateAssetsImport();
-	ClearMetaData();
+	//ClearMetaData();
 	return true;
 }
 
@@ -100,9 +98,7 @@ void M_Resources::ImportScene(const char* source_file, uint64 ID)
 	resource = App->moduleImport->ImportFile(source_file, ++nextID);
 	if (resource)
 	{
-		existingResources[resource->ID] = GetMetaInfo(resource);
-		resources[resource->ID] = resource;
-		SaveMetaInfo(resource);
+		AddResource(resource);
 	}
 	//return resource;
 }
@@ -120,14 +116,16 @@ uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, con
 		if (resource != nullptr)
 			return resource->ID;
 	}
-
+	else
+	{
+		DeleteResource(ID);
+	}
 	//If its not imported, import it
 	uint64 newID = ID == 0 ? ++nextID : ID;
 	resource = App->moduleMeshes->ImportMeshResource(mesh, newID, source_file, name);
 	if (resource)
 	{
-		existingResources[resource->ID] = GetMetaInfo(resource);
-		resources[resource->ID] = resource;
+		AddResource(resource);
 		ret = resource->ID;
 	}
 
@@ -139,7 +137,7 @@ uint64 M_Resources::ImportRTexture(const char* buffer, const char* source_file, 
 	uint64 ret = 0;
 	R_Texture* resource = nullptr;
 
-	//If ID is not 0 it means we have a resource imported, but we want to reimport it
+	//If ID is not 0 it means we have a resource imported and want to reimport it
 	if (ID == 0)
 	{
 		//First we find if that resource has already been imported
@@ -147,21 +145,18 @@ uint64 M_Resources::ImportRTexture(const char* buffer, const char* source_file, 
 		if (resource != nullptr)
 			return resource->ID;;
 	}
+	
+	else //erase the old resource
+	{
+		DeleteResource(ID);
+	}
 
-	//If its not imported, import it
+	//Importing resource
 	uint64 newID = ID == 0 ? ++nextID : ID;
 	resource = App->moduleMaterials->ImportTextureResource(buffer, newID, source_file, size);
 	if (resource)
 	{
-		if (ID != 0)
-		{
-			R_Texture* oldTexture = (R_Texture*)GetResource(newID, Resource::TEXTURE);
-			SubstituteTexture(oldTexture, resource);
-			//resource = oldTexture;
-		}
-
-		existingResources[resource->ID] = GetMetaInfo(resource);
-		SaveMetaInfo(resource);
+		AddResource(resource);
 		ret = resource->ID;
 	}
 	return ret;
@@ -183,8 +178,7 @@ uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_fi
 	resource = App->moduleMaterials->ImportMaterialResource(mat, ++nextID, source_file);
 	if (resource)
 	{
-		existingResources[resource->ID] = GetMetaInfo(resource);
-		resources[resource->ID] = resource;
+		AddResource(resource);
 		ret = resource->ID;
 	}
 	return ret;
@@ -209,24 +203,25 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 				case (Resource::MESH):
 				{
 					ret = App->moduleMeshes->LoadMeshResource(ID);
-					resources[ID] = ret;
+					LoadResource(ret);
 					break;
 				}
 				case (Resource::TEXTURE):
 				{
 					ret = App->moduleMaterials->LoadTextureResource(ID);
-					resources[ID] = ret;
+					LoadResource(ret);
 					break;
 				}
 				case (Resource::MATERIAL):
 				{
 					ret = App->moduleMaterials->LoadMaterialResource(ID);
-					resources[ID] = ret;
+					LoadResource(ret);
 					break;
 				}
 				case (Resource::PREFAB):
 				{
-					//App->moduleImport->
+					//Anything to do when Getting a prefab resource?
+					//AddResource(ret);
 					break;
 				}
 				case (Resource::BONE):
@@ -239,7 +234,6 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 			{
 				ret->original_file = it->second.original_file;
 				ret->name = it->second.resource_name;
-				ret->LoadOnMemory();
 				LOG("Resource load from library correctly");
 			}
 		}
@@ -276,6 +270,15 @@ void M_Resources::LoadPrefab(const char* path)
 		}
 	}
 	LOG("Could not find file '%s' loaded in resources", path);
+}
+
+PathNode M_Resources::CollectImportedScenes()
+{
+	std::vector<std::string> filter_ext;
+	filter_ext.push_back("FBX");
+	filter_ext.push_back("fbx");
+
+	return App->fileSystem->GetAllFiles("Assets", &filter_ext);
 }
 
 void M_Resources::SaveResourcesData()
@@ -401,19 +404,7 @@ bool M_Resources::LoadMetaInfo(const char* file)
 	return false;
 }
 
-void M_Resources::SubstituteTexture(R_Texture* dst, R_Texture* src)
-{
-	int instances = dst->instances;
-
-	resources.erase(dst->ID);
-	//TODO: buffers break when releasing them
-	//dst->FreeMemory();
-	RELEASE(dst);
-
-	resources[src->ID] = src;
-	src->LoadOnMemory();
-}
-
+//Save .meta file in assets
 void M_Resources::SaveMetaInfo(const Resource* resource)
 {
 	Config config;
@@ -427,7 +418,8 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	std::string global_path = "";
 	App->fileSystem->GetRealDir(resource->original_file.c_str(), global_path);
 
-	SaveFileDate(global_path.c_str(), config);
+	uint64 modDate = App->fileSystem->GetLastModTime(resource->original_file.c_str());
+	config.SetNumber("ModificationDate", modDate);
 	
 	char* buffer = nullptr;
 	uint size = config.Serialize(&buffer);
@@ -444,7 +436,7 @@ void M_Resources::SaveFileDate(const char* path, Config& config)
 	struct stat attr;
 
 	stat(path, &attr);
-	clock = gmtime(&(attr.st_mtime));
+	clock = localtime(&(attr.st_mtime));
 	
 	config.SetNumber("Day", clock->tm_mday);
 	config.SetNumber("Month", clock->tm_mon);
@@ -521,36 +513,19 @@ void M_Resources::RemoveMetaFromFolder(PathNode node)
 
 bool M_Resources::IsFileModified(const char* path)
 {
-	bool ret = false;
-
 	std::string meta_file = path;
 	meta_file.append(".meta");
-
-	std::string full_path = "";
-	App->fileSystem->GetRealDir(path, full_path);
 
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load(meta_file.c_str(), &buffer);
 
 	if (size > 0)
 	{
-		Config config(buffer);
-
-		//Opening file data
-		struct tm* clock;
-		struct stat attr;
-
-		stat(path, &attr);
-		clock = gmtime(&(attr.st_mtime));
-
-		uint day = config.GetNumber("Day", 0);
-		if (day != 0)
-		{
-			ret = !(config.GetNumber("Day") == clock->tm_mday && config.GetNumber("Month") == clock->tm_mon && config.GetNumber("Year") == clock->tm_year
-				&& config.GetNumber("Hour") == clock->tm_hour && config.GetNumber("Minutes") == clock->tm_min && config.GetNumber("Seconds") == clock->tm_sec);
-		}
+		uint64 fileMod = App->fileSystem->GetLastModTime(path);
+		uint64 configData = Config(buffer).GetNumber("ModificationDate");
+		return fileMod != configData;
 	}
-	return ret;
+	return false;
 }
 
 uint64 M_Resources::GetIDFromMeta(const char* path)
@@ -561,15 +536,112 @@ uint64 M_Resources::GetIDFromMeta(const char* path)
 	uint size = App->fileSystem->Load(path, &buffer);
 	
 	if (size > 0)
-	{
-		Config config(buffer);
-		ret = config.GetNumber("ResourceID");
-	}
+		ret = Config(buffer).GetNumber("ResourceID");
 
 	return ret;
 }
 
+void M_Resources::AddResource(Resource* resource)
+{
+	LoadResource(resource);
+	existingResources[resource->ID] = GetMetaInfo(resource);
+	SaveMetaInfo(resource);
+}
+
+void M_Resources::LoadResource(Resource* resource)
+{
+	resources[resource->ID] = resource;
+	switch (resource->type)
+	{
+	case(Resource::MESH):
+	{
+		meshes[resource->ID] = resource;
+		break;
+	}
+	case(Resource::MATERIAL):
+	{
+		materials[resource->ID] = resource;
+		break;
+	}
+	case (Resource::TEXTURE):
+	{
+		textures[resource->ID] = resource;
+		break;
+	}
+	case(Resource::PREFAB):
+	{
+		scenes[resource->ID] = resource;
+		break;
+	}
+	}
+	resource->LoadOnMemory();
+}
+
 void M_Resources::DeleteResource(uint64 ID)
 {
+	Resource::Type type = resources[ID]->type;
+	UnLoadResource(ID);
 
+	std::string resourcePath = "";
+	switch (type)
+	{
+		case(Resource::MESH):
+		{
+			resourcePath.append("/Library/Meshes/");
+			break;
+		}
+		case(Resource::MATERIAL):
+		{
+			resourcePath.append("/Library/Materials/");
+			break;
+		}
+		case(Resource::TEXTURE):
+		{
+			resourcePath.append("/Library/Textures/");
+			break;
+		}
+		case(Resource::PREFAB):
+		{
+			resourcePath.append("/Library/GameObjects/");
+			break;
+		}
+	}
+	resourcePath.append(std::to_string(ID));
+	App->fileSystem->Remove(resourcePath.c_str());
+}
+
+void M_Resources::UnLoadResource(uint64 ID)
+{
+	std::map<uint64, Resource*>::iterator it = resources.find(ID);
+	if (it != resources.end())
+	{
+		it->second->FreeMemory();
+
+		switch (it->second->type)
+		{
+			case(Resource::MESH):
+			{
+				meshes.erase(ID);
+				break;
+			}
+			case(Resource::MATERIAL):
+			{
+				materials.erase(ID);
+				break;
+			}
+			case(Resource::TEXTURE):
+			{
+				textures.erase(ID);
+				break;
+			}
+			case(Resource::PREFAB):
+			{
+				scenes.erase(ID);
+				break;
+			}
+		}
+		Resource* resource = it->second;
+		resources.erase(it);
+		RELEASE(resource);
+	}
 }

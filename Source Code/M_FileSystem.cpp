@@ -386,6 +386,11 @@ bool M_FileSystem::Remove(const char * file)
 	return ret;
 }
 
+uint64 M_FileSystem::GetLastModTime(const char* filename)
+{
+	return PHYSFS_getLastModTime(filename);
+}
+
 // -----------------------------------------------------
 // ASSIMP IO
 // -----------------------------------------------------

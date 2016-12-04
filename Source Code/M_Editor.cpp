@@ -10,9 +10,11 @@
 #include "P_Inspector.h"
 #include "P_Configuration.h"
 #include "P_Buttons.h"
+#include "P_Resources.h"
 
 #include "M_Scene.h"
 #include "M_FileSystem.h"
+#include "M_Resources.h"
 
 #include "GameObject.h"
 #include "OpenGL.h"
@@ -48,6 +50,8 @@ bool M_Editor::Init(Config& config)
 	panelInspector = new P_Inspector();
 	panelConfiguration = new P_Configuration();
 	panelButtons = new P_Buttons();
+	panelResources = new P_Resources();
+
 	panelConfiguration->Init();
 
 	//Chaning ImGui style
@@ -154,6 +158,28 @@ void M_Editor::Draw()
 			ImGui::EndMenu();
 
 		}
+
+		if (ImGui::BeginMenu("Assets"))
+		{
+			if (ImGui::BeginMenu("Create"))
+			{
+				if (ImGui::MenuItem("Camera"))
+				{
+					App->scene->CreateCamera();
+				}
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Load Imported Scene"))
+			{
+				PathNode assets = App->moduleResources->CollectImportedScenes();
+				DisplayScenesWindows(assets);
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Inspector          ", nullptr, &panelInspector->active))
@@ -208,35 +234,12 @@ void M_Editor::Draw()
 
 bool M_Editor::CleanUp()
 {
-	if (panelConsole)
-	{
-		delete panelConsole;
-		panelConsole = nullptr;
-	}
-
-	if (panelHierarchy)
-	{
-		delete panelHierarchy;
-		panelHierarchy = nullptr;
-	}
-
-	if (panelInspector)
-	{
-		delete panelInspector;
-		panelInspector = nullptr;
-	}
-
-	if (panelConfiguration)
-	{
-		delete panelConfiguration;
-		panelConfiguration = nullptr;
-	}
-
-	if (panelButtons)
-	{
-		delete panelButtons;
-		panelButtons = nullptr;
-	}
+	RELEASE(panelConsole);
+	RELEASE(panelHierarchy);
+	RELEASE(panelInspector);
+	RELEASE(panelConfiguration);
+	RELEASE(panelButtons);
+	RELEASE(panelResources);
 
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
@@ -279,6 +282,34 @@ void M_Editor::DrawPanels()
 	if (panelButtons != nullptr)
 	{
 		panelButtons->Draw(windowFlags);
+	}
+	if (panelResources != nullptr)
+	{
+		panelResources->Draw(windowFlags);
+	}
+}
+
+void M_Editor::DisplayScenesWindows(const PathNode& folder)
+{
+	if (folder.file == true)
+	{
+		if (ImGui::MenuItem(folder.path.c_str()))
+		{
+			App->moduleResources->LoadPrefab(folder.path.c_str());
+		}
+	}
+
+	//If node folder has something inside
+	else if (folder.leaf == false)
+	{
+		if (ImGui::BeginMenu(folder.path.c_str()))
+		{
+			for (uint i = 0; i < folder.children.size(); i++)
+			{
+				DisplayScenesWindows(folder.children[i]);
+			}
+			ImGui::EndMenu();
+		}
 	}
 }
 
@@ -379,6 +410,7 @@ void M_Editor::OnResize(int screen_width, int screen_height)
 	panelInspector->UpdatePosition(screen_width, screen_height);
 	panelConfiguration->UpdatePosition(screen_width, screen_height);
 	panelButtons->UpdatePosition(screen_width, screen_height);
+	panelResources->UpdatePosition(screen_width, screen_height);
 
 	playWindow.x = screen_width / 2 - 90;
 	playWindow.y = screen_height / 20;

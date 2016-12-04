@@ -56,6 +56,9 @@ public:
 
 	void LoadPrefab(const char* path);
 
+	PathNode CollectImportedScenes();
+
+
 private:
 	void SaveResourcesData();
 	void LoadResourcesData();
@@ -64,8 +67,6 @@ private:
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
 	bool			LoadMetaInfo(const char* file);
-
-	void SubstituteTexture(R_Texture* dst, R_Texture* src);
 
 	//Meta data management -----------------------------------------------------
 	void SaveMetaInfo(const Resource* resource);
@@ -84,7 +85,25 @@ private:
 	uint64 GetIDFromMeta(const char* path);
 	//---------------------------------------------------------------------------
 
+	//Adds a new resource (importion previous to this)
+	void AddResource(Resource* resource);
+
+	//Loads an existing resource. Loading is previous to this, this is just for data management
+	void LoadResource(Resource* resource);
+
+	//Completely deletes a resource, including its file (not yet though)
 	void DeleteResource(uint64 ID);
+
+	//Removes a resource from memory
+	void UnLoadResource(uint64 ID);
+
+public:
+	//Just for quick info display
+	std::map<uint64, Resource*> meshes;
+	std::map<uint64, Resource*> materials;
+	std::map<uint64, Resource*> textures;
+	std::map<uint64, Resource*> scenes;
+
 private:
 	//Resources loaded in memory
 	std::map<uint64, Resource*> resources;
@@ -94,7 +113,7 @@ private:
 
 	std::string metaFile = "/ProjectSettings/Resources.JSON";
 
-	uint64 nextID = 5;
+	uint64 nextID = 1;
 
 	Timer updateAssets;
 };

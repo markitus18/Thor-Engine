@@ -34,9 +34,8 @@ public:
 	virtual void Save();
 	virtual void Load();
 
-//Resource handling
+	//Resource handling
 	void SetResource(Resource* resource);
-	//Made only for external file importing, it does not set the pointer
 	void SetResource(unsigned long long id);
 	
 	Resource* GetResource();
@@ -46,9 +45,9 @@ public:
 	const GameObject* gameObject;
 
 protected:
-	bool active;
-	Type type;
-	unsigned long long resourceID;
+	bool active = true;
+	Type type = None;
+	uint64 resourceID = 0;
 
 
 };

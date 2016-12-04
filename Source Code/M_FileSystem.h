@@ -66,6 +66,8 @@ public:
 	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
 	bool Remove(const char* file);
 
+	uint64 GetLastModTime(const char* filename);
+
 private:
 
 	void CreateAssimpIO();

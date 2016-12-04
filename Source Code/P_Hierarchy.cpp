@@ -131,7 +131,7 @@ void P_Hierarchy::UpdatePosition(int screen_width, int screen_height)
 	position.x = 0;
 	position.y = 19;
 	size.x = screen_width * (0.20);
-	size.y = screen_height * (0.75) - position.y;
+	size.y = screen_height * (0.60) - position.y;
 
 }
 

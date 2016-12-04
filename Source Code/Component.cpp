@@ -10,7 +10,10 @@ Component::Component(Type type, const GameObject* gameObject) : type(type)
 
 Component::~Component()
 {
-
+	if (resourceID != 0)
+	{
+		App->moduleResources->GetResource(resourceID)->instances--;
+	}
 }
 
 void Component::SetActive(bool set)
@@ -45,6 +48,7 @@ void Component::Load()
 
 void Component::SetResource(Resource* resource)
 {
+
 	Resource* oldResource = GetResource();
 	if (oldResource != nullptr)
 		oldResource->instances--;

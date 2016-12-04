@@ -150,6 +150,7 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 							if (ImGui::ColorEdit3("Color", color))
 							{
 								rMat->color.Set(color[0], color[1], color[2]);
+								rMat->needs_save = true;
 							}
 						}
 					}

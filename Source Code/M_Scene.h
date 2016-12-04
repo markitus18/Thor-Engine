@@ -66,10 +66,16 @@ private:
 	void DeleteAllGameObjects();
 	void CreateDefaultScene();
 	void DeleteToRemoveGameObjects();
+
 public:
+	bool drawQuadtree = false;
+	bool drawBounds = false;
+	bool drawBoundsSelected = false;
+
 	bool reset = false;
 	std::string current_scene = "Untitled";
 	Quadtree* quadtree;
+
 private:
 	bool drawGrid = true;
 	GameObject* root = nullptr;

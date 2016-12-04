@@ -2,6 +2,9 @@ THOR ENGINE
 	Simple 3D game engine for edutational purposes
 
 USAGE
+	- Debugging tools:
+		- Use debugging tools in the main menu for testing purposes
+
 	- Camera movement:
 		Use clicked mouse wheel to move camera position
 		Use mouse right button to rotate camera
@@ -12,7 +15,10 @@ USAGE
 	- Resources:
 		- All files in /Assets/ are loaded at te beggining of the execution.
 		- If new files are addded in /Assets/, they will be imported after a while
-		- If a texture is changed in /Assets/, it will be reimported after a while.
+		- If a texture is changed in /Assets/, it will be reimported after a while
+			- The red texture in Street_Environment IS NOT A BUG: it is for testing purposes.
+			  Changing that texture file is an easy way to see the changes in the scene.
+		- If a material is changed in the editor, it will be saved after a while
 		  Not handling FBX modifications yet.
 
 		- To load an imported asset in the current open scene use the menu Assets->LoadImportedScene
@@ -32,6 +38,10 @@ USAGE
 	- Mouse GameObject selection:
 		- To test picking correctly, remove "Plane002" or any plane in scene. It causes trouble in
 		  detecting the ray collision
+
+	- GameObjects:
+		- Can be deleted using "Delete" keyboard key. Yet this can cause problems sometimes
+		- Can be multiple-selected using "Ctrl" + click in hierarchy
 
 LICENCE
 

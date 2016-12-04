@@ -221,6 +221,9 @@ R_Texture* M_Materials::ImportTextureResource(const char* buffer, unsigned long 
 				resTexture->resource_file = full_path;
 				resTexture->ID = ID;
 				resTexture->buffer = ilutGLBindTexImage();
+				std::string file, extension;
+				App->fileSystem->SplitFilePath(resTexture->original_file.c_str(), nullptr, &file, &extension);
+				resTexture->name = file + (".") + extension;
 			}
 		}
 	}
@@ -247,6 +250,7 @@ R_Texture* M_Materials::LoadTextureResource(unsigned long long ID)
 
 		ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
 		rTexture->buffer = ilutGLBindTexImage();
+		rTexture->resource_file = full_path;
 
 		ilDeleteImages(1, &ImageName);
 		RELEASE_ARRAY(buffer);

@@ -44,7 +44,7 @@ public:
 	//Import a file existing in assets creating the resources
 	void ImportFileFromAssets(const char* path, uint64 ID = 0);
 
-	void ImportScene(const char* source_file, uint64 ID = 0);
+	void ImportScene(const char* source_file, bool add = true);
 	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name, uint64 ID = 0);
 	uint64 ImportRTexture(const char* buffer, const char* path, uint size, uint64 ID = 0);
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID = 0);
@@ -85,6 +85,8 @@ private:
 	uint64 GetIDFromMeta(const char* path);
 	//---------------------------------------------------------------------------
 
+	void SaveChangedResources();
+
 	//Adds a new resource (importion previous to this)
 	void AddResource(Resource* resource);
 
@@ -115,7 +117,8 @@ private:
 
 	uint64 nextID = 1;
 
-	Timer updateAssets;
+	Timer updateAssets_timer;
+	Timer saveChangedResources_timer;
 };
 
 #endif

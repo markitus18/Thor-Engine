@@ -170,7 +170,7 @@ update_status M_Scene::Update(float dt)
 		for (uint i = 0; i < gameObjects.size(); i++)
 		{
 			if (gameObjects[i]->name != "root");
-			gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+			gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
 		}
 		gameObjects.clear();
 	}
@@ -179,7 +179,8 @@ update_status M_Scene::Update(float dt)
 		DrawAllGameObjects(root);
 	}
 
-	quadtree->Draw();
+	if (drawQuadtree)
+		quadtree->Draw();
 
 	return UPDATE_CONTINUE;
 }
@@ -479,7 +480,7 @@ void M_Scene::UpdateAllGameObjects(GameObject* gameObject)
 void M_Scene::DrawAllGameObjects(GameObject* gameObject)
 {
 	if (gameObject->name != "root");
-		gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe);
+		gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{

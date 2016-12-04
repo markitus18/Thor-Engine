@@ -22,7 +22,7 @@ public:
 	~GameObject();
 
 	void Update();
-	void Draw(bool shaded, bool wireframe) const;
+	void Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const;
 
 	void OnUpdateTransform();
 	const AABB& GetAABB() const;

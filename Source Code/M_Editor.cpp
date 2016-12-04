@@ -15,6 +15,7 @@
 #include "M_Scene.h"
 #include "M_FileSystem.h"
 #include "M_Resources.h"
+#include "M_Camera3D.h"
 
 #include "GameObject.h"
 #include "OpenGL.h"
@@ -100,6 +101,10 @@ void M_Editor::Draw()
 {
 	DrawPanels();
 
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	{
+		panelHierarchy->DeleteSelected();
+	}
 	//Showing all windows ----------
 	if (show_About_window)
 		ShowAboutWindow();
@@ -221,6 +226,14 @@ void M_Editor::Draw()
 		if (ImGui::BeginMenu("Debugging Tools"))
 		{
 			ImGui::MenuItem("ImGui Demo", nullptr, &show_Demo_window);
+			if (ImGui::BeginMenu("Display"))
+			{
+				ImGui::MenuItem("Quadtree", nullptr, &App->scene->drawQuadtree);
+				ImGui::MenuItem("Ray picking", nullptr, &App->camera->drawRay);
+				ImGui::MenuItem("GameObjects box", nullptr, &App->scene->drawBounds);
+				ImGui::MenuItem("GameObjects box (selected)", nullptr, &App->scene->drawBoundsSelected);
+				ImGui::EndMenu();
+			}
 			ImGui::EndMenu();
 		}
 

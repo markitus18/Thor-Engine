@@ -77,18 +77,22 @@ update_status M_Camera3D::Update(float dt)
 		Move_Mouse();
 	}
 
-	glColor4f(1, 0, 0, 1);
+	if (drawRay)
+	{
+		glColor4f(1, 0, 0, 1);
 
-	//Between-planes right
-	GLfloat pointA[3] = { lastRay.a.x, lastRay.a.y, lastRay.a.z };
-	GLfloat pointB[3] = { lastRay.b.x, lastRay.b.y, lastRay.b.z };
+		//Between-planes right
+		GLfloat pointA[3] = { lastRay.a.x, lastRay.a.y, lastRay.a.z };
+		GLfloat pointB[3] = { lastRay.b.x, lastRay.b.y, lastRay.b.z };
 
-	glBegin(GL_LINES);
-	glVertex3fv(pointA);
-	glVertex3fv(pointB);
-	glEnd();
+		glBegin(GL_LINES);
+		glVertex3fv(pointA);
+		glVertex3fv(pointB);
+		glEnd();
 
-	glColor4f(1, 1, 1, 1);
+		glColor4f(1, 1, 1, 1);
+	}
+
 	return UPDATE_CONTINUE;
 }
 

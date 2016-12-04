@@ -37,6 +37,7 @@ public:
 
 public:
 	uint instances = 0;
+	bool needs_save = false;
 
 protected:
 	unsigned long long ID = 0;

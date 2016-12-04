@@ -176,9 +176,7 @@ void P_Hierarchy::AddSelect(GameObject* gameObject, bool openTree)
 				it = it->parent;
 			}
 		}
-
 	}
-
 }
 
 void P_Hierarchy::UnselectSingle(GameObject* gameObject)
@@ -186,11 +184,15 @@ void P_Hierarchy::UnselectSingle(GameObject* gameObject)
 	gameObject->Unselect();
 	std::vector<GameObject*>::iterator it = selectedGameObjects.begin();
 	while (it != selectedGameObjects.end())
+	{
 		if ((*it) == gameObject)
 		{
 			selectedGameObjects.erase(it);
 			break;
 		}
+		it++;
+	}
+
 }
 
 void P_Hierarchy::UnselectAll()
@@ -198,6 +200,17 @@ void P_Hierarchy::UnselectAll()
 	for (uint i = 0; i < selectedGameObjects.size(); i++)
 	{
 		selectedGameObjects[i]->Unselect();
+	}
+	selectedGameObjects.clear();
+}
+
+void P_Hierarchy::DeleteSelected()
+{
+	//Warning: iterator is not moved because GameObject will be erased from vector on "OnRemove" call
+	for (uint i = 0; i < selectedGameObjects.size(); )
+	{
+		selectedGameObjects[i]->Unselect();
+		App->scene->DeleteGameObject(selectedGameObjects[i]);
 	}
 	selectedGameObjects.clear();
 }

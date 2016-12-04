@@ -18,6 +18,7 @@ public:
 	float ReadSec() const;
 	Uint32 Read();
 
+	bool IsRunning() const;
 private:
 
 	bool	running = true;

@@ -43,6 +43,9 @@ private:
 
 	void OnClick();
 
+public:
+	bool drawRay = false;
+
 private:
 
 	float3 reference;

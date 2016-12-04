@@ -24,7 +24,8 @@ public:
 	void AddSelect(GameObject* gameObject, bool openTree = true);
 	void UnselectSingle(GameObject* gameObject);
 	void UnselectAll();
-	
+	void DeleteSelected();
+
 	std::vector<GameObject*> selectedGameObjects;
 };
 

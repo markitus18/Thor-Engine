@@ -52,4 +52,9 @@ Uint32 Timer::Read()
 	}
 }
 
+bool Timer::IsRunning() const
+{
+	return running;
+}
+
 

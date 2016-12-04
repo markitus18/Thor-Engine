@@ -56,7 +56,7 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::Draw(bool shaded, bool wireframe) const
+void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const
 {
 	if (active && IsParentActive())
 	{
@@ -72,7 +72,7 @@ void GameObject::Draw(bool shaded, bool wireframe) const
 			App->renderer3D->AddFrustum(camera->frustum, Blue);
 		}
 
-		if (selected || IsParentSelected())
+		if (drawBox || ( drawBoxSelected && (selected || IsParentSelected())))
 		{
 			App->renderer3D->AddAABB(aabb, Green);
 			App->renderer3D->AddOBB(obb, Yellow);

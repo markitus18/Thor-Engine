@@ -38,22 +38,37 @@ bool M_Resources::Start()
 {
 	LoadResourcesData();
 	UpdateAssetsImport();
-	updateAssets.Start();
+	updateAssets_timer.Start();
+	saveChangedResources_timer.Stop();
 	return true;
 }
 
 update_status M_Resources::Update(float dt)
 {
-	if (updateAssets.ReadSec() > 5)
+	//Little dirty trick to offset both updates
+	if (saveChangedResources_timer.IsRunning() == false && updateAssets_timer.ReadSec() > 2.5)
+	{
+		saveChangedResources_timer.Start();
+	}
+
+	if (updateAssets_timer.ReadSec() > 5)
 	{
 		UpdateAssetsImport();
-		updateAssets.Start();
+		updateAssets_timer.Start();
 	}
+
+	if (saveChangedResources_timer.ReadSec() > 5)
+	{
+		SaveChangedResources();
+		saveChangedResources_timer.Start();
+	}
+
 	return UPDATE_CONTINUE;
 }
 
 bool M_Resources::CleanUp()
 {
+	SaveChangedResources();
 	SaveResourcesData();
 	for (std::map<unsigned long long, Resource*>::iterator it = resources.begin(); it != resources.end(); )
 	{
@@ -79,13 +94,13 @@ void M_Resources::ImportFileFromAssets(const char* path, uint64 ID)
 		}
 		case (Resource::PREFAB):
 		{
-			ImportScene(path);
+			ImportScene(path, false);
 			break;
 		}
 	}
 }
 
-void M_Resources::ImportScene(const char* source_file, uint64 ID)
+void M_Resources::ImportScene(const char* source_file, bool add)
 {
 	R_Prefab* resource = nullptr;
 
@@ -93,12 +108,19 @@ void M_Resources::ImportScene(const char* source_file, uint64 ID)
 	App->fileSystem->SplitFilePath(source_file, nullptr, &name);
 	resource = (R_Prefab*)FindResourceInLibrary(source_file, name.c_str(), Resource::PREFAB);
 	if (resource != nullptr)
+	{
+		if (add)
+			resource->instances++;
 		return;// resource;
+	}
+
 
 	resource = App->moduleImport->ImportFile(source_file, ++nextID);
 	if (resource)
 	{
 		AddResource(resource);
+		if (add)
+			resource->instances++;
 	}
 	//return resource;
 }
@@ -209,12 +231,19 @@ Resource* M_Resources::GetResource(uint64 ID, Resource::Type type)
 				case (Resource::TEXTURE):
 				{
 					ret = App->moduleMaterials->LoadTextureResource(ID);
+					ret->original_file = it->second.original_file;
+					ret->name = it->second.resource_name;
 					LoadResource(ret);
 					break;
 				}
 				case (Resource::MATERIAL):
 				{
 					ret = App->moduleMaterials->LoadMaterialResource(ID);
+					if (((R_Material*)ret)->textureID != 0)
+					{
+						R_Texture* rTex = (R_Texture*)GetResource(((R_Material*)ret)->textureID, Resource::TEXTURE);
+						rTex->instances++;
+					}
 					LoadResource(ret);
 					break;
 				}
@@ -266,6 +295,7 @@ void M_Resources::LoadPrefab(const char* path)
 		if (it->second->original_file == path && it->second->type == Resource::PREFAB)
 		{
 			App->scene->LoadGameObject(it->first);
+			it->second->instances++;
 			return;
 		}
 	}
@@ -274,6 +304,14 @@ void M_Resources::LoadPrefab(const char* path)
 		if (it->second.original_file == path && it->second.type == Resource::PREFAB)
 		{
 			App->scene->LoadGameObject(it->first);
+			R_Prefab* resource = new R_Prefab;
+			resource->ID = it->first;
+			resource->original_file = it->second.original_file;
+			resource->name = it->second.resource_name;
+			resource->resource_file = std::string("/Library/GameObjects/");
+			resource->resource_file.append(std::to_string(it->first));
+			resource->instances++;
+			AddResource(resource);
 			return;
 		}
 	}
@@ -549,6 +587,25 @@ uint64 M_Resources::GetIDFromMeta(const char* path)
 		ret = Config(buffer).GetNumber("ResourceID");
 
 	return ret;
+}
+
+void M_Resources::SaveChangedResources()
+{
+	for (std::map<uint64, Resource*>::iterator it = resources.begin(); it != resources.end(); it++)
+	{
+		if (it->second->needs_save == true)
+		{
+			switch (it->second->type)
+			{
+				//By now the only resource that can be modified is material
+				case(Resource::MATERIAL):
+				{
+					App->moduleMaterials->SaveMaterialResource((R_Material*)it->second);
+				}
+			}
+			it->second->needs_save = false;
+		}
+	}
 }
 
 void M_Resources::AddResource(Resource* resource)

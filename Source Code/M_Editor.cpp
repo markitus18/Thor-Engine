@@ -411,7 +411,9 @@ void M_Editor::OpenFileNameWindow()
 	show_fileName_window = true;
 	std::string file, extension;
 	App->fileSystem->SplitFilePath(App->scene->current_scene.c_str(), nullptr, &file, &extension);
-	std::string str = file + extension;
+	std::string str = file;
+	if (extension != "")
+		file.append("." + extension);
 	strcpy_s(fileName, 50, str.c_str());
 }
 

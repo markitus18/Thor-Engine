@@ -52,7 +52,7 @@ R_Material* M_Materials::ImportMaterialResource(const aiMaterial* mat, unsigned 
 	std::string texture_file;
 	std::string texture_path;
 
-	R_Material* material = new R_Material;
+	R_Material* material = new R_Material();
 
 	if (numTextures > 0)
 	{
@@ -152,7 +152,7 @@ R_Material* M_Materials::LoadMaterialResource(unsigned long long ID)
 	{
 		char* cursor = buffer;
 
-		material = new R_Material;
+		material = new R_Material();
 
 		uint nameSize = 0;
 		uint bytes = sizeof(uint);

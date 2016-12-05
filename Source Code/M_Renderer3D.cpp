@@ -337,6 +337,8 @@ void M_Renderer3D::DrawMesh(const RenderMesh& rMesh)
 				R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID, Resource::TEXTURE);
 				if (rTex && rTex->buffer != 0)
 				{
+					glEnable(GL_ALPHA_TEST);
+					glAlphaFunc(GL_GREATER, 0.0);
 					glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 				}
 			}

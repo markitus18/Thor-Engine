@@ -30,7 +30,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	return true;
 }
 
@@ -351,7 +351,7 @@ void M_Resources::SaveResourcesData()
 
 void M_Resources::LoadResourcesData()
 {
-	bool json_file = true;
+	bool json_file = false;
 	if (json_file)
 	{
 #pragma region JSON_File
@@ -445,8 +445,51 @@ bool M_Resources::LoadMetaInfo(const char* file)
 		meta.resource_name = config.GetString("ResourceName");
 		meta.id = config.GetNumber("ResourceID");
 		meta.type = static_cast<Resource::Type>((int)(config.GetNumber("Type")));
-
 		existingResources[meta.id] = meta;
+
+		if (meta.type == Resource::PREFAB)
+		{
+			std::string resFile = "/Library/GameObjects/";
+			resFile.append(std::to_string(meta.id));
+			LoadSceneMeta(resFile.c_str());
+		}
+
+		return true;
+	}
+	return false;
+}
+
+bool M_Resources::LoadSceneMeta(const char* file)
+{
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(file, &buffer);
+	if (size > 0)
+	{
+		Config config(buffer);
+		Config_Array GameObjects = config.GetArray("GameObjects");
+
+		for (uint i = 0; i < GameObjects.GetSize(); i++)
+		{
+			Config node = GameObjects.GetNode(i);
+			ResourceMeta meta;
+	
+			if (node.GetNumber("MeshID"))
+			{
+				//Loop through 
+				meta.original_file = file;
+				meta.id = node.GetNumber("MeshID");
+				meta.type = Resource::MESH;
+				existingResources[meta.id] = meta;
+			}
+
+			if (node.GetNumber("MaterialID"))
+			{
+				meta.original_file = file;
+				meta.id = node.GetNumber("MaterialID");
+				meta.type = Resource::MATERIAL;
+				existingResources[meta.id] = meta;
+			}
+		}
 		return true;
 	}
 	return false;
@@ -469,6 +512,11 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	uint64 modDate = App->fileSystem->GetLastModTime(resource->original_file.c_str());
 	config.SetNumber("ModificationDate", modDate);
 	
+	if (resource->type == Resource::PREFAB)
+	{
+
+	}
+
 	char* buffer = nullptr;
 	uint size = config.Serialize(&buffer);
 	if (size > 0)

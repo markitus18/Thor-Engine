@@ -77,6 +77,14 @@ void M_Import::SaveGameObjectConfig(Config& config, std::vector<GameObject*>& ga
 	}
 }
 
+void M_Import::SaveGameObjectComponent(Config& config, Component* component)
+{
+	Resource* resource = component->GetResource();
+	config.SetNumber("ID", resource->GetID());
+	config.SetString("Name", resource->GetName());
+	config.SetNumber("Type", static_cast<int>(resource->GetType()));
+}
+
 GameObject* M_Import::LoadGameObject(uint64 ID)
 {
 	std::string full_path = "Library/GameObjects/";
@@ -213,6 +221,8 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	//Transform = 01 // Mesh = 02 // Material = 03 ...
 	//Each component will go indexed by a number also, not a file name: mesh path would be Library/02/02.mesh
 
+	const std::vector<Component*> components = gameObject->GetAllComponents();
+
 	//TMP for mesh storage
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
 	if (mesh)
@@ -228,6 +238,7 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	{
 		const R_Material* rMaterial = (R_Material*)mat->GetResource();
 		config.SetNumber("MaterialID", rMaterial->GetID());
+		config.SetString("")
 	}
 	else
 		config.SetNumber("MaterialID", 0);

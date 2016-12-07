@@ -1,0 +1,1208 @@
+{
+    "GameObjects": [
+        {
+            "UID": 265345742,
+            "ParentUID": 0,
+            "Name": "Street_environment_V01",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 981572288,
+            "ParentUID": 265345742,
+            "Name": "Sky001",
+            "Translation": [
+                18.153732,
+                0,
+                58.960911
+            ],
+            "Rotation": [
+                -1.000000,
+                0,
+                0,
+                0
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 819648014,
+            "ParentUID": 265345742,
+            "Name": "Dummy001",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                -0.707107,
+                0,
+                0,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 1778914610,
+            "ParentUID": 819648014,
+            "Name": "City_building_004",
+            "Translation": [
+                -41.475891,
+                21.014099,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 6,
+            "MaterialID": 7,
+            "Camera": 0
+        },
+        {
+            "UID": 137173026,
+            "ParentUID": 819648014,
+            "Name": "City_building_001",
+            "Translation": [
+                17.707165,
+                20.053276,
+                0.000000
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 9,
+            "MaterialID": 10,
+            "Camera": 0
+        },
+        {
+            "UID": 263464937,
+            "ParentUID": 819648014,
+            "Name": "City_building_007",
+            "Translation": [
+                16.010492,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 12,
+            "MaterialID": 13,
+            "Camera": 0
+        },
+        {
+            "UID": 1034549850,
+            "ParentUID": 819648014,
+            "Name": "City_building_008",
+            "Translation": [
+                40.979996,
+                18.270824,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 15,
+            "MaterialID": 16,
+            "Camera": 0
+        },
+        {
+            "UID": 1941070117,
+            "ParentUID": 819648014,
+            "Name": "Line002",
+            "Translation": [
+                -2.159772,
+                1.853838,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 18,
+            "MaterialID": 19,
+            "Camera": 0
+        },
+        {
+            "UID": 244193594,
+            "ParentUID": 819648014,
+            "Name": "Plane001",
+            "Translation": [
+                -0.028603,
+                0.026032,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                0.996635,
+                0.970616,
+                0.996635
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 20,
+            "MaterialID": 21,
+            "Camera": 0
+        },
+        {
+            "UID": 1521658222,
+            "ParentUID": 819648014,
+            "Name": "City_building_010",
+            "Translation": [
+                25.154011,
+                -39.153721,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 1851283705,
+            "ParentUID": 1521658222,
+            "Name": "City_building_010_submesh",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 22,
+            "MaterialID": 23,
+            "Camera": 0
+        },
+        {
+            "UID": 549300159,
+            "ParentUID": 1521658222,
+            "Name": "City_building_010_submesh(1)",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 25,
+            "MaterialID": 23,
+            "Camera": 0
+        },
+        {
+            "UID": 437583963,
+            "ParentUID": 819648014,
+            "Name": "City_building_011",
+            "Translation": [
+                30.134541,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 26,
+            "MaterialID": 13,
+            "Camera": 0
+        },
+        {
+            "UID": 830071681,
+            "ParentUID": 819648014,
+            "Name": "City_building_013",
+            "Translation": [
+                -42.288055,
+                33.201576,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 27,
+            "MaterialID": 28,
+            "Camera": 0
+        },
+        {
+            "UID": 1635562131,
+            "ParentUID": 819648014,
+            "Name": "City_building_014",
+            "Translation": [
+                -19.439707,
+                32.061729,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                -0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 30,
+            "MaterialID": 7,
+            "Camera": 0
+        },
+        {
+            "UID": 1298223823,
+            "ParentUID": 819648014,
+            "Name": "City_building_016",
+            "Translation": [
+                34.270424,
+                -41.972748,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                -0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 349046147,
+            "ParentUID": 1298223823,
+            "Name": "City_building_016_submesh",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 31,
+            "MaterialID": 23,
+            "Camera": 0
+        },
+        {
+            "UID": 16850835,
+            "ParentUID": 1298223823,
+            "Name": "City_building_016_submesh(1)",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 32,
+            "MaterialID": 23,
+            "Camera": 0
+        },
+        {
+            "UID": 645912273,
+            "ParentUID": 819648014,
+            "Name": "City_building_017",
+            "Translation": [
+                44.260082,
+                -39.153721,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 750790353,
+            "ParentUID": 645912273,
+            "Name": "City_building_017_submesh",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 33,
+            "MaterialID": 23,
+            "Camera": 0
+        },
+        {
+            "UID": 1023198233,
+            "ParentUID": 645912273,
+            "Name": "City_building_017_submesh(1)",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 34,
+            "MaterialID": 23,
+            "Camera": 0
+        },
+        {
+            "UID": 1904125056,
+            "ParentUID": 819648014,
+            "Name": "City_building_022",
+            "Translation": [
+                -20.831324,
+                -27.426489,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 35,
+            "MaterialID": 36,
+            "Camera": 0
+        },
+        {
+            "UID": 777510819,
+            "ParentUID": 819648014,
+            "Name": "City_building_023",
+            "Translation": [
+                42.130642,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 38,
+            "MaterialID": 13,
+            "Camera": 0
+        },
+        {
+            "UID": 1607923317,
+            "ParentUID": 819648014,
+            "Name": "City_building_024",
+            "Translation": [
+                -20.572771,
+                43.060829,
+                -0.069194
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 39,
+            "MaterialID": 16,
+            "Camera": 0
+        },
+        {
+            "UID": 1201702041,
+            "ParentUID": 819648014,
+            "Name": "City_building_026",
+            "Translation": [
+                31.511889,
+                -16.446016,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 40,
+            "MaterialID": 36,
+            "Camera": 0
+        },
+        {
+            "UID": 2029876635,
+            "ParentUID": 819648014,
+            "Name": "City_building_028",
+            "Translation": [
+                13.387990,
+                -33.755039,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 41,
+            "MaterialID": 42,
+            "Camera": 0
+        },
+        {
+            "UID": 437363559,
+            "ParentUID": 819648014,
+            "Name": "Object010",
+            "Translation": [
+                -2.503353,
+                15.800846,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 44,
+            "MaterialID": 45,
+            "Camera": 0
+        },
+        {
+            "UID": 517710326,
+            "ParentUID": 819648014,
+            "Name": "City_building_030",
+            "Translation": [
+                -42.807240,
+                -41.835564,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 46,
+            "MaterialID": 42,
+            "Camera": 0
+        },
+        {
+            "UID": 145075198,
+            "ParentUID": 819648014,
+            "Name": "City_building_031",
+            "Translation": [
+                -34.679482,
+                -41.835564,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 47,
+            "MaterialID": 42,
+            "Camera": 0
+        },
+        {
+            "UID": 664768117,
+            "ParentUID": 819648014,
+            "Name": "City_building_032",
+            "Translation": [
+                -29.478403,
+                21.014099,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 48,
+            "MaterialID": 7,
+            "Camera": 0
+        },
+        {
+            "UID": 1400997160,
+            "ParentUID": 819648014,
+            "Name": "City_building_033",
+            "Translation": [
+                -32.361496,
+                42.370422,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 49,
+            "MaterialID": 28,
+            "Camera": 0
+        },
+        {
+            "UID": 116029620,
+            "ParentUID": 819648014,
+            "Name": "City_building_034",
+            "Translation": [
+                16.049517,
+                -16.696884,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 50,
+            "MaterialID": 36,
+            "Camera": 0
+        },
+        {
+            "UID": 1412177653,
+            "ParentUID": 819648014,
+            "Name": "City_building_035",
+            "Translation": [
+                13.387990,
+                -40.802517,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 51,
+            "MaterialID": 42,
+            "Camera": 0
+        },
+        {
+            "UID": 1124052559,
+            "ParentUID": 819648014,
+            "Name": "City_building_036",
+            "Translation": [
+                -31.216331,
+                33.201576,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 52,
+            "MaterialID": 28,
+            "Camera": 0
+        },
+        {
+            "UID": 1211629812,
+            "ParentUID": 819648014,
+            "Name": "City_building_037",
+            "Translation": [
+                -20.317694,
+                -16.163609,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 53,
+            "MaterialID": 36,
+            "Camera": 0
+        },
+        {
+            "UID": 1721487092,
+            "ParentUID": 819648014,
+            "Name": "City_building_038",
+            "Translation": [
+                -41.649002,
+                -16.495394,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 54,
+            "MaterialID": 36,
+            "Camera": 0
+        },
+        {
+            "UID": 590493062,
+            "ParentUID": 819648014,
+            "Name": "City_building_039",
+            "Translation": [
+                -42.807240,
+                -30.643888,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 55,
+            "MaterialID": 42,
+            "Camera": 0
+        },
+        {
+            "UID": 1438014981,
+            "ParentUID": 819648014,
+            "Name": "City_building_040",
+            "Translation": [
+                -34.679482,
+                -30.643888,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 56,
+            "MaterialID": 42,
+            "Camera": 0
+        },
+        {
+            "UID": 353369061,
+            "ParentUID": 819648014,
+            "Name": "City_building_041",
+            "Translation": [
+                30.695278,
+                21.612646,
+                0.000000
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 57,
+            "MaterialID": 10,
+            "Camera": 0
+        },
+        {
+            "UID": 334735849,
+            "ParentUID": 265345742,
+            "Name": "Camera001",
+            "Translation": [
+                -78.312431,
+                45.251217,
+                -97.031113
+            ],
+            "Rotation": [
+                0.049340,
+                0.932287,
+                0.139331,
+                -0.330140
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 152005985,
+            "ParentUID": 265345742,
+            "Name": "Camera001.Target",
+            "Translation": [
+                -28.132622,
+                20.873329,
+                -35.064213
+            ],
+            "Rotation": [
+                0.049340,
+                0.932287,
+                0.139331,
+                -0.330140
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 9269269,
+            "ParentUID": 265345742,
+            "Name": "Spot001",
+            "Translation": [
+                -66.721268,
+                141.934128,
+                0.000006
+            ],
+            "Rotation": [
+                -0.690035,
+                -0.154439,
+                -0.690035,
+                0.154439
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        },
+        {
+            "UID": 1090682949,
+            "ParentUID": 265345742,
+            "Name": "Spot001.Target",
+            "Translation": [
+                28.890945,
+                -60.963882,
+                -0.000003
+            ],
+            "Rotation": [
+                0.000000,
+                0,
+                0,
+                1.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "MeshID": 0,
+            "MaterialID": 0,
+            "Camera": 0
+        }
+    ]
+} 

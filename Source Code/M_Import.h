@@ -30,6 +30,8 @@ public:
 	update_status Update(float dt);
 
 	void		SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects);
+	void		SaveGameObjectComponent(Config& config, Component* component);
+
 	GameObject* LoadGameObject(uint64 ID);
 	void		LoadGameObjectConfig(Config& config, std::vector<GameObject*>& nodes);
 

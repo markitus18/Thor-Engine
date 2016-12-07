@@ -85,6 +85,12 @@ public:
 		}
 		return vector.empty() ? false : true;
 	}
+
+	const std::vector<Component*>& GetAllComponents() const
+	{
+		return components;
+	}
+
 	//EndOf Component management -------------------------
 
 private:

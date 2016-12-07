@@ -18,10 +18,10 @@ struct PathNode;
 
 struct ResourceMeta
 {
-	Resource::Type type;
-	std::string original_file;
-	std::string resource_name;
-	uint64 id;
+	Resource::Type type = Resource::UNKNOWN;
+	std::string original_file = "";
+	std::string resource_name = "";
+	uint64 id = 0;
 
 	bool Compare(const char* file, const char* name)
 	{
@@ -67,6 +67,7 @@ private:
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
 	bool			LoadMetaInfo(const char* file);
+	bool			LoadSceneMeta(const char* file);
 
 	//Meta data management -----------------------------------------------------
 	void SaveMetaInfo(const Resource* resource);
@@ -89,13 +90,10 @@ private:
 
 	//Adds a new resource (importion previous to this)
 	void AddResource(Resource* resource);
-
 	//Loads an existing resource. Loading is previous to this, this is just for data management
 	void LoadResource(Resource* resource);
-
 	//Completely deletes a resource, including its file (not yet though)
 	void DeleteResource(uint64 ID);
-
 	//Removes a resource from memory
 	void UnLoadResource(uint64 ID);
 

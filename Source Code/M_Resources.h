@@ -67,7 +67,7 @@ private:
 	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
 	bool			LoadMetaInfo(const char* file);
-	bool			LoadSceneMeta(const char* file);
+	bool			LoadSceneMeta(const char* file, const char* source_file);
 
 	//Meta data management -----------------------------------------------------
 	void SaveMetaInfo(const Resource* resource);

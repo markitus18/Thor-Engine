@@ -1,7 +1,7 @@
 #include "C_Camera.h"
 #include "GameObject.h"
 
-C_Camera::C_Camera(GameObject* gameObject) : Component(Component::Type::Camera, gameObject)
+C_Camera::C_Camera(GameObject* gameObject) : Component(Component::Type::Camera, gameObject, false)
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetPos(float3(0, 0, 0));

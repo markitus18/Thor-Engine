@@ -14,6 +14,8 @@
 #include "R_Mesh.h"
 #include "R_Material.h"
 
+#include "Component.h"
+
 #include "M_Materials.h"
 #include "M_Meshes.h"
 #include "M_FileSystem.h"
@@ -79,10 +81,17 @@ void M_Import::SaveGameObjectConfig(Config& config, std::vector<GameObject*>& ga
 
 void M_Import::SaveGameObjectComponent(Config& config, Component* component)
 {
-	Resource* resource = component->GetResource();
-	config.SetNumber("ID", resource->GetID());
-	config.SetString("Name", resource->GetName());
-	config.SetNumber("Type", static_cast<int>(resource->GetType()));
+	config.SetBool("HasResource", component->HasResource());
+	if (component->HasResource())
+	{
+		Resource* resource = component->GetResource();
+		if (resource != nullptr)
+		{
+			config.SetNumber("Type", static_cast<int>(resource->GetType()));
+			config.SetNumber("ID", resource->GetID());
+			config.SetString("ResourceName", resource->GetName());
+		}
+	}
 }
 
 GameObject* M_Import::LoadGameObject(uint64 ID)
@@ -217,31 +226,14 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	config.SetBool("Selected", gameObject->IsSelected());
 	config.SetBool("OpenInHierarchy", gameObject->hierarchyOpen);
 
-	//A thought: each component type will have a folder, same number as their enumeration
-	//Transform = 01 // Mesh = 02 // Material = 03 ...
-	//Each component will go indexed by a number also, not a file name: mesh path would be Library/02/02.mesh
-
+	Config_Array compConfig = config.SetArray("Components");
 	const std::vector<Component*> components = gameObject->GetAllComponents();
 
-	//TMP for mesh storage
-	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
-	if (mesh)
+	for (uint i = 0; i < components.size(); i++)
 	{
-		const R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
-		config.SetNumber("MeshID", rMesh->GetID());
+		SaveGameObjectComponent(compConfig.AddNode(), components[i]);
 	}
-	else
-		config.SetNumber("MeshID", 0);
 
-	C_Material* mat = gameObject->GetComponent<C_Material>();
-	if (mat)
-	{
-		const R_Material* rMaterial = (R_Material*)mat->GetResource();
-		config.SetNumber("MaterialID", rMaterial->GetID());
-		config.SetString("")
-	}
-	else
-		config.SetNumber("MaterialID", 0);
 
 	C_Camera* cam = gameObject->GetComponent<C_Camera>();
 	if (cam)

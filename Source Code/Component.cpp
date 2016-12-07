@@ -3,9 +3,8 @@
 #include "Application.h"
 #include "M_Resources.h"
 
-Component::Component(Type type, const GameObject* gameObject) : type(type)
+Component::Component(Type type, const GameObject* gameObject, bool hasResource) : type(type), hasResource(hasResource), gameObject(gameObject)
 {
-	this->gameObject = gameObject;
 }
 
 Component::~Component()
@@ -81,4 +80,9 @@ Resource* Component::GetResource()
 const Resource* Component::GetResource() const
 {
 	return App->moduleResources->GetResource(resourceID);
+}
+
+bool Component::HasResource() const
+{
+	return hasResource;
 }

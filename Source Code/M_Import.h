@@ -13,6 +13,7 @@ class GameObject;
 class C_Mesh;
 class C_Material;
 class R_Prefab;
+class Component;
 
 class Config;
 
@@ -30,13 +31,13 @@ public:
 	update_status Update(float dt);
 
 	void		SaveGameObjectConfig(Config& config, std::vector<GameObject*>& gameObjects);
-	void		SaveGameObjectComponent(Config& config, Component* component);
 
 	GameObject* LoadGameObject(uint64 ID);
 	void		LoadGameObjectConfig(Config& config, std::vector<GameObject*>& nodes);
 
 private:
 	void SaveGameObjectSingle(Config& config, GameObject* gameObject);
+	void SaveGameObjectComponent(Config& config, Component* component);
 
 private:
 	bool fbx_loaded = false;

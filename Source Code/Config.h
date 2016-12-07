@@ -92,7 +92,7 @@ public:
 
 private:
 	JSON_Array* arr;
-	uint size;
+	uint size = 0;
 };
 
 #endif //__CONFIG_H__

@@ -5,11 +5,11 @@
 #include "Application.h"
 #include "M_Resources.h"
 
-C_Mesh::C_Mesh() : Component(Type::Mesh, nullptr)
+C_Mesh::C_Mesh() : Component(Type::Mesh, nullptr, true)
 {
 }
 
-C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObject)
+C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObject, true)
 {
 }
 

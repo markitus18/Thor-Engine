@@ -2,9 +2,9 @@
 #include "GameObject.h"
 #include "OpenGL.h"
 
-C_Material::C_Material(const GameObject* gameObject) : Component (Type::Material, gameObject)
+C_Material::C_Material(const GameObject* gameObject) : Component (Type::Material, gameObject, true)
 {
-
+	
 }
 
 C_Material::~C_Material()

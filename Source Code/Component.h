@@ -22,7 +22,7 @@ public:
 	};
 
 public:
-	Component(Type type, const GameObject*);
+	Component(Type type, const GameObject*, bool hasResource);
 	virtual ~Component();
 
 	void SetActive(bool set);
@@ -40,11 +40,13 @@ public:
 	
 	Resource* GetResource();
 	const Resource* GetResource() const;
+	bool HasResource() const;
 
 public:
 	const GameObject* gameObject;
 
 protected:
+	bool hasResource = false;
 	bool active = true;
 	Type type = None;
 	uint64 resourceID = 0;

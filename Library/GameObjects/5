@@ -1,7 +1,7 @@
 {
     "GameObjects": [
         {
-            "UID": 265345742,
+            "UID": 1397528084,
             "ParentUID": 0,
             "Name": "Street_environment_V01",
             "Translation": [
@@ -24,13 +24,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 981572288,
-            "ParentUID": 265345742,
+            "UID": 1261141535,
+            "ParentUID": 1397528084,
             "Name": "Sky001",
             "Translation": [
                 18.153732,
@@ -52,13 +55,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 819648014,
-            "ParentUID": 265345742,
+            "UID": 2065900640,
+            "ParentUID": 1397528084,
             "Name": "Dummy001",
             "Translation": [
                 0,
@@ -80,13 +86,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1778914610,
-            "ParentUID": 819648014,
+            "UID": 203715968,
+            "ParentUID": 2065900640,
             "Name": "City_building_004",
             "Translation": [
                 -41.475891,
@@ -108,13 +117,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 6,
-            "MaterialID": 7,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 6,
+                    "ResourceName": "City_building_004"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 7,
+                    "ResourceName": "06 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 137173026,
-            "ParentUID": 819648014,
+            "UID": 927403340,
+            "ParentUID": 2065900640,
             "Name": "City_building_001",
             "Translation": [
                 17.707165,
@@ -136,13 +160,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 9,
-            "MaterialID": 10,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 9,
+                    "ResourceName": "City_building_001"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 10,
+                    "ResourceName": "Building_dnt"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 263464937,
-            "ParentUID": 819648014,
+            "UID": 504603438,
+            "ParentUID": 2065900640,
             "Name": "City_building_007",
             "Translation": [
                 16.010492,
@@ -164,13 +203,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 12,
-            "MaterialID": 13,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 12,
+                    "ResourceName": "City_building_007"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 13,
+                    "ResourceName": "building_16"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1034549850,
-            "ParentUID": 819648014,
+            "UID": 310975725,
+            "ParentUID": 2065900640,
             "Name": "City_building_008",
             "Translation": [
                 40.979996,
@@ -192,13 +246,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 15,
-            "MaterialID": 16,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 15,
+                    "ResourceName": "City_building_008"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 16,
+                    "ResourceName": "building_025"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1941070117,
-            "ParentUID": 819648014,
+            "UID": 1658304818,
+            "ParentUID": 2065900640,
             "Name": "Line002",
             "Translation": [
                 -2.159772,
@@ -220,13 +289,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 18,
-            "MaterialID": 19,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 18,
+                    "ResourceName": "Line002"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 19,
+                    "ResourceName": "20 - Defaulta"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 244193594,
-            "ParentUID": 819648014,
+            "UID": 1971387611,
+            "ParentUID": 2065900640,
             "Name": "Plane001",
             "Translation": [
                 -0.028603,
@@ -248,13 +332,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 20,
-            "MaterialID": 21,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 20,
+                    "ResourceName": "Plane001"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 21,
+                    "ResourceName": "20 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1521658222,
-            "ParentUID": 819648014,
+            "UID": 2018367,
+            "ParentUID": 2065900640,
             "Name": "City_building_010",
             "Translation": [
                 25.154011,
@@ -276,13 +375,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1851283705,
-            "ParentUID": 1521658222,
+            "UID": 934291852,
+            "ParentUID": 2018367,
             "Name": "City_building_010_submesh",
             "Translation": [
                 0,
@@ -304,13 +406,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 22,
-            "MaterialID": 23,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 22,
+                    "ResourceName": "City_building_010_submesh"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 23,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 549300159,
-            "ParentUID": 1521658222,
+            "UID": 1200844109,
+            "ParentUID": 2018367,
             "Name": "City_building_010_submesh(1)",
             "Translation": [
                 0,
@@ -332,13 +449,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 25,
-            "MaterialID": 23,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 25,
+                    "ResourceName": "City_building_010_submesh(1)"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 23,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 437583963,
-            "ParentUID": 819648014,
+            "UID": 281851332,
+            "ParentUID": 2065900640,
             "Name": "City_building_011",
             "Translation": [
                 30.134541,
@@ -360,13 +492,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 26,
-            "MaterialID": 13,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 26,
+                    "ResourceName": "City_building_011"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 13,
+                    "ResourceName": "building_16"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 830071681,
-            "ParentUID": 819648014,
+            "UID": 1213502533,
+            "ParentUID": 2065900640,
             "Name": "City_building_013",
             "Translation": [
                 -42.288055,
@@ -388,13 +535,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 27,
-            "MaterialID": 28,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 27,
+                    "ResourceName": "City_building_013"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 28,
+                    "ResourceName": "3db _ building 06"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1635562131,
-            "ParentUID": 819648014,
+            "UID": 1105693366,
+            "ParentUID": 2065900640,
             "Name": "City_building_014",
             "Translation": [
                 -19.439707,
@@ -416,13 +578,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 30,
-            "MaterialID": 7,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 30,
+                    "ResourceName": "City_building_014"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 7,
+                    "ResourceName": "06 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1298223823,
-            "ParentUID": 819648014,
+            "UID": 779023924,
+            "ParentUID": 2065900640,
             "Name": "City_building_016",
             "Translation": [
                 34.270424,
@@ -444,13 +621,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 349046147,
-            "ParentUID": 1298223823,
+            "UID": 1725107819,
+            "ParentUID": 779023924,
             "Name": "City_building_016_submesh",
             "Translation": [
                 0,
@@ -472,13 +652,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 31,
-            "MaterialID": 23,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 31,
+                    "ResourceName": "City_building_016_submesh"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 23,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 16850835,
-            "ParentUID": 1298223823,
+            "UID": 1413540830,
+            "ParentUID": 779023924,
             "Name": "City_building_016_submesh(1)",
             "Translation": [
                 0,
@@ -500,13 +695,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 32,
-            "MaterialID": 23,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 32,
+                    "ResourceName": "City_building_016_submesh(1)"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 23,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 645912273,
-            "ParentUID": 819648014,
+            "UID": 1540518008,
+            "ParentUID": 2065900640,
             "Name": "City_building_017",
             "Translation": [
                 44.260082,
@@ -528,13 +738,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 750790353,
-            "ParentUID": 645912273,
+            "UID": 628452847,
+            "ParentUID": 1540518008,
             "Name": "City_building_017_submesh",
             "Translation": [
                 0,
@@ -556,13 +769,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 33,
-            "MaterialID": 23,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 33,
+                    "ResourceName": "City_building_017_submesh"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 23,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1023198233,
-            "ParentUID": 645912273,
+            "UID": 683837009,
+            "ParentUID": 1540518008,
             "Name": "City_building_017_submesh(1)",
             "Translation": [
                 0,
@@ -584,13 +812,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 34,
-            "MaterialID": 23,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 34,
+                    "ResourceName": "City_building_017_submesh(1)"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 23,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1904125056,
-            "ParentUID": 819648014,
+            "UID": 1851433246,
+            "ParentUID": 2065900640,
             "Name": "City_building_022",
             "Translation": [
                 -20.831324,
@@ -612,13 +855,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 35,
-            "MaterialID": 36,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 35,
+                    "ResourceName": "City_building_022"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 36,
+                    "ResourceName": "09 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 777510819,
-            "ParentUID": 819648014,
+            "UID": 223075885,
+            "ParentUID": 2065900640,
             "Name": "City_building_023",
             "Translation": [
                 42.130642,
@@ -640,13 +898,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 38,
-            "MaterialID": 13,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 38,
+                    "ResourceName": "City_building_023"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 13,
+                    "ResourceName": "building_16"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1607923317,
-            "ParentUID": 819648014,
+            "UID": 164454481,
+            "ParentUID": 2065900640,
             "Name": "City_building_024",
             "Translation": [
                 -20.572771,
@@ -668,13 +941,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 39,
-            "MaterialID": 16,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 39,
+                    "ResourceName": "City_building_024"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 16,
+                    "ResourceName": "building_025"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1201702041,
-            "ParentUID": 819648014,
+            "UID": 1250099544,
+            "ParentUID": 2065900640,
             "Name": "City_building_026",
             "Translation": [
                 31.511889,
@@ -696,13 +984,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 40,
-            "MaterialID": 36,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 40,
+                    "ResourceName": "City_building_026"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 36,
+                    "ResourceName": "09 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 2029876635,
-            "ParentUID": 819648014,
+            "UID": 2110590855,
+            "ParentUID": 2065900640,
             "Name": "City_building_028",
             "Translation": [
                 13.387990,
@@ -724,13 +1027,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 41,
-            "MaterialID": 42,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 41,
+                    "ResourceName": "City_building_028"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 42,
+                    "ResourceName": "Material #0"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 437363559,
-            "ParentUID": 819648014,
+            "UID": 2024853627,
+            "ParentUID": 2065900640,
             "Name": "Object010",
             "Translation": [
                 -2.503353,
@@ -752,13 +1070,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 44,
-            "MaterialID": 45,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 44,
+                    "ResourceName": "Object010"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 45,
+                    "ResourceName": "21 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 517710326,
-            "ParentUID": 819648014,
+            "UID": 770358052,
+            "ParentUID": 2065900640,
             "Name": "City_building_030",
             "Translation": [
                 -42.807240,
@@ -780,13 +1113,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 46,
-            "MaterialID": 42,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 46,
+                    "ResourceName": "City_building_030"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 42,
+                    "ResourceName": "Material #0"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 145075198,
-            "ParentUID": 819648014,
+            "UID": 1841338114,
+            "ParentUID": 2065900640,
             "Name": "City_building_031",
             "Translation": [
                 -34.679482,
@@ -808,13 +1156,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 47,
-            "MaterialID": 42,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 47,
+                    "ResourceName": "City_building_031"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 42,
+                    "ResourceName": "Material #0"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 664768117,
-            "ParentUID": 819648014,
+            "UID": 1764527129,
+            "ParentUID": 2065900640,
             "Name": "City_building_032",
             "Translation": [
                 -29.478403,
@@ -836,13 +1199,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 48,
-            "MaterialID": 7,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 48,
+                    "ResourceName": "City_building_032"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 7,
+                    "ResourceName": "06 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1400997160,
-            "ParentUID": 819648014,
+            "UID": 1341221474,
+            "ParentUID": 2065900640,
             "Name": "City_building_033",
             "Translation": [
                 -32.361496,
@@ -864,13 +1242,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 49,
-            "MaterialID": 28,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 49,
+                    "ResourceName": "City_building_033"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 28,
+                    "ResourceName": "3db _ building 06"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 116029620,
-            "ParentUID": 819648014,
+            "UID": 296302500,
+            "ParentUID": 2065900640,
             "Name": "City_building_034",
             "Translation": [
                 16.049517,
@@ -892,13 +1285,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 50,
-            "MaterialID": 36,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 50,
+                    "ResourceName": "City_building_034"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 36,
+                    "ResourceName": "09 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1412177653,
-            "ParentUID": 819648014,
+            "UID": 148439418,
+            "ParentUID": 2065900640,
             "Name": "City_building_035",
             "Translation": [
                 13.387990,
@@ -920,13 +1328,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 51,
-            "MaterialID": 42,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 51,
+                    "ResourceName": "City_building_035"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 42,
+                    "ResourceName": "Material #0"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1124052559,
-            "ParentUID": 819648014,
+            "UID": 809411214,
+            "ParentUID": 2065900640,
             "Name": "City_building_036",
             "Translation": [
                 -31.216331,
@@ -948,13 +1371,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 52,
-            "MaterialID": 28,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 52,
+                    "ResourceName": "City_building_036"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 28,
+                    "ResourceName": "3db _ building 06"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1211629812,
-            "ParentUID": 819648014,
+            "UID": 2047232614,
+            "ParentUID": 2065900640,
             "Name": "City_building_037",
             "Translation": [
                 -20.317694,
@@ -976,13 +1414,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 53,
-            "MaterialID": 36,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 53,
+                    "ResourceName": "City_building_037"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 36,
+                    "ResourceName": "09 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1721487092,
-            "ParentUID": 819648014,
+            "UID": 1892167904,
+            "ParentUID": 2065900640,
             "Name": "City_building_038",
             "Translation": [
                 -41.649002,
@@ -1004,13 +1457,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 54,
-            "MaterialID": 36,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 54,
+                    "ResourceName": "City_building_038"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 36,
+                    "ResourceName": "09 - Default"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 590493062,
-            "ParentUID": 819648014,
+            "UID": 1532286463,
+            "ParentUID": 2065900640,
             "Name": "City_building_039",
             "Translation": [
                 -42.807240,
@@ -1032,13 +1500,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 55,
-            "MaterialID": 42,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 55,
+                    "ResourceName": "City_building_039"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 42,
+                    "ResourceName": "Material #0"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1438014981,
-            "ParentUID": 819648014,
+            "UID": 918192151,
+            "ParentUID": 2065900640,
             "Name": "City_building_040",
             "Translation": [
                 -34.679482,
@@ -1060,13 +1543,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 56,
-            "MaterialID": 42,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 56,
+                    "ResourceName": "City_building_040"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 42,
+                    "ResourceName": "Material #0"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 353369061,
-            "ParentUID": 819648014,
+            "UID": 1310024522,
+            "ParentUID": 2065900640,
             "Name": "City_building_041",
             "Translation": [
                 30.695278,
@@ -1088,13 +1586,28 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 57,
-            "MaterialID": 10,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 57,
+                    "ResourceName": "City_building_041"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 10,
+                    "ResourceName": "Building_dnt"
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 334735849,
-            "ParentUID": 265345742,
+            "UID": 1586758072,
+            "ParentUID": 1397528084,
             "Name": "Camera001",
             "Translation": [
                 -78.312431,
@@ -1116,13 +1629,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 152005985,
-            "ParentUID": 265345742,
+            "UID": 829961738,
+            "ParentUID": 1397528084,
             "Name": "Camera001.Target",
             "Translation": [
                 -28.132622,
@@ -1144,13 +1660,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 9269269,
-            "ParentUID": 265345742,
+            "UID": 423671469,
+            "ParentUID": 1397528084,
             "Name": "Spot001",
             "Translation": [
                 -66.721268,
@@ -1172,13 +1691,16 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         },
         {
-            "UID": 1090682949,
-            "ParentUID": 265345742,
+            "UID": 743451704,
+            "ParentUID": 1397528084,
             "Name": "Spot001.Target",
             "Translation": [
                 28.890945,
@@ -1200,8 +1722,11 @@
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "MeshID": 0,
-            "MaterialID": 0,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
             "Camera": 0
         }
     ]

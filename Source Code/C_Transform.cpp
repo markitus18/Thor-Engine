@@ -2,7 +2,7 @@
 #include "Component.h"
 
 
-C_Transform::C_Transform(GameObject* new_GameObject, float3 position, Quat rotation, float3 scale) : Component(Component::Type::Transform, gameObject), position(position), rotation(rotation), scale(scale)
+C_Transform::C_Transform(GameObject* new_GameObject, float3 position, Quat rotation, float3 scale) : Component(Component::Type::Transform, gameObject, false), position(position), rotation(rotation), scale(scale)
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
 	UpdateEulerAngles();

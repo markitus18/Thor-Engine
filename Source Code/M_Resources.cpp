@@ -441,7 +441,10 @@ bool M_Resources::LoadMetaInfo(const char* file)
 	{
 		Config config(buffer);
 
-		meta.original_file = file;
+		std::string sourceFile = file;
+		sourceFile = std::string(file).substr(0, sourceFile.size() - 5);
+
+		meta.original_file = sourceFile;
 		meta.resource_name = config.GetString("ResourceName");
 		meta.id = config.GetNumber("ResourceID");
 		meta.type = static_cast<Resource::Type>((int)(config.GetNumber("Type")));
@@ -451,7 +454,8 @@ bool M_Resources::LoadMetaInfo(const char* file)
 		{
 			std::string resFile = "/Library/GameObjects/";
 			resFile.append(std::to_string(meta.id));
-			LoadSceneMeta(resFile.c_str());
+
+			LoadSceneMeta(resFile.c_str(), sourceFile.c_str());
 		}
 
 		return true;
@@ -459,7 +463,7 @@ bool M_Resources::LoadMetaInfo(const char* file)
 	return false;
 }
 
-bool M_Resources::LoadSceneMeta(const char* file)
+bool M_Resources::LoadSceneMeta(const char* file, const char* source_file)
 {
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load(file, &buffer);
@@ -470,24 +474,20 @@ bool M_Resources::LoadSceneMeta(const char* file)
 
 		for (uint i = 0; i < GameObjects.GetSize(); i++)
 		{
-			Config node = GameObjects.GetNode(i);
-			ResourceMeta meta;
-	
-			if (node.GetNumber("MeshID"))
-			{
-				//Loop through 
-				meta.original_file = file;
-				meta.id = node.GetNumber("MeshID");
-				meta.type = Resource::MESH;
-				existingResources[meta.id] = meta;
-			}
+			Config_Array components = GameObjects.GetNode(i).GetArray("Components");
 
-			if (node.GetNumber("MaterialID"))
+			for (uint i = 0; i < components.GetSize(); i++)
 			{
-				meta.original_file = file;
-				meta.id = node.GetNumber("MaterialID");
-				meta.type = Resource::MATERIAL;
-				existingResources[meta.id] = meta;
+				Config resource = components.GetNode(i);
+				if (resource.GetBool("HasResource"))
+				{
+					ResourceMeta meta;
+					meta.id = resource.GetNumber("ID");
+					meta.type = static_cast<Resource::Type>((int)resource.GetNumber("Type"));
+					meta.resource_name = resource.GetString("ResourceName");
+					meta.original_file = source_file;
+					existingResources[meta.id] = meta;
+				}
 			}
 		}
 		return true;

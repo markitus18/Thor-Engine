@@ -138,7 +138,7 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 						{
 							if (rMat->textureID != 0)
 							{
-								R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(rMat->textureID, Resource::TEXTURE);
+								R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(rMat->textureID);
 								if (rTex)
 								{
 									ImGui::Text(rTex->GetName());

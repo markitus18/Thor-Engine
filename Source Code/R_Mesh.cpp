@@ -48,5 +48,5 @@ void R_Mesh::LoadOnMemory()
 
 void R_Mesh::FreeMemory()
 {
-	glDeleteBuffers(max_buffer_type, buffers);
+	//glDeleteBuffers(max_buffer_type, buffers);
 }

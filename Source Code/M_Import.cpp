@@ -145,7 +145,7 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 			roots.push_back(gameObject);
 		}
 
-		if (parent == nullptr)
+		else if (parent == nullptr)
 			not_parented_GameObjects.push_back(gameObject);
 
 		gameObject->active = gameObject_node.GetBool("Active");
@@ -158,31 +158,24 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 
 		gameObject->beenSelected = gameObject->hierarchyOpen = gameObject_node.GetBool("OpenInHierarchy", false);
 
-		//Mesh load
-		unsigned long long meshID = gameObject_node.GetNumber("MeshID");
+		Config_Array components = gameObject_node.GetArray("Components");
 
-		if (meshID > 0)
+		for (uint i = 0; i < components.GetSize(); i++)
 		{
-			R_Mesh* rMesh = (R_Mesh*)App->moduleResources->GetResource(meshID, Resource::MESH);
-			if (rMesh)
+			Config component = components.GetNode(i);
+			if (component.GetBool("HasResource") == true)
 			{
-				C_Mesh* mesh = new C_Mesh;
-				mesh->SetResource(rMesh);
-				gameObject->AddComponent(mesh);
-			}
-		}
-
-		unsigned long long materialID = gameObject_node.GetNumber("MaterialID");
-
-		if (materialID > 0)
-		{
-			R_Material* rMaterial = (R_Material*)App->moduleResources->GetResource(materialID, Resource::MATERIAL);
-			if (rMaterial)
-			{
-				//TODO: create default constructor
-				C_Material* cMaterial = new C_Material(nullptr);
-				cMaterial->SetResource(rMaterial);
-				gameObject->AddComponent(cMaterial);
+				Resource* resource = App->moduleResources->GetResource(component.GetNumber("ID"));
+				if (resource)
+				{
+					Component::Type type = App->moduleResources->ResourceToComponentType(resource->type);
+					if (type != Component::None)
+					{
+						Component* component = gameObject->CreateComponent(type);
+						if (component)
+							component->SetResource(resource->GetID());
+					}
+				}
 			}
 		}
 
@@ -191,13 +184,16 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 		{
 			gameObject->CreateComponent(Component::Camera);
 		}
+
+		//Call OnUpdateTransform() to init all components according to the GameObject
+		gameObject->OnUpdateTransform();
 	}
 
 	//Security method if any game object is left without a parent
 	for (uint i = 0; i < not_parented_GameObjects.size(); i++)
 	{
 		LOG("[warning] GameObject not parented when loading prefab");
-		//not_parented_GameObjects[i]->parent = root;
+		roots.push_back(not_parented_GameObjects[i]);
 	}
 }
 
@@ -288,7 +284,7 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 	}
 	else
 	{
-		LOG("File not found");
+		LOG("File not found: %s", aiGetErrorString());
 	}
 
 	return ret;

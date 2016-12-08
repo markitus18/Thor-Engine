@@ -3,7 +3,9 @@
 
 #include "Module.h"
 #include "Resource.h"
+#include "Component.h"
 #include "Timer.h"
+#include "MathGeoLib\src\Algorithm\Random\LCG.h"
 
 #include <map>
 #include <vector>
@@ -23,9 +25,9 @@ struct ResourceMeta
 	std::string resource_name = "";
 	uint64 id = 0;
 
-	bool Compare(const char* file, const char* name)
+	bool Compare(const char* file, const char* name, Resource::Type type)
 	{
-		return (original_file == file && resource_name == name);
+		return (original_file == file && resource_name == name && type == this->type);
 	}
 
 };
@@ -42,49 +44,48 @@ public:
 	bool CleanUp();
 
 	//Import a file existing in assets creating the resources
-	void ImportFileFromAssets(const char* path, uint64 ID = 0);
+	void ImportFileFromAssets(const char* path);
 
-	void ImportScene(const char* source_file, bool add = true);
-	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name, uint64 ID = 0);
-	uint64 ImportRTexture(const char* buffer, const char* path, uint size, uint64 ID = 0);
-	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name, uint64 ID = 0);
+	void ImportScene(const char* source_fil);
+	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
+	uint64 ImportRTexture(const char* buffer, const char* path, uint size);
+	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
 
 	///Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene
-	Resource* GetResource(uint64 ID, Resource::Type type = Resource::UNKNOWN);
+	Resource* GetResource(uint64 ID);
 	Resource::Type GetTypeFromPath(const char* path);
 
 	void LoadPrefab(const char* path);
 
 	PathNode CollectImportedScenes();
-
+	Component::Type M_Resources::ResourceToComponentType(Resource::Type type);
 
 private:
-	void SaveResourcesData();
 	void LoadResourcesData();
 	void LoadMetaFromFolder(PathNode node);
 
-	Resource*		FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
+	ResourceMeta*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
-	bool			LoadMetaInfo(const char* file);
-	bool			LoadSceneMeta(const char* file, const char* source_file);
 
-	//Meta data management -----------------------------------------------------
+	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
 	void SaveFileDate(const char* path, Config& config);
 
+	bool LoadMetaInfo(const char* file);
+	bool LoadSceneMeta(const char* file, const char* source_file);
+
+	//Search through all assets and imports / re-imports
 	void UpdateAssetsImport();
 	void UpdateAssetsFolder(const PathNode& node);
 
 	//Remove all .meta files in assets TODO: fix fileSystem removing error
 	void ClearMetaData();
-
 	//Remove all .meta files in a folder
 	void RemoveMetaFromFolder(PathNode node);
 
 	bool IsFileModified(const char* path);
 	uint64 GetIDFromMeta(const char* path);
-	//---------------------------------------------------------------------------
 
 	void SaveChangedResources();
 
@@ -93,7 +94,8 @@ private:
 	//Loads an existing resource. Loading is previous to this, this is just for data management
 	void LoadResource(Resource* resource);
 	//Completely deletes a resource, including its file (not yet though)
-	void DeleteResource(uint64 ID);
+	//Return number of instances previous to deletion
+	uint DeleteResource(uint64 ID);
 	//Removes a resource from memory
 	void UnLoadResource(uint64 ID);
 
@@ -111,12 +113,11 @@ private:
 	//All resources imported
 	std::map<uint64, ResourceMeta> existingResources;
 
-	std::string metaFile = "/ProjectSettings/Resources.JSON";
-
 	uint64 nextID = 1;
 
 	Timer updateAssets_timer;
 	Timer saveChangedResources_timer;
+	LCG random;
 };
 
 #endif

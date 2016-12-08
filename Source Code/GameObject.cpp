@@ -173,17 +173,18 @@ Component* GameObject::CreateComponent(Component::Type type)
 			if (!HasComponent(Component::Type::Mesh))
 			{
 				new_component = new C_Mesh(this);
-				break;
 			}
+			break;
 		}
 		case(Component::Type::Material):
 		{
 			C_Mesh* mesh = GetComponent<C_Mesh>();
-			if (mesh)
+			if (!HasComponent(Component::Type::Material))
 			{
 				new_component = new C_Material(this);
-				break;
 			}
+
+			break;
 		}
 		case(Component::Type::Camera):
 		{
@@ -191,8 +192,8 @@ Component* GameObject::CreateComponent(Component::Type type)
 			{
 				new_component = new C_Camera(this);
 				new_component->OnUpdateTransform(transform->GetGlobalTransform(), float4x4::identity);
-				break;
 			}
+			break;
 		}
 	}
 	if (new_component)

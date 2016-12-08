@@ -12,6 +12,7 @@ class P_Inspector;
 class P_Configuration;
 class P_Buttons;
 class P_Resources;
+class P_Explorer;
 
 class Config;
 struct PathNode;
@@ -24,6 +25,7 @@ public:
 	~M_Editor();
 
 	bool Init(Config& config);
+	bool Start();
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
@@ -75,6 +77,7 @@ public:
 	P_Configuration*	panelConfiguration = nullptr;
 	P_Buttons*			panelButtons = nullptr;
 	P_Resources*		panelResources = nullptr;
+	P_Explorer*			panelExplorer = nullptr;
 
 	ImVec2 playWindow;
 

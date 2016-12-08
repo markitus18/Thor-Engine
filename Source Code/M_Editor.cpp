@@ -11,7 +11,7 @@
 #include "P_Configuration.h"
 #include "P_Buttons.h"
 #include "P_Resources.h"
-
+#include "P_Explorer.h"
 #include "M_Scene.h"
 #include "M_FileSystem.h"
 #include "M_Resources.h"
@@ -24,6 +24,14 @@
 #include "ImGui\imgui_impl_sdl_gl3.h"
 
 #include "Time.h"
+
+
+#include "Devil\include\ilu.h"
+#include "Devil\include\ilut.h"
+
+#pragma comment( lib, "Devil/libx86/DevIL.lib" )
+#pragma comment( lib, "Devil/libx86/ILU.lib" )
+#pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
 M_Editor::M_Editor(bool start_enabled) : Module("Editor", start_enabled)
 {
@@ -52,6 +60,7 @@ bool M_Editor::Init(Config& config)
 	panelConfiguration = new P_Configuration();
 	panelButtons = new P_Buttons();
 	panelResources = new P_Resources();
+	panelExplorer = new P_Explorer();
 
 	panelConfiguration->Init();
 
@@ -83,6 +92,41 @@ bool M_Editor::Init(Config& config)
 
 
 
+	return true;
+}
+
+bool M_Editor::Start()
+{
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load("ProjectSettings/Icons/FolderIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			panelExplorer->folderBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+
+	size = App->fileSystem->Load("ProjectSettings/Icons/FileIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			panelExplorer->fileBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+
+	size = App->fileSystem->Load("ProjectSettings/Icons/SelectedIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			panelExplorer->selectedBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
 	return true;
 }
 
@@ -258,6 +302,7 @@ bool M_Editor::CleanUp()
 	RELEASE(panelConfiguration);
 	RELEASE(panelButtons);
 	RELEASE(panelResources);
+	RELEASE(panelExplorer);
 
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
@@ -305,13 +350,17 @@ void M_Editor::DrawPanels()
 	{
 		panelResources->Draw(windowFlags);
 	}
+	if (panelExplorer != nullptr)
+	{
+		panelExplorer->Draw(windowFlags);
+	}
 }
 
 void M_Editor::DisplayScenesWindows(const PathNode& folder)
 {
 	if (folder.file == true)
 	{
-		if (ImGui::MenuItem(folder.path.c_str()))
+		if (ImGui::MenuItem(folder.localPath.c_str()))
 		{
 			App->moduleResources->LoadPrefab(folder.path.c_str());
 		}
@@ -320,7 +369,7 @@ void M_Editor::DisplayScenesWindows(const PathNode& folder)
 	//If node folder has something inside
 	else if (folder.leaf == false)
 	{
-		if (ImGui::BeginMenu(folder.path.c_str()))
+		if (ImGui::BeginMenu(folder.localPath.c_str()))
 		{
 			for (uint i = 0; i < folder.children.size(); i++)
 			{
@@ -431,6 +480,7 @@ void M_Editor::OnResize(int screen_width, int screen_height)
 	panelConfiguration->UpdatePosition(screen_width, screen_height);
 	panelButtons->UpdatePosition(screen_width, screen_height);
 	panelResources->UpdatePosition(screen_width, screen_height);
+	panelExplorer->UpdatePosition(screen_width, screen_height);
 
 	playWindow.x = screen_width / 2 - 90;
 	playWindow.y = screen_height / 20;

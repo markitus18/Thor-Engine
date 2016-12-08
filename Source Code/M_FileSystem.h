@@ -11,16 +11,7 @@ struct aiFileIO;
 
 //struct BASS_FILEPROCS;
 class Config;
-
-struct PathNode
-{
-	PathNode() : path("") {};
-	std::string path;
-	std::vector<PathNode> children;
-
-	bool leaf = true;
-	bool file = true;
-};
+struct PathNode;
 
 class M_FileSystem : public Module
 {

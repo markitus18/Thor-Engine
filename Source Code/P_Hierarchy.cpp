@@ -46,7 +46,7 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 	ImGuiTreeNodeFlags gameObject_flag = default_flags;
 	if (gameObject->childs.empty())
 	{
-		gameObject_flag = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+		gameObject_flag |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 	if (gameObject->IsSelected())
 		gameObject_flag |= ImGuiTreeNodeFlags_Selected;

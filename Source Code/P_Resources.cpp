@@ -20,6 +20,7 @@ P_Resources::~P_Resources()
 
 void P_Resources::Draw(ImGuiWindowFlags flags)
 {
+	active = false;
 	if (active)
 	{
 		ImGui::SetNextWindowPos(position);

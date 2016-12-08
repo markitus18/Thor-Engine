@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "M_FileSystem.h"
+#include "PathNode.h"
 
 #include "PhysFS/include/physfs.h"
 
@@ -154,6 +155,10 @@ PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::strin
 	if (Exists(directory))
 	{
 		root.path = directory;
+		App->fileSystem->SplitFilePath(directory, nullptr, &root.localPath);
+		if (root.localPath == "")
+			root.localPath = directory;
+
 		std::vector<string> file_list, dir_list;
 		DiscoverFiles(directory, file_list, dir_list);	
 

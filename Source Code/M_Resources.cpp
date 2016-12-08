@@ -13,6 +13,8 @@
 #include "R_Prefab.h"
 
 #include "M_FileSystem.h"
+#include "PathNode.h"
+
 #include "Config.h"
 #include "M_Scene.h"
 

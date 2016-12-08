@@ -29,6 +29,7 @@ void P_Console::AddLog(const char* input)
 
 void P_Console::Draw(ImGuiWindowFlags flags)
 {
+	active = false;
 	if (active)
 	{
 		ImGui::SetNextWindowPos(position);

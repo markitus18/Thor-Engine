@@ -23,11 +23,8 @@
 #pragma comment( lib, "Devil/libx86/ILU.lib" )
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
-
-
 M_Materials::M_Materials(bool start_enabled) : Module("Materials", start_enabled)
 {
-
 }
 
 M_Materials::~M_Materials()
@@ -37,6 +34,7 @@ M_Materials::~M_Materials()
 
 bool M_Materials::Init()
 {
+
 	return true;
 }
 

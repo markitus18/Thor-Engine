@@ -80,6 +80,8 @@ public:
 	//----------------------------------------------
 
 	void OnRemoveGameObject(GameObject* gameObject);
+
+	void SaveImage(const char* path);
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
 	int window_width;
@@ -90,29 +92,6 @@ public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
-
-#pragma region Cubes
-	//uint	image_texture;
-	//uint	array_cube_id;
-	//uint	index_cube_index_id;
-	//uint	index_cube_vertex_id;
-
-	//float cube_vertices[24];
-	//uint cube_indices[36];
-
-	//uint	texture_vertex_id;
-	//uint	texture_UV_id;
-	//uint	texture_index_id;
-
-	//float	texture_vertices[16 * 3];
-	//float	texture_UV[16 * 2];
-	//uint	texture_indices[36];
-
-	//uint	lenna_texture;
-	//bool	lenaON = false;
-
-	//bool BuffersON = false;
-#pragma endregion
 
 private:
 	uint mesh_draw_timer;

@@ -19,6 +19,18 @@
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
 
+
+//TMP TESTING
+
+#include "Devil\include\ilu.h"
+#include "Devil\include\ilut.h"
+
+#pragma comment( lib, "Devil/libx86/DevIL.lib" )
+#pragma comment( lib, "Devil/libx86/ILU.lib" )
+#pragma comment( lib, "Devil/libx86/ILUT.lib" )
+#include "M_Input.h"
+
+
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module("Renderer", start_enabled)
 {
 }
@@ -136,6 +148,8 @@ bool M_Renderer3D::Init(Config& config)
 	mesh_draw_timer = App->moduleEditor->AddTimer("Mesh draw", "Render");
 	box_draw_timer = App->moduleEditor->AddTimer("Box draw", "Render");
 
+	SDL_Texture* texture;
+
 	return ret;
 }
 
@@ -159,7 +173,6 @@ update_status M_Renderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-#pragma endregion
 	return UPDATE_CONTINUE;
 }
 
@@ -169,8 +182,74 @@ update_status M_Renderer3D::PostUpdate(float dt)
 	DrawAllScene();
 	App->moduleEditor->Draw();
 
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+	{
+		SaveImage("Library/PreImage.dds");
+	}
+
 	SDL_GL_SwapWindow(App->window->window);
+
+	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	{
+		SaveImage("Library/PostImage.dds");
+	}
+
+
 	return UPDATE_CONTINUE;
+}
+
+void M_Renderer3D::SaveImage(const char* path)
+{
+	ILuint img;
+	ilGenImages(1, &img);
+	ilBindImage(img);
+
+	SDL_Surface* surface = SDL_GetWindowSurface(App->window->window);
+	SDL_LockSurface(surface);
+
+	
+	uint m_width = 50, m_height = 50;
+	char* buffer = new char[m_width * m_height * 4];
+	uint k = 0;
+	for (uint j = m_height; j > 0; j--)
+	{
+		for (uint i = 0; i < m_width; i++)
+		{
+			buffer[k] = static_cast<char>(255.0);
+			buffer[k + 1] = static_cast<char>(0.0);
+			buffer[k + 2] = static_cast<char>(255.0);
+			buffer[k + 3] = static_cast<char>(50.0);
+			k += 4;
+		}
+	}
+	
+
+	//char* cursor = (char*)surface->pixels;
+
+	//
+	////float matrix[50];
+
+	//for (uint i = 0; i < 50; i+=4)
+	//{
+	//	*(cursor) = 255;
+	//	*(cursor + 1) = 255;
+	//	*(cursor + 2) = 255;
+
+	//	cursor+= 4;
+	//}
+	//
+
+	int* data = (int*)surface->pixels;
+
+	int mode = (surface->format->BytesPerPixel == 3) ? IL_RGB : IL_RGBA;
+
+	ilTexImage(50, 50, 1, 4, IL_RGBA, IL_UNSIGNED_BYTE, buffer);
+
+	SDL_UnlockSurface(surface);
+
+	ilEnable(IL_FILE_OVERWRITE);
+	ilSave(IL_DDS, path);
+	ilDeleteImages(1, &img);
 }
 
 // Called before quitting
@@ -179,6 +258,7 @@ bool M_Renderer3D::CleanUp()
 	LOG("Destroying 3D Renderer");
 
 	SDL_GL_DeleteContext(context);
+
 
 	return true;
 }
@@ -460,4 +540,7 @@ void M_Renderer3D::OnRemoveGameObject(GameObject* gameObject)
 			it++;
 	}
 }
+
+
+
 //----------------------------------------------

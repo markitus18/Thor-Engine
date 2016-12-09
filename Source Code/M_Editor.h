@@ -16,6 +16,8 @@ class P_Explorer;
 
 class Config;
 struct PathNode;
+class GameObject;
+class Resource;
 
 class M_Editor : public Module
 {
@@ -47,9 +49,15 @@ public:
 	void StopTimer(uint index);
 	//------------------------------------
 
-	//GameObject stuff -------------------
-	void SelectGameObject(GameObject* gameObject, bool selectSingle = true, bool openTree = true);
-	//------------------------------------
+	//Selection --------------------
+	void SelectSingle(GameObject* gameObject, bool openTree = true);
+	void AddSelect(GameObject* gameObject, bool openTree = true);
+	void UnselectSingle(GameObject* gameObject);
+	void UnselectAll();
+	void UnselectGameObjects();
+	void UnselectResources();
+	void DeleteSelected();
+	//Endof Selection------------------------------------
 
 	void LoadScene(Config& root, bool tmp = false);
 	void ResetScene();
@@ -67,7 +75,6 @@ private:
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();
 
-	void DeleteSelectedGameObjects();
 	//TODO: move into private
 public:
 	//Panels
@@ -83,6 +90,10 @@ public:
 
 	bool shaded = true;
 	bool wireframe = false;
+
+	std::vector<GameObject*> selectedGameObjects;
+	std::vector<Resource*> selectedResources;
+
 private:
 
 	//Active window controllers

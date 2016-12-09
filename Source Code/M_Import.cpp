@@ -153,7 +153,7 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 		bool selected = gameObject_node.GetBool("Selected", false);
 		if (selected)
 		{
-			App->moduleEditor->SelectGameObject(gameObject, false);
+			App->moduleEditor->AddSelect(gameObject);
 		}
 
 		gameObject->beenSelected = gameObject->hierarchyOpen = gameObject_node.GetBool("OpenInHierarchy", false);

@@ -437,7 +437,7 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 			}
 		}
 	}
-	App->moduleEditor->SelectGameObject((GameObject*)toSelect);
+	App->moduleEditor->SelectSingle((GameObject*)toSelect);
 }
 
 void M_Scene::CreateCamera()

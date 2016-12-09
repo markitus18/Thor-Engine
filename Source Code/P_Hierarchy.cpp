@@ -10,6 +10,9 @@
 
 #include "ImGui\imgui.h"
 
+#include "Application.h"
+#include "M_Editor.h"
+
 P_Hierarchy::P_Hierarchy()
 {
 }
@@ -73,15 +76,15 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 		{
 			if (gameObject->IsSelected())
 			{
-				UnselectSingle(gameObject);
+				App->moduleEditor->UnselectSingle(gameObject);
 			}
 			else
-				AddSelect(gameObject);
+				App->moduleEditor->AddSelect(gameObject);
 		}
 		//If not ctrl pressed, unselect all other GameObjects
 		else
 		{
-			SelectSingle(gameObject);
+			App->moduleEditor->SelectSingle(gameObject);
 		}
 	}
 
@@ -133,84 +136,4 @@ void P_Hierarchy::UpdatePosition(int screen_width, int screen_height)
 	size.x = screen_width * (0.20);
 	size.y = screen_height * (0.60) - position.y;
 
-}
-
-void P_Hierarchy::SelectSingle(GameObject* gameObject, bool openTree)
-{
-	if (!selectedGameObjects.empty())
-	{
-		UnselectAll();
-	}
-	if (gameObject)
-	{
-		gameObject->Select();
-		selectedGameObjects.push_back(gameObject);
-
-		if (openTree)
-		{
-			//Opening tree hierarchy node
-			GameObject* it = gameObject->parent;
-			while (it != nullptr)
-			{
-				it->beenSelected = true;
-				it = it->parent;
-			}
-		}
-	}
-}
-
-void P_Hierarchy::AddSelect(GameObject* gameObject, bool openTree)
-{
-	if (gameObject)
-	{
-		gameObject->Select();
-		selectedGameObjects.push_back(gameObject);
-
-		if (openTree)
-		{
-			//Opening tree hierarchy node
-			GameObject* it = gameObject->parent;
-			while (it != nullptr && it->name != "root")
-			{
-				it->beenSelected = true;
-				it = it->parent;
-			}
-		}
-	}
-}
-
-void P_Hierarchy::UnselectSingle(GameObject* gameObject)
-{
-	gameObject->Unselect();
-	std::vector<GameObject*>::iterator it = selectedGameObjects.begin();
-	while (it != selectedGameObjects.end())
-	{
-		if ((*it) == gameObject)
-		{
-			selectedGameObjects.erase(it);
-			break;
-		}
-		it++;
-	}
-
-}
-
-void P_Hierarchy::UnselectAll()
-{
-	for (uint i = 0; i < selectedGameObjects.size(); i++)
-	{
-		selectedGameObjects[i]->Unselect();
-	}
-	selectedGameObjects.clear();
-}
-
-void P_Hierarchy::DeleteSelected()
-{
-	//Warning: iterator is not moved because GameObject will be erased from vector on "OnRemove" call
-	for (uint i = 0; i < selectedGameObjects.size(); )
-	{
-		selectedGameObjects[i]->Unselect();
-		App->scene->DeleteGameObject(selectedGameObjects[i]);
-	}
-	selectedGameObjects.clear();
 }

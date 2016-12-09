@@ -18,15 +18,6 @@ public:
 	void DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags default_flags);
 
 	void UpdatePosition(int, int);
-
-	//GameObject selection methods
-	void SelectSingle(GameObject* gameObject, bool openTree = true);
-	void AddSelect(GameObject* gameObject, bool openTree = true);
-	void UnselectSingle(GameObject* gameObject);
-	void UnselectAll();
-	void DeleteSelected();
-
-	std::vector<GameObject*> selectedGameObjects;
 };
 
 #endif

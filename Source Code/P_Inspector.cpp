@@ -2,7 +2,7 @@
 
 #include "Application.h"
 #include "M_Editor.h"
-#include "P_Hierarchy.h"
+
 #include "GameObject.h"
 #include "M_Input.h"
 #include "OpenGL.h"
@@ -42,9 +42,9 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 			return;
 		}
 
-		if (App->moduleEditor->panelHierarchy->selectedGameObjects.size() == 1)
+		if (App->moduleEditor->selectedGameObjects.size() == 1)
 		{
-			GameObject* gameObject = App->moduleEditor->panelHierarchy->selectedGameObjects[0];
+			GameObject* gameObject = App->moduleEditor->selectedGameObjects[0];
 
 			//Active button
 			ImGui::Checkbox("##", &gameObject->active);

@@ -60,13 +60,15 @@ public:
 
 	PathNode CollectImportedScenes();
 	Component::Type M_Resources::ResourceToComponentType(Resource::Type type);
+	//TMP: move into private? usage in P_Explorer.cpp
+	uint64 GetIDFromMeta(const char* path);
 
 private:
 	void LoadResourcesData();
 	void LoadMetaFromFolder(PathNode node);
 
-	ResourceMeta*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 	ResourceMeta	GetMetaInfo(Resource* resource);
+	ResourceMeta*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 
 	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
@@ -85,7 +87,7 @@ private:
 	void RemoveMetaFromFolder(PathNode node);
 
 	bool IsFileModified(const char* path);
-	uint64 GetIDFromMeta(const char* path);
+
 
 	void SaveChangedResources();
 

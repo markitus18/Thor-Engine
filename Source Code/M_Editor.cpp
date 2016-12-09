@@ -18,6 +18,8 @@
 #include "M_Camera3D.h"
 
 #include "GameObject.h"
+#include "Resource.h"
+
 #include "OpenGL.h"
 
 #include "ImGui\imgui.h"
@@ -147,7 +149,7 @@ void M_Editor::Draw()
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
-		panelHierarchy->DeleteSelected();
+		DeleteSelected();
 	}
 	//Showing all windows ----------
 	if (show_About_window)
@@ -447,14 +449,6 @@ void M_Editor::ShowFileNameWindow()
 	ImGui::End();
 }
 
-void M_Editor::DeleteSelectedGameObjects()
-{
-	for (uint i = 0; i < panelHierarchy->selectedGameObjects.size(); i++)
-	{
-		App->scene->DeleteGameObject(panelHierarchy->selectedGameObjects[i]);
-	}
-}
-
 void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
@@ -517,31 +511,119 @@ void M_Editor::StopTimer(uint index)
 	panelConfiguration->StopTimer(index);
 }
 
-void M_Editor::SelectGameObject(GameObject* gameObject, bool selectSingle, bool openTree)
+
+//Selection----------------------------
+void M_Editor::SelectSingle(GameObject* gameObject, bool openTree)
 {
-	if (selectSingle)
-		panelHierarchy->SelectSingle(gameObject, openTree);
-	else
-		panelHierarchy->AddSelect(gameObject, openTree);
+
+	UnselectAll();
+
+	if (gameObject)
+	{
+		gameObject->Select();
+		selectedGameObjects.push_back(gameObject);
+
+		if (openTree)
+		{
+			//Opening tree hierarchy node
+			GameObject* it = gameObject->parent;
+			while (it != nullptr)
+			{
+				it->beenSelected = true;
+				it = it->parent;
+			}
+		}
+	}
 }
+
+void M_Editor::AddSelect(GameObject* gameObject, bool openTree)
+{
+	UnselectResources();
+	if (gameObject)
+	{
+		gameObject->Select();
+		selectedGameObjects.push_back(gameObject);
+
+		if (openTree)
+		{
+			//Opening tree hierarchy node
+			GameObject* it = gameObject->parent;
+			while (it != nullptr && it->name != "root")
+			{
+				it->beenSelected = true;
+				it = it->parent;
+			}
+		}
+	}
+}
+
+void M_Editor::UnselectSingle(GameObject* gameObject)
+{
+	gameObject->Unselect();
+	std::vector<GameObject*>::iterator it = selectedGameObjects.begin();
+	while (it != selectedGameObjects.end())
+	{
+		if ((*it) == gameObject)
+		{
+			selectedGameObjects.erase(it);
+			break;
+		}
+		it++;
+	}
+}
+
+void M_Editor::UnselectAll()
+{
+	UnselectResources();
+	UnselectGameObjects();
+}
+
+void M_Editor::UnselectGameObjects()
+{
+	for (uint i = 0; i < selectedGameObjects.size(); i++)
+	{
+		selectedGameObjects[i]->Unselect();
+	}
+	selectedGameObjects.clear();
+}
+
+void M_Editor::UnselectResources()
+{
+	selectedResources.clear();
+}
+
+void M_Editor::DeleteSelected()
+{
+	//Warning: iterator is not moved because GameObject will be erased from vector on "OnRemove" call
+	for (uint i = 0; i < selectedGameObjects.size(); )
+	{
+		selectedGameObjects[i]->Unselect();
+		App->scene->DeleteGameObject(selectedGameObjects[i]);
+	}
+	selectedGameObjects.clear();
+
+	//TODO: Delete resources
+	selectedResources.clear();
+}
+//Endof Selection -----------------------
 
 void M_Editor::LoadScene(Config& root, bool tmp)
 {
-	panelHierarchy->selectedGameObjects.clear();
+	selectedGameObjects.clear();
 }
 
 void M_Editor::ResetScene()
 {
-	panelHierarchy->selectedGameObjects.clear();
+	selectedGameObjects.clear();
 }
 
 void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 {
-	for (std::vector<GameObject*>::iterator it = panelHierarchy->selectedGameObjects.begin(); it != panelHierarchy->selectedGameObjects.end();)
+	for (std::vector<GameObject*>::iterator it = selectedGameObjects.begin(); it != selectedGameObjects.end();)
 	{
 		if (*it == gameObject)
 		{
-			it = panelHierarchy->selectedGameObjects.erase(it);
+			it = selectedGameObjects.erase(it);
 		}
 		else
 		{

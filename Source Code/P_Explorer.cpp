@@ -2,11 +2,13 @@
 #include "Application.h"
 #include "M_FileSystem.h"
 #include "PerfTimer.h"
+#include "M_Resources.h"
+#include "R_Texture.h"
 
 P_Explorer::P_Explorer()
 {
 	updateTimer.Start();
-	assets = App->fileSystem->GetAllFiles("Assets");
+	UpdateTree();
 	currentNode = assets;
 }
 
@@ -171,12 +173,29 @@ void P_Explorer::DrawNodeImage(const PathNode& node)
 	if (node.file == false)
 		ImGui::Image((ImTextureID)folderBuffer, ImVec2(imageSize, imageSize));
 	else
-		ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize));
+	{
+		std::string metaFile = node.path + (".meta");
+		uint64 id = App->moduleResources->GetIDFromMeta(metaFile.c_str());
+		Resource* resource = App->moduleResources->GetResource(id);
+
+		if (resource && resource->GetType() == Resource::TEXTURE)
+		{
+			R_Texture* tex = (R_Texture*)resource;
+			ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+		}
+		else
+		{
+			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize));
+		}
+	}
+
 }
 
 void P_Explorer::UpdateTree()
 {
-	assets = App->fileSystem->GetAllFiles("Assets");
+	std::vector<std::string> ignore_ext;
+	ignore_ext.push_back("meta");
+	assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
 }
 
 std::string P_Explorer::GetTextAdjusted(const char* text)

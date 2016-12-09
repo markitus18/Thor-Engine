@@ -584,7 +584,7 @@ uint64 M_Resources::GetIDFromMeta(const char* path)
 	uint size = App->fileSystem->Load(path, &buffer);
 	
 	if (size > 0)
-		ret = Config(buffer).GetNumber("ResourceID");
+		ret = Config(buffer).GetNumber("ID");
 
 	return ret;
 }

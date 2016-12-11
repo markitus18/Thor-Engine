@@ -80,6 +80,14 @@ void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSel
 	}
 }
 
+void GameObject::DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const
+{
+	Draw(shaded, wireframe, drawBox, drawBoxSelected);
+
+	for (uint i = 0; i < childs.size(); i++)
+		childs[i]->DrawResursive(shaded, wireframe, drawBox, drawBoxSelected);
+}
+
 void GameObject::OnUpdateTransform()
 {
 	flipped_normals = HasFlippedNormals();

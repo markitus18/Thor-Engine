@@ -47,7 +47,6 @@ bool M_Camera3D::Init(Config& config)
 // -----------------------------------------------------------------
 bool M_Camera3D::Start()
 {
-	LOG("Setting up the camera");
 	bool ret = true;
 
 	return ret;

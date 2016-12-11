@@ -92,6 +92,11 @@ update_status M_Scene::Update(float dt)
 		CreateCamera();
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
+	{
+		App->renderer3D->SavePrefabImage(root->childs[1]);
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 	{
 		App->moduleResources->LoadPrefab("Assets/Models/Street_environment_V01.FBX");

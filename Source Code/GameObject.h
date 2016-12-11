@@ -23,6 +23,7 @@ public:
 
 	void Update();
 	void Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const;
+	void DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBosSelected) const;
 
 	void OnUpdateTransform();
 	const AABB& GetAABB() const;

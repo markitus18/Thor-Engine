@@ -116,12 +116,13 @@ bool M_Renderer3D::Init(Config& config)
 		GLfloat lmodel_ambient[] = { 1.4, 1.4, 1.4, 1.0 };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
 
-		//lights[0].ref = GL_LIGHT0;
-		//lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		//lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		//lights[0].SetPos(0.0f, 0.0f, 2.5f);
-		//lights[0].Init();
-		
+		lights[0].ref = GL_LIGHT0;
+		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
+		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+		lights[0].SetPos(0.0f, 0.0f, 2.5f);
+		lights[0].Init();
+		lights[0].Active(true);		
+
 		//GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		//glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
@@ -137,7 +138,7 @@ bool M_Renderer3D::Init(Config& config)
 	//	glEnable(GL_BLEND);
 	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		//lights[0].Active(true);
+
 
 		glShadeModel(GL_SMOOTH);
 	}
@@ -147,8 +148,6 @@ bool M_Renderer3D::Init(Config& config)
 
 	mesh_draw_timer = App->moduleEditor->AddTimer("Mesh draw", "Render");
 	box_draw_timer = App->moduleEditor->AddTimer("Box draw", "Render");
-
-	SDL_Texture* texture;
 
 	return ret;
 }
@@ -168,7 +167,7 @@ update_status M_Renderer3D::PreUpdate(float dt)
 	glLoadMatrixf(camera->GetOpenGLViewMatrix());
 
 	// light 0 on cam pos
-	//lights[0].SetPos(App->camera->GetCamera()->frustum.pos.x, App->camera->GetCamera()->frustum.pos.y, App->camera->GetCamera()->frustum.pos.z);
+	lights[0].SetPos(App->camera->GetCamera()->frustum.Pos().x, App->camera->GetCamera()->frustum.Pos().y, App->camera->GetCamera()->frustum.Pos().z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -180,12 +179,15 @@ update_status M_Renderer3D::PreUpdate(float dt)
 update_status M_Renderer3D::PostUpdate(float dt)
 {
 	DrawAllScene();
-	App->moduleEditor->Draw();
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
 	{
 		SaveImage("Library/PreImage.dds");
 	}
+
+//	App->moduleEditor->Draw();
+
+
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -207,7 +209,12 @@ void M_Renderer3D::SaveImage(const char* path)
 	SDL_Surface* surface = SDL_GetWindowSurface(App->window->window);
 	SDL_LockSurface(surface);
 
-	
+	unsigned char* pixels = new unsigned char[surface->w * surface->h * 3];
+	glReadPixels(0, 0, surface->w, surface->h, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+//	SDL_BYTEORDER
+	/*
+	if (SDL_RenderReadPixels(context, &surface->clip_rect, surface->format->format, pixels, surface->w * surface->format->BytesPerPixel))
 	uint m_width = 50, m_height = 50;
 	char* buffer = new char[m_width * m_height * 4];
 	uint k = 0;
@@ -240,10 +247,11 @@ void M_Renderer3D::SaveImage(const char* path)
 	//
 
 	int* data = (int*)surface->pixels;
+	*/
 
 	int mode = (surface->format->BytesPerPixel == 3) ? IL_RGB : IL_RGBA;
 
-	ilTexImage(50, 50, 1, 4, IL_RGBA, IL_UNSIGNED_BYTE, buffer);
+	ilTexImage(surface->w, surface->h, 1, 3, IL_RGB, IL_UNSIGNED_BYTE, pixels);
 
 	SDL_UnlockSurface(surface);
 
@@ -252,6 +260,19 @@ void M_Renderer3D::SaveImage(const char* path)
 	ilDeleteImages(1, &img);
 }
 
+void M_Renderer3D::SavePrefabImage(GameObject* gameObject)
+{
+	PreUpdate(0);
+	gameObject->DrawResursive(true, false, false, false);
+	PostUpdate(0);
+	glReadBuffer(GL_FRONT);
+	//SDL_GL_SwapWindow(App->window->window);
+	std::string path = "Library";
+	path.append(gameObject->name).append(".dds");
+	SaveImage(path.c_str());
+	
+	//SDL_GL_SwapWindow(App->window->window);
+}
 // Called before quitting
 bool M_Renderer3D::CleanUp()
 {

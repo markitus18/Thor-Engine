@@ -24,6 +24,7 @@
 #include "Config.h"
 #include "R_Prefab.h"
 #include "Resource.h"
+#include "M_Renderer3D.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -254,7 +255,8 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 
 		//TODO CHANGE LOADFBX FNC NAME
 		GameObject* rootNode = CreateGameObjects(file, file->mRootNode, nullptr, path, createdGameObjects);
-		
+		App->renderer3D->SavePrefabImage(rootNode);
+
 		Config config;
 		SaveGameObjectConfig(config, createdGameObjects);
 

@@ -76,6 +76,11 @@ void P_Explorer::Draw(ImGuiWindowFlags flags)
 			{
 				ImGui::PushID(i);
 
+				ImGui::SetCursorPosX(vec2.x + (i - (line * columnsNumber)) * (imageSize + imageSpacingX) + imageSpacingX);
+				ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY));
+
+				DrawNodeImage(currentNode.children[i]);
+
 				ImGui::SetCursorPosX(vec2.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
 				ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY));
 
@@ -83,11 +88,6 @@ void P_Explorer::Draw(ImGuiWindowFlags flags)
 				{
 					ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize, imageSize));
 				}
-
-				ImGui::SetCursorPosX(vec2.x + (i - (line * columnsNumber)) * (imageSize + imageSpacingX) + imageSpacingX);
-				ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY));
-
-				DrawNodeImage(currentNode.children[i]);
 
 				if (ImGui::IsItemClicked())
 				{

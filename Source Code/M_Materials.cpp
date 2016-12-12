@@ -225,6 +225,10 @@ R_Texture* M_Materials::ImportTextureResource(const char* buffer, unsigned long 
 			}
 		}
 	}
+	else
+	{
+		LOG("[warning] error when importing texture %s -- %s", file, ilGetError());
+	}
 
 	return resTexture;
 }

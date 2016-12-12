@@ -8,6 +8,8 @@ class R_Prefab : public Resource
 public:
 	R_Prefab();
 	~R_Prefab();
+
+	uint64 miniTextureID = 0;
 };
 
 #endif __R_PREFAB_H__

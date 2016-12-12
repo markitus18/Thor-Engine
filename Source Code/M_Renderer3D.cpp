@@ -179,28 +179,14 @@ update_status M_Renderer3D::PreUpdate(float dt)
 update_status M_Renderer3D::PostUpdate(float dt)
 {
 	DrawAllScene();
-
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-	{
-		SaveImage("Library/PreImage.dds");
-	}
-
-//	App->moduleEditor->Draw();
-
-
+	App->moduleEditor->Draw();
 
 	SDL_GL_SwapWindow(App->window->window);
-
-	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
-	{
-		SaveImage("Library/PostImage.dds");
-	}
-
 
 	return UPDATE_CONTINUE;
 }
 
-void M_Renderer3D::SaveImage(const char* path)
+uint M_Renderer3D::SaveImage(char** buffer)
 {
 	ILuint img;
 	ilGenImages(1, &img);
@@ -209,77 +195,31 @@ void M_Renderer3D::SaveImage(const char* path)
 	SDL_Surface* surface = SDL_GetWindowSurface(App->window->window);
 	SDL_LockSurface(surface);
 
-	unsigned char* pixels = new unsigned char[surface->w * surface->h * 3];
-	glReadPixels(0, 0, surface->w, surface->h, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	uint size = surface->w * surface->h * 3;
+	*buffer = new char[size];
+	glReadPixels(0, 0, surface->w, surface->h, GL_RGB, GL_UNSIGNED_BYTE, *buffer);
+	return size;
 
-//	SDL_BYTEORDER
-	/*
-	if (SDL_RenderReadPixels(context, &surface->clip_rect, surface->format->format, pixels, surface->w * surface->format->BytesPerPixel))
-	uint m_width = 50, m_height = 50;
-	char* buffer = new char[m_width * m_height * 4];
-	uint k = 0;
-	for (uint j = m_height; j > 0; j--)
-	{
-		for (uint i = 0; i < m_width; i++)
-		{
-			buffer[k] = static_cast<char>(255.0);
-			buffer[k + 1] = static_cast<char>(0.0);
-			buffer[k + 2] = static_cast<char>(255.0);
-			buffer[k + 3] = static_cast<char>(50.0);
-			k += 4;
-		}
-	}
-	
-
-	//char* cursor = (char*)surface->pixels;
-
-	//
-	////float matrix[50];
-
-	//for (uint i = 0; i < 50; i+=4)
-	//{
-	//	*(cursor) = 255;
-	//	*(cursor + 1) = 255;
-	//	*(cursor + 2) = 255;
-
-	//	cursor+= 4;
-	//}
-	//
-
-	int* data = (int*)surface->pixels;
-	*/
-
-	int mode = (surface->format->BytesPerPixel == 3) ? IL_RGB : IL_RGBA;
-
-	ilTexImage(surface->w, surface->h, 1, 3, IL_RGB, IL_UNSIGNED_BYTE, pixels);
-
-	SDL_UnlockSurface(surface);
-
-	ilEnable(IL_FILE_OVERWRITE);
-	ilSave(IL_DDS, path);
-	ilDeleteImages(1, &img);
 }
 
-void M_Renderer3D::SavePrefabImage(GameObject* gameObject)
+uint M_Renderer3D::SavePrefabImage(GameObject* gameObject, char** buffer)
 {
 	PreUpdate(0);
 	gameObject->DrawResursive(true, false, false, false);
-	PostUpdate(0);
-	glReadBuffer(GL_FRONT);
-	//SDL_GL_SwapWindow(App->window->window);
+	DrawAllScene();
 	std::string path = "Library";
 	path.append(gameObject->name).append(".dds");
-	SaveImage(path.c_str());
-	
-	//SDL_GL_SwapWindow(App->window->window);
+	uint size = SaveImage(buffer);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	return size;
 }
+
 // Called before quitting
 bool M_Renderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
 
 	SDL_GL_DeleteContext(context);
-
 
 	return true;
 }

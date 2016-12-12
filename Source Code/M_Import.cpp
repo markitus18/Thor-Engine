@@ -255,13 +255,22 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 
 		//TODO CHANGE LOADFBX FNC NAME
 		GameObject* rootNode = CreateGameObjects(file, file->mRootNode, nullptr, path, createdGameObjects);
-		App->renderer3D->SavePrefabImage(rootNode);
 
 		Config config;
 		SaveGameObjectConfig(config, createdGameObjects);
 
+		//Saving mini-texture
+		char* miniTexBuffer;
+		uint miniTexID = 0;
+		uint miniTexSize = App->renderer3D->SavePrefabImage(rootNode, &miniTexBuffer);
+		if (miniTexSize > 0)
+		{
+			uint64 miniTexID = App->moduleResources->ImportRTexture(miniTexBuffer, path, miniTexSize);
+		}
+
 		char* buffer;
 		uint size = config.Serialize(&buffer);
+		config.SetNumber("MiniTex", miniTexID);
 
 		if (size > 0)
 		{
@@ -277,6 +286,7 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 			ret->resource_file = full_path.c_str();
 			ret->original_file = path;
 			ret->name = fileName;
+			ret->miniTextureID = miniTexID;
 
 			RELEASE_ARRAY(buffer);
 		}

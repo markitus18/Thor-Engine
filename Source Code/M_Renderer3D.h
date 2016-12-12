@@ -81,8 +81,8 @@ public:
 
 	void OnRemoveGameObject(GameObject* gameObject);
 
-	void SaveImage(const char* path);
-	void SavePrefabImage(GameObject* gameObject);
+	uint SaveImage(char** buffer);
+	uint SavePrefabImage(GameObject* gameObject, char** buffer);
 
 public:
 	//TODO: should it be moved into window module? SDL method maybe?

@@ -181,6 +181,37 @@ uint64 M_Resources::ImportRTexture(const char* buffer, const char* source_file, 
 	return ret;
 }
 
+uint64 M_Resources::ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY)
+{
+	uint64 ret = 0;
+	uint64 newID = 0;
+	R_Texture* resource = nullptr;
+	uint64 instances = 0;
+
+	std::string name = "", extension = "";
+	ResourceMeta* meta = FindResourceInLibrary(source_file, name.c_str(), Resource::TEXTURE);
+
+	if (meta != nullptr)
+	{
+		newID = meta->id;
+		instances = DeleteResource(newID);
+	}
+	else
+	{
+		newID = ++nextID;
+	}
+
+	//Importing resource
+	resource = App->moduleMaterials->ImportPrefabImage(buffer, newID, source_file, sizeX, sizeY);
+	if (resource)
+	{
+		resource->instances = instances;
+		AddResource(resource);
+		ret = resource->ID;
+	}
+	return ret;
+}
+
 uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name)
 {
 	uint64 ret = 0;
@@ -246,6 +277,7 @@ Resource* M_Resources::GetResource(uint64 ID)
 					ret = App->moduleMaterials->LoadMaterialResource(ID);
 					if (((R_Material*)ret)->textureID != 0)
 					{
+						//TODO: move into import
 						R_Texture* rTex = (R_Texture*)GetResource(((R_Material*)ret)->textureID);
 						rTex->instances++;
 					}
@@ -254,8 +286,14 @@ Resource* M_Resources::GetResource(uint64 ID)
 				}
 				case (Resource::PREFAB):
 				{
-					//Anything to do when Getting a prefab resource?
-					//AddResource(ret);
+					ret = App->moduleImport->LoadPrefabResource(ID);
+					if (((R_Prefab*)ret)->miniTextureID != 0)
+					{
+						//TODO: move into import
+						R_Texture* rTex = (R_Texture*)GetResource(((R_Prefab*)ret)->miniTextureID);
+						rTex->instances++;
+					}
+					LoadResource(ret);
 					break;
 				}
 				case (Resource::BONE):

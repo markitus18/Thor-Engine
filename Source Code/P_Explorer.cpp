@@ -4,6 +4,7 @@
 #include "PerfTimer.h"
 #include "M_Resources.h"
 #include "R_Texture.h"
+#include "R_Prefab.h"
 
 P_Explorer::P_Explorer()
 {
@@ -181,6 +182,12 @@ void P_Explorer::DrawNodeImage(const PathNode& node)
 		if (resource && resource->GetType() == Resource::TEXTURE)
 		{
 			R_Texture* tex = (R_Texture*)resource;
+			ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+		}
+		else if (resource && resource->GetType() == Resource::PREFAB)
+		{
+			R_Prefab* prefab = (R_Prefab*)resource;
+			R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
 			ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
 		}
 		else

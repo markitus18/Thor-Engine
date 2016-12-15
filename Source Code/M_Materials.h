@@ -25,7 +25,7 @@ public:
 
 	//Both import and save
 	R_Texture* ImportTextureResource(const char* buffer, unsigned long long ID, const char* file, uint size);
-
+	R_Texture* ImportPrefabImage(char* buffer, uint64 ID, const char* source_file, uint sizeX, uint sizeY);
 
 	R_Texture* LoadTextureResource(unsigned long long ID);
 };

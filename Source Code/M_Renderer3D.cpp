@@ -149,6 +149,20 @@ bool M_Renderer3D::Init(Config& config)
 	mesh_draw_timer = App->moduleEditor->AddTimer("Mesh draw", "Render");
 	box_draw_timer = App->moduleEditor->AddTimer("Box draw", "Render");
 
+	//Creating screenshot camera----------------
+	screenshotCamera = new C_Camera(nullptr);
+
+	screenshotCamera->frustum.SetViewPlaneDistances(0.1f, 2000.0f);
+	screenshotCamera->frustum.SetPerspective(1.0f, 1.0f);
+
+	screenshotCamera->frustum.SetPos(float3(50, 50, 50));
+//	screenshotCamera->frustum.SetFront(float3::unitZ);
+//	screenshotCamera->frustum.SetUp(float3::unitY);
+	screenshotCamera->Look(float3(0, 0, 0));
+	screenshotCamera->frustum.SetUp(-screenshotCamera->frustum.Up());
+	screenshotCamera->update_projection = true;
+	//-----------------------------------------
+
 	return ret;
 }
 
@@ -186,32 +200,52 @@ update_status M_Renderer3D::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-uint M_Renderer3D::SaveImage(char** buffer)
+uint M_Renderer3D::SaveImage(const char* source_file)
 {
+	SDL_Surface* surface = SDL_GetWindowSurface(App->window->window);
+	//Enable surface pixel read-write
+	SDL_LockSurface(surface);
+
+	char* pixels = new char[surface->w * surface->h * 3];
+	glReadPixels(0, 0, surface->w, surface->h, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	
+	SDL_UnlockSurface(surface);
+
+	uint64 ret = App->moduleResources->ImportPrefabImage(pixels, source_file, surface->w, surface->h);
+	/*
+	//Generating IL Texture
 	ILuint img;
 	ilGenImages(1, &img);
 	ilBindImage(img);
+	ilTexImage(surface->w, surface->h, 1, 3, IL_RGB, IL_UNSIGNED_BYTE, pixels);
 
-	SDL_Surface* surface = SDL_GetWindowSurface(App->window->window);
-	SDL_LockSurface(surface);
-
-	uint size = surface->w * surface->h * 3;
-	*buffer = new char[size];
-	glReadPixels(0, 0, surface->w, surface->h, GL_RGB, GL_UNSIGNED_BYTE, *buffer);
-	return size;
+	//Saving file
+	ilEnable(IL_FILE_OVERWRITE);
+	ilSave(IL_DDS, source_file);
+	*/
+	
+	//ilDeleteImages(1, &img);
+	
+	return ret;
 
 }
 
-uint M_Renderer3D::SavePrefabImage(GameObject* gameObject, char** buffer)
+uint M_Renderer3D::SavePrefabImage(GameObject* gameObject)
 {
+	C_Camera* previous_camera = camera;
+	SetActiveCamera(screenshotCamera);
+
 	PreUpdate(0);
 	gameObject->DrawResursive(true, false, false, false);
 	DrawAllScene();
+
+	SetActiveCamera(previous_camera);
+
 	std::string path = "Library";
 	path.append(gameObject->name).append(".dds");
-	uint size = SaveImage(buffer);
+	uint ID = SaveImage(path.c_str());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	return size;
+	return ID;
 }
 
 // Called before quitting

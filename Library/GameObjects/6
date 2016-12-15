@@ -1,0 +1,1736 @@
+{
+    "GameObjects": [
+        {
+            "UID": 1660707753,
+            "ParentUID": 0,
+            "Name": "Street_environment_V01",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1762400780,
+            "ParentUID": 1660707753,
+            "Name": "Sky001",
+            "Translation": [
+                18.153732,
+                0,
+                58.960911
+            ],
+            "Rotation": [
+                -1.000000,
+                0,
+                0,
+                0
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1479049388,
+            "ParentUID": 1660707753,
+            "Name": "Dummy001",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                -0.707107,
+                0,
+                0,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1056568298,
+            "ParentUID": 1479049388,
+            "Name": "City_building_004",
+            "Translation": [
+                -41.475891,
+                21.014099,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 7,
+                    "ResourceName": "City_building_004"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 8,
+                    "ResourceName": "06 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1584114367,
+            "ParentUID": 1479049388,
+            "Name": "City_building_001",
+            "Translation": [
+                17.707165,
+                20.053276,
+                0.000000
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 10,
+                    "ResourceName": "City_building_001"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 11,
+                    "ResourceName": "Building_dnt"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1456169575,
+            "ParentUID": 1479049388,
+            "Name": "City_building_007",
+            "Translation": [
+                16.010492,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 13,
+                    "ResourceName": "City_building_007"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 14,
+                    "ResourceName": "building_16"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1573973499,
+            "ParentUID": 1479049388,
+            "Name": "City_building_008",
+            "Translation": [
+                40.979996,
+                18.270824,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 16,
+                    "ResourceName": "City_building_008"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 17,
+                    "ResourceName": "building_025"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1960918410,
+            "ParentUID": 1479049388,
+            "Name": "Line002",
+            "Translation": [
+                -2.159772,
+                1.853838,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 19,
+                    "ResourceName": "Line002"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 20,
+                    "ResourceName": "20 - Defaulta"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1270215526,
+            "ParentUID": 1479049388,
+            "Name": "Plane001",
+            "Translation": [
+                -0.028603,
+                0.026032,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                0.996635,
+                0.970616,
+                0.996635
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 21,
+                    "ResourceName": "Plane001"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 22,
+                    "ResourceName": "20 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 298552186,
+            "ParentUID": 1479049388,
+            "Name": "City_building_010",
+            "Translation": [
+                25.154011,
+                -39.153721,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 7522193,
+            "ParentUID": 298552186,
+            "Name": "City_building_010_submesh",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 23,
+                    "ResourceName": "City_building_010_submesh"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 24,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1864072632,
+            "ParentUID": 298552186,
+            "Name": "City_building_010_submesh(1)",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 26,
+                    "ResourceName": "City_building_010_submesh(1)"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 24,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1868956968,
+            "ParentUID": 1479049388,
+            "Name": "City_building_011",
+            "Translation": [
+                30.134541,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 27,
+                    "ResourceName": "City_building_011"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 14,
+                    "ResourceName": "building_16"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 471413751,
+            "ParentUID": 1479049388,
+            "Name": "City_building_013",
+            "Translation": [
+                -42.288055,
+                33.201576,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 28,
+                    "ResourceName": "City_building_013"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 29,
+                    "ResourceName": "3db _ building 06"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 304181270,
+            "ParentUID": 1479049388,
+            "Name": "City_building_014",
+            "Translation": [
+                -19.439707,
+                32.061729,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                -0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 31,
+                    "ResourceName": "City_building_014"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 8,
+                    "ResourceName": "06 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1067955603,
+            "ParentUID": 1479049388,
+            "Name": "City_building_016",
+            "Translation": [
+                34.270424,
+                -41.972748,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                -0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1958210029,
+            "ParentUID": 1067955603,
+            "Name": "City_building_016_submesh",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 32,
+                    "ResourceName": "City_building_016_submesh"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 24,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1688582861,
+            "ParentUID": 1067955603,
+            "Name": "City_building_016_submesh(1)",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 33,
+                    "ResourceName": "City_building_016_submesh(1)"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 24,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1130077960,
+            "ParentUID": 1479049388,
+            "Name": "City_building_017",
+            "Translation": [
+                44.260082,
+                -39.153721,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1946761668,
+            "ParentUID": 1130077960,
+            "Name": "City_building_017_submesh",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 34,
+                    "ResourceName": "City_building_017_submesh"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 24,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1358674717,
+            "ParentUID": 1130077960,
+            "Name": "City_building_017_submesh(1)",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 35,
+                    "ResourceName": "City_building_017_submesh(1)"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 24,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2080272848,
+            "ParentUID": 1479049388,
+            "Name": "City_building_022",
+            "Translation": [
+                -20.831324,
+                -27.426489,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 36,
+                    "ResourceName": "City_building_022"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 37,
+                    "ResourceName": "09 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 83829634,
+            "ParentUID": 1479049388,
+            "Name": "City_building_023",
+            "Translation": [
+                42.130642,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 39,
+                    "ResourceName": "City_building_023"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 14,
+                    "ResourceName": "building_16"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1589879815,
+            "ParentUID": 1479049388,
+            "Name": "City_building_024",
+            "Translation": [
+                -20.572771,
+                43.060829,
+                -0.069194
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 40,
+                    "ResourceName": "City_building_024"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 17,
+                    "ResourceName": "building_025"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1272982794,
+            "ParentUID": 1479049388,
+            "Name": "City_building_026",
+            "Translation": [
+                31.511889,
+                -16.446016,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 41,
+                    "ResourceName": "City_building_026"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 37,
+                    "ResourceName": "09 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1832473031,
+            "ParentUID": 1479049388,
+            "Name": "City_building_028",
+            "Translation": [
+                13.387990,
+                -33.755039,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 42,
+                    "ResourceName": "City_building_028"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 43,
+                    "ResourceName": "Material #0"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 896390275,
+            "ParentUID": 1479049388,
+            "Name": "Object010",
+            "Translation": [
+                -2.503353,
+                15.800846,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 45,
+                    "ResourceName": "Object010"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 46,
+                    "ResourceName": "21 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1712553955,
+            "ParentUID": 1479049388,
+            "Name": "City_building_030",
+            "Translation": [
+                -42.807240,
+                -41.835564,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 47,
+                    "ResourceName": "City_building_030"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 43,
+                    "ResourceName": "Material #0"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1426819615,
+            "ParentUID": 1479049388,
+            "Name": "City_building_031",
+            "Translation": [
+                -34.679482,
+                -41.835564,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 48,
+                    "ResourceName": "City_building_031"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 43,
+                    "ResourceName": "Material #0"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 457356636,
+            "ParentUID": 1479049388,
+            "Name": "City_building_032",
+            "Translation": [
+                -29.478403,
+                21.014099,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 49,
+                    "ResourceName": "City_building_032"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 8,
+                    "ResourceName": "06 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 886320887,
+            "ParentUID": 1479049388,
+            "Name": "City_building_033",
+            "Translation": [
+                -32.361496,
+                42.370422,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 50,
+                    "ResourceName": "City_building_033"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 29,
+                    "ResourceName": "3db _ building 06"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 751360929,
+            "ParentUID": 1479049388,
+            "Name": "City_building_034",
+            "Translation": [
+                16.049517,
+                -16.696884,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 51,
+                    "ResourceName": "City_building_034"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 37,
+                    "ResourceName": "09 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2092564283,
+            "ParentUID": 1479049388,
+            "Name": "City_building_035",
+            "Translation": [
+                13.387990,
+                -40.802517,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 52,
+                    "ResourceName": "City_building_035"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 43,
+                    "ResourceName": "Material #0"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1127334263,
+            "ParentUID": 1479049388,
+            "Name": "City_building_036",
+            "Translation": [
+                -31.216331,
+                33.201576,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 53,
+                    "ResourceName": "City_building_036"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 29,
+                    "ResourceName": "3db _ building 06"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2053877414,
+            "ParentUID": 1479049388,
+            "Name": "City_building_037",
+            "Translation": [
+                -20.317694,
+                -16.163609,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 54,
+                    "ResourceName": "City_building_037"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 37,
+                    "ResourceName": "09 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 653320952,
+            "ParentUID": 1479049388,
+            "Name": "City_building_038",
+            "Translation": [
+                -41.649002,
+                -16.495394,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 55,
+                    "ResourceName": "City_building_038"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 37,
+                    "ResourceName": "09 - Default"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1154355732,
+            "ParentUID": 1479049388,
+            "Name": "City_building_039",
+            "Translation": [
+                -42.807240,
+                -30.643888,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 56,
+                    "ResourceName": "City_building_039"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 43,
+                    "ResourceName": "Material #0"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2119895891,
+            "ParentUID": 1479049388,
+            "Name": "City_building_040",
+            "Translation": [
+                -34.679482,
+                -30.643888,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 57,
+                    "ResourceName": "City_building_040"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 43,
+                    "ResourceName": "Material #0"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1310703589,
+            "ParentUID": 1479049388,
+            "Name": "City_building_041",
+            "Translation": [
+                30.695278,
+                21.612646,
+                0.000000
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 58,
+                    "ResourceName": "City_building_041"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 11,
+                    "ResourceName": "Building_dnt"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1619441445,
+            "ParentUID": 1660707753,
+            "Name": "Camera001",
+            "Translation": [
+                -78.312431,
+                45.251217,
+                -97.031113
+            ],
+            "Rotation": [
+                0.049340,
+                0.932287,
+                0.139331,
+                -0.330140
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2093891198,
+            "ParentUID": 1660707753,
+            "Name": "Camera001.Target",
+            "Translation": [
+                -28.132622,
+                20.873329,
+                -35.064213
+            ],
+            "Rotation": [
+                0.049340,
+                0.932287,
+                0.139331,
+                -0.330140
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1166686657,
+            "ParentUID": 1660707753,
+            "Name": "Spot001",
+            "Translation": [
+                -66.721268,
+                141.934128,
+                0.000006
+            ],
+            "Rotation": [
+                -0.690035,
+                -0.154439,
+                -0.690035,
+                0.154439
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1617766516,
+            "ParentUID": 1660707753,
+            "Name": "Spot001.Target",
+            "Translation": [
+                28.890945,
+                -60.963882,
+                -0.000003
+            ],
+            "Rotation": [
+                0.000000,
+                0,
+                0,
+                1.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        }
+    ],
+    "MiniTexture": 59,
+    "Name": "Assets\/Models\/Street_environment_V01.FBX",
+    "Source": "Assets\/Models\/Street_environment_V01.FBX"
+} 

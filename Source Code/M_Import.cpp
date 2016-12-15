@@ -198,6 +198,29 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 	}
 }
 
+R_Prefab* M_Import::LoadPrefabResource(uint64 ID)
+{
+	std::string full_path = ("/Library/GameObjects/");
+	full_path.append(std::to_string(ID));
+
+	R_Prefab* prefab = nullptr;
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+	if (size > 0)
+	{
+		Config config(buffer);
+
+		prefab = new R_Prefab();
+		prefab->ID = ID;
+		prefab->resource_file = full_path.c_str();
+		prefab->original_file = config.GetString("Source");
+		prefab->name = prefab->original_file;
+		prefab->miniTextureID = config.GetNumber("MiniTexture");
+	}
+	return prefab;
+}
+
 void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 {
 	config.SetNumber("UID", gameObject->uid);
@@ -260,17 +283,15 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 		SaveGameObjectConfig(config, createdGameObjects);
 
 		//Saving mini-texture
-		char* miniTexBuffer;
 		uint miniTexID = 0;
-		uint miniTexSize = App->renderer3D->SavePrefabImage(rootNode, &miniTexBuffer);
-		if (miniTexSize > 0)
-		{
-			uint64 miniTexID = App->moduleResources->ImportRTexture(miniTexBuffer, path, miniTexSize);
-		}
+		miniTexID = App->renderer3D->SavePrefabImage(rootNode);
+
+		config.SetNumber("MiniTexture", miniTexID);
+		config.SetString("Name", path);
+		config.SetString("Source", path);
 
 		char* buffer;
 		uint size = config.Serialize(&buffer);
-		config.SetNumber("MiniTex", miniTexID);
 
 		if (size > 0)
 		{

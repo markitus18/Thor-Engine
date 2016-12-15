@@ -233,6 +233,53 @@ R_Texture* M_Materials::ImportTextureResource(const char* buffer, unsigned long 
 	return resTexture;
 }
 
+R_Texture* M_Materials::ImportPrefabImage(char* buffer, uint64 ID, const char* source_file, uint sizeX, uint sizeY)
+{
+	R_Texture* resTexture = nullptr;
+
+	std::string full_path("/Library/Textures/");
+	full_path.append(std::to_string(ID));
+
+	ILuint img;
+	ilGenImages(1, &img);
+	ilBindImage(img);
+	ilTexImage(sizeX, sizeY, 1, 3, IL_RGB, IL_UNSIGNED_BYTE, buffer);
+
+	//Saving file
+	ILuint saveBufferSize;
+	ILubyte* saveBuffer;
+
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+
+	ilEnable(IL_FILE_OVERWRITE);
+	ilSave(IL_DDS, full_path.c_str());
+	
+	saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
+
+	if (saveBufferSize > 0)
+	{
+		saveBuffer = new ILubyte[saveBufferSize];
+		if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+		{
+			App->fileSystem->Save(full_path.c_str(), saveBuffer, saveBufferSize);
+			RELEASE_ARRAY(saveBuffer);
+
+			resTexture = new R_Texture;
+			resTexture->original_file = source_file;
+			resTexture->resource_file = full_path;
+			resTexture->ID = ID;
+			resTexture->buffer = ilutGLBindTexImage();
+			std::string file, extension;
+			App->fileSystem->SplitFilePath(resTexture->original_file.c_str(), nullptr, &file, &extension);
+			resTexture->name = file + (".") + extension;
+		}
+	}
+
+	ilDeleteImages(1, &img);
+
+	return resTexture;
+}
+
 R_Texture* M_Materials::LoadTextureResource(unsigned long long ID)
 {
 	std::string full_path = "/Library/Textures/";

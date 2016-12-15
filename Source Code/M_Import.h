@@ -35,6 +35,8 @@ public:
 	GameObject* LoadGameObject(uint64 ID);
 	void		LoadGameObjectConfig(Config& config, std::vector<GameObject*>& nodes);
 
+	R_Prefab* LoadPrefabResource(uint64 ID);
+
 private:
 	void SaveGameObjectSingle(Config& config, GameObject* gameObject);
 	void SaveGameObjectComponent(Config& config, Component* component);

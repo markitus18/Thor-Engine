@@ -50,7 +50,7 @@ public:
 	//Endof GameObject management -------------------------------------------------
 
 	//GameObject primitives creation ---------
-	void CreateCamera();
+	GameObject* CreateCamera();
 
 	//----------------------------------------
 

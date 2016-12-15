@@ -49,6 +49,8 @@ public:
 	void ImportScene(const char* source_fil);
 	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
 	uint64 ImportRTexture(const char* buffer, const char* path, uint size);
+	//Same as ImportRTexture, but we need different functions
+	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
 
 	///Getting a resource by ID

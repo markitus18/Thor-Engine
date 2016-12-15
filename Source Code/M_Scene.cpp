@@ -294,7 +294,7 @@ void M_Scene::LoadScene(Config& node, bool tmp)
 		{
 			nonStatic.push_back(newGameObjects[i]);
 		}
-	}
+	}	
 }
 
 void M_Scene::LoadScene(const char* file)
@@ -440,13 +440,15 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 	App->moduleEditor->SelectSingle((GameObject*)toSelect);
 }
 
-void M_Scene::CreateCamera()
+GameObject* M_Scene::CreateCamera()
 {
 	GameObject* camera = new GameObject(root, "Camera");
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
 	camera->CreateComponent(Component::Type::Camera);
 	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
 	camera->uid = random.Int();
+
+	return camera;
 }
 
 void M_Scene::Play()

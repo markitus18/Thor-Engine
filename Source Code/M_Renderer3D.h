@@ -81,8 +81,8 @@ public:
 
 	void OnRemoveGameObject(GameObject* gameObject);
 
-	uint SaveImage(char** buffer);
-	uint SavePrefabImage(GameObject* gameObject, char** buffer);
+	uint SaveImage(const char* pathr);
+	uint SavePrefabImage(GameObject* gameObject);
 
 public:
 	//TODO: should it be moved into window module? SDL method maybe?
@@ -90,6 +90,7 @@ public:
 	int window_height;
 
 	C_Camera* camera = nullptr;
+	C_Camera* screenshotCamera = nullptr;
 	C_Camera* culling_camera = nullptr;
 
 	Light lights[MAX_LIGHTS];

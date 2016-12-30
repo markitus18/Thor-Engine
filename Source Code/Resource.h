@@ -18,7 +18,7 @@ public:
 		MESH,
 		TEXTURE,
 		MATERIAL,
-		BONE,
+		ANIMATION,
 		PREFAB,
 		UNKNOWN,
 	};

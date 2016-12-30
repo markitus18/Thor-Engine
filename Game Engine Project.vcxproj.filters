@@ -259,6 +259,12 @@
     <ClCompile Include="Source Code\P_Explorer.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\R_Animation.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\M_Animations.cpp">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -638,6 +644,12 @@
     </ClInclude>
     <ClInclude Include="Source Code\PathNode.h">
       <Filter>Source Code\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Animation.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Animations.h">
+      <Filter>Source Code\Modules\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,12 +5,14 @@
 #include "M_Meshes.h"
 #include "M_Materials.h"
 #include "M_Import.h"
+#include "M_Animations.h"
 
 //Resources
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Material.h"
 #include "R_Prefab.h"
+#include "R_Animation.h"
 
 #include "M_FileSystem.h"
 #include "PathNode.h"
@@ -242,6 +244,36 @@ uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_fi
 	return ret;
 }
 
+uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name)
+{
+	uint64 ret = 0;
+	uint64 newID = 0;
+	R_Animation* resource = nullptr;
+	uint64 instances = 0;
+
+	//Find if the resource already exists and delete it
+	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::MATERIAL);
+	if (meta != nullptr)
+	{
+		newID = meta->id;
+		instances = DeleteResource(newID);
+	}
+	else
+	{
+		newID = ++nextID;
+	}
+
+	//Importing resource
+	resource = App->moduleAnimations->ImportAnimation(anim, newID, source_file);
+	if (resource)
+	{
+		resource->instances = instances;
+		AddResource(resource);
+		ret = resource->ID;
+	}
+	return ret;
+}
+
 Resource* M_Resources::GetResource(uint64 ID)
 {
 	Resource* ret = nullptr;
@@ -296,7 +328,7 @@ Resource* M_Resources::GetResource(uint64 ID)
 					LoadResource(ret);
 					break;
 				}
-				case (Resource::BONE):
+				case (Resource::ANIMATION):
 				{
 					break;
 				}

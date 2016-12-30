@@ -13,6 +13,8 @@
 #include "M_Import.h"
 #include "M_Materials.h"
 #include "M_Meshes.h"
+#include "M_Animations.h"
+
 #include "Config.h"
 
 #include "parson/parson.h"
@@ -34,6 +36,7 @@ Application::Application()
 	moduleImport = new M_Import();
 	moduleMaterials = new M_Materials();
 	moduleMeshes = new M_Meshes();
+	moduleAnimations = new M_Animations();
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -57,6 +60,7 @@ Application::Application()
 	AddModule(moduleImport);
 	AddModule(moduleMaterials);
 	AddModule(moduleMeshes);
+	AddModule(moduleAnimations);
 
 	title = TITLE;
 	organization = ORGANIZATION;

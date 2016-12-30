@@ -18,6 +18,8 @@
 
 #include "M_Materials.h"
 #include "M_Meshes.h"
+#include "M_Animations.h"
+
 #include "M_FileSystem.h"
 #include "M_Editor.h"
 
@@ -276,8 +278,8 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 		LOG("Starting scene load %s", path);
 		std::vector<GameObject*> createdGameObjects;
 
-		//TODO CHANGE LOADFBX FNC NAME
 		GameObject* rootNode = CreateGameObjects(file, file->mRootNode, nullptr, path, createdGameObjects);
+		App->moduleAnimations->ImportSceneAnimations(file, rootNode, path);
 
 		Config config;
 		SaveGameObjectConfig(config, createdGameObjects);
@@ -338,6 +340,7 @@ GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node
 	
 	//Skipp all dummy modules. Assimp loads this fbx nodes to stack all transformations
 	std::string node_name = node->mName.C_Str();	
+
 	bool dummyFound = true;
 	while (dummyFound)
 	{

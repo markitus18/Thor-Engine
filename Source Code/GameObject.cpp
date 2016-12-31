@@ -39,7 +39,7 @@ GameObject::~GameObject()
 	}
 }
 
-void GameObject::Update()
+void GameObject::Update(float dt)
 {
 	if (transform)
 	{
@@ -48,11 +48,16 @@ void GameObject::Update()
 			OnUpdateTransform();
 		}
 	}
+	C_Animation* anim = (C_Animation*)GetComponent<C_Animation>();
+	if (anim != nullptr)
+	{
+		anim->Update(dt);
+	}
 
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)
-			childs[i]->Update();
+			childs[i]->Update(dt);
 	}
 }
 

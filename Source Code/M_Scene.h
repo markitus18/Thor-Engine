@@ -61,7 +61,7 @@ public:
 
 private:
 	void TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final);
-	void UpdateAllGameObjects(GameObject* gameObject);
+	void UpdateAllGameObjects(GameObject* gameObject, float dt);
 	void DrawAllGameObjects(GameObject* gameObject);
 	void FindGameObjectByID(uint id, GameObject* gameObject, GameObject** ret);
 	void DeleteAllGameObjects();

@@ -22,7 +22,7 @@ public:
 	GameObject(GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
 	~GameObject();
 
-	void Update();
+	void Update(float dt);
 	void Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const;
 	void DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBosSelected) const;
 

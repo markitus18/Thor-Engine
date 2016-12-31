@@ -333,7 +333,7 @@ void M_Animations::LoadChannel(const aiNodeAnim* node, Channel& channel)
 
 	//Loading rotation keys
 	for (uint i = 0; i < node->mNumRotationKeys; i++)
-		channel.positionKeys[node->mRotationKeys[i].mTime] = float3(node->mRotationKeys[i].mValue.x, node->mRotationKeys[i].mValue.y, node->mRotationKeys[i].mValue.z);
+		channel.rotationKeys[node->mRotationKeys[i].mTime] = Quat(node->mRotationKeys[i].mValue.x, node->mRotationKeys[i].mValue.y, node->mRotationKeys[i].mValue.z, node->mRotationKeys[i].mValue.w);
 
 	//Loading scale keys
 	for (uint i = 0; i < node->mNumScalingKeys; i++)

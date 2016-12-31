@@ -28,6 +28,7 @@ public:
 
 	void SetPosition(float3 position);
 	void SetScale(float3 scale);
+	void SetQuatRotation(Quat rotation);
 	void SetEulerRotation(float3 euler_angles);
 
 	void Reset();

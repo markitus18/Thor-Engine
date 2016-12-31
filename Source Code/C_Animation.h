@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include <vector>
+#include <map>
 
 class GameObject;
 class Channel;
@@ -15,6 +16,10 @@ class C_Animation : public Component
 		Link(GameObject* gameObject, Channel* channel) : gameObject(gameObject), channel(channel) {};
 		GameObject* gameObject;
 		Channel* channel;
+
+		std::map<double, float3>::iterator prevPosKey;
+		std::map<double, Quat>::iterator prevRotKey;
+		std::map<double, float3>::iterator prevScaleKey;
 	};
 
 public:
@@ -24,9 +29,21 @@ public:
 	void LinkChannels();
 	void DrawLinkedBones() const;
 
+	void Start();
+	void Update(float dt);
 	static Component::Type GetType();
 
 private:
+
+	void UpdateChannelsTransform(float dt);
+	float3 GetChannelPosition(Link& link, float currentKey);
+	Quat GetChannelRotation(Link& link, float currentKey);
+	float3 GetChannelScale(Link& link, float currentKey);
+
+private:
+	bool started = false;
+	bool playing = true;
+	float currentFrame = 0.0f;
 	std::vector<Link> links;
 
 };

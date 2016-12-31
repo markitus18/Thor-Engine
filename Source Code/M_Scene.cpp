@@ -87,24 +87,6 @@ bool M_Scene::CleanUp()
 // Update
 update_status M_Scene::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
-	{
-		CreateCamera();
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-	{
-		App->moduleResources->LoadPrefab("Assets/Models/Street_environment_V01.FBX");
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
-	{
-		//Imports asset in project and loads it in scene
-		std::string file = "Assets/Models/Street_environment_V01.FBX";
-		App->moduleResources->ImportScene(file.c_str());
-		//App->moduleResources->LoadPrefab(file.c_str());
-	}
-
 #pragma region WindowTest
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 	{
@@ -153,7 +135,7 @@ update_status M_Scene::Update(float dt)
 		drawGrid = !drawGrid;
 	}
 
-	UpdateAllGameObjects(root);
+	UpdateAllGameObjects(root, dt);
 
 	if (App->renderer3D->culling_camera)
 	{
@@ -474,9 +456,9 @@ void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std
 	}
 }
 
-void M_Scene::UpdateAllGameObjects(GameObject* gameObject)
+void M_Scene::UpdateAllGameObjects(GameObject* gameObject, float dt)
 {
-	root->Update();
+	root->Update(dt);
 }
 
 void M_Scene::DrawAllGameObjects(GameObject* gameObject)

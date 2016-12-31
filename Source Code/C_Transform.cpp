@@ -70,6 +70,13 @@ void C_Transform::SetScale(float3 new_scale)
 	flipped_normals = result >= 0 ? false : true;
 }
 
+void C_Transform::SetQuatRotation(Quat rotation)
+{
+	this->rotation = rotation;
+	UpdateEulerAngles();
+	UpdateLocalTransform();
+}
+
 void C_Transform::SetEulerRotation(float3 euler_angles)
 {
 	float3 delta = (euler_angles - rotation_euler) * DEGTORAD;

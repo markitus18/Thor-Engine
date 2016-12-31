@@ -263,7 +263,7 @@ void M_Scene::SaveScene(Config& node) const
 {
 	//Store all gameObjects in a vector
 	std::vector<GameObject*> gameObjects;
-	GettAllGameObjects(gameObjects, root);
+	root->CollectChilds(gameObjects);
 
 	App->moduleImport->SaveGameObjectConfig(node, gameObjects);
 }
@@ -281,7 +281,7 @@ void M_Scene::LoadScene(Config& node, bool tmp)
 	{
 		roots[i]->parent = root;
 		root->childs.push_back(roots[i]);
-		GettAllGameObjects(newGameObjects, roots[i]);
+		roots[i]->CollectChilds(newGameObjects);
 	}
 
 	for (uint i = 0; i < newGameObjects.size(); i++)
@@ -312,7 +312,7 @@ void M_Scene::LoadGameObject(uint64 ID)
 		root->childs.push_back(gameObject);
 
 		std::vector<GameObject*> newGameObjects;
-		GettAllGameObjects(newGameObjects, gameObject);
+		gameObject->CollectChilds(newGameObjects);
 
 		for (uint i = 0; i < newGameObjects.size(); i++)
 		{
@@ -487,16 +487,6 @@ void M_Scene::DrawAllGameObjects(GameObject* gameObject)
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
 		DrawAllGameObjects(gameObject->childs[i]);
-	}
-}
-
-void M_Scene::GettAllGameObjects(std::vector<GameObject*>& vector, GameObject* gameObject) const
-{
-	if (gameObject->name != "root")
-		vector.push_back(gameObject);
-	for (uint i = 0; i < gameObject->childs.size(); i++)
-	{
-		GettAllGameObjects(vector, gameObject->childs[i]);
 	}
 }
 

@@ -19,10 +19,11 @@ public:
 		Mesh,
 		Material,
 		Camera,
+		Animation,
 	};
 
 public:
-	Component(Type type, const GameObject*, bool hasResource);
+	Component(Type type, GameObject*, bool hasResource);
 	virtual ~Component();
 
 	void SetActive(bool set);
@@ -43,7 +44,7 @@ public:
 	bool HasResource() const;
 
 public:
-	const GameObject* gameObject;
+	GameObject* gameObject;
 
 protected:
 	bool hasResource = false;

@@ -405,6 +405,7 @@ Component::Type M_Resources::ResourceToComponentType(Resource::Type type)
 	{
 	case Resource::MESH: return Component::Mesh;
 	case Resource::MATERIAL: return Component::Material;
+	case Resource::ANIMATION: return Component::Animation;
 	default: return Component::None;
 	}
 }

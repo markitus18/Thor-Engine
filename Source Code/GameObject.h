@@ -11,6 +11,7 @@
 #include "C_Material.h"
 #include "C_Camera.h"
 #include "C_Transform.h"
+#include "C_Animation.h"
 
 class C_Transform;
 
@@ -30,6 +31,8 @@ public:
 	const OBB& GetOBB() const;
 	bool HasFlippedNormals() const;
 	bool IsParentActive() const;
+
+	void CollectChilds(std::vector<GameObject*>& vector);
 
 	//Selection methods -----------------------------------
 	void Select();

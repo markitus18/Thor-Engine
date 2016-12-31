@@ -19,7 +19,7 @@ public:
 	M_Animations(bool start_enabled = true);
 	~M_Animations();
 
-	void ImportSceneAnimations(const aiScene* scene, GameObject* root, const char* source_file);
+	uint64 ImportSceneAnimations(const aiScene* scene, GameObject* root, const char* source_file);
 	R_Animation* ImportAnimation(const aiAnimation* animation, uint64 ID, const char* source_file);
 	bool SaveAnimationResource(R_Animation* animation);
 	R_Animation* LoadAnimation(uint64 ID);

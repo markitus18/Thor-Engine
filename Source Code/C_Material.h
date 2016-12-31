@@ -10,7 +10,7 @@ class GameObject;
 class C_Material : public Component
 {
 public:
-	C_Material(const GameObject* gameObject);
+	C_Material(GameObject* gameObject);
 	~C_Material();
 
 	static Component::Type GetType();

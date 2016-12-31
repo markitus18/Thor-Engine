@@ -12,6 +12,7 @@
 #include "R_Mesh.h"
 #include "R_Material.h"
 #include "R_Texture.h"
+#include "R_Animation.h"
 
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -110,10 +111,10 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 			C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
 			std::vector<C_Material*> materials;
 			gameObject->GetComponents(materials);
-			if (mesh)
+			if (mesh != nullptr)
 			{
 				R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
-				if (rMesh)
+				if (rMesh != nullptr)
 				{
 					if (ImGui::CollapsingHeader("Mesh", transform_header_flags))
 					{
@@ -158,7 +159,7 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 			}
 
 			C_Camera* camera = gameObject->GetComponent<C_Camera>();
-			if (camera)
+			if (camera != nullptr)
 			{
 				if (ImGui::CollapsingHeader("Camera", transform_header_flags))
 				{
@@ -194,6 +195,21 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 					if (ImGui::DragFloat("Far plane", &camera_far_plane))
 					{
 						camera->SetFarPlane(camera_far_plane);
+					}
+				}
+			}
+
+			C_Animation* animation = gameObject->GetComponent<C_Animation>();
+			if (animation)
+			{
+				if (ImGui::CollapsingHeader("Animation", transform_header_flags))
+				{
+					R_Animation* rAnimation = (R_Animation*)animation->GetResource();
+					if (rAnimation != nullptr)
+					{
+						ImGui::DragFloat("Duration", &rAnimation->duration);
+						ImGui::DragFloat("Ticks per second", &rAnimation->ticksPerSecond);
+						ImGui::Checkbox("Loopable", &rAnimation->loopable);
 					}
 				}
 			}

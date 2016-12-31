@@ -77,6 +77,10 @@ void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSel
 			App->renderer3D->AddAABB(aabb, Green);
 			App->renderer3D->AddOBB(obb, Yellow);
 		}
+
+		const C_Animation* animation = GetComponent<C_Animation>();
+		if (animation)
+			animation->DrawLinkedBones();
 	}
 }
 
@@ -142,6 +146,13 @@ bool GameObject::IsParentActive() const
 	return active;
 }
 
+void GameObject::CollectChilds(std::vector<GameObject*>& vector)
+{
+	vector.push_back(this);
+	for (uint i = 0; i < childs.size(); i++)
+		childs[i]->CollectChilds(vector);
+}
+
 void GameObject::Select()
 {
 	selected = true;
@@ -186,7 +197,6 @@ Component* GameObject::CreateComponent(Component::Type type)
 		}
 		case(Component::Type::Material):
 		{
-			C_Mesh* mesh = GetComponent<C_Mesh>();
 			if (!HasComponent(Component::Type::Material))
 			{
 				new_component = new C_Material(this);
@@ -202,6 +212,13 @@ Component* GameObject::CreateComponent(Component::Type type)
 				new_component->OnUpdateTransform(transform->GetGlobalTransform(), float4x4::identity);
 			}
 			break;
+		}
+		case(Component::Type::Animation):
+		{
+			if (!HasComponent(Component::Type::Animation))
+			{
+				new_component = new C_Animation(this);
+			}
 		}
 	}
 	if (new_component)
@@ -282,7 +299,7 @@ void GameObject::UpdateAABB()
 	else
 	{
 		aabb.SetNegativeInfinity();
-		aabb.Enclose(transform->GetGlobalPosition() - float3(1, 1, 1), transform->GetGlobalPosition() + float3(1, 1, 1));
+		aabb.SetFromCenterAndSize(transform->GetGlobalPosition(), float3(1, 1, 1));
 		obb = aabb;
 	}
 }

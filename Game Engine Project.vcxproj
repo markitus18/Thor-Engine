@@ -86,6 +86,7 @@
     <ClInclude Include="Source Code\Color.h" />
     <ClInclude Include="Source Code\Component.h" />
     <ClInclude Include="Source Code\Config.h" />
+    <ClInclude Include="Source Code\C_Animation.h" />
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Source Code\Color.cpp" />
     <ClCompile Include="Source Code\Component.cpp" />
     <ClCompile Include="Source Code\Config.cpp" />
+    <ClCompile Include="Source Code\C_Animation.cpp" />
     <ClCompile Include="Source Code\C_Camera.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui.cpp" />

@@ -27,6 +27,7 @@ public:
 
 	float duration;
 	float ticksPerSecond;
+	bool loopable = false;
 	uint numChannels;
 
 	Channel* channels;

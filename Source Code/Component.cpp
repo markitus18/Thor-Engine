@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "M_Resources.h"
 
-Component::Component(Type type, const GameObject* gameObject, bool hasResource) : type(type), hasResource(hasResource), gameObject(gameObject)
+Component::Component(Type type, GameObject* gameObject, bool hasResource) : type(type), hasResource(hasResource), gameObject(gameObject)
 {
 }
 
@@ -61,7 +61,6 @@ void Component::SetResource(Resource* resource)
 
 void Component::SetResource(unsigned long long id)
 {
-	//TODO: find resource by ID
 	Resource* oldResource = GetResource();
 	if (oldResource != nullptr)
 		oldResource->instances--;

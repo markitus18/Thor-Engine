@@ -192,6 +192,14 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 		gameObject->OnUpdateTransform();
 	}
 
+	//After all GameObjects have been loaded, animation links are created
+	std::map<unsigned long long, GameObject*>::iterator it;
+	for (it = createdGameObjects.begin(); it != createdGameObjects.end(); it++)
+	{
+		C_Animation* anim = (C_Animation*)it->second->GetComponent<C_Animation>();
+		if (anim != nullptr)
+			anim->LinkChannels();
+	}
 	//Security method if any game object is left without a parent
 	for (uint i = 0; i < not_parented_GameObjects.size(); i++)
 	{
@@ -279,7 +287,12 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 		std::vector<GameObject*> createdGameObjects;
 
 		GameObject* rootNode = CreateGameObjects(file, file->mRootNode, nullptr, path, createdGameObjects);
-		App->moduleAnimations->ImportSceneAnimations(file, rootNode, path);
+		uint64 animID = App->moduleAnimations->ImportSceneAnimations(file, rootNode, path);
+		if (animID != 0)
+		{
+			C_Animation* animation = (C_Animation*)rootNode->CreateComponent(Component::Type::Animation);
+			animation->SetResource(animID);
+		}
 
 		Config config;
 		SaveGameObjectConfig(config, createdGameObjects);
@@ -345,7 +358,7 @@ GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node
 	while (dummyFound)
 	{
 		//All dummy modules have one children (next dummy module or last module containing the mesh)
-		if (node_name.find("$AssimpFbx$") != std::string::npos && node->mNumChildren == 1)
+		if (node_name.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1)
 		{
 			//Dummy module have only one child node, so we use that one as our next GameObject
 			node = node->mChildren[0];

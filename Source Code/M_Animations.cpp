@@ -17,8 +17,9 @@ M_Animations::~M_Animations()
 
 }
 
-void M_Animations::ImportSceneAnimations(const aiScene* scene, GameObject* root, const char* source_file)
+uint64 M_Animations::ImportSceneAnimations(const aiScene* scene, GameObject* root, const char* source_file)
 {
+	uint ret = 0;
 	if (scene->HasAnimations() == true)
 	{
 		std::map<std::string, GameObject*> map;
@@ -26,9 +27,10 @@ void M_Animations::ImportSceneAnimations(const aiScene* scene, GameObject* root,
 
 		for (uint i = 0; i < scene->mNumAnimations; i++)
 		{
-			uint ID = App->moduleResources->ImportRAnimation(scene->mAnimations[i], source_file, scene->mAnimations[i]->mName.C_Str());
+			ret = App->moduleResources->ImportRAnimation(scene->mAnimations[i], source_file, scene->mAnimations[i]->mName.C_Str());
 		}
 	}
+	return ret;
 }
 
 R_Animation* M_Animations::ImportAnimation(const aiAnimation* anim, uint64 ID, const char* source_file)
@@ -320,7 +322,11 @@ void M_Animations::CollectGameObjectNames(GameObject* gameObject, std::map<std::
 void M_Animations::LoadChannel(const aiNodeAnim* node, Channel& channel)
 {
 	channel.name = node->mNodeName.C_Str();
-
+	uint pos = channel.name.find("_$AssimpFbx$_");
+	if (pos != std::string::npos)
+	{
+		channel.name = channel.name.substr(0, pos);
+	}
 	//Loading position keys
 	for (uint i = 0; i < node->mNumPositionKeys; i++)
 		channel.positionKeys[node->mPositionKeys[i].mTime] = float3(node->mPositionKeys[i].mValue.x, node->mPositionKeys[i].mValue.y, node->mPositionKeys[i].mValue.z);

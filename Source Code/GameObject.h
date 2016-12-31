@@ -63,6 +63,8 @@ public:
 	RetComponent* GetComponent()
 	{
 		Component::Type type = RetComponent::GetType();
+		if (type == Component::Type::Transform)
+			return (RetComponent*)transform;
 		for (uint i = 0; i < components.size(); i++)
 		{
 			if (components[i]->GetType() == type)

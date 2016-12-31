@@ -111,6 +111,7 @@ public:
 	std::map<uint64, Resource*> materials;
 	std::map<uint64, Resource*> textures;
 	std::map<uint64, Resource*> scenes;
+	std::map<uint64, Resource*> animations;
 
 private:
 	//Resources loaded in memory

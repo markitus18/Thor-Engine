@@ -20,6 +20,11 @@ unsigned long long Resource::GetID() const
 	return ID;
 }
 
+const char* Resource::GetOriginalFile() const
+{
+	return original_file.c_str();
+}
+
 const char* Resource::GetResourceFile() const
 {
 	return resource_file.c_str();

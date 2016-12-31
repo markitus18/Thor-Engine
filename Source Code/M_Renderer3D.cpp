@@ -241,7 +241,7 @@ uint M_Renderer3D::SavePrefabImage(GameObject* gameObject)
 
 	SetActiveCamera(previous_camera);
 
-	std::string path = "Library";
+	std::string path = "/Library/PrefabImages/";
 	path.append(gameObject->name).append(".dds");
 	uint ID = SaveImage(path.c_str());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

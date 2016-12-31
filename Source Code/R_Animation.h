@@ -7,9 +7,11 @@
 
 struct Channel
 {
-	uint numPositionKeys = 0;
-	uint numScalingKeys = 0;
-	uint numRotationKeys = 0;
+	std::string name;
+
+	//uint numPositionKeys = 0;
+	//uint numScalingKeys = 0;
+	//uint numRotationKeys = 0;
 
 	std::map<double, float3> positionKeys;
 	std::map<double, Quat> rotationKeys;
@@ -27,7 +29,7 @@ public:
 	float ticksPerSecond;
 	uint numChannels;
 
-	Channel* channel;
+	Channel* channels;
 };
 
 #endif

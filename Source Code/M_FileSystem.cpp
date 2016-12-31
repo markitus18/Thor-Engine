@@ -31,6 +31,7 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 	CreateDir("Library/Materials");
 	CreateDir("Library/Textures");
 	CreateDir("Library/GameObjects");
+	CreateDir("Library/Animations");
 
 	// Generate IO interfaces
 	CreateAssimpIO();

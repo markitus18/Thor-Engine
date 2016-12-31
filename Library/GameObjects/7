@@ -1,0 +1,1724 @@
+{
+    "GameObjects": [
+        {
+            "UID": 730814722,
+            "ParentUID": 0,
+            "Name": "warrior",
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1869195638,
+            "ParentUID": 730814722,
+            "Name": "RPG-Character-Mesh",
+            "Translation": [
+                -0.178409,
+                0,
+                -0.079894
+            ],
+            "Rotation": [
+                -0.707107,
+                0,
+                0,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                },
+                {
+                    "HasResource": true,
+                    "Type": 0,
+                    "ID": 8,
+                    "ResourceName": "RPG-Character-Mesh"
+                },
+                {
+                    "HasResource": true,
+                    "Type": 2,
+                    "ID": 9,
+                    "ResourceName": "RPG-Character"
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2055472292,
+            "ParentUID": 730814722,
+            "Name": "Motion",
+            "Translation": [
+                -0.204375,
+                0,
+                -0.253184
+            ],
+            "Rotation": [
+                -0.500000,
+                -0.500000,
+                -0.500000,
+                0.500000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 21172546,
+            "ParentUID": 2055472292,
+            "Name": "B_Pelvis",
+            "Translation": [
+                0.051386,
+                -0.000001,
+                132.993088
+            ],
+            "Rotation": [
+                -0.500000,
+                -0.500000,
+                -0.500000,
+                0.500000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 880043224,
+            "ParentUID": 21172546,
+            "Name": "B_Spine",
+            "Translation": [
+                9.260315,
+                3.395593,
+                -0.000005
+            ],
+            "Rotation": [
+                -0.000002,
+                0.000000,
+                -0.005728,
+                0.999984
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1780849194,
+            "ParentUID": 880043224,
+            "Name": "B_Spine1",
+            "Translation": [
+                17.629440,
+                -0.019911,
+                -0.000000
+            ],
+            "Rotation": [
+                -0.000000,
+                0.000000,
+                -0.071934,
+                0.997409
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1680859576,
+            "ParentUID": 1780849194,
+            "Name": "B_Spine2",
+            "Translation": [
+                25.269379,
+                -0.016050,
+                -0.000000
+            ],
+            "Rotation": [
+                -0.000001,
+                -0.000000,
+                0.032254,
+                0.999480
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 298164725,
+            "ParentUID": 1680859576,
+            "Name": "B_L_Clavicle",
+            "Translation": [
+                12.008545,
+                -1.454860,
+                5.302795
+            ],
+            "Rotation": [
+                0.675334,
+                -0.020248,
+                0.737014,
+                -0.018014
+            ],
+            "Scale": [
+                1,
+                1,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 949387323,
+            "ParentUID": 298164725,
+            "Name": "B_L_UpperArm",
+            "Translation": [
+                27.203571,
+                0.000004,
+                -0.000015
+            ],
+            "Rotation": [
+                0.065984,
+                0.440832,
+                -0.022487,
+                0.894879
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2043127217,
+            "ParentUID": 949387323,
+            "Name": "B_L_Forearm",
+            "Translation": [
+                35.551193,
+                -0.000004,
+                0.000015
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                -0.002177,
+                0.999998
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1685648418,
+            "ParentUID": 2043127217,
+            "Name": "B_L_Hand",
+            "Translation": [
+                35.489616,
+                -0.000006,
+                -0.000015
+            ],
+            "Rotation": [
+                -0.720275,
+                0.030073,
+                0.023694,
+                0.692631
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000001
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 842168322,
+            "ParentUID": 1685648418,
+            "Name": "B_L_Finger0",
+            "Translation": [
+                12.316864,
+                -0.520882,
+                -9.563871
+            ],
+            "Rotation": [
+                0.448542,
+                0.133177,
+                0.067791,
+                0.881180
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2002215568,
+            "ParentUID": 842168322,
+            "Name": "B_L_Finger01",
+            "Translation": [
+                4.867081,
+                -0.000015,
+                -0.000031
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 939049311,
+            "ParentUID": 2002215568,
+            "Name": "B_L_Finger02",
+            "Translation": [
+                4.867096,
+                0.000008,
+                0.000031
+            ],
+            "Rotation": [
+                -0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1707415510,
+            "ParentUID": 1685648418,
+            "Name": "B_L_Finger1",
+            "Translation": [
+                17.315132,
+                -2.635735,
+                -4.906816
+            ],
+            "Rotation": [
+                -0.000398,
+                0.000000,
+                -0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 165425672,
+            "ParentUID": 1707415510,
+            "Name": "B_L_Finger11",
+            "Translation": [
+                5.438866,
+                0,
+                0.000016
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 145911451,
+            "ParentUID": 165425672,
+            "Name": "B_L_Finger12",
+            "Translation": [
+                5.438873,
+                -0.000023,
+                -0.000024
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 903479761,
+            "ParentUID": 1685648418,
+            "Name": "B_L_Finger2",
+            "Translation": [
+                17.315155,
+                -2.632576,
+                -0.899354
+            ],
+            "Rotation": [
+                -0.000398,
+                -0.000000,
+                -0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1368419951,
+            "ParentUID": 903479761,
+            "Name": "B_L_Finger21",
+            "Translation": [
+                6.345329,
+                -0.000015,
+                0.000011
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1948376710,
+            "ParentUID": 1368419951,
+            "Name": "B_L_Finger22",
+            "Translation": [
+                6.345329,
+                0.000023,
+                -0.000006
+            ],
+            "Rotation": [
+                -0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2130364155,
+            "ParentUID": 1685648418,
+            "Name": "B_L_Finger3",
+            "Translation": [
+                17.315147,
+                -2.629341,
+                3.144605
+            ],
+            "Rotation": [
+                -0.000399,
+                -0.000000,
+                -0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2124755200,
+            "ParentUID": 2130364155,
+            "Name": "B_L_Finger31",
+            "Translation": [
+                5.438847,
+                0,
+                0.000000
+            ],
+            "Rotation": [
+                -0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 318239252,
+            "ParentUID": 2124755200,
+            "Name": "B_L_Finger32",
+            "Translation": [
+                5.438858,
+                0.000015,
+                0.000005
+            ],
+            "Rotation": [
+                -0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 546177393,
+            "ParentUID": 1685648418,
+            "Name": "B_L_Finger4",
+            "Translation": [
+                17.315140,
+                -2.626289,
+                6.989297
+            ],
+            "Rotation": [
+                -0.000400,
+                -0.000000,
+                -0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2070824271,
+            "ParentUID": 546177393,
+            "Name": "B_L_Finger41",
+            "Translation": [
+                4.532387,
+                0.000023,
+                0.000016
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1541929946,
+            "ParentUID": 2070824271,
+            "Name": "B_L_Finger42",
+            "Translation": [
+                4.532364,
+                -0.000031,
+                -0.000021
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 144740583,
+            "ParentUID": 1680859576,
+            "Name": "B_R_Clavicle",
+            "Translation": [
+                12.008545,
+                -1.454825,
+                -5.302805
+            ],
+            "Rotation": [
+                -0.675334,
+                0.020245,
+                0.737014,
+                -0.018012
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 990857319,
+            "ParentUID": 144740583,
+            "Name": "B_R_UpperArm",
+            "Translation": [
+                27.203560,
+                0.000013,
+                0
+            ],
+            "Rotation": [
+                -0.065984,
+                -0.440832,
+                -0.022488,
+                0.894879
+            ],
+            "Scale": [
+                1.000000,
+                1,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 860213518,
+            "ParentUID": 990857319,
+            "Name": "B_R_Forearm",
+            "Translation": [
+                35.551186,
+                0.000002,
+                0
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                -0.002177,
+                0.999998
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 2048872789,
+            "ParentUID": 860213518,
+            "Name": "B_R_Hand",
+            "Translation": [
+                35.489609,
+                -0.000009,
+                -0.000031
+            ],
+            "Rotation": [
+                0.720275,
+                -0.030073,
+                0.023694,
+                0.692631
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 118674641,
+            "ParentUID": 2048872789,
+            "Name": "B_R_Finger0",
+            "Translation": [
+                12.316833,
+                -0.520874,
+                9.563883
+            ],
+            "Rotation": [
+                -0.448542,
+                -0.133177,
+                0.067791,
+                0.881180
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 877591052,
+            "ParentUID": 118674641,
+            "Name": "B_R_Finger01",
+            "Translation": [
+                4.867088,
+                -0.000015,
+                0.000008
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 709390495,
+            "ParentUID": 877591052,
+            "Name": "B_R_Finger02",
+            "Translation": [
+                4.867073,
+                0.000008,
+                0.000015
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 646738689,
+            "ParentUID": 2048872789,
+            "Name": "B_R_Finger1",
+            "Translation": [
+                17.315140,
+                -2.635727,
+                4.906816
+            ],
+            "Rotation": [
+                0.000398,
+                0.000000,
+                0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 304640220,
+            "ParentUID": 646738689,
+            "Name": "B_R_Finger11",
+            "Translation": [
+                5.438847,
+                -0.000015,
+                0.000007
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 808258848,
+            "ParentUID": 304640220,
+            "Name": "B_R_Finger12",
+            "Translation": [
+                5.438866,
+                -0.000008,
+                -0.000012
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1275254267,
+            "ParentUID": 2048872789,
+            "Name": "B_R_Finger2",
+            "Translation": [
+                17.315140,
+                -2.632538,
+                0.899359
+            ],
+            "Rotation": [
+                0.000398,
+                0.000000,
+                0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1060904886,
+            "ParentUID": 1275254267,
+            "Name": "B_R_Finger21",
+            "Translation": [
+                6.345341,
+                -0.000015,
+                -0.000031
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 706513288,
+            "ParentUID": 1060904886,
+            "Name": "B_R_Finger22",
+            "Translation": [
+                6.345314,
+                0,
+                0.000027
+            ],
+            "Rotation": [
+                -0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 48689313,
+            "ParentUID": 2048872789,
+            "Name": "B_R_Finger3",
+            "Translation": [
+                17.315155,
+                -2.629318,
+                -3.144617
+            ],
+            "Rotation": [
+                0.000398,
+                -0.000000,
+                -0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1069465407,
+            "ParentUID": 48689313,
+            "Name": "B_R_Finger31",
+            "Translation": [
+                5.438843,
+                -0.000031,
+                -0.000000
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1,
+                1,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1845575610,
+            "ParentUID": 1069465407,
+            "Name": "B_R_Finger32",
+            "Translation": [
+                5.438889,
+                -0.000015,
+                -0.000017
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 430492859,
+            "ParentUID": 2048872789,
+            "Name": "B_R_Finger4",
+            "Translation": [
+                17.315155,
+                -2.626312,
+                -6.989321
+            ],
+            "Rotation": [
+                0.000398,
+                0.000000,
+                -0.000000,
+                1.000000
+            ],
+            "Scale": [
+                1.000000,
+                1.000001,
+                1.000001
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1061558907,
+            "ParentUID": 430492859,
+            "Name": "B_R_Finger41",
+            "Translation": [
+                4.532345,
+                0,
+                0.000029
+            ],
+            "Rotation": [
+                -0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1,
+                1.000000
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1142952742,
+            "ParentUID": 1061558907,
+            "Name": "B_R_Finger42",
+            "Translation": [
+                4.532417,
+                0.000023,
+                -0.000007
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.116402,
+                0.993202
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 653794844,
+            "ParentUID": 1680859576,
+            "Name": "B_Neck",
+            "Translation": [
+                33.547531,
+                -3.045568,
+                0.000000
+            ],
+            "Rotation": [
+                0.000000,
+                -0.000000,
+                0.130526,
+                0.991445
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1934935959,
+            "ParentUID": 653794844,
+            "Name": "B_Head",
+            "Translation": [
+                10.931519,
+                -0.266273,
+                0.000000
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                -0.041791,
+                0.999126
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 527225229,
+            "ParentUID": 21172546,
+            "Name": "B_L_Thigh",
+            "Translation": [
+                0,
+                0.000022,
+                11.652329
+            ],
+            "Rotation": [
+                -0.005688,
+                0.999544,
+                0.000207,
+                -0.029656
+            ],
+            "Scale": [
+                1.000000,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 1157173685,
+            "ParentUID": 527225229,
+            "Name": "B_L_Calf",
+            "Translation": [
+                59.167969,
+                0.000000,
+                0.000006
+            ],
+            "Rotation": [
+                -0.000004,
+                -0.000000,
+                -0.049678,
+                0.998765
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 740106180,
+            "ParentUID": 1157173685,
+            "Name": "B_L_Foot",
+            "Translation": [
+                59.505074,
+                -0.000002,
+                -0.000006
+            ],
+            "Rotation": [
+                -0.008042,
+                -0.030147,
+                0.055046,
+                0.997996
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 209731662,
+            "ParentUID": 740106180,
+            "Name": "B_L_Toe0",
+            "Translation": [
+                14.912971,
+                24.276676,
+                -0.217896
+            ],
+            "Rotation": [
+                -0.000000,
+                -0.000000,
+                0.713206,
+                0.700954
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 986724149,
+            "ParentUID": 21172546,
+            "Name": "B_R_Thigh",
+            "Translation": [
+                0,
+                -0.000010,
+                -11.652328
+            ],
+            "Rotation": [
+                -0.005688,
+                0.999544,
+                -0.000209,
+                0.029656
+            ],
+            "Scale": [
+                1.000000,
+                1,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 867593646,
+            "ParentUID": 986724149,
+            "Name": "B_R_Calf",
+            "Translation": [
+                59.167969,
+                -0.000000,
+                0
+            ],
+            "Rotation": [
+                0.000002,
+                0.000000,
+                -0.049678,
+                0.998765
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 464688997,
+            "ParentUID": 867593646,
+            "Name": "B_R_Foot",
+            "Translation": [
+                59.505074,
+                -0.000001,
+                0.000006
+            ],
+            "Rotation": [
+                0.008042,
+                0.030147,
+                0.055046,
+                0.997996
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        },
+        {
+            "UID": 271518082,
+            "ParentUID": 464688997,
+            "Name": "B_R_Toe0",
+            "Translation": [
+                14.912968,
+                24.276680,
+                0.217888
+            ],
+            "Rotation": [
+                0.000000,
+                0.000000,
+                0.713206,
+                0.700954
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1
+            ],
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Components": [
+                {
+                    "HasResource": false
+                }
+            ],
+            "Camera": 0
+        }
+    ],
+    "MiniTexture": 11,
+    "Name": "Assets\/Models\/warrior.FBX",
+    "Source": "Assets\/Models\/warrior.FBX"
+} 

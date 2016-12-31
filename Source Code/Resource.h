@@ -11,6 +11,7 @@ friend class M_Meshes;
 friend class M_Materials;
 friend struct ResourceMeta;
 friend class M_Import;
+friend class M_Animations;
 
 public:
 	enum Type
@@ -29,6 +30,7 @@ public:
 	Type GetType() const;
 	unsigned long long GetID() const;
 
+	const char* GetOriginalFile() const;
 	const char* GetResourceFile() const;
 	const char* GetName() const;
 

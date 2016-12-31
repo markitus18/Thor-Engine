@@ -63,6 +63,7 @@ bool M_Editor::Init(Config& config)
 	panelButtons = new P_Buttons();
 	panelResources = new P_Resources();
 	panelExplorer = new P_Explorer();
+	panelExplorer->active = false;
 
 	panelConfiguration->Init();
 
@@ -248,6 +249,12 @@ void M_Editor::Draw()
 			{
 			}
 			if (ImGui::MenuItem("Configuration         ", nullptr, &panelConfiguration->active))
+			{
+			}
+			if (ImGui::MenuItem("Explorer         ", nullptr, &panelExplorer->active))
+			{
+			}
+			if (ImGui::MenuItem("Resources         ", nullptr, &panelExplorer->active))
 			{
 			}
 

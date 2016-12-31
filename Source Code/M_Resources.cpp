@@ -710,6 +710,11 @@ void M_Resources::LoadResource(Resource* resource)
 		scenes[resource->ID] = resource;
 		break;
 	}
+	case(Resource::ANIMATION):
+	{
+		animations[resource->ID] = resource;
+		break;
+	}
 	}
 	resource->LoadOnMemory();
 }

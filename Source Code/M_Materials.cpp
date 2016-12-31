@@ -265,7 +265,7 @@ R_Texture* M_Materials::ImportPrefabImage(char* buffer, uint64 ID, const char* s
 			RELEASE_ARRAY(saveBuffer);
 
 			resTexture = new R_Texture;
-			resTexture->original_file = source_file;
+			resTexture->original_file = full_path;
 			resTexture->resource_file = full_path;
 			resTexture->ID = ID;
 			resTexture->buffer = ilutGLBindTexImage();

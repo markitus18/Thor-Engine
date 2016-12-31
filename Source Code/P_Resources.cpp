@@ -20,7 +20,6 @@ P_Resources::~P_Resources()
 
 void P_Resources::Draw(ImGuiWindowFlags flags)
 {
-	active = false;
 	if (active)
 	{
 		ImGui::SetNextWindowPos(position);
@@ -82,6 +81,18 @@ void P_Resources::Draw(ImGuiWindowFlags flags)
 					}
 				}
 			}
+
+			if (ImGui::CollapsingHeader("Animations"))
+			{
+				for (std::map<uint64, Resource*>::iterator it = App->moduleResources->animations.begin(); it != App->moduleResources->animations.end(); it++)
+				{
+					ImGui::Text("-- %s", it->second->GetName());
+					if (ImGui::IsItemHovered())
+					{
+						DisplayResourceInfo(it->second);
+					}
+				}
+			}
 			ImGui::End();
 		}
 	}
@@ -91,7 +102,7 @@ void P_Resources::DisplayResourceInfo(Resource* resource)
 {
 	ImGui::BeginTooltip();
 	ImGui::Text("UID: %llu", resource->GetID());
-	ImGui::Text("Source file: %s", resource->GetResourceFile());
+	ImGui::Text("Source file: %s", resource->GetOriginalFile());
 	ImGui::Text("Instances: %i", resource->instances);
 	ImGui::EndTooltip();
 }

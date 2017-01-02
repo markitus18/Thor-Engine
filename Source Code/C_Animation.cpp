@@ -93,73 +93,85 @@ void C_Animation::UpdateChannelsTransform(float currentKey)
 {
 	for (uint i = 0; i < links.size(); i++)
 	{
-		float3 position = GetChannelPosition(links[i], currentKey);
-		Quat rotation = GetChannelRotation(links[i], currentKey);
-		float3 scale = GetChannelScale(links[i], currentKey);
-
 		C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
+
+		float3 position = GetChannelPosition(links[i], currentKey, transform->GetPosition());
+		Quat rotation = GetChannelRotation(links[i], currentKey, transform->GetQuatRotation());
+		float3 scale = GetChannelScale(links[i], currentKey, transform->GetScale());
+
+
 		transform->SetPosition(position);
 		transform->SetQuatRotation(rotation);
 		transform->SetScale(scale);
 	}
 }
 
-float3 C_Animation::GetChannelPosition(Link& link, float currentKey)
+float3 C_Animation::GetChannelPosition(Link& link, float currentKey, float3 default)
 {
-	float3 position = float3::zero;
+	float3 position = default;
 
-	std::map<double, float3>::iterator previous = link.channel->GetPrevPosKey(link.prevPosKey, currentKey);
-	std::map<double, float3>::iterator next = link.channel->GetNextPosKey(link.prevPosKey, currentKey);
-	link.prevPosKey = previous;
-
-	//If both keys are the same, no need to blend
-	if (previous == next)
-		position = previous->second;
-	else //blend between both keys
+	if (link.channel->HasPosKey())
 	{
-		//0 to 1
-		float ratio = (currentKey - previous->first) / (next->first - previous->first);
-		position = previous->second.Lerp(next->second, ratio);
+		std::map<double, float3>::iterator previous = link.channel->GetPrevPosKey(link.prevPosKey, currentKey);
+		std::map<double, float3>::iterator next = link.channel->GetNextPosKey(link.prevPosKey, currentKey);
+		link.prevPosKey = previous;
+
+		//If both keys are the same, no need to blend
+		if (previous == next)
+			position = previous->second;
+		else //blend between both keys
+		{
+			//0 to 1
+			float ratio = (currentKey - previous->first) / (next->first - previous->first);
+			position = previous->second.Lerp(next->second, ratio);
+		}
 	}
+
 	return position;
 }
 
-Quat C_Animation::GetChannelRotation(Link& link, float currentKey)
+Quat C_Animation::GetChannelRotation(Link& link, float currentKey, Quat default)
 {
-	Quat rotation = Quat::identity;
+	Quat rotation = default;
 
-	std::map<double, Quat>::iterator previous = link.channel->GetPrevRotKey(link.prevRotKey, currentKey);
-	std::map<double, Quat>::iterator next = link.channel->GetNextRotKey(link.prevRotKey, currentKey);
-	link.prevRotKey = previous;
-
-	//If both keys are the same, no need to blend
-	if (previous == next)
-		rotation = previous->second;
-	else //blend between both keys
+	if (link.channel->HasRotKey())
 	{
-		//0 to 1
-		float ratio = (currentKey - previous->first) / (next->first - previous->first);
-		rotation = previous->second.Slerp(next->second, ratio);
+		std::map<double, Quat>::iterator previous = link.channel->GetPrevRotKey(link.prevRotKey, currentKey);
+		std::map<double, Quat>::iterator next = link.channel->GetNextRotKey(link.prevRotKey, currentKey);
+		link.prevRotKey = previous;
+
+		//If both keys are the same, no need to blend
+		if (previous == next)
+			rotation = previous->second;
+		else //blend between both keys
+		{
+			//0 to 1
+			float ratio = (currentKey - previous->first) / (next->first - previous->first);
+			rotation = previous->second.Slerp(next->second, ratio);
+		}
 	}
 	return rotation;
 }
 
-float3 C_Animation::GetChannelScale(Link& link, float currentKey)
+float3 C_Animation::GetChannelScale(Link& link, float currentKey, float3 default)
 {
-	float3 scale = float3::zero;
+	float3 scale = default;
 
-	std::map<double, float3>::iterator previous = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey);
-	std::map<double, float3>::iterator next = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey);
-	link.prevScaleKey = previous;
-
-	//If both keys are the same, no need to blend
-	if (previous == next)
-		scale = previous->second;
-	else //blend between both keys
+	if (link.channel->HasScaleKey())
 	{
-		//0 to 1
-		float ratio = (currentKey - previous->first) / (next->first - previous->first);
-		scale = previous->second.Lerp(next->second, ratio);
+		std::map<double, float3>::iterator previous = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey);
+		std::map<double, float3>::iterator next = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey);
+		link.prevScaleKey = previous;
+
+		//If both keys are the same, no need to blend
+		if (previous == next)
+			scale = previous->second;
+		else //blend between both keys
+		{
+			//0 to 1
+			float ratio = (currentKey - previous->first) / (next->first - previous->first);
+			scale = previous->second.Lerp(next->second, ratio);
+		}
 	}
 	return scale;
 }

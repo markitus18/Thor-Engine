@@ -13,12 +13,15 @@ struct Channel
 	std::map<double, Quat> rotationKeys;
 	std::map<double, float3> scaleKeys;
 
+	bool HasPosKey() const;
 	std::map<double, float3>::iterator GetPrevPosKey(std::map<double, float3>::iterator lastPrev, double currentKey);
 	std::map<double, float3>::iterator GetNextPosKey(std::map<double, float3>::iterator previous, double currentKey);
 
+	bool HasRotKey() const;
 	std::map<double, Quat>::iterator GetPrevRotKey(std::map<double, Quat>::iterator lastPrev, double currentKey);
 	std::map<double, Quat>::iterator GetNextRotKey(std::map<double, Quat>::iterator previous, double currentKey);
 
+	bool HasScaleKey() const;
 	std::map<double, float3>::iterator GetPrevScaleKey(std::map<double, float3>::iterator lastPrev, double currentKey);
 	std::map<double, float3>::iterator GetNextScaleKey(std::map<double, float3>::iterator previous, double currentKey);
 };

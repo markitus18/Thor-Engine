@@ -4,7 +4,9 @@
 #include "GameObject.h"
 #include "M_FileSystem.h"
 
+#include "Resource.h"
 #include "R_Animation.h"
+#include "R_Bone.h"
 
 #include "Assimp/include/scene.h"
 
@@ -173,6 +175,149 @@ R_Animation* M_Animations::LoadAnimation(uint64 ID)
 
 		RELEASE_ARRAY(buffer);
 		return animation;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+void M_Animations::ImportSceneBones(const std::vector<const aiMesh*>& bonedMeshes, GameObject* root)
+{
+	std::map<std::string, GameObject*> map;
+	CollectGameObjectNames(root, map);
+
+	for (uint i = 0; i < bonedMeshes.size(); i++)
+	{
+		for (uint b = 0; b = bonedMeshes[i]->mNumBones; b++)
+		{
+			R_Bone* bone = new R_Bone();
+		}
+	}
+}
+
+R_Bone* M_Animations::ImportBone(const aiBone* bone, uint64 ID, const char* source_file)
+{
+	R_Bone* rBone = new R_Bone();
+	rBone->numWeights = bone->mNumWeights;
+	rBone->weights = new float[rBone->numWeights];
+	rBone->weightsIndex = new uint[rBone->numWeights];
+
+	for (uint i = 0; i < rBone->numWeights; i++)
+		memcpy(rBone->weights + i, &((bone->mWeights + i)->mWeight), sizeof(float));
+
+	for (uint i = 0; i < rBone->numWeights; i++)
+		memcpy(rBone->weightsIndex + i, &((bone->mWeights + i)->mVertexId), sizeof(uint));
+
+	rBone->ID = ID;
+	rBone->name = bone->mName.C_Str();
+
+	std::string full_path("/Library/Bones/");
+	full_path.append(std::to_string(ID));
+	rBone->resource_file = full_path;
+	rBone->original_file = source_file;
+	rBone->LoadOnMemory();
+	SaveBoneResource(rBone);
+
+	return rBone;
+}
+
+bool M_Animations::SaveBoneResource(R_Bone* bone)
+{
+	uint size = sizeof(uint) * 2 + bone->original_file.size() + bone->name.size() + sizeof(uint) + sizeof(bone->numWeights	) * sizeof(float) + sizeof(bone->numWeights) * sizeof(uint);
+
+	char* data = new char[size];
+	char* cursor = data;
+
+	// Store source file and name: Sizes;
+	uint fileSize = bone->original_file.size();
+	memcpy(cursor, &fileSize, sizeof(uint));
+	cursor += sizeof(uint);
+
+	uint nameSize = bone->name.size();
+	memcpy(cursor, &nameSize, sizeof(uint));
+	cursor += sizeof(uint);
+
+	// Store source file and name: Strings
+	memcpy(cursor, bone->original_file.c_str(), bone->original_file.size());
+	cursor += bone->original_file.size();
+
+	memcpy(cursor, bone->name.c_str(), bone->name.size());
+	cursor += bone->name.size();
+
+	//Num weights
+	memcpy(cursor, &bone->numWeights, sizeof(uint));
+	cursor += sizeof(uint);
+
+	//Weights
+	memcpy(cursor, bone->weights, sizeof(float) * sizeof(bone->numWeights));
+	cursor += sizeof(float) * sizeof(bone->numWeights);
+
+	//Weights index
+	memcpy(cursor, bone->weightsIndex, sizeof(uint) * sizeof(bone->numWeights));
+	cursor += sizeof(uint) * sizeof(bone->numWeights);
+
+	uint ret = App->fileSystem->Save(bone->resource_file.c_str(), data, size);
+	RELEASE_ARRAY(data);
+
+	return ret > 0;
+}
+
+R_Bone* M_Animations::LoadBone(uint64 ID)
+{
+	std::string full_path = "/Library/Bones/";
+	full_path.append(std::to_string(ID));
+
+	char* buffer;
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	if (size > 0)
+	{
+		char* cursor = buffer;
+		R_Bone* bone = new R_Bone();
+
+		uint stringSize = 0;
+		memcpy(&stringSize, cursor, sizeof(uint));
+		cursor += sizeof(uint);
+
+		uint nameSize = 0;
+		memcpy(&nameSize, cursor, sizeof(uint));
+		cursor += sizeof(uint);
+
+		if (stringSize > 0)
+		{
+			char* string = new char[stringSize + 1];
+			memcpy(string, cursor, sizeof(char) * stringSize);
+			cursor += sizeof(char) * stringSize;
+			string[stringSize] = '\0';
+			bone->original_file = string;
+			RELEASE_ARRAY(string);
+		}
+
+		if (nameSize > 0)
+		{
+			char* string = new char[nameSize + 1];
+			memcpy(string, cursor, sizeof(char) * nameSize);
+			cursor += sizeof(char) * nameSize;
+			string[nameSize] = '\0';
+			bone->name = string;
+			RELEASE_ARRAY(string);
+		}
+
+		memcpy(&bone->numWeights, cursor, sizeof(uint));
+		cursor += sizeof(uint);
+
+		memcpy(&bone->weights, cursor, sizeof(float) * bone->numWeights);
+		cursor += sizeof(float) * bone->numWeights;
+
+		memcpy(&bone->weightsIndex, cursor, sizeof(uint) * bone->numWeights);
+		cursor += sizeof(uint) * bone->numWeights;
+
+		bone->ID = ID;
+		bone->resource_file = full_path;
+
+		RELEASE_ARRAY(buffer);
+		return bone;
 	}
 	else
 	{

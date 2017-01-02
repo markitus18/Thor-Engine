@@ -1,6 +1,12 @@
 #include "R_Animation.h"
 
 #pragma region ChannelKeys
+
+bool Channel::HasPosKey() const
+{
+	return ((positionKeys.size() == 1 && positionKeys.begin()->first == -1) == false);
+}
+
 std::map<double, float3>::iterator Channel::GetPrevPosKey(std::map<double, float3>::iterator lastPrev, double currentKey)
 {	
 	//Looping through keys
@@ -32,6 +38,11 @@ std::map<double, float3>::iterator Channel::GetNextPosKey(std::map<double, float
 	}
 }
 
+bool Channel::HasRotKey() const
+{
+	return ((rotationKeys.size() == 1 && rotationKeys.begin()->first == -1) == false);
+}
+
 std::map<double, Quat>::iterator Channel::GetPrevRotKey(std::map<double, Quat>::iterator lastPrev, double currentKey)
 {
 	//Looping through keys
@@ -61,6 +72,11 @@ std::map<double, Quat>::iterator Channel::GetNextRotKey(std::map<double, Quat>::
 		else
 			return previous;
 	}
+}
+
+bool Channel::HasScaleKey() const
+{
+	return ((scaleKeys.size() == 1 && scaleKeys.begin()->first == -1) == false);
 }
 
 std::map<double, float3>::iterator Channel::GetPrevScaleKey(std::map<double, float3>::iterator lastPrev, double currentKey)

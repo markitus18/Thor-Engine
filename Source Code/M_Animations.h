@@ -12,6 +12,8 @@ class GameObject;
 struct aiScene;
 struct aiAnimation;
 struct aiNodeAnim;
+struct aiMesh;
+struct aiBone;
 
 class M_Animations : public Module
 {
@@ -19,11 +21,18 @@ public:
 	M_Animations(bool start_enabled = true);
 	~M_Animations();
 
+	//Animation data management
 	uint64 ImportSceneAnimations(const aiScene* scene, GameObject* root, const char* source_file);
 	R_Animation* ImportAnimation(const aiAnimation* animation, uint64 ID, const char* source_file);
 	bool SaveAnimationResource(R_Animation* animation);
 	R_Animation* LoadAnimation(uint64 ID);
 
+	//Bone data management
+	void ImportSceneBones(const std::vector<const aiMesh*>& bonedMeshes, GameObject* root);
+	R_Bone* ImportBone(const aiBone*, uint64 ID, const char* source_file);
+	bool SaveBoneResource(R_Bone* bone);
+	R_Bone* LoadBone(uint64 ID);
+	
 	//Save utils
 	uint CalcChannelSize(const Channel& channel) const;
 

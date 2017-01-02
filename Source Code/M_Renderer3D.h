@@ -42,6 +42,14 @@ struct RenderBox
 	Color color;
 };
 
+struct RenderLine
+{
+	RenderLine(const float3& a, const float3& b, const Color& color) : start(a), end(b), color(color) {}
+	float3 start;
+	float3 end;
+	Color color;
+};
+
 class M_Renderer3D : public Module
 {
 public:
@@ -70,6 +78,9 @@ public:
 	void AddOBB(const OBB& box, const Color& color);
 	void AddFrustum(const Frustum& box, const Color& color);
 	void DrawAllBox();
+
+	void AddLine(const float3 a, const float3 b, const Color& color);
+	void DrawAllLines();
 
 	//Component buffers management -----------------
 	void LoadBuffers(R_Mesh* mesh);
@@ -105,4 +116,5 @@ private:
 	std::vector<RenderBox<AABB>> aabb;
 	std::vector<RenderBox<OBB>> obb;
 	std::vector<RenderBox<Frustum>> frustum;
+	std::vector<RenderLine> lines;
 };

@@ -10,7 +10,7 @@ class Channel;
 
 class C_Animation : public Component
 {
-	//Careful, this could be dangerous
+	//Careful, this could be dangerous, duplicating pointers
 	struct Link
 	{
 		Link(GameObject* gameObject, Channel* channel) : gameObject(gameObject), channel(channel) {};
@@ -36,9 +36,9 @@ public:
 private:
 
 	void UpdateChannelsTransform(float dt);
-	float3 GetChannelPosition(Link& link, float currentKey);
-	Quat GetChannelRotation(Link& link, float currentKey);
-	float3 GetChannelScale(Link& link, float currentKey);
+	float3 GetChannelPosition(Link& link, float currentKey, float3 default);
+	Quat GetChannelRotation(Link& link, float currentKey, Quat default);
+	float3 GetChannelScale(Link& link, float currentKey, float3 default);
 
 private:
 	bool started = false;

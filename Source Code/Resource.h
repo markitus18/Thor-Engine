@@ -20,6 +20,7 @@ public:
 		TEXTURE,
 		MATERIAL,
 		ANIMATION,
+		BONE,
 		PREFAB,
 		UNKNOWN,
 	};

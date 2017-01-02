@@ -480,6 +480,22 @@ void M_Renderer3D::DrawAllBox()
 	glEnable(GL_LIGHTING);
 }
 
+void M_Renderer3D::AddLine(const float3 a, const float3 b, const Color& color)
+{
+	lines.push_back(RenderLine(a, b, color));
+}
+
+void M_Renderer3D::DrawAllLines()
+{
+	for (uint i = 0; i < lines.size(); i++)
+	{
+		glColor3f(lines[i].color.r, lines[i].color.g, lines[i].color.b);
+		glVertex3f(lines[i].start.x, lines[i].start.y, lines[i].start.z);
+		glVertex3f(lines[i].end.x, lines[i].end.y, lines[i].end.z);
+	}
+	glEnd();
+}
+
 //Component buffers management -----------------
 void M_Renderer3D::LoadBuffers(R_Mesh* mesh)
 {

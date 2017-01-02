@@ -285,8 +285,9 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 	{
 		LOG("Starting scene load %s", path);
 		std::vector<GameObject*> createdGameObjects;
+		std::vector<const aiMesh*> bonedMeshes;
 
-		GameObject* rootNode = CreateGameObjects(file, file->mRootNode, nullptr, path, createdGameObjects);
+		GameObject* rootNode = CreateGameObjects(file, file->mRootNode, nullptr, path, createdGameObjects, bonedMeshes);
 		uint64 animID = App->moduleAnimations->ImportSceneAnimations(file, rootNode, path);
 		if (animID != 0)
 		{
@@ -338,7 +339,7 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 	return ret;
 }
 
-GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector)
+GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector, std::vector<const aiMesh*>& bonedMeshes)
 {
 	aiVector3D		translation;
 	aiVector3D		scaling;
@@ -401,6 +402,10 @@ GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node
 	for (uint i = 0; i < node->mNumMeshes; i++)
 	{
 		const aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
+
+		if (newMesh->HasBones())
+			bonedMeshes.push_back(newMesh);
+
 		GameObject* child = nullptr;
 
 		if (node->mNumMeshes > 1)
@@ -443,7 +448,7 @@ GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node
 	// ------------------------------------------------------------
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
-		GameObject* new_child = CreateGameObjects(scene, node->mChildren[i], gameObject, path, vector);
+		GameObject* new_child = CreateGameObjects(scene, node->mChildren[i], gameObject, path, vector, bonedMeshes);
 	}
 	return gameObject;
 }

@@ -13,6 +13,7 @@
 #include "R_Material.h"
 #include "R_Prefab.h"
 #include "R_Animation.h"
+#include "R_Bone.h"
 
 #include "M_FileSystem.h"
 #include "PathNode.h"
@@ -252,7 +253,37 @@ uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source
 	uint64 instances = 0;
 
 	//Find if the resource already exists and delete it
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::MATERIAL);
+	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::ANIMATION);
+	if (meta != nullptr)
+	{
+		newID = meta->id;
+		instances = DeleteResource(newID);
+	}
+	else
+	{
+		newID = ++nextID;
+	}
+
+	//Importing resource
+	resource = App->moduleAnimations->ImportAnimation(anim, newID, source_file);
+	if (resource)
+	{
+		resource->instances = instances;
+		AddResource(resource);
+		ret = resource->ID;
+	}
+	return ret;
+}
+
+uint64 M_Resources::ImportRBone(const aiBone* bone, const char* source_file, const char* name)
+{
+	uint64 ret = 0;
+	uint64 newID = 0;
+	R_Bone* resource = nullptr;
+	uint64 instances = 0;
+
+	//Find if the resource already exists and delete it
+	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::BONE);
 	if (meta != nullptr)
 	{
 		newID = meta->id;

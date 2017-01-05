@@ -1,7 +1,7 @@
 {
     "GameObjects": [
         {
-            "UID": 1995341766,
+            "UID": 1025190853,
             "ParentUID": 0,
             "Name": "warrior",
             "Translation": [
@@ -38,8 +38,8 @@
             "Camera": 0
         },
         {
-            "UID": 1266933550,
-            "ParentUID": 1995341766,
+            "UID": 1045885021,
+            "ParentUID": 1025190853,
             "Name": "RPG-Character-Mesh",
             "Translation": [
                 -0.178409,
@@ -81,8 +81,8 @@
             "Camera": 0
         },
         {
-            "UID": 1584851319,
-            "ParentUID": 1995341766,
+            "UID": 833028212,
+            "ParentUID": 1025190853,
             "Name": "Motion",
             "Translation": [
                 -0.204375,
@@ -112,8 +112,8 @@
             "Camera": 0
         },
         {
-            "UID": 1223897239,
-            "ParentUID": 1584851319,
+            "UID": 1313776770,
+            "ParentUID": 833028212,
             "Name": "B_Pelvis",
             "Translation": [
                 0.051386,
@@ -149,8 +149,8 @@
             "Camera": 0
         },
         {
-            "UID": 1093530753,
-            "ParentUID": 1223897239,
+            "UID": 829011146,
+            "ParentUID": 1313776770,
             "Name": "B_Spine",
             "Translation": [
                 9.260315,
@@ -186,8 +186,8 @@
             "Camera": 0
         },
         {
-            "UID": 114301169,
-            "ParentUID": 1093530753,
+            "UID": 814498894,
+            "ParentUID": 829011146,
             "Name": "B_Spine1",
             "Translation": [
                 17.629440,
@@ -223,8 +223,8 @@
             "Camera": 0
         },
         {
-            "UID": 1334774814,
-            "ParentUID": 114301169,
+            "UID": 1921800139,
+            "ParentUID": 814498894,
             "Name": "B_Spine2",
             "Translation": [
                 25.269379,
@@ -260,8 +260,8 @@
             "Camera": 0
         },
         {
-            "UID": 297468863,
-            "ParentUID": 1334774814,
+            "UID": 826334631,
+            "ParentUID": 1921800139,
             "Name": "B_L_Clavicle",
             "Translation": [
                 12.008545,
@@ -297,8 +297,8 @@
             "Camera": 0
         },
         {
-            "UID": 1894902902,
-            "ParentUID": 297468863,
+            "UID": 1303925368,
+            "ParentUID": 826334631,
             "Name": "B_L_UpperArm",
             "Translation": [
                 27.203571,
@@ -334,8 +334,8 @@
             "Camera": 0
         },
         {
-            "UID": 819537638,
-            "ParentUID": 1894902902,
+            "UID": 11835897,
+            "ParentUID": 1303925368,
             "Name": "B_L_Forearm",
             "Translation": [
                 35.551193,
@@ -371,8 +371,8 @@
             "Camera": 0
         },
         {
-            "UID": 536878055,
-            "ParentUID": 819537638,
+            "UID": 1540748236,
+            "ParentUID": 11835897,
             "Name": "B_L_Hand",
             "Translation": [
                 35.489616,
@@ -408,8 +408,8 @@
             "Camera": 0
         },
         {
-            "UID": 1034191120,
-            "ParentUID": 536878055,
+            "UID": 1624770906,
+            "ParentUID": 1540748236,
             "Name": "B_L_Finger0",
             "Translation": [
                 12.316864,
@@ -445,8 +445,8 @@
             "Camera": 0
         },
         {
-            "UID": 588248904,
-            "ParentUID": 1034191120,
+            "UID": 1621624548,
+            "ParentUID": 1624770906,
             "Name": "B_L_Finger01",
             "Translation": [
                 4.867081,
@@ -482,8 +482,8 @@
             "Camera": 0
         },
         {
-            "UID": 1963797094,
-            "ParentUID": 588248904,
+            "UID": 1612366224,
+            "ParentUID": 1621624548,
             "Name": "B_L_Finger02",
             "Translation": [
                 4.867096,
@@ -519,8 +519,8 @@
             "Camera": 0
         },
         {
-            "UID": 1971095119,
-            "ParentUID": 536878055,
+            "UID": 1283685120,
+            "ParentUID": 1540748236,
             "Name": "B_L_Finger1",
             "Translation": [
                 17.315132,
@@ -556,8 +556,8 @@
             "Camera": 0
         },
         {
-            "UID": 1113269305,
-            "ParentUID": 1971095119,
+            "UID": 1762285968,
+            "ParentUID": 1283685120,
             "Name": "B_L_Finger11",
             "Translation": [
                 5.438866,
@@ -593,8 +593,8 @@
             "Camera": 0
         },
         {
-            "UID": 2089979528,
-            "ParentUID": 1113269305,
+            "UID": 2075657724,
+            "ParentUID": 1762285968,
             "Name": "B_L_Finger12",
             "Translation": [
                 5.438873,
@@ -630,8 +630,8 @@
             "Camera": 0
         },
         {
-            "UID": 1562732756,
-            "ParentUID": 536878055,
+            "UID": 896828680,
+            "ParentUID": 1540748236,
             "Name": "B_L_Finger2",
             "Translation": [
                 17.315155,
@@ -667,8 +667,8 @@
             "Camera": 0
         },
         {
-            "UID": 1053197515,
-            "ParentUID": 1562732756,
+            "UID": 22493755,
+            "ParentUID": 896828680,
             "Name": "B_L_Finger21",
             "Translation": [
                 6.345329,
@@ -704,8 +704,8 @@
             "Camera": 0
         },
         {
-            "UID": 982548647,
-            "ParentUID": 1053197515,
+            "UID": 522138192,
+            "ParentUID": 22493755,
             "Name": "B_L_Finger22",
             "Translation": [
                 6.345329,
@@ -741,8 +741,8 @@
             "Camera": 0
         },
         {
-            "UID": 75261249,
-            "ParentUID": 536878055,
+            "UID": 1327372463,
+            "ParentUID": 1540748236,
             "Name": "B_L_Finger3",
             "Translation": [
                 17.315147,
@@ -778,8 +778,8 @@
             "Camera": 0
         },
         {
-            "UID": 2050801596,
-            "ParentUID": 75261249,
+            "UID": 334465172,
+            "ParentUID": 1327372463,
             "Name": "B_L_Finger31",
             "Translation": [
                 5.438847,
@@ -815,8 +815,8 @@
             "Camera": 0
         },
         {
-            "UID": 1260160674,
-            "ParentUID": 2050801596,
+            "UID": 634555391,
+            "ParentUID": 334465172,
             "Name": "B_L_Finger32",
             "Translation": [
                 5.438858,
@@ -852,8 +852,8 @@
             "Camera": 0
         },
         {
-            "UID": 349370016,
-            "ParentUID": 536878055,
+            "UID": 347290727,
+            "ParentUID": 1540748236,
             "Name": "B_L_Finger4",
             "Translation": [
                 17.315140,
@@ -889,8 +889,8 @@
             "Camera": 0
         },
         {
-            "UID": 1090098014,
-            "ParentUID": 349370016,
+            "UID": 209322894,
+            "ParentUID": 347290727,
             "Name": "B_L_Finger41",
             "Translation": [
                 4.532387,
@@ -926,8 +926,8 @@
             "Camera": 0
         },
         {
-            "UID": 1641747714,
-            "ParentUID": 1090098014,
+            "UID": 445174632,
+            "ParentUID": 209322894,
             "Name": "B_L_Finger42",
             "Translation": [
                 4.532364,
@@ -963,8 +963,8 @@
             "Camera": 0
         },
         {
-            "UID": 300484819,
-            "ParentUID": 1334774814,
+            "UID": 1019060968,
+            "ParentUID": 1921800139,
             "Name": "B_R_Clavicle",
             "Translation": [
                 12.008545,
@@ -1000,8 +1000,8 @@
             "Camera": 0
         },
         {
-            "UID": 1415378172,
-            "ParentUID": 300484819,
+            "UID": 1626407189,
+            "ParentUID": 1019060968,
             "Name": "B_R_UpperArm",
             "Translation": [
                 27.203560,
@@ -1037,8 +1037,8 @@
             "Camera": 0
         },
         {
-            "UID": 609086570,
-            "ParentUID": 1415378172,
+            "UID": 1724650000,
+            "ParentUID": 1626407189,
             "Name": "B_R_Forearm",
             "Translation": [
                 35.551186,
@@ -1074,8 +1074,8 @@
             "Camera": 0
         },
         {
-            "UID": 1003996308,
-            "ParentUID": 609086570,
+            "UID": 1751978936,
+            "ParentUID": 1724650000,
             "Name": "B_R_Hand",
             "Translation": [
                 35.489609,
@@ -1111,8 +1111,8 @@
             "Camera": 0
         },
         {
-            "UID": 781733065,
-            "ParentUID": 1003996308,
+            "UID": 1749320950,
+            "ParentUID": 1751978936,
             "Name": "B_R_Finger0",
             "Translation": [
                 12.316833,
@@ -1148,8 +1148,8 @@
             "Camera": 0
         },
         {
-            "UID": 1359652444,
-            "ParentUID": 781733065,
+            "UID": 1381271286,
+            "ParentUID": 1749320950,
             "Name": "B_R_Finger01",
             "Translation": [
                 4.867088,
@@ -1185,8 +1185,8 @@
             "Camera": 0
         },
         {
-            "UID": 1431127611,
-            "ParentUID": 1359652444,
+            "UID": 1170489946,
+            "ParentUID": 1381271286,
             "Name": "B_R_Finger02",
             "Translation": [
                 4.867073,
@@ -1222,8 +1222,8 @@
             "Camera": 0
         },
         {
-            "UID": 1884119219,
-            "ParentUID": 1003996308,
+            "UID": 118577757,
+            "ParentUID": 1751978936,
             "Name": "B_R_Finger1",
             "Translation": [
                 17.315140,
@@ -1259,8 +1259,8 @@
             "Camera": 0
         },
         {
-            "UID": 1668019945,
-            "ParentUID": 1884119219,
+            "UID": 574881029,
+            "ParentUID": 118577757,
             "Name": "B_R_Finger11",
             "Translation": [
                 5.438847,
@@ -1296,8 +1296,8 @@
             "Camera": 0
         },
         {
-            "UID": 1890895673,
-            "ParentUID": 1668019945,
+            "UID": 1139390870,
+            "ParentUID": 574881029,
             "Name": "B_R_Finger12",
             "Translation": [
                 5.438866,
@@ -1333,8 +1333,8 @@
             "Camera": 0
         },
         {
-            "UID": 1005121539,
-            "ParentUID": 1003996308,
+            "UID": 1780807384,
+            "ParentUID": 1751978936,
             "Name": "B_R_Finger2",
             "Translation": [
                 17.315140,
@@ -1370,8 +1370,8 @@
             "Camera": 0
         },
         {
-            "UID": 1812029224,
-            "ParentUID": 1005121539,
+            "UID": 917489213,
+            "ParentUID": 1780807384,
             "Name": "B_R_Finger21",
             "Translation": [
                 6.345341,
@@ -1407,8 +1407,8 @@
             "Camera": 0
         },
         {
-            "UID": 1359761089,
-            "ParentUID": 1812029224,
+            "UID": 1762901905,
+            "ParentUID": 917489213,
             "Name": "B_R_Finger22",
             "Translation": [
                 6.345314,
@@ -1444,8 +1444,8 @@
             "Camera": 0
         },
         {
-            "UID": 405166568,
-            "ParentUID": 1003996308,
+            "UID": 2008134661,
+            "ParentUID": 1751978936,
             "Name": "B_R_Finger3",
             "Translation": [
                 17.315155,
@@ -1481,8 +1481,8 @@
             "Camera": 0
         },
         {
-            "UID": 903927383,
-            "ParentUID": 405166568,
+            "UID": 715362840,
+            "ParentUID": 2008134661,
             "Name": "B_R_Finger31",
             "Translation": [
                 5.438843,
@@ -1518,8 +1518,8 @@
             "Camera": 0
         },
         {
-            "UID": 320056508,
-            "ParentUID": 903927383,
+            "UID": 1983026063,
+            "ParentUID": 715362840,
             "Name": "B_R_Finger32",
             "Translation": [
                 5.438889,
@@ -1555,8 +1555,8 @@
             "Camera": 0
         },
         {
-            "UID": 363822196,
-            "ParentUID": 1003996308,
+            "UID": 681350140,
+            "ParentUID": 1751978936,
             "Name": "B_R_Finger4",
             "Translation": [
                 17.315155,
@@ -1592,8 +1592,8 @@
             "Camera": 0
         },
         {
-            "UID": 95491351,
-            "ParentUID": 363822196,
+            "UID": 511818357,
+            "ParentUID": 681350140,
             "Name": "B_R_Finger41",
             "Translation": [
                 4.532345,
@@ -1629,8 +1629,8 @@
             "Camera": 0
         },
         {
-            "UID": 1741460506,
-            "ParentUID": 95491351,
+            "UID": 109678026,
+            "ParentUID": 511818357,
             "Name": "B_R_Finger42",
             "Translation": [
                 4.532417,
@@ -1666,8 +1666,8 @@
             "Camera": 0
         },
         {
-            "UID": 1737629547,
-            "ParentUID": 1334774814,
+            "UID": 1589483061,
+            "ParentUID": 1921800139,
             "Name": "B_Neck",
             "Translation": [
                 33.547531,
@@ -1703,8 +1703,8 @@
             "Camera": 0
         },
         {
-            "UID": 1310405236,
-            "ParentUID": 1737629547,
+            "UID": 1567859971,
+            "ParentUID": 1589483061,
             "Name": "B_Head",
             "Translation": [
                 10.931519,
@@ -1740,8 +1740,8 @@
             "Camera": 0
         },
         {
-            "UID": 175160055,
-            "ParentUID": 1223897239,
+            "UID": 1532747628,
+            "ParentUID": 1313776770,
             "Name": "B_L_Thigh",
             "Translation": [
                 0,
@@ -1777,8 +1777,8 @@
             "Camera": 0
         },
         {
-            "UID": 1406041489,
-            "ParentUID": 175160055,
+            "UID": 812705911,
+            "ParentUID": 1532747628,
             "Name": "B_L_Calf",
             "Translation": [
                 59.167969,
@@ -1814,8 +1814,8 @@
             "Camera": 0
         },
         {
-            "UID": 1267424468,
-            "ParentUID": 1406041489,
+            "UID": 1646582222,
+            "ParentUID": 812705911,
             "Name": "B_L_Foot",
             "Translation": [
                 59.505074,
@@ -1851,8 +1851,8 @@
             "Camera": 0
         },
         {
-            "UID": 1403315045,
-            "ParentUID": 1267424468,
+            "UID": 1876317355,
+            "ParentUID": 1646582222,
             "Name": "B_L_Toe0",
             "Translation": [
                 14.912971,
@@ -1888,8 +1888,8 @@
             "Camera": 0
         },
         {
-            "UID": 428227680,
-            "ParentUID": 1223897239,
+            "UID": 1807809092,
+            "ParentUID": 1313776770,
             "Name": "B_R_Thigh",
             "Translation": [
                 0,
@@ -1925,8 +1925,8 @@
             "Camera": 0
         },
         {
-            "UID": 123837979,
-            "ParentUID": 428227680,
+            "UID": 1755210756,
+            "ParentUID": 1807809092,
             "Name": "B_R_Calf",
             "Translation": [
                 59.167969,
@@ -1962,8 +1962,8 @@
             "Camera": 0
         },
         {
-            "UID": 1724576901,
-            "ParentUID": 123837979,
+            "UID": 1266078235,
+            "ParentUID": 1755210756,
             "Name": "B_R_Foot",
             "Translation": [
                 59.505074,
@@ -1999,8 +1999,8 @@
             "Camera": 0
         },
         {
-            "UID": 957720751,
-            "ParentUID": 1724576901,
+            "UID": 19024173,
+            "ParentUID": 1266078235,
             "Name": "B_R_Toe0",
             "Translation": [
                 14.912968,

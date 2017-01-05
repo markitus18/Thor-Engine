@@ -10,12 +10,12 @@ public:
 	R_Bone();
 	~R_Bone();
 
-	uint numWeights;
-	uint* weightsIndex;
-	float* weights;
-	float4x4 offset;
+	uint numWeights = 0;
+	uint* weightsIndex = nullptr;
+	float* weights = nullptr;
+	float4x4 offset = float4x4::identity;
 
-	uint64 meshID;
+	uint64 meshID = 0;
 };
 
 #endif __R_BONE_H__

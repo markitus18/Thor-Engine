@@ -47,15 +47,20 @@ void C_Mesh::StartBoneDeformation()
 		R_Mesh* rMesh = (R_Mesh*)GetResource();
 		animMesh->buffersSize[R_Mesh::b_vertices] = rMesh->buffersSize[R_Mesh::b_vertices];
 		animMesh->buffersSize[R_Mesh::b_normals] = rMesh->buffersSize[R_Mesh::b_normals];
+		animMesh->buffersSize[R_Mesh::b_indices] = rMesh->buffersSize[R_Mesh::b_indices];
+
 		animMesh->vertices = new float[rMesh->buffersSize[R_Mesh::b_vertices] * 3];
 		animMesh->normals = new float[rMesh->buffersSize[R_Mesh::b_normals] * 3];
+		animMesh->indices = new uint [rMesh->buffersSize[R_Mesh::b_indices]];
+		memcpy(animMesh->indices, rMesh->indices, rMesh->buffersSize[R_Mesh::b_indices] * sizeof(uint));
 	}
+
 	R_Mesh* rMesh = (R_Mesh*)GetResource();
-	memcpy(animMesh->vertices, rMesh->vertices, rMesh->buffersSize[R_Mesh::b_vertices] * sizeof(float) * 3);
+	memset(animMesh->vertices, 0, rMesh->buffersSize[R_Mesh::b_vertices] * sizeof(float) * 3);
 
 	if (rMesh->buffersSize[R_Mesh::b_normals] > 0)
 	{
-		memcpy(animMesh->normals, rMesh->normals, rMesh->buffersSize[R_Mesh::b_normals] * sizeof(float) * 3);
+		memset(animMesh->normals, 0, rMesh->buffersSize[R_Mesh::b_normals] * sizeof(float) * 3);
 	}
 }
 
@@ -71,7 +76,7 @@ void C_Mesh::DeformAnimMesh()
 		R_Mesh* rMesh = (R_Mesh*)GetResource();
 		C_Bone* rootBone = bones[i]->GetRoot();
 
-		float4x4 matrix = bones[i]->GetSystemTransform();
+		float4x4 matrix = bones[i]->gameObject->GetComponent<C_Transform>()->GetGlobalTransform();
 		matrix = matrix * gameObject->GetComponent<C_Transform>()->GetTransform().Inverted();// bones[i]->GetSystemTransform();// * rBone->offset;
 
 		matrix = matrix * rBone->offset;
@@ -80,13 +85,6 @@ void C_Mesh::DeformAnimMesh()
 		{
 			uint index = rBone->weightsIndex[i];
 			float3 originalV(&rMesh->vertices[index * 3]);
-
-			//if (animMesh->indices[index]++ == 0)
-			//{
-			//	memset(&animMesh->vertices[index * 3], 0, sizeof(float) * 3);
-			//	if (rMesh->normals)
-			//		memset(&animMesh->normals[index * 3], 0, sizeof(float) * 3);
-			//}
 
 			float3 toAdd = matrix.TransformPos(originalV);
 

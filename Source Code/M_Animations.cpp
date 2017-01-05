@@ -216,7 +216,7 @@ R_Bone* M_Animations::ImportBone(const aiBone* bone, uint64 ID, const char* sour
 	rBone->weights = new float[rBone->numWeights];
 	rBone->weightsIndex = new uint[rBone->numWeights];
 	rBone->meshID = meshID;
-	//TODO: import bone offset matrix
+
 	rBone->offset = float4x4(bone->mOffsetMatrix.a1, bone->mOffsetMatrix.a2, bone->mOffsetMatrix.a3, bone->mOffsetMatrix.a4,
 							bone->mOffsetMatrix.b1, bone->mOffsetMatrix.b2, bone->mOffsetMatrix.b3, bone->mOffsetMatrix.b4,
 							bone->mOffsetMatrix.c1, bone->mOffsetMatrix.c2, bone->mOffsetMatrix.c3, bone->mOffsetMatrix.c4,
@@ -243,7 +243,7 @@ R_Bone* M_Animations::ImportBone(const aiBone* bone, uint64 ID, const char* sour
 
 bool M_Animations::SaveBoneResource(R_Bone* bone)
 {
-	uint size = sizeof(uint) * 2 + bone->original_file.size() + bone->name.size() + sizeof(uint) + sizeof(uint) + sizeof(bone->numWeights	) * sizeof(float) + sizeof(bone->numWeights) * sizeof(uint)
+	uint size = sizeof(uint) * 2 + bone->original_file.size() + bone->name.size() + sizeof(uint64) + sizeof(uint) + bone->numWeights * sizeof(float) + bone->numWeights * sizeof(uint)
 		+ sizeof(float) * 16;
 
 	char* data = new char[size];
@@ -265,20 +265,20 @@ bool M_Animations::SaveBoneResource(R_Bone* bone)
 	memcpy(cursor, bone->name.c_str(), bone->name.size());
 	cursor += bone->name.size();
 
-	memcpy(cursor, &bone->meshID, sizeof(uint));
-	cursor += sizeof(uint);
+	memcpy(cursor, &bone->meshID, sizeof(uint64));
+	cursor += sizeof(uint64);
 
 	//Num weights
 	memcpy(cursor, &bone->numWeights, sizeof(uint));
 	cursor += sizeof(uint);
 
 	//Weights
-	memcpy(cursor, bone->weights, sizeof(float) * sizeof(bone->numWeights));
-	cursor += sizeof(float) * sizeof(bone->numWeights);
+	memcpy(cursor, bone->weights, sizeof(float) * bone->numWeights);
+	cursor += sizeof(float) * bone->numWeights;
 
 	//Weights index
-	memcpy(cursor, bone->weightsIndex, sizeof(uint) * sizeof(bone->numWeights));
-	cursor += sizeof(uint) * sizeof(bone->numWeights);
+	memcpy(cursor, bone->weightsIndex, sizeof(uint) * bone->numWeights);
+	cursor += sizeof(uint) * bone->numWeights;
 
 	//Offset matrix
 	memcpy(cursor, &bone->offset, sizeof(float) * 16);
@@ -330,6 +330,9 @@ R_Bone* M_Animations::LoadBone(uint64 ID)
 			bone->name = string;
 			RELEASE_ARRAY(string);
 		}
+
+		memcpy(&bone->meshID, cursor, sizeof(uint64));
+		cursor += sizeof(uint64);
 
 		memcpy(&bone->numWeights, cursor, sizeof(uint));
 		cursor += sizeof(uint);

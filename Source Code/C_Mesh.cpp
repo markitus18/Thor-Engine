@@ -71,7 +71,7 @@ void C_Mesh::DeformAnimMesh()
 		R_Mesh* rMesh = (R_Mesh*)GetResource();
 		C_Bone* rootBone = bones[i]->GetRoot();
 
-		float4x4 matrix = bones[i]->gameObject->GetComponent<C_Transform>()->GetGlobalTransform();
+		float4x4 matrix = bones[i]->GetSystemTransform();
 		matrix = matrix * gameObject->GetComponent<C_Transform>()->GetTransform().Inverted();// bones[i]->GetSystemTransform();// * rBone->offset;
 
 		matrix = matrix * rBone->offset;

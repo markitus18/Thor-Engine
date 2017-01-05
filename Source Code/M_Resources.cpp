@@ -35,7 +35,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	return true;
 }
 
@@ -361,6 +361,14 @@ Resource* M_Resources::GetResource(uint64 ID)
 				}
 				case (Resource::ANIMATION):
 				{
+					ret = App->moduleAnimations->LoadAnimation(ID);
+					LoadResource(ret);
+					break;
+				}
+				case (Resource::BONE):
+				{
+					ret = App->moduleAnimations->LoadBone(ID);
+					LoadResource(ret);
 					break;
 				}
 			}

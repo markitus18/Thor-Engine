@@ -111,7 +111,7 @@ void C_Animation::Update(float dt)
 	if (playing == true)
 	{
 		UpdateChannelsTransform(currentFrame);
-		UpdateMeshAnimation(gameObject);
+	//	UpdateMeshAnimation(gameObject);
 	}
 	
 

@@ -188,7 +188,8 @@ void P_Explorer::DrawNodeImage(const PathNode& node)
 		{
 			R_Prefab* prefab = (R_Prefab*)resource;
 			R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
-			ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+			if (tex)
+				ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
 		}
 		else
 		{

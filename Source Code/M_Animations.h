@@ -37,14 +37,14 @@ public:
 	//Save utils
 	uint CalcChannelSize(const Channel& channel) const;
 
-	void SaveChannelData(const Channel& channel, char* cursor);
-	void SaveKeys(const std::map<double, float3>&, char* cursor);
-	void SaveKeys(const std::map<double, Quat>&, char* cursor);
+	void SaveChannelData(const Channel& channel, char** cursor);
+	void SaveKeys(const std::map<double, float3>&, char** cursor);
+	void SaveKeys(const std::map<double, Quat>&, char** cursor);
 
 	//Load utils
-	void LoadChannelData(Channel& channel, char* cursor);
-	void LoadKeys(std::map<double, float3>&, char* cursor, uint size);
-	void LoadKeys(std::map<double, Quat>&, char* cursor, uint size);
+	void LoadChannelData(Channel& channel, char** cursor);
+	void LoadKeys(std::map<double, float3>&, char** cursor, uint size);
+	void LoadKeys(std::map<double, Quat>&, char** cursor, uint size);
 
 	bool Init(Config& config);
 	bool CleanUp();

@@ -70,9 +70,9 @@ public:
 
 	C_Camera* GetActiveCamera();
 
-	void AddMesh(float4x4 transform, const C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
+	void AddMesh(float4x4 transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
 	void DrawAllMeshes();
-	void DrawMesh(const RenderMesh& mesh);
+	void DrawMesh(RenderMesh& mesh);
 
 	void AddAABB(const AABB& box, const Color& color);
 	void AddOBB(const OBB& box, const Color& color);

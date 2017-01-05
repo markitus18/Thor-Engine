@@ -152,7 +152,7 @@ update_status M_Scene::Update(float dt)
 		for (uint i = 0; i < gameObjects.size(); i++)
 		{
 			if (gameObjects[i]->name != "root");
-			gameObjects[i]->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
+			((GameObject*)gameObjects[i])->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
 		}
 		gameObjects.clear();
 	}

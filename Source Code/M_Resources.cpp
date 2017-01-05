@@ -275,7 +275,7 @@ uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source
 	return ret;
 }
 
-uint64 M_Resources::ImportRBone(const aiBone* bone, const char* source_file, const char* name)
+uint64 M_Resources::ImportRBone(const aiBone* bone, const char* source_file, const char* name, uint64 meshID)
 {
 	uint64 ret = 0;
 	uint64 newID = 0;
@@ -295,7 +295,7 @@ uint64 M_Resources::ImportRBone(const aiBone* bone, const char* source_file, con
 	}
 
 	//Importing resource
-	resource = App->moduleAnimations->ImportAnimation(anim, newID, source_file);
+	resource = App->moduleAnimations->ImportBone(bone, newID, source_file, meshID);
 	if (resource)
 	{
 		resource->instances = instances;
@@ -437,6 +437,7 @@ Component::Type M_Resources::ResourceToComponentType(Resource::Type type)
 	case Resource::MESH: return Component::Mesh;
 	case Resource::MATERIAL: return Component::Material;
 	case Resource::ANIMATION: return Component::Animation;
+	case Resource::BONE: return Component::Bone;
 	default: return Component::None;
 	}
 }

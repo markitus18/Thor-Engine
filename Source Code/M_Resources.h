@@ -55,7 +55,7 @@ public:
 	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
 	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name);
-	uint64 ImportRBone(const aiBone* bone, const char* source_file, const char* name);
+	uint64 ImportRBone(const aiBone* bone, const char* source_file, const char* name, uint64 meshID);
 
 	///Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene

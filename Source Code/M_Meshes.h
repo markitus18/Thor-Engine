@@ -24,9 +24,6 @@ class M_Meshes : public Module
 
 		bool	SaveMeshResource(const R_Mesh*);
 		R_Mesh* LoadMeshResource(u64 ID);
-
-	private:
-		std::vector<C_Mesh*> meshes;
 };
 
 #endif

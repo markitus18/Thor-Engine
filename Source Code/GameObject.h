@@ -12,6 +12,7 @@
 #include "C_Camera.h"
 #include "C_Transform.h"
 #include "C_Animation.h"
+#include "C_Bone.h"
 
 class C_Transform;
 
@@ -23,8 +24,8 @@ public:
 	~GameObject();
 
 	void Update(float dt);
-	void Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const;
-	void DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBosSelected) const;
+	void Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected);
+	void DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBosSelected);
 
 	void OnUpdateTransform();
 	const AABB& GetAABB() const;

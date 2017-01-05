@@ -7,6 +7,8 @@
 
 class GameObject;
 class Channel;
+class C_Mesh;
+class C_Bone;
 
 class C_Animation : public Component
 {
@@ -27,6 +29,7 @@ public:
 	~C_Animation();
 
 	void LinkChannels();
+	void LinkBones();
 	void DrawLinkedBones() const;
 
 	void Start();
@@ -40,11 +43,17 @@ private:
 	Quat GetChannelRotation(Link& link, float currentKey, Quat default);
 	float3 GetChannelScale(Link& link, float currentKey, float3 default);
 
+	void CollectMeshesBones(GameObject* gameObject, std::map<uint64, C_Mesh*>& meshes, std::vector<C_Bone*>& bones);
+	void UpdateMeshAnimation(GameObject* gameObject);
+	
 private:
 	bool started = false;
 	bool playing = true;
 	float currentFrame = 0.0f;
 	std::vector<Link> links;
+
+	bool channelsLinked = false;
+	bool bonesLinked = false;
 
 };
 

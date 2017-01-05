@@ -8,6 +8,7 @@
 #include <map>
 
 class R_Animation;
+class R_Bone;
 class GameObject;
 struct aiScene;
 struct aiAnimation;
@@ -28,8 +29,8 @@ public:
 	R_Animation* LoadAnimation(uint64 ID);
 
 	//Bone data management
-	void ImportSceneBones(const std::vector<const aiMesh*>& bonedMeshes, GameObject* root);
-	R_Bone* ImportBone(const aiBone*, uint64 ID, const char* source_file);
+	void ImportSceneBones(const std::vector<const aiMesh*>& bonedMeshes, const std::vector<const GameObject*>& meshGameObjects, GameObject* root, const char* source_file);
+	R_Bone* ImportBone(const aiBone*, uint64 ID, const char* source_file, uint64 meshID);
 	bool SaveBoneResource(R_Bone* bone);
 	R_Bone* LoadBone(uint64 ID);
 	

@@ -4,10 +4,6 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 
-
-
-
-
 GameObject::GameObject()
 {
 }
@@ -61,11 +57,11 @@ void GameObject::Update(float dt)
 	}
 }
 
-void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const
+void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected)
 {
 	if (active && IsParentActive())
 	{
-		const C_Mesh* mesh = GetComponent<C_Mesh>();
+		C_Mesh* mesh = GetComponent<C_Mesh>();
 		if (mesh)
 		{
 			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected(), flipped_normals);
@@ -89,7 +85,7 @@ void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSel
 	}
 }
 
-void GameObject::DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected) const
+void GameObject::DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected)
 {
 	Draw(shaded, wireframe, drawBox, drawBoxSelected);
 
@@ -223,6 +219,14 @@ Component* GameObject::CreateComponent(Component::Type type)
 			if (!HasComponent(Component::Type::Animation))
 			{
 				new_component = new C_Animation(this);
+			}
+			break;
+		}
+		case(Component::Type::Bone):
+		{
+			if (!HasComponent(Component::Type::Bone))
+			{
+				new_component = new C_Bone(this);
 			}
 		}
 	}

@@ -324,7 +324,7 @@ void M_Renderer3D::DrawAllScene()
 	App->moduleEditor->ReadTimer(box_draw_timer);
 }
 
-void M_Renderer3D::AddMesh(float4x4 transform, const C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
+void M_Renderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
 {
 	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected, flippedNormals));
 }
@@ -344,18 +344,33 @@ void M_Renderer3D::DrawAllMeshes()
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void M_Renderer3D::DrawMesh(const RenderMesh& rMesh)
+void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 {
 	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
+
+	//Generate buffers for animation mesh
+	if (rMesh.mesh->animMesh != nullptr)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh->buffers[R_Mesh::b_vertices]);
+		glBufferData(GL_ARRAY_BUFFER, resMesh->buffersSize[R_Mesh::b_vertices] * sizeof(float) * 3, rMesh.mesh->animMesh->vertices, GL_STATIC_DRAW);
+
+		if (resMesh->buffersSize[R_Mesh::b_normals] > 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh->buffers[R_Mesh::b_normals]);
+			glBufferData(GL_ARRAY_BUFFER, resMesh->buffersSize[R_Mesh::b_normals] * sizeof(float) * 3, rMesh.mesh->animMesh->normals, GL_STATIC_DRAW);
+		}
+	}
 
 	glPushMatrix();
 	glMultMatrixf((float*)&rMesh.transform);
 
-	glBindBuffer(GL_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_vertices]);
+	glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh ? rMesh.mesh->animMesh->buffers[R_Mesh::b_vertices] :  resMesh->buffers[R_Mesh::b_vertices]);
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_indices]);
 
+
+	//Selected wireframe drawing
 	if (rMesh.selected || rMesh.parentSelected || rMesh.wireframe)
 	{
 		if (rMesh.selected)
@@ -393,7 +408,7 @@ void M_Renderer3D::DrawMesh(const RenderMesh& rMesh)
 				glFrontFace(GL_CW);
 			}
 
-			glBindBuffer(GL_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_normals]);
+			glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh ? rMesh.mesh->animMesh->buffers[R_Mesh::b_normals] : resMesh->buffers[R_Mesh::b_normals]);
 			glNormalPointer(GL_FLOAT, 0, nullptr);
 		}
 
@@ -499,13 +514,19 @@ void M_Renderer3D::DrawAllLines()
 //Component buffers management -----------------
 void M_Renderer3D::LoadBuffers(R_Mesh* mesh)
 {
-	glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_vertices]);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_vertices]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->buffersSize[R_Mesh::b_vertices] * 3, mesh->vertices, GL_STATIC_DRAW);
+	if (mesh->buffersSize[R_Mesh::b_vertices] > 0)
+	{
+		glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_vertices]);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_vertices]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->buffersSize[R_Mesh::b_vertices] * 3, mesh->vertices, GL_STATIC_DRAW);
+	}
 
-	glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_indices]);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_indices]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices], mesh->indices, GL_STATIC_DRAW);
+	if (mesh->buffersSize[R_Mesh::b_indices] > 0)
+	{
+		glGenBuffers(1, (GLuint*)&mesh->buffers[R_Mesh::b_indices]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->buffers[R_Mesh::b_indices]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices], mesh->indices, GL_STATIC_DRAW);
+	}
 
 	if (mesh->buffersSize[R_Mesh::b_normals] > 0)
 	{

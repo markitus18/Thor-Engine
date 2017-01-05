@@ -20,6 +20,7 @@ public:
 		Material,
 		Camera,
 		Animation,
+		Bone,
 	};
 
 public:
@@ -31,9 +32,6 @@ public:
 	Type GetType() const;
 
 	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
-
-	virtual void Save();
-	virtual void Load();
 
 	//Resource handling
 	void SetResource(Resource* resource);

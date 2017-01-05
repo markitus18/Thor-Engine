@@ -182,26 +182,45 @@ R_Animation* M_Animations::LoadAnimation(uint64 ID)
 	}
 }
 
-void M_Animations::ImportSceneBones(const std::vector<const aiMesh*>& bonedMeshes, GameObject* root)
+void M_Animations::ImportSceneBones(const std::vector<const aiMesh*>& bonedMeshes, const std::vector<const GameObject*>& meshGameObjects, GameObject* root, const char* source_file)
 {
 	std::map<std::string, GameObject*> map;
 	CollectGameObjectNames(root, map);
 
 	for (uint i = 0; i < bonedMeshes.size(); i++)
 	{
-		for (uint b = 0; b = bonedMeshes[i]->mNumBones; b++)
+		for (uint b = 0; b < bonedMeshes[i]->mNumBones; b++)
 		{
-			R_Bone* bone = new R_Bone();
+			uint meshID = 0;
+			const C_Mesh* mesh = meshGameObjects[i]->GetComponent<C_Mesh>();
+			if (mesh != nullptr)
+			{
+				meshID = mesh->GetResource()->GetID();
+			}
+
+			uint64 ID = App->moduleResources->ImportRBone(bonedMeshes[i]->mBones[b], source_file, bonedMeshes[i]->mBones[b]->mName.C_Str(), meshID);
+			std::map<std::string, GameObject*>::iterator bone_it = map.find(bonedMeshes[i]->mBones[b]->mName.C_Str());
+			if (bone_it != map.end())
+			{
+				C_Bone* bone = (C_Bone*)bone_it->second->CreateComponent(Component::Type::Bone);
+				bone->SetResource(ID);
+			}
 		}
 	}
 }
 
-R_Bone* M_Animations::ImportBone(const aiBone* bone, uint64 ID, const char* source_file)
+R_Bone* M_Animations::ImportBone(const aiBone* bone, uint64 ID, const char* source_file, uint64 meshID)
 {
 	R_Bone* rBone = new R_Bone();
 	rBone->numWeights = bone->mNumWeights;
 	rBone->weights = new float[rBone->numWeights];
 	rBone->weightsIndex = new uint[rBone->numWeights];
+	rBone->meshID = meshID;
+	//TODO: import bone offset matrix
+	rBone->offset = float4x4(bone->mOffsetMatrix.a1, bone->mOffsetMatrix.a2, bone->mOffsetMatrix.a3, bone->mOffsetMatrix.a4,
+							bone->mOffsetMatrix.b1, bone->mOffsetMatrix.b2, bone->mOffsetMatrix.b3, bone->mOffsetMatrix.b4,
+							bone->mOffsetMatrix.c1, bone->mOffsetMatrix.c2, bone->mOffsetMatrix.c3, bone->mOffsetMatrix.c4,
+							bone->mOffsetMatrix.d1, bone->mOffsetMatrix.d2, bone->mOffsetMatrix.d3, bone->mOffsetMatrix.d4);
 
 	for (uint i = 0; i < rBone->numWeights; i++)
 		memcpy(rBone->weights + i, &((bone->mWeights + i)->mWeight), sizeof(float));
@@ -224,7 +243,8 @@ R_Bone* M_Animations::ImportBone(const aiBone* bone, uint64 ID, const char* sour
 
 bool M_Animations::SaveBoneResource(R_Bone* bone)
 {
-	uint size = sizeof(uint) * 2 + bone->original_file.size() + bone->name.size() + sizeof(uint) + sizeof(bone->numWeights	) * sizeof(float) + sizeof(bone->numWeights) * sizeof(uint);
+	uint size = sizeof(uint) * 2 + bone->original_file.size() + bone->name.size() + sizeof(uint) + sizeof(uint) + sizeof(bone->numWeights	) * sizeof(float) + sizeof(bone->numWeights) * sizeof(uint)
+		+ sizeof(float) * 16;
 
 	char* data = new char[size];
 	char* cursor = data;
@@ -245,6 +265,9 @@ bool M_Animations::SaveBoneResource(R_Bone* bone)
 	memcpy(cursor, bone->name.c_str(), bone->name.size());
 	cursor += bone->name.size();
 
+	memcpy(cursor, &bone->meshID, sizeof(uint));
+	cursor += sizeof(uint);
+
 	//Num weights
 	memcpy(cursor, &bone->numWeights, sizeof(uint));
 	cursor += sizeof(uint);
@@ -256,6 +279,10 @@ bool M_Animations::SaveBoneResource(R_Bone* bone)
 	//Weights index
 	memcpy(cursor, bone->weightsIndex, sizeof(uint) * sizeof(bone->numWeights));
 	cursor += sizeof(uint) * sizeof(bone->numWeights);
+
+	//Offset matrix
+	memcpy(cursor, &bone->offset, sizeof(float) * 16);
+	cursor += sizeof(float) * 16;
 
 	uint ret = App->fileSystem->Save(bone->resource_file.c_str(), data, size);
 	RELEASE_ARRAY(data);
@@ -312,6 +339,16 @@ R_Bone* M_Animations::LoadBone(uint64 ID)
 
 		memcpy(&bone->weightsIndex, cursor, sizeof(uint) * bone->numWeights);
 		cursor += sizeof(uint) * bone->numWeights;
+
+		float* offset = new float[16];
+		memcpy(offset, cursor, sizeof(float) * 16);
+		cursor += sizeof(float) * 16;
+		bone->offset = float4x4(offset[0], offset[1], offset[2], offset[3],
+								offset[4], offset[5], offset[6], offset[7], 
+								offset[8], offset[9], offset[10], offset[11], 
+								offset[12], offset[13], offset[14], offset[15]);
+
+		RELEASE_ARRAY(offset);
 
 		bone->ID = ID;
 		bone->resource_file = full_path;

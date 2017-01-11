@@ -10,7 +10,7 @@
 
 C_Animation::C_Animation(GameObject* gameObject) : Component(Type::Animation, gameObject, true)
 {
-
+	AddAnimation();
 }
 
 C_Animation::~C_Animation()
@@ -91,30 +91,57 @@ void C_Animation::Start()
 
 void C_Animation::Update(float dt)
 {
-	
-	if (started == false)
-		Start();
-	R_Animation* resource = (R_Animation*)GetResource();
-
-	currentFrame += resource->ticksPerSecond * dt;
-	if (currentFrame >= resource->duration)
-	{
-		if (resource->loopable)
-		{
-			currentFrame = currentFrame - resource->duration;
-		}
-		else
-		{
-			playing = false;
-		}
-	}
 	if (playing == true)
 	{
-		UpdateChannelsTransform(currentFrame);
+		if (started == false)
+			Start();
+		R_Animation* resource = (R_Animation*)GetResource();
+
+		currentFrame += (animations[current_animation].speed == 0 ? resource->ticksPerSecond : animations[current_animation].speed) * dt;
+
+		uint endFrame = (animations[current_animation].end_frame == 0) ? resource->duration : animations[current_animation].end_frame;
+		if (currentFrame >= endFrame)
+		{
+			if (animations[current_animation].loopable == true)
+			{
+				currentFrame = animations[current_animation].start_fame;// + (currentFrame - endFrame);
+			}
+			else
+			{
+				playing = false;
+				return;
+			}
+		}
+
+		UpdateChannelsTransform(currentFrame, animations[current_animation]);
 		UpdateMeshAnimation(gameObject);
 	}
+
 	
 
+}
+
+void C_Animation::AddAnimation()
+{
+	std::string new_name = "Default";
+//	for (uint i = 0; i < animations.size(); i++)
+//	{
+//		if (animations[i].find("Default"))
+//	}
+	AddAnimation(new_name.c_str(), 0, 0, 24);
+}
+
+void C_Animation::AddAnimation(const char* name, uint init, uint end, float ticksPerSec)
+{
+	ClearDefaultAnimation();
+
+	AnimationSettings animation;
+	animation.name = name;
+	animation.start_fame = init;
+	animation.end_frame = end;
+	animation.speed = ticksPerSec;
+
+	animations.push_back(animation);
 }
 
 Component::Type C_Animation::GetType()
@@ -122,15 +149,15 @@ Component::Type C_Animation::GetType()
 	return Component::Type::Animation;
 }
 
-void C_Animation::UpdateChannelsTransform(float currentKey)
+void C_Animation::UpdateChannelsTransform(float currentKey, const AnimationSettings& settings)
 {
 	for (uint i = 0; i < links.size(); i++)
 	{
 		C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
 
-		float3 position = GetChannelPosition(links[i], currentKey, transform->GetPosition());
-		Quat rotation = GetChannelRotation(links[i], currentKey, transform->GetQuatRotation());
-		float3 scale = GetChannelScale(links[i], currentKey, transform->GetScale());
+		float3 position = GetChannelPosition(links[i], currentKey, transform->GetPosition(), settings);
+		Quat rotation = GetChannelRotation(links[i], currentKey, transform->GetQuatRotation(), settings);
+		float3 scale = GetChannelScale(links[i], currentKey, transform->GetScale(), settings);
 
 
 		transform->SetPosition(position);
@@ -139,14 +166,14 @@ void C_Animation::UpdateChannelsTransform(float currentKey)
 	}
 }
 
-float3 C_Animation::GetChannelPosition(Link& link, float currentKey, float3 default)
+float3 C_Animation::GetChannelPosition(Link& link, float currentKey, float3 default, const AnimationSettings& settings)
 {
 	float3 position = default;
 
 	if (link.channel->HasPosKey())
 	{
-		std::map<double, float3>::iterator previous = link.channel->GetPrevPosKey(link.prevPosKey, currentKey);
-		std::map<double, float3>::iterator next = link.channel->GetNextPosKey(link.prevPosKey, currentKey);
+		std::map<double, float3>::iterator previous = link.channel->GetPrevPosKey(link.prevPosKey, currentKey, settings.start_fame, settings.end_frame);
+		std::map<double, float3>::iterator next = link.channel->GetNextPosKey(link.prevPosKey, currentKey, settings.start_fame, settings.end_frame);
 		link.prevPosKey = previous;
 
 		//If both keys are the same, no need to blend
@@ -163,14 +190,14 @@ float3 C_Animation::GetChannelPosition(Link& link, float currentKey, float3 defa
 	return position;
 }
 
-Quat C_Animation::GetChannelRotation(Link& link, float currentKey, Quat default)
+Quat C_Animation::GetChannelRotation(Link& link, float currentKey, Quat default, const AnimationSettings& settings)
 {
 	Quat rotation = default;
 
 	if (link.channel->HasRotKey())
 	{
-		std::map<double, Quat>::iterator previous = link.channel->GetPrevRotKey(link.prevRotKey, currentKey);
-		std::map<double, Quat>::iterator next = link.channel->GetNextRotKey(link.prevRotKey, currentKey);
+		std::map<double, Quat>::iterator previous = link.channel->GetPrevRotKey(link.prevRotKey, currentKey, settings.start_fame, settings.end_frame);
+		std::map<double, Quat>::iterator next = link.channel->GetNextRotKey(link.prevRotKey, currentKey, settings.start_fame, settings.end_frame);
 		link.prevRotKey = previous;
 
 		//If both keys are the same, no need to blend
@@ -186,14 +213,14 @@ Quat C_Animation::GetChannelRotation(Link& link, float currentKey, Quat default)
 	return rotation;
 }
 
-float3 C_Animation::GetChannelScale(Link& link, float currentKey, float3 default)
+float3 C_Animation::GetChannelScale(Link& link, float currentKey, float3 default, const AnimationSettings& settings)
 {
 	float3 scale = default;
 
 	if (link.channel->HasScaleKey())
 	{
-		std::map<double, float3>::iterator previous = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey);
-		std::map<double, float3>::iterator next = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey);
+		std::map<double, float3>::iterator previous = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey, settings.start_fame, settings.end_frame);
+		std::map<double, float3>::iterator next = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey, settings.start_fame, settings.end_frame);
 		link.prevScaleKey = previous;
 
 		//If both keys are the same, no need to blend
@@ -240,4 +267,12 @@ void C_Animation::UpdateMeshAnimation(GameObject* gameObject)
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 		UpdateMeshAnimation(gameObject->childs[i]);
+}
+
+void C_Animation::ClearDefaultAnimation()
+{
+	if (animations.size() == 1 && animations[0].name == "Default")
+	{
+		animations.erase(animations.begin());
+	}
 }

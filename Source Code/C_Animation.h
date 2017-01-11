@@ -10,6 +10,15 @@ class Channel;
 class C_Mesh;
 class C_Bone;
 
+struct AnimationSettings
+{
+	std::string name;
+	uint start_fame;
+	uint end_frame;
+	float speed;
+	bool loopable;
+};
+
 class C_Animation : public Component
 {
 	//Careful, this could be dangerous, duplicating pointers
@@ -34,21 +43,33 @@ public:
 
 	void Start();
 	void Update(float dt);
+
+	//Animation configuration management
+	void AddAnimation();
+	void AddAnimation(const char* name, uint init, uint end, float ticksPerSec);
+
 	static Component::Type GetType();
 
 private:
 
-	void UpdateChannelsTransform(float dt);
-	float3 GetChannelPosition(Link& link, float currentKey, float3 default);
-	Quat GetChannelRotation(Link& link, float currentKey, Quat default);
-	float3 GetChannelScale(Link& link, float currentKey, float3 default);
+	void UpdateChannelsTransform(float dt, const AnimationSettings& settings);
+	float3 GetChannelPosition(Link& link, float currentKey, float3 default, const AnimationSettings& settings);
+	Quat GetChannelRotation(Link& link, float currentKey, Quat default, const AnimationSettings& settings);
+	float3 GetChannelScale(Link& link, float currentKey, float3 default, const AnimationSettings& settings);
 
 	void CollectMeshesBones(GameObject* gameObject, std::map<uint64, C_Mesh*>& meshes, std::vector<C_Bone*>& bones);
 	void UpdateMeshAnimation(GameObject* gameObject);
-	
+
+	void ClearDefaultAnimation();
+
+public:
+	std::vector<AnimationSettings> animations;
+	uint current_animation = 0;
+	bool playing = false;
+
 private:
 	bool started = false;
-	bool playing = true;
+
 	float currentFrame = 0.0f;
 	std::vector<Link> links;
 

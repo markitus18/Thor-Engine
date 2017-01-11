@@ -254,9 +254,42 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 		if (ImGui::CollapsingHeader("Animation", flags))
 		{
 			R_Animation* rAnimation = (R_Animation*)animation->GetResource();
-			ImGui::DragFloat("Duration", &rAnimation->duration);
-			ImGui::DragFloat("Ticks per second", &rAnimation->ticksPerSecond);
-			ImGui::Checkbox("Loopable", &rAnimation->loopable);
+			ImGui::Checkbox("Playing", &animation->playing);
+			ImGui::Text("Animations size: %i", animation->animations.size());
+			ImGui::Separator();
+			ImGui::Separator();
+			for (uint i = 0; i < animation->animations.size(); i++)
+			{			
+				ImGui::Text(animation->animations[i].name.c_str());
+				ImGui::Separator();
+				ImGui::Checkbox("Loop", &animation->animations[i].loopable);
+
+				int start_frame = animation->animations[i].start_fame;
+				if (ImGui::InputInt("Start Frame", &start_frame))
+				{
+					if (start_frame >= 0)
+						animation->animations[i].start_fame = start_frame;
+				}
+
+				int end_frame = animation->animations[i].start_fame;
+				if (ImGui::InputInt("End Frame", &end_frame))
+				{
+					if (end_frame >= 0 && end_frame != animation->animations[i].end_frame)
+					{
+						//TODO: restart animation?
+						animation->animations[i].end_frame = end_frame;
+					}
+				}
+
+				float speed = animation->animations[i].speed;
+				if (ImGui::InputFloat("Speed", &speed))
+				{
+					if (speed >= 0)
+						animation->animations[i].speed = speed;
+				}
+				ImGui::Separator();
+				ImGui::Separator();
+			}
 		}
 	}
 }

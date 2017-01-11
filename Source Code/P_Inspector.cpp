@@ -271,7 +271,7 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 						animation->animations[i].start_fame = start_frame;
 				}
 
-				int end_frame = animation->animations[i].start_fame;
+				int end_frame = animation->animations[i].end_frame;
 				if (ImGui::InputInt("End Frame", &end_frame))
 				{
 					if (end_frame >= 0 && end_frame != animation->animations[i].end_frame)

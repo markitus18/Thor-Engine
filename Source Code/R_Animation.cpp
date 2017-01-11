@@ -91,7 +91,7 @@ std::map<double, Quat>::iterator Channel::GetNextRotKey(std::map<double, Quat>::
 	{
 		std::map<double, Quat>::iterator it = previous;
 		it++;
-		if (it != rotationKeys.end() && (end == 0 ? true : it->first < end))
+		if (it != rotationKeys.end() && (end == 0 ? true : it->first <= end))
 			return it;
 		else
 			return previous;

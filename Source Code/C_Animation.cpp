@@ -11,6 +11,9 @@
 C_Animation::C_Animation(GameObject* gameObject) : Component(Type::Animation, gameObject, true)
 {
 	AddAnimation();
+	//TODO: ask Ricard about why a cast is needed
+	SetAnimation((uint)0);
+	AddAnimation("Default02", 0, 0, 24);
 }
 
 C_Animation::~C_Animation()
@@ -86,6 +89,7 @@ void C_Animation::Start()
 		links[i].prevScaleKey = links[i].channel->scaleKeys.begin();
 	}
 	started = true;
+	animations[current_animation].current = true;
 
 }
 
@@ -113,7 +117,7 @@ void C_Animation::Update(float dt)
 			}
 		}
 
-		UpdateChannelsTransform(currentFrame, animations[current_animation]);
+		UpdateChannelsTransform(animations[current_animation]);
 		UpdateMeshAnimation(gameObject);
 	}
 
@@ -133,8 +137,6 @@ void C_Animation::AddAnimation()
 
 void C_Animation::AddAnimation(const char* name, uint init, uint end, float ticksPerSec)
 {
-	ClearDefaultAnimation();
-
 	AnimationSettings animation;
 	animation.name = name;
 	animation.start_fame = init;
@@ -144,20 +146,59 @@ void C_Animation::AddAnimation(const char* name, uint init, uint end, float tick
 	animations.push_back(animation);
 }
 
+//TODO: restart animation even when it is already playing?
+void C_Animation::SetAnimation(uint index, float blendTime)
+{
+	if (index != current_animation && index < animations.size())
+	{
+		if (current_animation < animations.size())
+		{
+			animations[current_animation].current = false;
+
+			if (blendTime > 0)
+			{
+				previous_animation = current_animation;
+				prevBlendFrame = currentFrame;
+				currentBlend = 0;
+				blendDuration = animations[current_animation].speed * blendTime;
+			}
+		}
+		current_animation = index;
+		animations[current_animation].current = true;
+		currentFrame = animations[current_animation].start_fame;
+	}
+}
+
+//TODO: restart animation even when it is already playing?
+void C_Animation::SetAnimation(const char* name, float blendTime)
+{
+	if (animations[current_animation].name != name)
+	{
+		for (uint i = 0; i < animations.size(); i++)
+		{
+			if (animations[i].name == name)
+			{
+				SetAnimation(i, blendTime);
+				return;
+			}
+		}
+	}
+}
+
 Component::Type C_Animation::GetType()
 {
 	return Component::Type::Animation;
 }
 
-void C_Animation::UpdateChannelsTransform(float currentKey, const AnimationSettings& settings)
+void C_Animation::UpdateChannelsTransform(const AnimationSettings& settings)
 {
 	for (uint i = 0; i < links.size(); i++)
 	{
 		C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
 
-		float3 position = GetChannelPosition(links[i], currentKey, transform->GetPosition(), settings);
-		Quat rotation = GetChannelRotation(links[i], currentKey, transform->GetQuatRotation(), settings);
-		float3 scale = GetChannelScale(links[i], currentKey, transform->GetScale(), settings);
+		float3 position = GetChannelPosition(links[i], currentFrame, transform->GetPosition(), settings);
+		Quat rotation = GetChannelRotation(links[i], currentFrame, transform->GetQuatRotation(), settings);
+		float3 scale = GetChannelScale(links[i], currentFrame, transform->GetScale(), settings);
 
 
 		transform->SetPosition(position);

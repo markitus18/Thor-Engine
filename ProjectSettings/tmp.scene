@@ -1,0 +1,541 @@
+{
+    "FileSystem": {},
+    "Window": {},
+    "Camera": {
+        "Position": [
+            -7.304690,
+            10.541088,
+            -8.802419
+        ],
+        "Reference": [
+            -0.051518,
+            -0.386180,
+            -0.032311
+        ]
+    },
+    "Editor": {},
+    "Input": {},
+    "Audio": {},
+    "Scene": {
+        "GameObjects": [
+            {
+                "UID": 0,
+                "ParentUID": 0,
+                "Name": "root",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 0,
+                "ParentUID": 0,
+                "Name": "root",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 1164319419,
+                "ParentUID": 0,
+                "Name": "Camera",
+                "Translation": [
+                    10,
+                    10,
+                    -10
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": true,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": false
+                    }
+                ],
+                "Camera": 1
+            },
+            {
+                "UID": 3212585,
+                "ParentUID": 0,
+                "Name": "simpleAnimation",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": true,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 3,
+                        "ID": 5,
+                        "ResourceName": "Take 001"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 325080997,
+                "ParentUID": 3212585,
+                "Name": "pCube1",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 0,
+                        "ID": 3,
+                        "ResourceName": "pCube1"
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 2,
+                        "ID": 4,
+                        "ResourceName": "lambert2"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 133936404,
+                "ParentUID": 3212585,
+                "Name": "joint1",
+                "Translation": [
+                    3.228770,
+                    0,
+                    0.029651
+                ],
+                "Rotation": [
+                    0,
+                    0.999995,
+                    0,
+                    -0.003118
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 4,
+                        "ID": 6,
+                        "ResourceName": "joint1"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 412387610,
+                "ParentUID": 133936404,
+                "Name": "joint2",
+                "Translation": [
+                    3.361028,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0.364457,
+                    0.931220
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 4,
+                        "ID": 7,
+                        "ResourceName": "joint2"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 1128919067,
+                "ParentUID": 412387610,
+                "Name": "joint3",
+                "Translation": [
+                    1.732349,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0.999977,
+                    0,
+                    0.006835
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 4,
+                        "ID": 8,
+                        "ResourceName": "joint3"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 1164319419,
+                "ParentUID": 0,
+                "Name": "Camera",
+                "Translation": [
+                    10,
+                    10,
+                    -10
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": true,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": false
+                    }
+                ],
+                "Camera": 1
+            },
+            {
+                "UID": 3212585,
+                "ParentUID": 0,
+                "Name": "simpleAnimation",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": true,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 3,
+                        "ID": 5,
+                        "ResourceName": "Take 001"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 325080997,
+                "ParentUID": 3212585,
+                "Name": "pCube1",
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 0,
+                        "ID": 3,
+                        "ResourceName": "pCube1"
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 2,
+                        "ID": 4,
+                        "ResourceName": "lambert2"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 133936404,
+                "ParentUID": 3212585,
+                "Name": "joint1",
+                "Translation": [
+                    3.228770,
+                    0,
+                    0.029651
+                ],
+                "Rotation": [
+                    0,
+                    0.999995,
+                    0,
+                    -0.003118
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 4,
+                        "ID": 6,
+                        "ResourceName": "joint1"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 412387610,
+                "ParentUID": 133936404,
+                "Name": "joint2",
+                "Translation": [
+                    3.361028,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0.364457,
+                    0.931220
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 4,
+                        "ID": 7,
+                        "ResourceName": "joint2"
+                    }
+                ],
+                "Camera": 0
+            },
+            {
+                "UID": 1128919067,
+                "ParentUID": 412387610,
+                "Name": "joint3",
+                "Translation": [
+                    1.732349,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0.999977,
+                    0,
+                    0.006835
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Components": [
+                    {
+                        "HasResource": false
+                    },
+                    {
+                        "HasResource": true,
+                        "Type": 4,
+                        "ID": 8,
+                        "ResourceName": "joint3"
+                    }
+                ],
+                "Camera": 0
+            }
+        ]
+    },
+    "Renderer": {},
+    "Resources": {},
+    "Importer": {},
+    "Materials": {},
+    "Meshes": {},
+    "AnimationImporter": {}
+} 

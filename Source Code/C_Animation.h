@@ -16,7 +16,8 @@ struct AnimationSettings
 	uint start_fame;
 	uint end_frame;
 	float speed;
-	bool loopable;
+	bool loopable = false;
+	bool current = false;
 };
 
 class C_Animation : public Component
@@ -48,11 +49,14 @@ public:
 	void AddAnimation();
 	void AddAnimation(const char* name, uint init, uint end, float ticksPerSec);
 
+	void SetAnimation(uint index, float blendTime = 0.0f);
+	void SetAnimation(const char* name, float blendTime = 0.0f);
+
 	static Component::Type GetType();
 
 private:
 
-	void UpdateChannelsTransform(float dt, const AnimationSettings& settings);
+	void UpdateChannelsTransform(const AnimationSettings& settings);
 	float3 GetChannelPosition(Link& link, float currentKey, float3 default, const AnimationSettings& settings);
 	Quat GetChannelRotation(Link& link, float currentKey, Quat default, const AnimationSettings& settings);
 	float3 GetChannelScale(Link& link, float currentKey, float3 default, const AnimationSettings& settings);
@@ -64,13 +68,21 @@ private:
 
 public:
 	std::vector<AnimationSettings> animations;
-	uint current_animation = 0;
+	//Used for blending
+	uint previous_animation = 0;
+	uint current_animation = 999;
 	bool playing = false;
 
 private:
 	bool started = false;
 
+	float prevBlendFrame = 0.0f;
 	float currentFrame = 0.0f;
+
+	//Mesured in frames
+	uint blendDuration = 0;
+	uint currentBlend = 0;
+
 	std::vector<Link> links;
 
 	bool channelsLinked = false;

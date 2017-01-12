@@ -262,17 +262,32 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 			{			
 				ImGui::Text(animation->animations[i].name.c_str());
 				ImGui::Separator();
-				ImGui::Checkbox("Loop", &animation->animations[i].loopable);
+
+				std::string loop_label = std::string("Loop##") + std::string(std::to_string(i));
+				ImGui::Checkbox(loop_label.c_str(), &animation->animations[i].loopable);
+
+				bool isCurrent = animation->animations[i].current;
+				std::string current_label = std::string("CurrentAnimation##") + std::string(std::to_string(i));
+
+				if (ImGui::Checkbox(current_label.c_str(), &isCurrent))
+				{
+					if (isCurrent == true)
+					{
+						animation->SetAnimation(i);
+					}
+				}
 
 				int start_frame = animation->animations[i].start_fame;
-				if (ImGui::InputInt("Start Frame", &start_frame))
+				std::string startF_label = std::string("Start Frame##") + std::string(std::to_string(i));
+				if (ImGui::InputInt(startF_label.c_str(), &start_frame))
 				{
 					if (start_frame >= 0)
 						animation->animations[i].start_fame = start_frame;
 				}
 
 				int end_frame = animation->animations[i].end_frame;
-				if (ImGui::InputInt("End Frame", &end_frame))
+				std::string endF_label = std::string("End Frame##") + std::string(std::to_string(i));
+				if (ImGui::InputInt(endF_label.c_str(), &end_frame))
 				{
 					if (end_frame >= 0 && end_frame != animation->animations[i].end_frame)
 					{
@@ -282,7 +297,8 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 				}
 
 				float speed = animation->animations[i].speed;
-				if (ImGui::InputFloat("Speed", &speed))
+				std::string speed_label = std::string("Speed##") + std::string(std::to_string(i));
+				if (ImGui::InputFloat(speed_label.c_str(), &speed))
 				{
 					if (speed >= 0)
 						animation->animations[i].speed = speed;

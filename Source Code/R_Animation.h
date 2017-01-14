@@ -14,16 +14,16 @@ struct Channel
 	std::map<double, float3> scaleKeys;
 
 	bool HasPosKey() const;
-	std::map<double, float3>::iterator GetPrevPosKey(std::map<double, float3>::iterator lastPrev, double currentKey, uint,	uint);
-	std::map<double, float3>::iterator GetNextPosKey(std::map<double, float3>::iterator previous, double currentKey, uint, uint);
+	std::map<double, float3>::iterator GetPrevPosKey(double currentKey, uint,	uint);
+	std::map<double, float3>::iterator GetNextPosKey(double currentKey, uint, uint);
 
 	bool HasRotKey() const;
-	std::map<double, Quat>::iterator GetPrevRotKey(std::map<double, Quat>::iterator lastPrev, double currentKey, uint, uint);
-	std::map<double, Quat>::iterator GetNextRotKey(std::map<double, Quat>::iterator previous, double currentKey, uint, uint);
+	std::map<double, Quat>::iterator GetPrevRotKey(double currentKey, uint, uint);
+	std::map<double, Quat>::iterator GetNextRotKey(double currentKey, uint, uint);
 
 	bool HasScaleKey() const;
-	std::map<double, float3>::iterator GetPrevScaleKey(std::map<double, float3>::iterator lastPrev, double currentKey, uint, uint);
-	std::map<double, float3>::iterator GetNextScaleKey(std::map<double, float3>::iterator previous, double currentKey, uint, uint);
+	std::map<double, float3>::iterator GetPrevScaleKey(double currentKey, uint, uint);
+	std::map<double, float3>::iterator GetNextScaleKey(double currentKey, uint, uint);
 };
 
 class R_Animation : public Resource

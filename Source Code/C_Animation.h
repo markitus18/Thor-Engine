@@ -13,11 +13,17 @@ class C_Bone;
 struct AnimationSettings
 {
 	std::string name;
-	uint start_fame;
+
+	uint start_frame;
 	uint end_frame;
-	float speed;
+
+	float ticksPerSecond;
+	float duration;
+
 	bool loopable = false;
 	bool current = false;
+
+	float GetDuration();
 };
 
 class C_Animation : public Component
@@ -28,10 +34,6 @@ class C_Animation : public Component
 		Link(GameObject* gameObject, Channel* channel) : gameObject(gameObject), channel(channel) {};
 		GameObject* gameObject;
 		Channel* channel;
-
-		std::map<double, float3>::iterator prevPosKey;
-		std::map<double, Quat>::iterator prevRotKey;
-		std::map<double, float3>::iterator prevScaleKey;
 	};
 
 public:
@@ -56,7 +58,7 @@ public:
 
 private:
 
-	void UpdateChannelsTransform(const AnimationSettings& settings);
+	void UpdateChannelsTransform(const AnimationSettings* settings, const AnimationSettings* blend, float blendRatio);
 	float3 GetChannelPosition(Link& link, float currentKey, float3 default, const AnimationSettings& settings);
 	Quat GetChannelRotation(Link& link, float currentKey, Quat default, const AnimationSettings& settings);
 	float3 GetChannelScale(Link& link, float currentKey, float3 default, const AnimationSettings& settings);
@@ -76,12 +78,10 @@ public:
 private:
 	bool started = false;
 
-	float prevBlendFrame = 0.0f;
-	float currentFrame = 0.0f;
-
-	//Mesured in frames
-	uint blendDuration = 0;
-	uint currentBlend = 0;
+	float prevAnimTime = 0.0f;
+	float time = 0.0f;
+	float blendTime = 0.0f;
+	float blendTimeDuration = 0.0f;
 
 	std::vector<Link> links;
 

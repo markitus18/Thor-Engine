@@ -176,7 +176,18 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 					{
 						Component* component = gameObject->CreateComponent(type);
 						if (component)
+						{
 							component->SetResource(resource->GetID());
+
+							//TODO: Erase
+							if (type == Component::Animation)
+							{
+								C_Animation* animation = (C_Animation*)component;
+								animation->AddAnimation("Default", 0, 29, 24.0f);
+								animation->SetAnimation((uint)0);
+								animation->AddAnimation("Default002", 59, 89, 24.0f);
+							}
+						}
 					}
 				}
 			}
@@ -286,6 +297,9 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 		{
 			C_Animation* animation = (C_Animation*)rootNode->CreateComponent(Component::Type::Animation);
 			animation->SetResource(animID);
+			animation->AddAnimation("Default", 0, 29, 24.0f);
+			animation->SetAnimation((uint)0);
+			animation->AddAnimation("Default002", 59, 89, 24.0f);
 		}
 		App->moduleAnimations->ImportSceneBones(bonedMeshes, meshGameObjects, rootNode, path);
 

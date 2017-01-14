@@ -254,7 +254,11 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 		if (ImGui::CollapsingHeader("Animation", flags))
 		{
 			R_Animation* rAnimation = (R_Animation*)animation->GetResource();
-			ImGui::Checkbox("Playing", &animation->playing);
+			if (ImGui::Checkbox("Playing", &animation->playing))
+			{
+				animation->SetAnimation(animation->current_animation);
+			}
+
 			ImGui::Text("Animations size: %i", animation->animations.size());
 			ImGui::Separator();
 			ImGui::Separator();
@@ -273,16 +277,16 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 				{
 					if (isCurrent == true)
 					{
-						animation->SetAnimation(i);
+						animation->SetAnimation(i, 2.0f);
 					}
 				}
 
-				int start_frame = animation->animations[i].start_fame;
+				int start_frame = animation->animations[i].start_frame;
 				std::string startF_label = std::string("Start Frame##") + std::string(std::to_string(i));
 				if (ImGui::InputInt(startF_label.c_str(), &start_frame))
 				{
 					if (start_frame >= 0)
-						animation->animations[i].start_fame = start_frame;
+						animation->animations[i].start_frame = start_frame;
 				}
 
 				int end_frame = animation->animations[i].end_frame;
@@ -296,12 +300,12 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 					}
 				}
 
-				float speed = animation->animations[i].speed;
+				float ticksPerSecond = animation->animations[i].ticksPerSecond;
 				std::string speed_label = std::string("Speed##") + std::string(std::to_string(i));
-				if (ImGui::InputFloat(speed_label.c_str(), &speed))
+				if (ImGui::InputFloat(speed_label.c_str(), &ticksPerSecond))
 				{
-					if (speed >= 0)
-						animation->animations[i].speed = speed;
+					if (ticksPerSecond >= 0)
+						animation->animations[i].ticksPerSecond = ticksPerSecond;
 				}
 				ImGui::Separator();
 				ImGui::Separator();

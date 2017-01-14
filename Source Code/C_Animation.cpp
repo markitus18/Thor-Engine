@@ -7,13 +7,14 @@
 
 #include "GameObject.h"
 
+float AnimationSettings::GetDuration()
+{
+	return ((float)end_frame - (float)start_frame) / ticksPerSecond;
+}
 
 C_Animation::C_Animation(GameObject* gameObject) : Component(Type::Animation, gameObject, true)
 {
-	AddAnimation();
-	//TODO: ask Ricard about why a cast is needed
-	SetAnimation((uint)0);
-	AddAnimation("Default02", 0, 0, 24);
+
 }
 
 C_Animation::~C_Animation()
@@ -82,12 +83,6 @@ void C_Animation::Start()
 	{
 		LinkBones();
 	}
-	for (uint i = 0; i < links.size(); i++)
-	{
-		links[i].prevPosKey = links[i].channel->positionKeys.begin();
-		links[i].prevRotKey = links[i].channel->rotationKeys.begin();
-		links[i].prevScaleKey = links[i].channel->scaleKeys.begin();
-	}
 	started = true;
 	animations[current_animation].current = true;
 
@@ -101,23 +96,52 @@ void C_Animation::Update(float dt)
 			Start();
 		R_Animation* resource = (R_Animation*)GetResource();
 
-		currentFrame += (animations[current_animation].speed == 0 ? resource->ticksPerSecond : animations[current_animation].speed) * dt;
 
-		uint endFrame = (animations[current_animation].end_frame == 0) ? resource->duration : animations[current_animation].end_frame;
-		if (currentFrame >= endFrame)
+		//Updating animation blend
+		float blendRatio = 0.0f;
+		if (blendTimeDuration > 0.0f)
+		{
+			prevAnimTime += dt;
+			blendTime += dt;
+
+			if (blendTime >= blendTimeDuration)
+			{
+				blendTimeDuration = 0.0f;
+			}
+
+			else if (prevAnimTime >= animations[previous_animation].GetDuration())
+			{
+				if (animations[previous_animation].loopable == true)
+				{
+					prevAnimTime = 0.0f;
+					//prevBlendFrame = animations[previous_animation].start_fame;// + (currentFrame - endFrame);
+				}
+				else
+					blendTimeDuration = 0.0f;
+			}
+
+			if (blendTimeDuration > 0.0f)
+				blendRatio = blendTime / blendTimeDuration;
+		}
+		//Endof Updating animation blend
+		
+		time += dt;
+
+		if (time > animations[current_animation].GetDuration())
 		{
 			if (animations[current_animation].loopable == true)
 			{
-				currentFrame = animations[current_animation].start_fame;// + (currentFrame - endFrame);
+				time = 0.0f;
 			}
 			else
 			{
 				playing = false;
+				//TODO: is it really necessary? Not returning could end in last anim frame
 				return;
 			}
 		}
 
-		UpdateChannelsTransform(animations[current_animation]);
+		UpdateChannelsTransform(&animations[current_animation], blendRatio > 0.0f ? &animations[previous_animation] : nullptr, blendRatio);
 		UpdateMeshAnimation(gameObject);
 	}
 
@@ -132,44 +156,43 @@ void C_Animation::AddAnimation()
 //	{
 //		if (animations[i].find("Default"))
 //	}
-	AddAnimation(new_name.c_str(), 0, 0, 24);
+	R_Animation* rAnim = (R_Animation*)GetResource();
+	AddAnimation(new_name.c_str(), 0, rAnim->duration, 24);
 }
 
 void C_Animation::AddAnimation(const char* name, uint init, uint end, float ticksPerSec)
 {
 	AnimationSettings animation;
 	animation.name = name;
-	animation.start_fame = init;
+	animation.start_frame = init;
 	animation.end_frame = end;
-	animation.speed = ticksPerSec;
+	animation.ticksPerSecond = ticksPerSec;
 
 	animations.push_back(animation);
 }
 
-//TODO: restart animation even when it is already playing?
 void C_Animation::SetAnimation(uint index, float blendTime)
 {
-	if (index != current_animation && index < animations.size())
+	if (index < animations.size())
 	{
-		if (current_animation < animations.size())
+		if (current_animation < animations.size() && index != current_animation)
 		{
 			animations[current_animation].current = false;
 
-			if (blendTime > 0)
+			if (blendTime > 0 && playing == true)
 			{
 				previous_animation = current_animation;
-				prevBlendFrame = currentFrame;
-				currentBlend = 0;
-				blendDuration = animations[current_animation].speed * blendTime;
+				prevAnimTime = time;
+				blendTimeDuration = blendTime;
+				this->blendTime = 0.0f;
 			}
 		}
 		current_animation = index;
 		animations[current_animation].current = true;
-		currentFrame = animations[current_animation].start_fame;
+		time = 0.0f;
 	}
 }
 
-//TODO: restart animation even when it is already playing?
 void C_Animation::SetAnimation(const char* name, float blendTime)
 {
 	if (animations[current_animation].name != name)
@@ -190,16 +213,31 @@ Component::Type C_Animation::GetType()
 	return Component::Type::Animation;
 }
 
-void C_Animation::UpdateChannelsTransform(const AnimationSettings& settings)
+void C_Animation::UpdateChannelsTransform(const AnimationSettings* settings, const AnimationSettings* blend, float blendRatio)
 {
+	R_Animation* resource = (R_Animation*)GetResource();
+	uint currentFrame = settings->start_frame + (settings->ticksPerSecond > 0.0f ? resource->ticksPerSecond : settings->ticksPerSecond) * time;
+
+	uint prevBlendFrame = 0;
+	if (blend != nullptr)
+	{
+		prevBlendFrame = blend->start_frame + (blend->ticksPerSecond > 0.0f ? resource->ticksPerSecond : blend->ticksPerSecond) * prevAnimTime;
+	}
+
 	for (uint i = 0; i < links.size(); i++)
 	{
 		C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
 
-		float3 position = GetChannelPosition(links[i], currentFrame, transform->GetPosition(), settings);
-		Quat rotation = GetChannelRotation(links[i], currentFrame, transform->GetQuatRotation(), settings);
-		float3 scale = GetChannelScale(links[i], currentFrame, transform->GetScale(), settings);
+		float3 position = GetChannelPosition(links[i], currentFrame, transform->GetPosition(), *settings);
+		Quat rotation = GetChannelRotation(links[i], currentFrame, transform->GetQuatRotation(), *settings);
+		float3 scale = GetChannelScale(links[i], currentFrame, transform->GetScale(), *settings);
 
+		if (blend != nullptr)
+		{
+			position = float3::Lerp(GetChannelPosition(links[i], prevBlendFrame, transform->GetPosition(), *blend), position, blendRatio);
+			rotation = Quat::Slerp(GetChannelRotation(links[i], prevBlendFrame, transform->GetQuatRotation(), *blend), rotation, blendRatio);
+			scale = float3::Lerp(GetChannelScale(links[i], prevBlendFrame, transform->GetScale(), *blend), scale, blendRatio);
+		}
 
 		transform->SetPosition(position);
 		transform->SetQuatRotation(rotation);
@@ -213,9 +251,11 @@ float3 C_Animation::GetChannelPosition(Link& link, float currentKey, float3 defa
 
 	if (link.channel->HasPosKey())
 	{
-		std::map<double, float3>::iterator previous = link.channel->GetPrevPosKey(link.prevPosKey, currentKey, settings.start_fame, settings.end_frame);
-		std::map<double, float3>::iterator next = link.channel->GetNextPosKey(link.prevPosKey, currentKey, settings.start_fame, settings.end_frame);
-		link.prevPosKey = previous;
+		std::map<double, float3>::iterator previous = link.channel->GetPrevPosKey(currentKey, settings.start_frame, settings.end_frame);
+		std::map<double, float3>::iterator next = link.channel->GetNextPosKey(currentKey, settings.start_frame, settings.end_frame);
+
+		if (next == link.channel->positionKeys.end())
+			next = previous;
 
 		//If both keys are the same, no need to blend
 		if (previous == next)
@@ -237,9 +277,11 @@ Quat C_Animation::GetChannelRotation(Link& link, float currentKey, Quat default,
 
 	if (link.channel->HasRotKey())
 	{
-		std::map<double, Quat>::iterator previous = link.channel->GetPrevRotKey(link.prevRotKey, currentKey, settings.start_fame, settings.end_frame);
-		std::map<double, Quat>::iterator next = link.channel->GetNextRotKey(link.prevRotKey, currentKey, settings.start_fame, settings.end_frame);
-		link.prevRotKey = previous;
+		std::map<double, Quat>::iterator previous = link.channel->GetPrevRotKey(currentKey, settings.start_frame, settings.end_frame);
+		std::map<double, Quat>::iterator next = link.channel->GetNextRotKey(currentKey, settings.start_frame, settings.end_frame);
+
+		if (next == link.channel->rotationKeys.end())
+			next = previous;
 
 		//If both keys are the same, no need to blend
 		if (previous == next)
@@ -260,9 +302,11 @@ float3 C_Animation::GetChannelScale(Link& link, float currentKey, float3 default
 
 	if (link.channel->HasScaleKey())
 	{
-		std::map<double, float3>::iterator previous = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey, settings.start_fame, settings.end_frame);
-		std::map<double, float3>::iterator next = link.channel->GetPrevScaleKey(link.prevScaleKey, currentKey, settings.start_fame, settings.end_frame);
-		link.prevScaleKey = previous;
+		std::map<double, float3>::iterator previous = link.channel->GetPrevScaleKey(currentKey, settings.start_frame, settings.end_frame);
+		std::map<double, float3>::iterator next = link.channel->GetPrevScaleKey(currentKey, settings.start_frame, settings.end_frame);
+
+		if (next == link.channel->scaleKeys.end())
+			next = previous;
 
 		//If both keys are the same, no need to blend
 		if (previous == next)

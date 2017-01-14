@@ -135,7 +135,7 @@ update_status M_Scene::Update(float dt)
 		drawGrid = !drawGrid;
 	}
 
-	UpdateAllGameObjects(root, dt);
+ 	UpdateAllGameObjects(root, dt);
 
 	if (App->renderer3D->culling_camera)
 	{
@@ -246,6 +246,9 @@ void M_Scene::SaveScene(Config& node) const
 	//Store all gameObjects in a vector
 	std::vector<GameObject*> gameObjects;
 	root->CollectChilds(gameObjects);
+
+	//Kinda dirty to erase root from list:
+	gameObjects.erase(gameObjects.begin());
 
 	App->moduleImport->SaveGameObjectConfig(node, gameObjects);
 }

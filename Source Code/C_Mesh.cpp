@@ -76,9 +76,7 @@ void C_Mesh::DeformAnimMesh()
 		R_Mesh* rMesh = (R_Mesh*)GetResource();
 		C_Bone* rootBone = bones[i]->GetRoot();
 
-		float4x4 matrix = bones[i]->gameObject->GetComponent<C_Transform>()->GetGlobalTransform();
-		matrix = matrix * gameObject->GetComponent<C_Transform>()->GetTransform().Inverted();// bones[i]->GetSystemTransform();// * rBone->offset;
-
+		float4x4 matrix = bones[i]->GetSystemTransform();
 		matrix = matrix * rBone->offset;
 
 		for (uint i = 0; i < rBone->numWeights; i++)
@@ -94,11 +92,11 @@ void C_Mesh::DeformAnimMesh()
 
 			if (rMesh->buffersSize[R_Mesh::b_normals] > 0)
 			{
+				toAdd = matrix.TransformPos(float3(&rMesh->normals[index * 3]));
 				animMesh->normals[index * 3] += toAdd.x * rBone->weights[i];
 				animMesh->normals[index * 3 + 1] += toAdd.y * rBone->weights[i];
 				animMesh->normals[index * 3 + 2] += toAdd.z * rBone->weights[i];
 			}
-
 		}
 	}
 }

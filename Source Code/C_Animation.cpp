@@ -90,63 +90,65 @@ void C_Animation::Start()
 
 void C_Animation::Update(float dt)
 {
-	if (playing == true)
+	dt = Time::deltaTime;
+	//"if" not necessary but we avoid all calculations
+	if (dt > 0.0f)
 	{
-		if (started == false)
-			Start();
-		R_Animation* resource = (R_Animation*)GetResource();
-
-
-		//Updating animation blend
-		float blendRatio = 0.0f;
-		if (blendTimeDuration > 0.0f)
+		if (playing == true)
 		{
-			prevAnimTime += dt;
-			blendTime += dt;
+			if (started == false)
+				Start();
+			R_Animation* resource = (R_Animation*)GetResource();
 
-			if (blendTime >= blendTimeDuration)
-			{
-				blendTimeDuration = 0.0f;
-			}
 
-			else if (prevAnimTime >= animations[previous_animation].GetDuration())
+			//Updating animation blend
+			float blendRatio = 0.0f;
+			if (blendTimeDuration > 0.0f)
 			{
-				if (animations[previous_animation].loopable == true)
+				prevAnimTime += dt;
+				blendTime += dt;
+
+				if (blendTime >= blendTimeDuration)
 				{
-					prevAnimTime = 0.0f;
-					//prevBlendFrame = animations[previous_animation].start_fame;// + (currentFrame - endFrame);
+					blendTimeDuration = 0.0f;
+				}
+
+				else if (prevAnimTime >= animations[previous_animation].GetDuration())
+				{
+					if (animations[previous_animation].loopable == true)
+					{
+						prevAnimTime = 0.0f;
+						//prevBlendFrame = animations[previous_animation].start_fame;// + (currentFrame - endFrame);
+					}
+					else
+						blendTimeDuration = 0.0f;
+				}
+
+				if (blendTimeDuration > 0.0f)
+					blendRatio = blendTime / blendTimeDuration;
+			}
+			//Endof Updating animation blend
+		
+			time += dt;
+
+			if (time > animations[current_animation].GetDuration())
+			{
+				if (animations[current_animation].loopable == true)
+				{
+					time = 0.0f;
 				}
 				else
-					blendTimeDuration = 0.0f;
+				{
+					playing = false;
+					//TODO: is it really necessary? Not returning could end in last anim frame
+					return;
+				}
 			}
 
-			if (blendTimeDuration > 0.0f)
-				blendRatio = blendTime / blendTimeDuration;
+			UpdateChannelsTransform(&animations[current_animation], blendRatio > 0.0f ? &animations[previous_animation] : nullptr, blendRatio);
+			UpdateMeshAnimation(gameObject);
 		}
-		//Endof Updating animation blend
-		
-		time += dt;
-
-		if (time > animations[current_animation].GetDuration())
-		{
-			if (animations[current_animation].loopable == true)
-			{
-				time = 0.0f;
-			}
-			else
-			{
-				playing = false;
-				//TODO: is it really necessary? Not returning could end in last anim frame
-				return;
-			}
-		}
-
-		UpdateChannelsTransform(&animations[current_animation], blendRatio > 0.0f ? &animations[previous_animation] : nullptr, blendRatio);
-		UpdateMeshAnimation(gameObject);
 	}
-
-	
-
 }
 
 void C_Animation::AddAnimation()

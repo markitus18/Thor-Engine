@@ -24,7 +24,6 @@ std::map<double, float3>::iterator Channel::GetPrevPosKey(std::map<double, float
 		}
 	}
 
-
 	std::map<double, float3>::iterator it = lastPrev;
 	it++;
 	while (it != positionKeys.end() && it->first <= currentKey)
@@ -71,7 +70,6 @@ std::map<double, Quat>::iterator Channel::GetPrevRotKey(std::map<double, Quat>::
 			}
 		}
 	}
-
 
 	std::map<double, Quat>::iterator it = lastPrev;
 	it++;

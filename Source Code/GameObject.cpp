@@ -190,24 +190,19 @@ Component* GameObject::CreateComponent(Component::Type type)
 	{
 		case(Component::Type::Mesh):
 		{
-			if (!HasComponent(Component::Type::Mesh))
-			{
+			if (!HasComponent(Component::Mesh))
 				new_component = new C_Mesh(this);
-			}
 			break;
 		}
 		case(Component::Type::Material):
 		{
-			if (!HasComponent(Component::Type::Material))
-			{
+			if (!HasComponent(Component::Material))
 				new_component = new C_Material(this);
-			}
-
 			break;
 		}
 		case(Component::Type::Camera):
 		{
-			if (!HasComponent(Component::Type::Camera))
+			if (!HasComponent(Component::Material))
 			{
 				new_component = new C_Camera(this);
 				new_component->OnUpdateTransform(transform->GetGlobalTransform(), float4x4::identity);
@@ -216,18 +211,15 @@ Component* GameObject::CreateComponent(Component::Type type)
 		}
 		case(Component::Type::Animation):
 		{
-			if (!HasComponent(Component::Type::Animation))
-			{
+			if (!HasComponent(Component::Material))
 				new_component = new C_Animation(this);
-			}
 			break;
 		}
 		case(Component::Type::Bone):
 		{
-			if (!HasComponent(Component::Type::Bone))
-			{
+			if (!HasComponent(Component::Material))
 				new_component = new C_Bone(this);
-			}
+			break;
 		}
 	}
 	if (new_component)

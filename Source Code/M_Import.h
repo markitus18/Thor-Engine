@@ -12,6 +12,9 @@ struct aiMaterial;
 class GameObject;
 class C_Mesh;
 class C_Material;
+class C_Animation;
+class C_Camera;
+class C_Transform;
 class R_Prefab;
 class Component;
 
@@ -41,6 +44,17 @@ private:
 	void SaveGameObjectSingle(Config& config, GameObject* gameObject);
 	void SaveGameObjectComponent(Config& config, Component* component);
 
+#pragma region Components Save/Load
+	void SaveComponent(Component* component, Config&);
+	void SaveComponent(C_Transform*, Config&);
+	void SaveComponent(C_Camera*, Config&);
+	void SaveComponent(C_Animation*, Config&);
+
+	void LoadComponent(Component* component, Config&);
+	void LoadComponent(C_Transform*, Config&);
+	void LoadComponent(C_Camera*, Config&);
+	void LoadComponent(C_Animation*, Config&);
+#pragma endregion
 private:
 	bool fbx_loaded = false;
 	uint material_count = 0;

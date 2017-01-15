@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "C_Mesh.h"
 #include "C_Transform.h"
+#include "C_Camera.h"
+#include "C_Animation.h"
 
 #include "M_Resources.h"
 
@@ -84,6 +86,9 @@ void M_Import::SaveGameObjectConfig(Config& config, std::vector<GameObject*>& ga
 
 void M_Import::SaveGameObjectComponent(Config& config, Component* component)
 {
+	config.SetNumber("ComponentType", (int)component->GetType());
+	SaveComponent(component, config);
+
 	config.SetBool("HasResource", component->HasResource());
 	if (component->HasResource())
 	{
@@ -130,7 +135,7 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 		Config gameObject_node = gameObjects_array.GetNode(i);
 
 		float3 position = gameObject_node.GetArray("Translation").GetFloat3(0);
-		Quat rotation = gameObject_node.GetArray("Rotation").GetQuat(0);
+		Quat rotation =gameObject_node.GetArray("Rotation").GetQuat(0);
 		float3 scale = gameObject_node.GetArray("Scale").GetFloat3(0);
 
 		//Parent setup
@@ -139,7 +144,7 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 		if (it != createdGameObjects.end())
 			parent = it->second;
 
-		GameObject* gameObject = new GameObject(parent, gameObject_node.GetString("Name").c_str(), position, scale, rotation);
+		GameObject* gameObject = new GameObject(parent, gameObject_node.GetString("Name").c_str() , position, scale, rotation);
 		gameObject->uid = gameObject_node.GetNumber("UID");
 		createdGameObjects[gameObject->uid] = gameObject;
 
@@ -165,38 +170,33 @@ void M_Import::LoadGameObjectConfig(Config& config, std::vector<GameObject*>& ro
 
 		for (uint i = 0; i < components.GetSize(); i++)
 		{
-			Config component = components.GetNode(i);
-			if (component.GetBool("HasResource") == true)
+			Config comp = components.GetNode(i);
+			Component::Type type = (Component::Type)((int)comp.GetNumber("ComponentType"));
+			Component* component = gameObject->CreateComponent(type);
+			if (component != nullptr)
 			{
-				Resource* resource = App->moduleResources->GetResource(component.GetNumber("ID"));
-				if (resource)
+				LoadComponent(component, comp);
+				if (comp.GetBool("HasResource") == true)
 				{
-					Component::Type type = App->moduleResources->ResourceToComponentType(resource->type);
-					if (type != Component::None)
+					Resource* resource = App->moduleResources->GetResource(comp.GetNumber("ID"));
+					if (resource)
 					{
-						Component* component = gameObject->CreateComponent(type);
 						if (component)
 						{
 							component->SetResource(resource->GetID());
-
-							//TODO: Erase
-							if (type == Component::Animation)
-							{
-								C_Animation* animation = (C_Animation*)component;
-								animation->AddAnimation("Default", 0, 29, 24.0f);
-								animation->SetAnimation((uint)0);
-								animation->AddAnimation("Default002", 59, 89, 24.0f);
-							}
 						}
 					}
 				}
-			}
-		}
+				//TODO: kinda dirty
+				if (component->GetType() == Component::Animation)
+				{
+					C_Animation* anim = (C_Animation*)component;
+					if (anim->animations.size() == 0)
+						anim->AddAnimation();
+				}
 
-		bool camera = gameObject_node.GetNumber("Camera");
-		if (camera == true)
-		{
-			gameObject->CreateComponent(Component::Camera);
+			}
+
 		}
 
 		//Call OnUpdateTransform() to init all components according to the GameObject
@@ -241,6 +241,11 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	config.SetNumber("ParentUID", gameObject->parent ? gameObject->parent->uid : 0);
 	config.SetString("Name", gameObject->name.c_str());
 
+	config.SetBool("Active", gameObject->active);
+	config.SetBool("Static", gameObject->isStatic);
+	config.SetBool("Selected", gameObject->IsSelected());
+	config.SetBool("OpenInHierarchy", gameObject->hierarchyOpen);
+
 	C_Transform* transform = gameObject->GetComponent<C_Transform>();
 	//Translation part
 	Config_Array transform_node = config.SetArray("Translation");
@@ -254,28 +259,12 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	Config_Array scale_node = config.SetArray("Scale");
 	scale_node.AddFloat3(transform->GetScale());
 
-	config.SetBool("Active", gameObject->active);
-	config.SetBool("Static", gameObject->isStatic);
-	config.SetBool("Selected", gameObject->IsSelected());
-	config.SetBool("OpenInHierarchy", gameObject->hierarchyOpen);
-
 	Config_Array compConfig = config.SetArray("Components");
 	const std::vector<Component*> components = gameObject->GetAllComponents();
 
 	for (uint i = 0; i < components.size(); i++)
 	{
 		SaveGameObjectComponent(compConfig.AddNode(), components[i]);
-	}
-
-
-	C_Camera* cam = gameObject->GetComponent<C_Camera>();
-	if (cam)
-	{
-		config.SetNumber("Camera", 1);
-	}
-	else
-	{
-		config.SetNumber("Camera", 0);
 	}
 }
 
@@ -297,9 +286,6 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 		{
 			C_Animation* animation = (C_Animation*)rootNode->CreateComponent(Component::Type::Animation);
 			animation->SetResource(animID);
-			animation->AddAnimation("Default", 0, 29, 24.0f);
-			animation->SetAnimation((uint)0);
-			animation->AddAnimation("Default002", 59, 89, 24.0f);
 		}
 		App->moduleAnimations->ImportSceneBones(bonedMeshes, meshGameObjects, rootNode, path);
 
@@ -467,4 +453,85 @@ GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node
 bool M_Import::CleanUp()
 {
 	return true;
+}
+
+#pragma region Components Save / Load
+
+void M_Import::SaveComponent(Component* component, Config& config)
+{
+	switch (component->GetType())
+	{
+		case(Component::Camera):
+		{
+			SaveComponent((C_Camera*)component, config);
+			break;
+		}
+		case(Component::Animation):
+		{
+			SaveComponent((C_Animation*)component, config);
+			break;
+		}
+	}
+}
+
+void M_Import::SaveComponent(C_Camera* camera, Config& config)
+{
+	config.SetNumber("FOV", camera->frustum.VerticalFov() * RADTODEG);
+	config.SetNumber("NearPlane", camera->frustum.NearPlaneDistance());
+	config.SetNumber("FarPlane", camera->frustum.FarPlaneDistance());
+}
+
+void M_Import::SaveComponent(C_Animation* animation, Config& config)
+{
+	config.SetBool("Playing", animation->playing);
+	Config_Array array = config.SetArray("Animations");
+	for (uint i = 0; i < animation->animations.size(); i++)
+	{
+		Config node = array.AddNode();
+		node.SetString("Name", animation->animations[i].name.c_str());
+		node.SetBool("Loopable", animation->animations[i].loopable);
+		node.SetNumber("StartFrame", animation->animations[i].start_frame);
+		node.SetNumber("EndFrame", animation->animations[i].end_frame);
+		node.SetNumber("TicksPerSecond", animation->animations[i].ticksPerSecond);
+		node.SetBool("CurrentAnimation", animation->animations[i].current);
+	}
+}
+
+void M_Import::LoadComponent(Component* component, Config& config)
+{
+	switch (component->GetType())
+	{
+	case(Component::Camera):
+	{
+		LoadComponent((C_Camera*)component, config);
+		break;
+	}
+	case(Component::Animation):
+	{
+		LoadComponent((C_Animation*)component, config);
+		break;
+	}
+	}
+}
+
+void M_Import::LoadComponent(C_Camera* camera, Config& config)
+{
+	camera->SetFOV(config.GetNumber("FOV"));
+	camera->SetNearPlane(config.GetNumber("NearPlane"));
+	camera->SetFarPlane(config.GetNumber("FarPlane"));
+}
+
+void M_Import::LoadComponent(C_Animation* animation, Config& config)
+{
+	animation->playing = config.GetBool("Playing");
+	Config_Array array = config.GetArray("Animations");
+	for (uint i = 0; i < array.GetSize(); i++)
+	{
+		Config node = array.GetNode(i);
+		animation->AddAnimation(node.GetString("Name").c_str(), node.GetNumber("StartFrame"), node.GetNumber("EndFrame"), node.GetNumber("TicksPerSecond"));
+		animation->animations[i].loopable = node.GetBool("Loopable", false);
+		animation->animations[i].current = node.GetBool("CurrentAnimation");
+		if (animation->animations[i].current == true)
+			animation->SetAnimation(i);
+	}
 }

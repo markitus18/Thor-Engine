@@ -1,9 +1,13 @@
 {
     "GameObjects": [
         {
-            "UID": 1702584098,
+            "UID": 1724033736,
             "ParentUID": 0,
             "Name": "warrior",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 0,
                 0,
@@ -20,27 +24,30 @@
                 1,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 5,
+                    "Playing": false,
+                    "Animations": [],
                     "HasResource": true,
                     "Type": 3,
                     "ID": 13,
                     "ResourceName": "Take 001"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 952623399,
-            "ParentUID": 1702584098,
+            "UID": 1796735932,
+            "ParentUID": 1724033736,
             "Name": "RPG-Character-Mesh",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 -0.178409,
                 0,
@@ -57,33 +64,35 @@
                 1,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 2,
                     "HasResource": true,
                     "Type": 0,
                     "ID": 11,
                     "ResourceName": "RPG-Character-Mesh"
                 },
                 {
+                    "ComponentType": 3,
                     "HasResource": true,
                     "Type": 2,
                     "ID": 12,
                     "ResourceName": "RPG-Character"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1856191478,
-            "ParentUID": 1702584098,
+            "UID": 1777367669,
+            "ParentUID": 1724033736,
             "Name": "Motion",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 -0.204375,
                 0,
@@ -100,21 +109,21 @@
                 1,
                 1
             ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 1959259662,
+            "ParentUID": 1777367669,
+            "Name": "B_Pelvis",
             "Active": true,
             "Static": false,
             "Selected": false,
             "OpenInHierarchy": false,
-            "Components": [
-                {
-                    "HasResource": false
-                }
-            ],
-            "Camera": 0
-        },
-        {
-            "UID": 783464319,
-            "ParentUID": 1856191478,
-            "Name": "B_Pelvis",
             "Translation": [
                 0.051386,
                 -0.000001,
@@ -131,27 +140,28 @@
                 1,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 33,
                     "ResourceName": "B_Pelvis"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1632202946,
-            "ParentUID": 783464319,
+            "UID": 1750637956,
+            "ParentUID": 1959259662,
             "Name": "B_Spine",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 9.260315,
                 3.395593,
@@ -168,27 +178,28 @@
                 1,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 34,
                     "ResourceName": "B_Spine"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1504122461,
-            "ParentUID": 1632202946,
+            "UID": 730749191,
+            "ParentUID": 1750637956,
             "Name": "B_Spine1",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.629440,
                 -0.019911,
@@ -205,27 +216,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 14,
                     "ResourceName": "B_Spine1"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 764778620,
-            "ParentUID": 1504122461,
+            "UID": 1601829181,
+            "ParentUID": 730749191,
             "Name": "B_Spine2",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 25.269379,
                 -0.016050,
@@ -242,27 +254,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 15,
                     "ResourceName": "B_Spine2"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 2090242949,
-            "ParentUID": 764778620,
+            "UID": 2123621691,
+            "ParentUID": 1601829181,
             "Name": "B_L_Clavicle",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 12.008545,
                 -1.454860,
@@ -279,27 +292,28 @@
                 1,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 22,
                     "ResourceName": "B_L_Clavicle"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 575013374,
-            "ParentUID": 2090242949,
+            "UID": 859104102,
+            "ParentUID": 2123621691,
             "Name": "B_L_UpperArm",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 27.203571,
                 0.000004,
@@ -316,27 +330,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 21,
                     "ResourceName": "B_L_UpperArm"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1763447527,
-            "ParentUID": 575013374,
+            "UID": 2119632745,
+            "ParentUID": 859104102,
             "Name": "B_L_Forearm",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 35.551193,
                 -0.000004,
@@ -353,27 +368,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 23,
                     "ResourceName": "B_L_Forearm"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1340178277,
-            "ParentUID": 1763447527,
+            "UID": 170085099,
+            "ParentUID": 2119632745,
             "Name": "B_L_Hand",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 35.489616,
                 -0.000006,
@@ -390,27 +406,28 @@
                 1.000000,
                 1.000001
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 24,
                     "ResourceName": "B_L_Hand"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 682328161,
-            "ParentUID": 1340178277,
+            "UID": 269847921,
+            "ParentUID": 170085099,
             "Name": "B_L_Finger0",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 12.316864,
                 -0.520882,
@@ -427,27 +444,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 42,
                     "ResourceName": "B_L_Finger0"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 2030625341,
-            "ParentUID": 682328161,
+            "UID": 895163985,
+            "ParentUID": 269847921,
             "Name": "B_L_Finger01",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.867081,
                 -0.000015,
@@ -464,27 +482,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 43,
                     "ResourceName": "B_L_Finger01"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1023416457,
-            "ParentUID": 2030625341,
+            "UID": 88880098,
+            "ParentUID": 895163985,
             "Name": "B_L_Finger02",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.867096,
                 0.000008,
@@ -501,27 +520,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 44,
                     "ResourceName": "B_L_Finger02"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 2064712631,
-            "ParentUID": 1340178277,
+            "UID": 1020915851,
+            "ParentUID": 170085099,
             "Name": "B_L_Finger1",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315132,
                 -2.635735,
@@ -538,27 +558,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 45,
                     "ResourceName": "B_L_Finger1"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1245203612,
-            "ParentUID": 2064712631,
+            "UID": 1916197712,
+            "ParentUID": 1020915851,
             "Name": "B_L_Finger11",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438866,
                 0,
@@ -575,27 +596,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 46,
                     "ResourceName": "B_L_Finger11"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 553325309,
-            "ParentUID": 1245203612,
+            "UID": 1621788218,
+            "ParentUID": 1916197712,
             "Name": "B_L_Finger12",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438873,
                 -0.000023,
@@ -612,27 +634,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 47,
                     "ResourceName": "B_L_Finger12"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1499678003,
-            "ParentUID": 1340178277,
+            "UID": 122333412,
+            "ParentUID": 170085099,
             "Name": "B_L_Finger2",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315155,
                 -2.632576,
@@ -649,27 +672,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 55,
                     "ResourceName": "B_L_Finger2"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 574813370,
-            "ParentUID": 1499678003,
+            "UID": 54332850,
+            "ParentUID": 122333412,
             "Name": "B_L_Finger21",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 6.345329,
                 -0.000015,
@@ -686,27 +710,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 50,
                     "ResourceName": "B_L_Finger21"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 723870925,
-            "ParentUID": 574813370,
+            "UID": 988647483,
+            "ParentUID": 54332850,
             "Name": "B_L_Finger22",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 6.345329,
                 0.000023,
@@ -723,27 +748,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 48,
                     "ResourceName": "B_L_Finger22"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1618925276,
-            "ParentUID": 1340178277,
+            "UID": 1628043946,
+            "ParentUID": 170085099,
             "Name": "B_L_Finger3",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315147,
                 -2.629341,
@@ -760,27 +786,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 51,
                     "ResourceName": "B_L_Finger3"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 517427601,
-            "ParentUID": 1618925276,
+            "UID": 1860675806,
+            "ParentUID": 1628043946,
             "Name": "B_L_Finger31",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438847,
                 0,
@@ -797,27 +824,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 53,
                     "ResourceName": "B_L_Finger31"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1936314443,
-            "ParentUID": 517427601,
+            "UID": 1601735192,
+            "ParentUID": 1860675806,
             "Name": "B_L_Finger32",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438858,
                 0.000015,
@@ -834,27 +862,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 49,
                     "ResourceName": "B_L_Finger32"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 2009379325,
-            "ParentUID": 1340178277,
+            "UID": 2022464463,
+            "ParentUID": 170085099,
             "Name": "B_L_Finger4",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315140,
                 -2.626289,
@@ -871,27 +900,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 52,
                     "ResourceName": "B_L_Finger4"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1470769304,
-            "ParentUID": 2009379325,
+            "UID": 1938095674,
+            "ParentUID": 2022464463,
             "Name": "B_L_Finger41",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.532387,
                 0.000023,
@@ -908,27 +938,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 54,
                     "ResourceName": "B_L_Finger41"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 114457530,
-            "ParentUID": 1470769304,
+            "UID": 1466411250,
+            "ParentUID": 1938095674,
             "Name": "B_L_Finger42",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.532364,
                 -0.000031,
@@ -945,27 +976,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 56,
                     "ResourceName": "B_L_Finger42"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1483365760,
-            "ParentUID": 764778620,
+            "UID": 1645057870,
+            "ParentUID": 1601829181,
             "Name": "B_R_Clavicle",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 12.008545,
                 -1.454825,
@@ -982,27 +1014,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 30,
                     "ResourceName": "B_R_Clavicle"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 918992730,
-            "ParentUID": 1483365760,
+            "UID": 976105466,
+            "ParentUID": 1645057870,
             "Name": "B_R_UpperArm",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 27.203560,
                 0.000013,
@@ -1019,27 +1052,28 @@
                 1,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 29,
                     "ResourceName": "B_R_UpperArm"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1212560259,
-            "ParentUID": 918992730,
+            "UID": 318639071,
+            "ParentUID": 976105466,
             "Name": "B_R_Forearm",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 35.551186,
                 0.000002,
@@ -1056,27 +1090,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 31,
                     "ResourceName": "B_R_Forearm"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 2075628269,
-            "ParentUID": 1212560259,
+            "UID": 464688581,
+            "ParentUID": 318639071,
             "Name": "B_R_Hand",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 35.489609,
                 -0.000009,
@@ -1093,27 +1128,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 32,
                     "ResourceName": "B_R_Hand"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 993625772,
-            "ParentUID": 2075628269,
+            "UID": 242555746,
+            "ParentUID": 464688581,
             "Name": "B_R_Finger0",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 12.316833,
                 -0.520874,
@@ -1130,27 +1166,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 36,
                     "ResourceName": "B_R_Finger0"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 329151601,
-            "ParentUID": 993625772,
+            "UID": 1309675905,
+            "ParentUID": 242555746,
             "Name": "B_R_Finger01",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.867088,
                 -0.000015,
@@ -1167,27 +1204,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 37,
                     "ResourceName": "B_R_Finger01"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 65616084,
-            "ParentUID": 329151601,
+            "UID": 938014032,
+            "ParentUID": 1309675905,
             "Name": "B_R_Finger02",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.867073,
                 0.000008,
@@ -1204,27 +1242,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 38,
                     "ResourceName": "B_R_Finger02"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 559666995,
-            "ParentUID": 2075628269,
+            "UID": 497216602,
+            "ParentUID": 464688581,
             "Name": "B_R_Finger1",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315140,
                 -2.635727,
@@ -1241,27 +1280,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 39,
                     "ResourceName": "B_R_Finger1"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 632567727,
-            "ParentUID": 559666995,
+            "UID": 1428141849,
+            "ParentUID": 497216602,
             "Name": "B_R_Finger11",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438847,
                 -0.000015,
@@ -1278,27 +1318,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 41,
                     "ResourceName": "B_R_Finger11"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1550572438,
-            "ParentUID": 632567727,
+            "UID": 170813129,
+            "ParentUID": 1428141849,
             "Name": "B_R_Finger12",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438866,
                 -0.000008,
@@ -1315,27 +1356,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 57,
                     "ResourceName": "B_R_Finger12"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 548254955,
-            "ParentUID": 2075628269,
+            "UID": 1563900670,
+            "ParentUID": 464688581,
             "Name": "B_R_Finger2",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315140,
                 -2.632538,
@@ -1352,27 +1394,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 40,
                     "ResourceName": "B_R_Finger2"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 683880277,
-            "ParentUID": 548254955,
+            "UID": 760159523,
+            "ParentUID": 1563900670,
             "Name": "B_R_Finger21",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 6.345341,
                 -0.000015,
@@ -1389,27 +1432,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 60,
                     "ResourceName": "B_R_Finger21"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 568827380,
-            "ParentUID": 683880277,
+            "UID": 479154115,
+            "ParentUID": 760159523,
             "Name": "B_R_Finger22",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 6.345314,
                 0,
@@ -1426,27 +1470,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 58,
                     "ResourceName": "B_R_Finger22"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 585088653,
-            "ParentUID": 2075628269,
+            "UID": 177667917,
+            "ParentUID": 464688581,
             "Name": "B_R_Finger3",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315155,
                 -2.629318,
@@ -1463,27 +1508,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 61,
                     "ResourceName": "B_R_Finger3"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 987294217,
-            "ParentUID": 585088653,
+            "UID": 2059726384,
+            "ParentUID": 177667917,
             "Name": "B_R_Finger31",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438843,
                 -0.000031,
@@ -1500,27 +1546,28 @@
                 1,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 63,
                     "ResourceName": "B_R_Finger31"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1901592228,
-            "ParentUID": 987294217,
+            "UID": 1990052039,
+            "ParentUID": 2059726384,
             "Name": "B_R_Finger32",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 5.438889,
                 -0.000015,
@@ -1537,27 +1584,28 @@
                 1.000000,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 59,
                     "ResourceName": "B_R_Finger32"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 533151685,
-            "ParentUID": 2075628269,
+            "UID": 210553720,
+            "ParentUID": 464688581,
             "Name": "B_R_Finger4",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 17.315155,
                 -2.626312,
@@ -1574,27 +1622,28 @@
                 1.000001,
                 1.000001
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 62,
                     "ResourceName": "B_R_Finger4"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1446106637,
-            "ParentUID": 533151685,
+            "UID": 237165698,
+            "ParentUID": 210553720,
             "Name": "B_R_Finger41",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.532345,
                 0,
@@ -1611,27 +1660,28 @@
                 1,
                 1.000000
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 64,
                     "ResourceName": "B_R_Finger41"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1061835923,
-            "ParentUID": 1446106637,
+            "UID": 1858782322,
+            "ParentUID": 237165698,
             "Name": "B_R_Finger42",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 4.532417,
                 0.000023,
@@ -1648,27 +1698,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 65,
                     "ResourceName": "B_R_Finger42"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1101730855,
-            "ParentUID": 764778620,
+            "UID": 771988095,
+            "ParentUID": 1601829181,
             "Name": "B_Neck",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 33.547531,
                 -3.045568,
@@ -1685,27 +1736,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 16,
                     "ResourceName": "B_Neck"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1930436056,
-            "ParentUID": 1101730855,
+            "UID": 1509928526,
+            "ParentUID": 771988095,
             "Name": "B_Head",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 10.931519,
                 -0.266273,
@@ -1722,27 +1774,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 35,
                     "ResourceName": "B_Head"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 772090928,
-            "ParentUID": 783464319,
+            "UID": 1261904349,
+            "ParentUID": 1959259662,
             "Name": "B_L_Thigh",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 0,
                 0.000022,
@@ -1759,27 +1812,28 @@
                 1,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 17,
                     "ResourceName": "B_L_Thigh"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 79330231,
-            "ParentUID": 772090928,
+            "UID": 1486682959,
+            "ParentUID": 1261904349,
             "Name": "B_L_Calf",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 59.167969,
                 0.000000,
@@ -1796,27 +1850,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 18,
                     "ResourceName": "B_L_Calf"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1869556014,
-            "ParentUID": 79330231,
+            "UID": 2084954080,
+            "ParentUID": 1486682959,
             "Name": "B_L_Foot",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 59.505074,
                 -0.000002,
@@ -1833,27 +1888,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 19,
                     "ResourceName": "B_L_Foot"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1375406024,
-            "ParentUID": 1869556014,
+            "UID": 1725852009,
+            "ParentUID": 2084954080,
             "Name": "B_L_Toe0",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 14.912971,
                 24.276676,
@@ -1870,27 +1926,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 20,
                     "ResourceName": "B_L_Toe0"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 846977174,
-            "ParentUID": 783464319,
+            "UID": 1685185292,
+            "ParentUID": 1959259662,
             "Name": "B_R_Thigh",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 0,
                 -0.000010,
@@ -1907,27 +1964,28 @@
                 1,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 25,
                     "ResourceName": "B_R_Thigh"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1791851728,
-            "ParentUID": 846977174,
+            "UID": 811127781,
+            "ParentUID": 1685185292,
             "Name": "B_R_Calf",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 59.167969,
                 -0.000000,
@@ -1944,27 +2002,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 26,
                     "ResourceName": "B_R_Calf"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1036617211,
-            "ParentUID": 1791851728,
+            "UID": 1297259489,
+            "ParentUID": 811127781,
             "Name": "B_R_Foot",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 59.505074,
                 -0.000001,
@@ -1981,27 +2040,28 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 27,
                     "ResourceName": "B_R_Foot"
                 }
-            ],
-            "Camera": 0
+            ]
         },
         {
-            "UID": 1991405949,
-            "ParentUID": 1036617211,
+            "UID": 1930625437,
+            "ParentUID": 1297259489,
             "Name": "B_R_Toe0",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
             "Translation": [
                 14.912968,
                 24.276680,
@@ -2018,22 +2078,19 @@
                 1.000000,
                 1
             ],
-            "Active": true,
-            "Static": false,
-            "Selected": false,
-            "OpenInHierarchy": false,
             "Components": [
                 {
+                    "ComponentType": 1,
                     "HasResource": false
                 },
                 {
+                    "ComponentType": 6,
                     "HasResource": true,
                     "Type": 4,
                     "ID": 28,
                     "ResourceName": "B_R_Toe0"
                 }
-            ],
-            "Camera": 0
+            ]
         }
     ],
     "MiniTexture": 66,

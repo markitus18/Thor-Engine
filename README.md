@@ -1,4 +1,4 @@
-# ${1:Thor Engine}
+# Thor Engine
 Simple 3D game engine for edutational purposes.
 
 ## License

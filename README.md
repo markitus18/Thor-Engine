@@ -1,5 +1,5 @@
 # Thor Engine
-Simple 3D game engine for edutational purposes.
+Simple 3D game engine for edutational purposes. 
 
 ## License
 This is free and unencumbered software released into the public domain.

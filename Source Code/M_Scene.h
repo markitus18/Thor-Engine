@@ -11,6 +11,7 @@
 class GameObject;
 class Config;
 class Quadtree;
+class C_Animation;
 
 class M_Scene : public Module
 {
@@ -89,6 +90,9 @@ private:
 	uint cullingTimer_optimized = 0;
 
 	LCG random;
+
+	//TODO: Dirty stuff to erase
+	C_Animation* animation = nullptr;
 };
 
 #endif //__MODULE_SCENE_H__

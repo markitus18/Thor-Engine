@@ -87,6 +87,47 @@ bool M_Scene::CleanUp()
 // Update
 update_status M_Scene::Update(float dt)
 {
+	//Dirty stuf to erase
+	if (animation == nullptr)
+	{
+		std::vector<GameObject*> gameObjects;
+		root->CollectChilds(gameObjects);
+
+		for (uint i = 0; i < gameObjects.size(); i++)
+		{
+			C_Animation* anim = gameObjects[i]->GetComponent<C_Animation>();
+			if (anim != nullptr && gameObjects[i]->name == "aniTest")
+			{
+				animation = anim;
+				break;
+			}
+		}
+	}
+
+	//Updating animation
+	if (Time::deltaTime > 0 && animation != nullptr)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_REPEAT && animation->current_animation == 0)
+		{
+			animation->SetAnimation(1, 1.0f);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP && animation->current_animation != 2)
+		{
+			animation->SetAnimation((uint)0, 1.0f);
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+		{
+			animation->SetAnimation(2, 1.0f);
+		}
+
+		if (animation->playing == false && animation->current_animation == 2)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_2) == KEY_REPEAT)
+				animation->SetAnimation((uint)1, 1.0f);
+			else
+				animation->SetAnimation((uint)0, 1.0f);
+		}
+	}
 #pragma region WindowTest
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 	{
@@ -256,6 +297,7 @@ void M_Scene::SaveScene(Config& node) const
 void M_Scene::LoadScene(Config& node, bool tmp)
 {
 	DeleteAllGameObjects();
+	animation = nullptr;
 	quadtree->Clear();
 	std::vector<GameObject*> roots;
 	std::vector<GameObject*> newGameObjects;

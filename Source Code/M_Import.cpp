@@ -294,7 +294,7 @@ R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
 
 		//Saving mini-texture
 		uint miniTexID = 0;
-		miniTexID = App->renderer3D->SavePrefabImage(rootNode);
+	//	miniTexID = App->renderer3D->SavePrefabImage(rootNode);
 
 		config.SetNumber("MiniTexture", miniTexID);
 		config.SetString("Name", path);

@@ -15,7 +15,7 @@ C_Bone::~C_Bone()
 float4x4 C_Bone::GetSystemTransform()
 {
 	float4x4 transform = gameObject->GetComponent<C_Transform>()->GetGlobalTransform();
-	return GetRoot()->gameObject->parent->GetComponent<C_Transform>()->GetTransform().Inverted() * transform;
+	return GetRoot()->gameObject->parent->parent->GetComponent<C_Transform>()->GetGlobalTransform().Inverted() * transform;
 }
 
 C_Bone* C_Bone::GetRoot()

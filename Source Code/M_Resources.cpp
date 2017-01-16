@@ -35,7 +35,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	return true;
 }
 
@@ -457,6 +457,10 @@ void M_Resources::LoadResourcesData()
 
 	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_ext);
 	LoadMetaFromFolder(assets);
+
+	//Just to save mini-tex images
+	PathNode tex = App->fileSystem->GetAllFiles("Library/Textures", &filter_ext);
+	LoadMetaFromFolder(tex);
 }
 
 void M_Resources::LoadMetaFromFolder(PathNode node)

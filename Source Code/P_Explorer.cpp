@@ -186,10 +186,13 @@ void P_Explorer::DrawNodeImage(const PathNode& node)
 		}
 		else if (resource && resource->GetType() == Resource::PREFAB)
 		{
-			R_Prefab* prefab = (R_Prefab*)resource;
-			R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
-			if (tex)
-				ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+			//R_Prefab* prefab = (R_Prefab*)resource;
+			//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
+			//if (tex)
+			//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+
+			//Not saving prefab screenshot by now
+			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize));
 		}
 		else
 		{

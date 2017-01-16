@@ -63,7 +63,8 @@ bool M_Editor::Init(Config& config)
 	panelButtons = new P_Buttons();
 	panelResources = new P_Resources();
 	panelExplorer = new P_Explorer();
-	panelExplorer->active = false;
+	panelResources->active = false;
+	panelConsole->active = false;
 
 	panelConfiguration->Init();
 
@@ -247,15 +248,30 @@ void M_Editor::Draw()
 			}
 			if (ImGui::MenuItem("Console          ", nullptr, &panelConsole->active))
 			{
+				if (panelConsole->active == true)
+				{
+					panelExplorer->explorerActive = false;
+				}
 			}
 			if (ImGui::MenuItem("Configuration         ", nullptr, &panelConfiguration->active))
 			{
+
 			}
 			if (ImGui::MenuItem("Explorer         ", nullptr, &panelExplorer->active))
 			{
+				if (panelExplorer->active == true)
+				{
+					panelConsole->active = false;
+					panelResources->active = false;
+					panelExplorer->explorerActive = true;
+				}
 			}
-			if (ImGui::MenuItem("Resources         ", nullptr, &panelExplorer->active))
+			if (ImGui::MenuItem("Resources         ", nullptr, &panelResources->active))
 			{
+				if (panelResources->active == true)
+				{
+					panelExplorer->active = false;
+				}
 			}
 
 			ImGui::EndMenu();

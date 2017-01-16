@@ -13,6 +13,6 @@ public:
 	void FreeMemory();
 
 public:
-	uint buffer;
+	uint buffer = 0;
 };
 #endif //__R_TEXTURE_H__

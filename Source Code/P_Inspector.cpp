@@ -170,7 +170,7 @@ void P_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh, ImGuiWindowFlag
 
 		if (mesh->bones.size() > 0)
 		{
-			if (ImGui::CollapsingHeader("Bones"), flags)
+			if (ImGui::CollapsingHeader("Bones", flags))
 			{
 				for (uint i = 0; i < mesh->bones.size(); i++)
 				{
@@ -309,6 +309,11 @@ void P_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation, 
 				}
 				ImGui::Separator();
 				ImGui::Separator();
+			}
+
+			if (ImGui::Button("Add Animation"))
+			{
+				animation->AddAnimation();
 			}
 		}
 	}

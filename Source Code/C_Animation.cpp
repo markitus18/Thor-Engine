@@ -63,14 +63,14 @@ void C_Animation::LinkBones()
 
 void C_Animation::DrawLinkedBones() const
 {
-	for (uint i = 0; i < links.size(); i++)
-	{
-		C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
-		float3 pos = transform->GetGlobalPosition();
-		AABB* box = new AABB();
-		box->SetFromCenterAndSize(pos, float3(1, 1, 1));
-		App->renderer3D->AddAABB(*box, Pink);
-	}
+	//for (uint i = 0; i < links.size(); i++)
+	//{
+	//	C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
+	//	float3 pos = transform->GetGlobalPosition();
+	//	AABB* box = new AABB();
+	//	box->SetFromCenterAndSize(pos, float3(1, 1, 1));
+	//	App->renderer3D->AddAABB(*box, Pink);
+	//}
 }
 
 void C_Animation::Start()
@@ -84,6 +84,7 @@ void C_Animation::Start()
 		LinkBones();
 	}
 	started = true;
+
 	animations[current_animation].current = true;
 
 }
@@ -118,10 +119,8 @@ void C_Animation::Update(float dt)
 					if (animations[previous_animation].loopable == true)
 					{
 						prevAnimTime = 0.0f;
-						//prevBlendFrame = animations[previous_animation].start_fame;// + (currentFrame - endFrame);
+						// + (currentFrame - endFrame);
 					}
-					else
-						blendTimeDuration = 0.0f;
 				}
 
 				if (blendTimeDuration > 0.0f)
@@ -153,11 +152,17 @@ void C_Animation::Update(float dt)
 
 void C_Animation::AddAnimation()
 {
+	//Just some simple and stupid way to avoid name duplication
 	std::string new_name = "Default";
-//	for (uint i = 0; i < animations.size(); i++)
-//	{
-//		if (animations[i].find("Default"))
-//	}
+	uint defCount = 0;
+	for (uint i = 0; i < animations.size(); i++)
+	{
+		if (animations[i].name.find("Default") != std::string::npos)
+			defCount++;
+	}
+	if (defCount > 0)
+		new_name.append(std::to_string(defCount));
+
 	R_Animation* rAnim = (R_Animation*)GetResource();
 	AddAnimation(new_name.c_str(), 0, rAnim->duration, 24);
 }
@@ -192,6 +197,7 @@ void C_Animation::SetAnimation(uint index, float blendTime)
 		current_animation = index;
 		animations[current_animation].current = true;
 		time = 0.0f;
+		playing = true;
 	}
 }
 

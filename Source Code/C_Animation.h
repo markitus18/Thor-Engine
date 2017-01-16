@@ -72,7 +72,7 @@ public:
 	std::vector<AnimationSettings> animations;
 	//Used for blending
 	uint previous_animation = 0;
-	uint current_animation = 999;
+	uint current_animation = 0;
 	bool playing = false;
 
 private:

@@ -25,7 +25,7 @@ void P_Resources::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowPos(position);
 		ImGui::SetNextWindowSize(size);
 
-		if (!ImGui::Begin("Resources (read-only)", &active, ImVec2(size), 1.0f, flags))
+		if (!ImGui::Begin("Resources (read-only)", &active, flags))
 		{
 			ImGui::End();
 			return;

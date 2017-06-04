@@ -39,7 +39,7 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowPos(position);
 		ImGui::SetNextWindowSize(size);
 
-		if (!ImGui::Begin("Inspector", &active, ImVec2(size), 1.0f, flags))
+		if (!ImGui::Begin("Inspector", &active, flags))
 		{
 			ImGui::End();
 			return;

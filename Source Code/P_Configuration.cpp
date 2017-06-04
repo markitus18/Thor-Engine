@@ -19,7 +19,7 @@ void P_Configuration::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowPos(position);
 		ImGui::SetNextWindowSize(size);
 
-		if (!ImGui::Begin("Configuration", &active, size, 1.0f, flags))
+		if (!ImGui::Begin("Configuration", &active, flags))
 		{
 			ImGui::End();
 			return;

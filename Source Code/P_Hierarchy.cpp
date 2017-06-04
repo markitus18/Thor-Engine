@@ -29,7 +29,7 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowPos(position);
 		ImGui::SetNextWindowSize(size);
 
-		ImGui::Begin("Hierarchy", &active, size, 1.0f, flags);
+		ImGui::Begin("Hierarchy", &active, flags);
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
 		DrawRootChilds(App->scene->GetRoot(), default_flags);
 		ImGui::End();

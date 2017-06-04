@@ -70,7 +70,7 @@ bool M_Editor::Init(Config& config)
 
 	//Chaning ImGui style
 	ImGuiStyle style = ImGui::GetStyle();
-
+	/*
 	//Window rounding
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 
@@ -93,7 +93,7 @@ bool M_Editor::Init(Config& config)
 
 	buttonColor = ImVec4(0.347, 0.37, 0.64, 1.0);
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, buttonColor);
-
+	*/
 
 
 	return true;

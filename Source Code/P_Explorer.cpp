@@ -35,7 +35,7 @@ void P_Explorer::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowPos(position);
 		ImGui::SetNextWindowSize(size);
 
-		if (!ImGui::Begin("Explorer", &active, ImVec2(size), 1.0f, flags))
+		if (!ImGui::Begin("Explorer", &active, flags))
 		{
 			ImGui::End();
 			return;
@@ -54,7 +54,7 @@ void P_Explorer::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowPos(explorerPosition);
 		ImGui::SetNextWindowSize(explorerSize);
 
-		if (!ImGui::Begin("FolderExplorer", &explorerActive, ImVec2(explorerSize), 1.0f, flags))
+		if (!ImGui::Begin("FolderExplorer", &explorerActive, flags))
 		{
 			ImGui::End();
 			return;

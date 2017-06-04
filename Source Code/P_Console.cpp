@@ -35,7 +35,7 @@ void P_Console::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowSize(size);
 		
 		//flags |= ImGuiWindowFlags_NoTitleBar;
-		if (!ImGui::Begin("Console", &active, size, 1.0f, flags))
+		if (!ImGui::Begin("Console", &active, flags))
 		{
 			ImGui::End();
 			return;

@@ -350,7 +350,7 @@ Resource* M_Resources::GetResource(uint64 ID)
 				case (Resource::PREFAB):
 				{
 					ret = App->moduleImport->LoadPrefabResource(ID);
-					if (((R_Prefab*)ret)->miniTextureID != 0)
+					if (ret && ((R_Prefab*)ret)->miniTextureID != 0)
 					{
 						//TODO: move into import
 						R_Texture* rTex = (R_Texture*)GetResource(((R_Prefab*)ret)->miniTextureID);
@@ -732,6 +732,12 @@ void M_Resources::AddResource(Resource* resource)
 
 void M_Resources::LoadResource(Resource* resource)
 {
+	if (resource == nullptr)
+	{
+		LOG("Error: Trying to load a null resource");
+		return;
+	}
+
 	resources[resource->ID] = resource;
 	switch (resource->type)
 	{

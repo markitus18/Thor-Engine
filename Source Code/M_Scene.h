@@ -42,7 +42,7 @@ public:
 	//Endof Scene and prefab save / load ------------------------------------------
 
 	//GameObject management -------------------------------------------------------
-	GameObject* CreateGameObject(const char* name);
+	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);
 
 	void DeleteGameObject(GameObject* gameObject);
 	void OnRemoveGameObject(GameObject* gameObject);

@@ -323,52 +323,59 @@ Resource* M_Resources::GetResource(uint64 ID)
 			{
 				case (Resource::MESH):
 				{
-					ret = App->moduleMeshes->LoadMeshResource(ID);
-					LoadResource(ret);
+					if (ret = App->moduleMeshes->LoadMeshResource(ID))
+						LoadResource(ret);
 					break;
 				}
 				case (Resource::TEXTURE):
 				{
-					ret = App->moduleMaterials->LoadTextureResource(ID);
-					ret->original_file = it->second.original_file;
-					ret->name = it->second.resource_name;
-					LoadResource(ret);
+					if (ret = App->moduleMaterials->LoadTextureResource(ID))
+					{
+						ret->original_file = it->second.original_file;
+						ret->name = it->second.resource_name;
+						LoadResource(ret);
+					}
 					break;
 				}
 				case (Resource::MATERIAL):
 				{
-					ret = App->moduleMaterials->LoadMaterialResource(ID);
-					if (((R_Material*)ret)->textureID != 0)
+					if (ret = App->moduleMaterials->LoadMaterialResource(ID))
 					{
-						//TODO: move into import
-						R_Texture* rTex = (R_Texture*)GetResource(((R_Material*)ret)->textureID);
-						rTex->instances++;
+						if (((R_Material*)ret)->textureID != 0)
+						{
+							//TODO: move into import
+							R_Texture* rTex = (R_Texture*)GetResource(((R_Material*)ret)->textureID);
+							rTex->instances++;
+						}
+						LoadResource(ret);
 					}
-					LoadResource(ret);
+
 					break;
 				}
 				case (Resource::PREFAB):
 				{
-					ret = App->moduleImport->LoadPrefabResource(ID);
-					if (ret && ((R_Prefab*)ret)->miniTextureID != 0)
+					if (ret = App->moduleImport->LoadPrefabResource(ID))
 					{
-						//TODO: move into import
-						R_Texture* rTex = (R_Texture*)GetResource(((R_Prefab*)ret)->miniTextureID);
-						rTex->instances++;
+						if (ret && ((R_Prefab*)ret)->miniTextureID != 0)
+						{
+							//TODO: move into import
+							R_Texture* rTex = (R_Texture*)GetResource(((R_Prefab*)ret)->miniTextureID);
+							rTex->instances++;
+						}
+						LoadResource(ret);
 					}
-					LoadResource(ret);
 					break;
 				}
 				case (Resource::ANIMATION):
 				{
-					ret = App->moduleAnimations->LoadAnimation(ID);
-					LoadResource(ret);
+					if (ret = App->moduleAnimations->LoadAnimation(ID))
+						LoadResource(ret);
 					break;
 				}
 				case (Resource::BONE):
 				{
-					ret = App->moduleAnimations->LoadBone(ID);
-					LoadResource(ret);
+					if (ret = App->moduleAnimations->LoadBone(ID))
+						LoadResource(ret);
 					break;
 				}
 			}

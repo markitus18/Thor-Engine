@@ -30,6 +30,7 @@ public:
 	void SetScale(float3 scale);
 	void SetQuatRotation(Quat rotation);
 	void SetEulerRotation(float3 euler_angles);
+	void SetGlobalTransform(float4x4 transform);
 
 	void Reset();
 
@@ -41,6 +42,7 @@ public:
 
 private:
 	void UpdateLocalTransform();
+	void UpdateTRS();
 	void UpdateEulerAngles();
 
 private:

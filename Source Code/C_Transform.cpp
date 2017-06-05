@@ -1,6 +1,6 @@
 #include "C_Transform.h"
 #include "Component.h"
-
+#include "GameObject.h" //TODO 1*: no need to include
 
 C_Transform::C_Transform(GameObject* new_GameObject, float3 position, Quat rotation, float3 scale) : Component(Component::Type::Transform, gameObject, false), position(position), rotation(rotation), scale(scale)
 {
@@ -86,6 +86,15 @@ void C_Transform::SetEulerRotation(float3 euler_angles)
 	UpdateLocalTransform();
 }
 
+void C_Transform::SetGlobalTransform(float4x4 transform)
+{
+	float4x4 localTransform = gameObject->parent->GetComponent<C_Transform>()->GetGlobalTransform().Inverted() * transform;
+	this->transform = localTransform;
+	global_transform = transform;
+	global_transformT = global_transform.Transposed();
+	transform_updated = true;
+}
+
 void C_Transform::Reset()
 {
 	position = float3::zero;
@@ -126,6 +135,12 @@ void C_Transform::UpdateLocalTransform()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
 	transform_updated = true;
+}
+
+void C_Transform::UpdateTRS()
+{
+	transform.Decompose(position, rotation, scale);
+	UpdateEulerAngles();
 }
 
 void C_Transform::UpdateEulerAngles()

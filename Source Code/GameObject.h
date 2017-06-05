@@ -31,9 +31,13 @@ public:
 	const AABB& GetAABB() const;
 	const OBB& GetOBB() const;
 	bool HasFlippedNormals() const;
+
+	void SetParent(GameObject* gameObject, bool worldPositionStays = true);
 	bool IsParentActive() const;
+	void RemoveChild(GameObject* gameObject);
 
 	void CollectChilds(std::vector<GameObject*>& vector);
+	GameObject* GetChildByName(const char* name);
 
 	//Selection methods -----------------------------------
 	void Select();
@@ -60,7 +64,7 @@ public:
 				return ((RetComponent*)(components[i]));
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	template<typename RetComponent>
@@ -76,7 +80,7 @@ public:
 				return ((RetComponent*)(components[i]));
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	template<typename RetComponent>

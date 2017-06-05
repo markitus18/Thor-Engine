@@ -238,6 +238,21 @@ void M_Editor::Draw()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("GameObject"))
+		{
+			if (ImGui::MenuItem("Create Empty"))
+			{
+				App->scene->CreateGameObject("GameObject");
+			}
+
+			if (ImGui::MenuItem("Create Empty Child"))
+			{
+				GameObject* parent = selectedGameObjects.size() > 0 ? selectedGameObjects[0] : nullptr;
+				GameObject* game_object = App->scene->CreateGameObject("GameObject", parent);
+			}
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Inspector          ", nullptr, &panelInspector->active))

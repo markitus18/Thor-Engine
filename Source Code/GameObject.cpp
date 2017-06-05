@@ -10,7 +10,6 @@ GameObject::GameObject()
 
 GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name)
 {
-	//Hierarchy setup ---
 	parent = new_parent;
 	if (new_parent)
 		new_parent->childs.push_back(this);
@@ -136,6 +135,19 @@ bool GameObject::HasFlippedNormals() const
 	return transform->flipped_normals;
 }
 
+void GameObject::SetParent(GameObject* gameObject, bool worldPositionStays)
+{
+	float4x4 global = transform->GetTransform();
+	if (parent != nullptr)
+	{
+		global = transform->GetGlobalTransform();
+		parent->RemoveChild(this);
+	}
+	parent = gameObject;
+	transform->SetGlobalTransform(global);
+
+}
+
 bool GameObject::IsParentActive() const
 {
 	if (active == false)
@@ -147,11 +159,37 @@ bool GameObject::IsParentActive() const
 	return active;
 }
 
+void GameObject::RemoveChild(GameObject* gameObject)
+{
+	std::vector<GameObject*>::iterator it = childs.begin();
+	for (/**/; it != childs.end(); it++)
+	{
+		if ((*it) == gameObject)
+		{
+			childs.erase(it);
+			break;
+		}
+	}
+}
+
 void GameObject::CollectChilds(std::vector<GameObject*>& vector)
 {
 	vector.push_back(this);
 	for (uint i = 0; i < childs.size(); i++)
 		childs[i]->CollectChilds(vector);
+}
+
+GameObject* GameObject::GetChildByName(const char* name)
+{
+	std::vector<GameObject*>::iterator it;
+	for (it = childs.begin(); it != childs.end(); it++)
+	{
+		if ((*it)->name == name)
+		{
+			return *it;
+		}
+	}
+	return nullptr;
 }
 
 void GameObject::Select()

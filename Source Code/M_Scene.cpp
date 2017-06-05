@@ -359,9 +359,9 @@ void M_Scene::LoadGameObject(uint64 ID)
 	}
 }
 
-GameObject* M_Scene::CreateGameObject(const char* name)
+GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
 {
-	return new GameObject(root, name);
+	return new GameObject(parent ? parent : root, name);
 }
 
 void M_Scene::DeleteGameObject(GameObject* gameObject)

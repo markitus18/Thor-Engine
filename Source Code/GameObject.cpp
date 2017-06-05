@@ -179,10 +179,10 @@ void GameObject::CollectChilds(std::vector<GameObject*>& vector)
 		childs[i]->CollectChilds(vector);
 }
 
-GameObject* GameObject::GetChildByName(const char* name)
+GameObject* GameObject::FindChildByName(const char* name) const
 {
-	std::vector<GameObject*>::iterator it;
-	for (it = childs.begin(); it != childs.end(); it++)
+	std::vector<GameObject*>::const_iterator it;
+	for (it = childs.begin(); it != childs.end(); ++it)
 	{
 		if ((*it)->name == name)
 		{
@@ -190,6 +190,30 @@ GameObject* GameObject::GetChildByName(const char* name)
 		}
 	}
 	return nullptr;
+}
+
+GameObject* GameObject::GetChild(uint index) const
+{
+	if (index < childs.size())
+	{
+		return childs[index];
+	}
+	return nullptr;
+}
+
+int GameObject::GetChildIndex(GameObject* gameObject) const
+
+{	int count = 0;
+	std::vector<GameObject*>::const_iterator it;
+	for (it = childs.begin(); it != childs.end(); ++it)
+	{
+		if ((*it) == gameObject)
+		{
+			return count;
+		}
+		++count;
+	}
+	return -1;
 }
 
 void GameObject::Select()

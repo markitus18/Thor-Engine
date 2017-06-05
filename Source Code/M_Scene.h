@@ -27,6 +27,9 @@ public:
 
 	GameObject* GetRoot();
 	const GameObject* GetRoot() const;
+	
+	std::string GetNewGameObjectName(const char* name, GameObject* parent = nullptr) const;
+	int GetGameObjectNameCount(const char* name, GameObject* parent = nullptr) const;
 
 	void SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds);
 

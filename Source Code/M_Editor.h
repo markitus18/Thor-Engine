@@ -94,6 +94,8 @@ public:
 	std::vector<GameObject*> selectedGameObjects;
 	std::vector<Resource*> selectedResources;
 
+	GameObject* lastSelected = nullptr;
+
 private:
 
 	//Active window controllers

@@ -37,7 +37,9 @@ public:
 	void RemoveChild(GameObject* gameObject);
 
 	void CollectChilds(std::vector<GameObject*>& vector);
-	GameObject* GetChildByName(const char* name);
+	GameObject* FindChildByName(const char* name) const;
+	GameObject* GetChild(uint index) const;
+	int GetChildIndex(GameObject* gameObject) const;
 
 	//Selection methods -----------------------------------
 	void Select();

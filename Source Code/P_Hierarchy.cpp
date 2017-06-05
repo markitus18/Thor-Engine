@@ -12,6 +12,7 @@
 
 #include "Application.h"
 #include "M_Editor.h"
+#include "M_Input.h"
 
 P_Hierarchy::P_Hierarchy()
 {
@@ -30,9 +31,51 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 		ImGui::SetNextWindowSize(size);
 
 		ImGui::Begin("Hierarchy", &active, flags);
+		windowFocused = ImGui::GetWindowIsFocused();
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
 		DrawRootChilds(App->scene->GetRoot(), default_flags);
 		ImGui::End();
+
+		switch (shiftSelectionStage)
+		{
+			case(SELECT_START): shiftSelectionStage = SELECTION_LOOP; break;
+		}
+
+		if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
+		{
+			GameObject* toSelect = GetNextHierarchyNode(App->moduleEditor->lastSelected);
+			if (toSelect != nullptr && toSelect != App->scene->GetRoot())
+			{
+				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
+					App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+				{
+					App->moduleEditor->AddSelect(toSelect);
+				}
+				else
+				{
+					App->moduleEditor->SelectSingle(toSelect);
+				}
+				App->moduleEditor->lastSelected = toSelect;
+			}
+		}
+
+		if ((App->input->GetKey(SDL_SCANCODE_UP)) == KEY_DOWN)
+		{
+			GameObject* toSelect = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
+			if (toSelect != nullptr && toSelect != App->scene->GetRoot())
+			{
+				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
+					App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+				{
+					App->moduleEditor->AddSelect(toSelect);
+				}
+				else
+				{
+					App->moduleEditor->SelectSingle(toSelect);
+				}
+				App->moduleEditor->lastSelected = toSelect;
+			}
+		}
 	}
 }
 
@@ -46,66 +89,16 @@ void P_Hierarchy::DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags defa
 
 void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
 {
-	ImGuiTreeNodeFlags gameObject_flag = default_flags;
-	if (gameObject->childs.empty())
-	{
-		gameObject_flag |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-	}
-	if (gameObject->IsSelected())
-		gameObject_flag |= ImGuiTreeNodeFlags_Selected;
 
-	if (gameObject->IsParentActive() == false)
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
+	DisplayGameObjectNode(gameObject, default_flags);
 
-	if (gameObject->beenSelected == true)
+	if (shiftSelectionStage != NONE)
 	{
-		ImGui::SetNextTreeNodeOpen(true);
+		HandleShiftSelection(gameObject);
 	}
 
-	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());
-	gameObject->hierarchyOpen = gameObject->childs.empty() ? false : nodeOpen;
-	//bool openAndChilds = (gameObject->hierarchyOpen && !gameObject->childs.empty());
+	HandleUserInput(gameObject);
 
-	if (gameObject->IsParentActive() == false)
-		ImGui::PopStyleColor();
-
-	if (ImGui::IsItemClicked())
-	{
-		//If control is pressed, select / unselect only the GameObject
-		if (ImGui::GetIO().KeyCtrl)
-		{
-			if (gameObject->IsSelected())
-			{
-				App->moduleEditor->UnselectSingle(gameObject);
-			}
-			else
-				App->moduleEditor->AddSelect(gameObject);
-		}
-		//If not ctrl pressed, unselect all other GameObjects
-		else
-		{
-			App->moduleEditor->SelectSingle(gameObject);
-		}
-	}
-
-
-	if (ImGui::IsItemHovered())
-	{
-		if (ImGui::GetIO().MouseClicked[1])
-		{
-			ImGui::OpenPopup(gameObject->name.c_str());
-			LOG("Opening popup");
-		}
-
-
-		if (ImGui::IsMouseDoubleClicked(0))
-		{
-			float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
-			App->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
-			LOG("New camera look position: %f x, %f y, %f z", pos.x, pos.y, pos.z);
-		}
-
-	}
 	if (ImGui::BeginPopup(gameObject->name.c_str()))
 	{
 		if (ImGui::Button("delete"))
@@ -128,6 +121,168 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 	if (gameObject->beenSelected == true)
 		gameObject->beenSelected = false;
 }
+
+void P_Hierarchy::DisplayGameObjectNode(GameObject* gameObject, ImGuiTreeNodeFlags defaultFlags)
+{
+	ImGuiTreeNodeFlags gameObject_flag = defaultFlags;
+	if (gameObject->childs.empty())
+	{
+		gameObject_flag |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+	}
+	if (gameObject->IsSelected())
+		gameObject_flag |= ImGuiTreeNodeFlags_Selected;
+
+	if (gameObject->IsParentActive() == false)
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
+
+	if (gameObject->beenSelected == true)
+	{
+		ImGui::SetNextTreeNodeOpen(true);
+	}
+
+	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());
+	gameObject->hierarchyOpen = gameObject->childs.empty() ? false : nodeOpen;
+
+	if (gameObject->IsParentActive() == false)
+		ImGui::PopStyleColor();
+}
+
+void P_Hierarchy::HandleUserInput(GameObject* gameObject)
+{
+	if (ImGui::IsItemClicked())
+	{
+		//If control is pressed, select / unselect only the GameObject
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+		{
+			if (gameObject->IsSelected())
+			{
+				App->moduleEditor->UnselectSingle(gameObject);
+			}
+			else
+			{
+				App->moduleEditor->AddSelect(gameObject);
+				App->moduleEditor->lastSelected = gameObject;
+			}
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT)
+		{
+			if (App->moduleEditor->selectedGameObjects.size() == 0)
+				App->moduleEditor->SelectSingle(gameObject);
+			else
+			{
+				shiftSelectionStage = SELECT_START;
+				shiftClickedGO = gameObject;
+				shiftSelects = !gameObject->IsSelected();
+			}
+		}
+		//If not ctrl pressed or shift, unselect all other GameObjects
+		else
+		{
+			App->moduleEditor->SelectSingle(gameObject);
+		}
+	}
+
+	if (ImGui::IsItemHovered())
+	{
+		if (ImGui::GetIO().MouseClicked[1])
+		{
+			ImGui::OpenPopup(gameObject->name.c_str());
+			LOG("Opening popup");
+		}
+
+
+		if (ImGui::IsMouseDoubleClicked(0))
+		{
+			float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
+			App->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
+			LOG("New camera look position: %f x, %f y, %f z", pos.x, pos.y, pos.z);
+		}
+
+	}
+}
+
+void P_Hierarchy::HandleShiftSelection(GameObject* gameObject)
+{
+	bool begunSelection = false;
+	switch (shiftSelectionStage)
+	{
+		case(SELECTION_LOOP):
+		{
+			if (gameObject == App->moduleEditor->lastSelected || gameObject == shiftClickedGO)
+			{
+				shiftSelectionStage = SELECTING;
+				if (App->moduleEditor->lastSelected != shiftClickedGO)
+					begunSelection = true;
+			}
+			else
+				break;
+		}
+		case(SELECTING):
+		{
+			if (shiftSelects == true)
+			{
+				App->moduleEditor->AddSelect(gameObject, false);
+			}
+			else
+			{
+				App->moduleEditor->UnselectSingle(gameObject);
+			}
+			if (begunSelection == false)
+			{
+				if (gameObject == App->moduleEditor->lastSelected || gameObject == shiftClickedGO)
+				{
+					App->moduleEditor->lastSelected = shiftClickedGO;
+					shiftSelectionStage = NONE;
+				}
+			}
+
+		}
+	}
+}
+
+GameObject* P_Hierarchy::GetPreviousHierarchyNode(GameObject* gameObject) const
+{
+	GameObject* ret = nullptr;
+	int childIndex = gameObject->parent->GetChildIndex(gameObject);
+	if (childIndex > 0)
+	{
+		GameObject* previousSibling = gameObject->parent->GetChild(--childIndex);
+		while (previousSibling->hierarchyOpen == true)
+		{
+			previousSibling = previousSibling->GetChild(previousSibling->childs.size() - 1);
+		}
+		return previousSibling;
+	}
+	else
+	{
+		return gameObject->parent;
+	}
+}
+
+GameObject* P_Hierarchy::GetNextHierarchyNode(GameObject* gameObject) const
+{
+	GameObject* ret = nullptr;
+	GameObject* parent = gameObject->parent;
+
+	if (gameObject->childs.size() > 0  && gameObject->hierarchyOpen == true)
+		return gameObject->childs[0];
+
+	while (parent != nullptr)
+	{
+		if (parent->hierarchyOpen == true)
+		{
+			int childIndex = parent->GetChildIndex(gameObject);
+			//Returning next "sibling" if exists and is open
+			if (ret = parent->GetChild(++childIndex))
+				return ret;
+		}
+		gameObject = parent;
+		parent = parent->parent;
+	}
+	return nullptr;
+}
+
+
 
 void P_Hierarchy::UpdatePosition(int screen_width, int screen_height)
 {

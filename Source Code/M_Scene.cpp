@@ -35,6 +35,7 @@
 M_Scene::M_Scene(bool start_enabled) : Module("Scene", start_enabled)
 {
 	root = new GameObject(nullptr, "root");
+	root->hierarchyOpen = true;
 	root->uid = 0;
 }
 
@@ -149,8 +150,11 @@ update_status M_Scene::Update(float dt)
 		}
 	}
 #pragma endregion
+	//TODO: move to renderer
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glColor4f(1.0, 1.0, 1.0, 1.0);
+	glColor4f(1.0, 1.0, 1.0, 0.4);
 	if (drawGrid)
 	{
 		//TODO: Move this into a mesh "prefab" or a renderer method
@@ -222,6 +226,39 @@ GameObject* M_Scene::GetRoot()
 const GameObject* M_Scene::GetRoot() const
 {
 	return root;
+}
+
+std::string M_Scene::GetNewGameObjectName(const char* name, GameObject* parent) const
+{
+	uint count = GetGameObjectNameCount(name, parent);
+	std::string newName = name;
+	if (count > 0)
+		newName.append(" (").append(std::to_string(count)).append(")");
+	return newName;
+}
+
+int M_Scene::GetGameObjectNameCount(const char* name, GameObject* parent) const
+{
+	if (parent == nullptr) parent = root;
+	if (parent->childs.size() == 0) return 0;
+
+	std::vector<GameObject*>::iterator it;
+	uint count = 0;
+	bool found = false;
+
+	do
+	{
+		std::string nameStr = name;
+		if (count > 0)
+		{
+			nameStr.append(" (").append(std::to_string(count)).append(")");
+		}
+		if (found = parent->FindChildByName(nameStr.c_str()))
+		{
+			++count;
+		}
+	} while (found == true);
+	return count;
 }
 
 void M_Scene::SaveConfig(Config& config) const

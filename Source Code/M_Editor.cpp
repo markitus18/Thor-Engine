@@ -242,14 +242,31 @@ void M_Editor::Draw()
 		{
 			if (ImGui::MenuItem("Create Empty"))
 			{
-				App->scene->CreateGameObject("GameObject");
+				std::string name(App->scene->GetNewGameObjectName("GameObject"));
+				GameObject* newGameObject = App->scene->CreateGameObject(name.c_str());
+				SelectSingle(newGameObject);
 			}
 
 			if (ImGui::MenuItem("Create Empty Child"))
 			{
 				GameObject* parent = selectedGameObjects.size() > 0 ? selectedGameObjects[0] : nullptr;
-				GameObject* game_object = App->scene->CreateGameObject("GameObject", parent);
+				std::string name(App->scene->GetNewGameObjectName("GameObject", parent));
+				GameObject* newGameObject = App->scene->CreateGameObject(name.c_str(), parent);
+				SelectSingle(newGameObject);
 			}
+
+			if (ImGui::BeginMenu("3D Object"))
+			{
+				if (ImGui::MenuItem("Cube"))
+				{
+					std::string name(App->scene->GetNewGameObjectName("Cube"));
+					GameObject* newGameObject = App->scene->CreateGameObject(name.c_str());
+					SelectSingle(newGameObject);
+
+				}
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMenu();
 		}
 
@@ -553,12 +570,12 @@ void M_Editor::StopTimer(uint index)
 //Selection----------------------------
 void M_Editor::SelectSingle(GameObject* gameObject, bool openTree)
 {
-
 	UnselectAll();
 
 	if (gameObject)
 	{
 		gameObject->Select();
+		lastSelected = gameObject;
 		selectedGameObjects.push_back(gameObject);
 
 		if (openTree)
@@ -577,7 +594,7 @@ void M_Editor::SelectSingle(GameObject* gameObject, bool openTree)
 void M_Editor::AddSelect(GameObject* gameObject, bool openTree)
 {
 	UnselectResources();
-	if (gameObject)
+	if (gameObject && gameObject->IsSelected() == false)
 	{
 		gameObject->Select();
 		selectedGameObjects.push_back(gameObject);
@@ -662,6 +679,7 @@ void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 		if (*it == gameObject)
 		{
 			it = selectedGameObjects.erase(it);
+			break;
 		}
 		else
 		{

@@ -38,8 +38,6 @@ private:
 
 private:
 	bool windowFocused = false;
-	GameObject* lastSelected = nullptr;
-
 
 	//Shift selection management----------------------------
 	GameObject* shiftClickedGO = nullptr;

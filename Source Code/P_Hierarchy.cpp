@@ -43,37 +43,62 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 
 		if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
 		{
-			GameObject* toSelect = GetNextHierarchyNode(App->moduleEditor->lastSelected);
-			if (toSelect != nullptr && toSelect != App->scene->GetRoot())
+			GameObject* next = GetNextHierarchyNode(App->moduleEditor->lastSelected);
+			if (next != nullptr && next != App->scene->GetRoot())
 			{
 				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
 					App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
 				{
-					App->moduleEditor->AddSelect(toSelect);
+					GameObject* previous = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
+					if (previous == nullptr || (previous != nullptr && previous->IsSelected() == true))
+					{
+						App->moduleEditor->AddSelect(next);
+					}
+					else if (next->IsSelected() == true)
+					{
+						App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
+					}
+					else
+					{
+						App->moduleEditor->AddSelect(next);
+					}
 				}
 				else
 				{
-					App->moduleEditor->SelectSingle(toSelect);
+					App->moduleEditor->SelectSingle(next);
 				}
-				App->moduleEditor->lastSelected = toSelect;
+				App->moduleEditor->lastSelected = next;
 			}
 		}
 
 		if ((App->input->GetKey(SDL_SCANCODE_UP)) == KEY_DOWN)
 		{
-			GameObject* toSelect = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
-			if (toSelect != nullptr && toSelect != App->scene->GetRoot())
+			GameObject* previous = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
+			if (previous != nullptr && previous != App->scene->GetRoot())
 			{
 				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
 					App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
 				{
-					App->moduleEditor->AddSelect(toSelect);
+					GameObject* next = GetNextHierarchyNode(App->moduleEditor->lastSelected);
+					//Bottom end of hierarchy -> next = nullptr
+					if ((next != nullptr && next->IsSelected() == true))
+					{
+						App->moduleEditor->AddSelect(previous);
+					}
+					else if (previous->IsSelected() == true)
+					{
+						App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
+					}
+					else
+					{
+						App->moduleEditor->AddSelect(previous);
+					}
 				}
 				else
 				{
-					App->moduleEditor->SelectSingle(toSelect);
+					App->moduleEditor->SelectSingle(previous);
 				}
-				App->moduleEditor->lastSelected = toSelect;
+				App->moduleEditor->lastSelected = previous;
 			}
 		}
 	}

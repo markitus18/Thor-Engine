@@ -100,6 +100,7 @@ bool M_Renderer3D::Init(Config& config)
 		
 		//Initialize clear color
 		glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Check for error
 		error = glGetError();
@@ -183,8 +184,8 @@ update_status M_Renderer3D::PreUpdate(float dt)
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->GetCamera()->frustum.Pos().x, App->camera->GetCamera()->frustum.Pos().y, App->camera->GetCamera()->frustum.Pos().z);
 
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
-		lights[i].Render();
+//	for(uint i = 0; i < MAX_LIGHTS; ++i)
+//		lights[i].Render();
 
 	return UPDATE_CONTINUE;
 }
@@ -375,18 +376,18 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	{
 		if (rMesh.selected)
 		{
-			glColor3f(0.71, 0.78, 0.88);
+			//glColor3f(0.71, 0.78, 0.88);
 			glLineWidth(1);
 		}
 
 		else if (rMesh.parentSelected)
 		{
-			glColor3f(0.51, 0.58, 0.68);
+			//glColor3f(0.51, 0.58, 0.68);
 		}
 
 		else if (rMesh.wireframe)
 		{
-			glColor3f(0, 0, 0);
+			//glColor3f(0, 0, 0);
 		}
 
 		glDisable(GL_LIGHTING);
@@ -396,7 +397,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_LIGHTING);
 		glLineWidth(1);
-		glColor4f(1, 1, 1, 1);
+		//glColor4f(1, 1, 1, 1);
 	}
 
 	if (rMesh.shaded)
@@ -430,7 +431,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 					glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 				}
 			}
-			glColor4f(mat->color.r, mat->color.g, mat->color.b, mat->color.a);
+			//glColor4f(mat->color.r, mat->color.g, mat->color.b, mat->color.a);
 		}
 
 		glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
@@ -439,7 +440,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 		if (rMesh.material)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
-			glColor4f(255, 255, 255, 1.0f);
+			//glColor4f(255, 255, 255, 1.0f);
 		}
 
 		if (resMesh->buffersSize[R_Mesh::b_tex_coords] > 0)
@@ -504,7 +505,7 @@ void M_Renderer3D::DrawAllLines()
 {
 	for (uint i = 0; i < lines.size(); i++)
 	{
-		glColor3f(lines[i].color.r, lines[i].color.g, lines[i].color.b);
+		//glColor3f(lines[i].color.r, lines[i].color.g, lines[i].color.b);
 		glVertex3f(lines[i].start.x, lines[i].start.y, lines[i].start.z);
 		glVertex3f(lines[i].end.x, lines[i].end.y, lines[i].end.z);
 	}

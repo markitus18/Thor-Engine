@@ -78,7 +78,7 @@ update_status M_Camera3D::Update(float dt)
 
 	if (drawRay)
 	{
-		glColor4f(1, 0, 0, 1);
+		//glColor4f(1, 0, 0, 1);
 
 		//Between-planes right
 		GLfloat pointA[3] = { lastRay.a.x, lastRay.a.y, lastRay.a.z };
@@ -89,7 +89,7 @@ update_status M_Camera3D::Update(float dt)
 		glVertex3fv(pointB);
 		glEnd();
 
-		glColor4f(1, 1, 1, 1);
+		//glColor4f(1, 1, 1, 1);
 	}
 
 	return UPDATE_CONTINUE;

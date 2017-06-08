@@ -5,6 +5,7 @@
 #include "M_Resources.h"
 #include "R_Texture.h"
 #include "R_Prefab.h"
+#include "OpenGL.h"
 
 P_Explorer::P_Explorer()
 {
@@ -199,7 +200,7 @@ void P_Explorer::DrawNodeImage(const PathNode& node)
 			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize));
 		}
 	}
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void P_Explorer::UpdateTree()

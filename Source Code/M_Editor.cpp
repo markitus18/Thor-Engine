@@ -101,6 +101,7 @@ bool M_Editor::Init(Config& config)
 
 bool M_Editor::Start()
 {
+	//TODO: load in another module
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load("ProjectSettings/Icons/FolderIcon.png", &buffer);
 	if (size > 0)
@@ -131,6 +132,7 @@ bool M_Editor::Start()
 		}
 		RELEASE_ARRAY(buffer);
 	}
+	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 	return true;
 }
 

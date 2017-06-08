@@ -101,7 +101,7 @@ bool M_Editor::Init(Config& config)
 
 bool M_Editor::Start()
 {
-	//TODO: load in another module
+	//TODO: load in another module (use icons as a resource)
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load("ProjectSettings/Icons/FolderIcon.png", &buffer);
 	if (size > 0)

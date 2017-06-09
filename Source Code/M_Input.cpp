@@ -76,15 +76,21 @@ update_status M_Input::PreUpdate(float dt)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if(mouse_buttons[i] == KEY_IDLE)
+			if (mouse_buttons[i] == KEY_IDLE)
+			{
 				mouse_buttons[i] = KEY_DOWN;
+				last_mouse_click_x = mouse_x;
+				last_mouse_click_y = mouse_y;
+			}
 			else
 				mouse_buttons[i] = KEY_REPEAT;
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
+			if (mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
+			{
 				mouse_buttons[i] = KEY_UP;
+			}
 			else
 				mouse_buttons[i] = KEY_IDLE;
 		}

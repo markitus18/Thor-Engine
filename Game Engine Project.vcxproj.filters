@@ -669,6 +669,9 @@
     <ClInclude Include="Source Code\C_Bone.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\Selectable.h">
+      <Filter>Source Code\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">

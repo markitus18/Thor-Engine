@@ -90,6 +90,7 @@
     <ClInclude Include="Source Code\C_Bone.h" />
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
+    <ClInclude Include="Source Code\Selectable.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\devil_internal_exports.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\il.h" />

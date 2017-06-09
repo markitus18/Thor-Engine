@@ -13,10 +13,11 @@
 #include "C_Transform.h"
 #include "C_Animation.h"
 #include "C_Bone.h"
+#include "Selectable.h"
 
 class C_Transform;
 
-class GameObject
+class GameObject : public Selectable<GameObject>
 {
 public:
 	GameObject();

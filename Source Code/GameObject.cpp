@@ -4,11 +4,11 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 
-GameObject::GameObject()
+GameObject::GameObject() : Selectable(this, GAMEOBJECT)
 {
 }
 
-GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name)
+GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), Selectable(this, GAMEOBJECT)
 {
 	parent = new_parent;
 	if (new_parent)
@@ -144,6 +144,7 @@ void GameObject::SetParent(GameObject* gameObject, bool worldPositionStays)
 		parent->RemoveChild(this);
 	}
 	parent = gameObject;
+	parent->childs.push_back(this); //TODO: check if parent already has the child?
 	transform->SetGlobalTransform(global);
 
 }

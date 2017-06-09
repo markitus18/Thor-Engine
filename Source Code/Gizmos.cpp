@@ -14,7 +14,7 @@
 
 void Gizmos::DrawWireCube(const float3* corners, Color color)
 {
-//	glColor4f(color.r, color.g, color.b, color.a);
+	glColor4f(color.r, color.g, color.b, color.a);
 
 	//Between-planes right
 	glVertex3fv((GLfloat*)&corners[1]);
@@ -52,5 +52,5 @@ void Gizmos::DrawWireCube(const float3* corners, Color color)
 	glVertex3fv((GLfloat*)&corners[4]);
 	glVertex3fv((GLfloat*)&corners[6]);
 
-	//glColor4f(1.0, 1.0, 1.0, 1.0);
+	glColor4f(1.0, 1.0, 1.0, 1.0);
 }

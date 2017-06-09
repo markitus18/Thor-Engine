@@ -38,67 +38,35 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 
 		switch (shiftSelectionStage)
 		{
-			case(SELECT_START): shiftSelectionStage = SELECTION_LOOP; break;
-		}
-
-		if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
-		{
-			GameObject* next = GetNextHierarchyNode(App->moduleEditor->lastSelected);
-			if (next != nullptr && next != App->scene->GetRoot())
+			case(ShiftStages::SELECT_START): //TODO: uncomment
 			{
-				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
-					App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
-				{
-					GameObject* previous = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
-					if (previous == nullptr || (previous != nullptr && previous->IsSelected() == true))
-					{
-						App->moduleEditor->AddSelect(next);
-					}
-					else if (next->IsSelected() == true)
-					{
-						App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
-					}
-					else
-					{
-						App->moduleEditor->AddSelect(next);
-					}
-				}
-				else
-				{
-					App->moduleEditor->SelectSingle(next);
-				}
-				App->moduleEditor->lastSelected = next;
+			//	if (App->moduleEditor->lastSelected == shiftClickedGO)
+			//	{
+			//		shiftSelectionStage = ShiftStages::NONE;
+			//	}
+			//	else
+			//	{
+					shiftSelectionStage = ShiftStages::SELECTION_LOOP;
+			//	}
+				break;
 			}
 		}
 
-		if ((App->input->GetKey(SDL_SCANCODE_UP)) == KEY_DOWN)
+		HandleArrows();
+
+		//Start the dragging party!
+		if (selectionType != Selection_Type::NONE && App->input->LastClickMoved() == true)
 		{
-			GameObject* previous = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
-			if (previous != nullptr && previous != App->scene->GetRoot())
+			dragging = true;
+		}
+
+		if (dragging == true)
+		{
+			LOG("Dragging");
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 			{
-				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
-					App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
-				{
-					GameObject* next = GetNextHierarchyNode(App->moduleEditor->lastSelected);
-					//Bottom end of hierarchy -> next = nullptr
-					if ((next != nullptr && next->IsSelected() == true))
-					{
-						App->moduleEditor->AddSelect(previous);
-					}
-					else if (previous->IsSelected() == true)
-					{
-						App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
-					}
-					else
-					{
-						App->moduleEditor->AddSelect(previous);
-					}
-				}
-				else
-				{
-					App->moduleEditor->SelectSingle(previous);
-				}
-				App->moduleEditor->lastSelected = previous;
+			//	dragging = false;
+				LOG("End dragging");
 			}
 		}
 	}
@@ -117,7 +85,7 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 
 	DisplayGameObjectNode(gameObject, default_flags);
 
-	if (shiftSelectionStage != NONE)
+	if (shiftSelectionStage != ShiftStages::NONE)
 	{
 		HandleShiftSelection(gameObject);
 	}
@@ -174,7 +142,17 @@ void P_Hierarchy::DisplayGameObjectNode(GameObject* gameObject, ImGuiTreeNodeFla
 
 void P_Hierarchy::HandleUserInput(GameObject* gameObject)
 {
-	if (ImGui::IsItemClicked())
+	if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && dragging == true)
+	{
+		if (App->moduleEditor->toSelectGOs.size() > 0)
+		{
+			App->moduleEditor->toSelectGOs[0]->SetParent(gameObject);
+			App->moduleEditor->toSelectGOs.clear();
+		}
+		dragging = false;
+		LOG("End dragging");
+	}
+	if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
 		//If control is pressed, select / unselect only the GameObject
 		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
@@ -182,28 +160,44 @@ void P_Hierarchy::HandleUserInput(GameObject* gameObject)
 			if (gameObject->IsSelected())
 			{
 				App->moduleEditor->UnselectSingle(gameObject);
+				App->moduleEditor->lastSelected = gameObject;
+				selectionType = Selection_Type::CTRL_MINUS;
 			}
 			else
 			{
-				App->moduleEditor->AddSelect(gameObject);
+				App->moduleEditor->AddToSelect(gameObject);
+				//App->moduleEditor->AddSelect(gameObject);
 				App->moduleEditor->lastSelected = gameObject;
+				selectionType = Selection_Type::CTRL_PLUS;
 			}
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT)
 		{
 			if (App->moduleEditor->selectedGameObjects.size() == 0)
-				App->moduleEditor->SelectSingle(gameObject);
+			{
+				App->moduleEditor->AddToSelect(gameObject);
+				selectionType = Selection_Type::NORMAL;
+				//App->moduleEditor->SelectSingle(gameObject);
+			}
 			else
 			{
-				shiftSelectionStage = SELECT_START;
+				shiftSelectionStage = ShiftStages::SELECT_START;
 				shiftClickedGO = gameObject;
 				shiftSelects = !gameObject->IsSelected();
+				selectionType = Selection_Type::SHIFT;
+				//TODO: add to select and selection type
 			}
 		}
 		//If not ctrl pressed or shift, unselect all other GameObjects
 		else
 		{
-			App->moduleEditor->SelectSingle(gameObject);
+			if (gameObject->IsSelected() == false)
+			{
+				App->moduleEditor->UnselectAll();
+				App->moduleEditor->AddToSelect(gameObject);
+			}
+			selectionType = Selection_Type::NORMAL;
+			//App->moduleEditor->SelectSingle(gameObject);
 		}
 	}
 
@@ -226,27 +220,92 @@ void P_Hierarchy::HandleUserInput(GameObject* gameObject)
 	}
 }
 
+void P_Hierarchy::HandleArrows()
+{
+	if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
+	{
+		GameObject* next = GetNextHierarchyNode(App->moduleEditor->lastSelected);
+		if (next != nullptr && next != App->scene->GetRoot())
+		{
+			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
+				App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+			{
+				GameObject* previous = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
+				if (previous == nullptr || (previous != nullptr && previous->IsSelected() == true))
+				{
+					App->moduleEditor->AddSelect(next);
+				}
+				else if (next->IsSelected() == true)
+				{
+					App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
+				}
+				else
+				{
+					App->moduleEditor->AddSelect(next);
+				}
+			}
+			else
+			{
+				App->moduleEditor->SelectSingle(next);
+			}
+			App->moduleEditor->lastSelected = next;
+		}
+	}
+
+	if ((App->input->GetKey(SDL_SCANCODE_UP)) == KEY_DOWN)
+	{
+		GameObject* previous = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
+		if (previous != nullptr && previous != App->scene->GetRoot())
+		{
+			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
+				App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+			{
+				GameObject* next = GetNextHierarchyNode(App->moduleEditor->lastSelected);
+				//Bottom end of hierarchy -> next = nullptr
+				if ((next != nullptr && next->IsSelected() == true))
+				{
+					App->moduleEditor->AddSelect(previous);
+				}
+				else if (previous->IsSelected() == true)
+				{
+					App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
+				}
+				else
+				{
+					App->moduleEditor->AddSelect(previous);
+				}
+			}
+			else
+			{
+				App->moduleEditor->SelectSingle(previous);
+			}
+			App->moduleEditor->lastSelected = previous;
+		}
+	}
+}
+
 void P_Hierarchy::HandleShiftSelection(GameObject* gameObject)
 {
 	bool begunSelection = false;
 	switch (shiftSelectionStage)
 	{
-		case(SELECTION_LOOP):
+		case(ShiftStages::SELECTION_LOOP):
 		{
 			if (gameObject == App->moduleEditor->lastSelected || gameObject == shiftClickedGO)
 			{
-				shiftSelectionStage = SELECTING;
+				shiftSelectionStage = ShiftStages::SELECTING;
 				if (App->moduleEditor->lastSelected != shiftClickedGO)
 					begunSelection = true;
 			}
 			else
 				break;
 		}
-		case(SELECTING):
+		case(ShiftStages::SELECTING):
 		{
 			if (shiftSelects == true)
 			{
-				App->moduleEditor->AddSelect(gameObject, false);
+				App->moduleEditor->AddToSelect(gameObject);
+				//App->moduleEditor->AddSelect(gameObject, false);
 			}
 			else
 			{
@@ -257,7 +316,7 @@ void P_Hierarchy::HandleShiftSelection(GameObject* gameObject)
 				if (gameObject == App->moduleEditor->lastSelected || gameObject == shiftClickedGO)
 				{
 					App->moduleEditor->lastSelected = shiftClickedGO;
-					shiftSelectionStage = NONE;
+					shiftSelectionStage = ShiftStages::NONE;
 				}
 			}
 
@@ -306,8 +365,6 @@ GameObject* P_Hierarchy::GetNextHierarchyNode(GameObject* gameObject) const
 	}
 	return nullptr;
 }
-
-
 
 void P_Hierarchy::UpdatePosition(int screen_width, int screen_height)
 {

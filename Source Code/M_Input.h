@@ -11,7 +11,8 @@ enum KEY_STATE
 	KEY_IDLE = 0,
 	KEY_DOWN,
 	KEY_REPEAT,
-	KEY_UP
+	KEY_UP,
+	KEY_CLICK, //For mouse handling, if the mouse has been pressed and released, but not moved
 };
 
 class Config;
@@ -67,6 +68,19 @@ public:
 		return mouse_motion_y;
 	}
 
+	bool LastClickMoved() const
+	{
+		if (GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+		{
+			if (last_mouse_click_x != mouse_x)
+				return true;
+			if (last_mouse_click_y != mouse_y)
+				return true;
+			return false;
+			return (last_mouse_click_x != mouse_x || last_mouse_click_y != mouse_y);
+		}
+		return false;
+	}
 private:
 	void ResetImGuiDrag();
 
@@ -82,6 +96,9 @@ private:
 	int mouse_z = 0;
 	int mouse_motion_x = 0;
 	int mouse_motion_y = 0;
+
+	int last_mouse_click_x = 0;
+	int last_mouse_click_y = 0;
 
 	//TODO: change "ifinite mouse" functionality in a more polite way
 	int last_mouse_swap = 0;

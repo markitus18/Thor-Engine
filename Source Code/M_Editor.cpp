@@ -614,6 +614,11 @@ void M_Editor::AddSelect(GameObject* gameObject, bool openTree)
 	}
 }
 
+void M_Editor::AddToSelect(GameObject* gameObject)
+{
+	toSelectGOs.push_back(gameObject);
+}
+
 void M_Editor::UnselectSingle(GameObject* gameObject)
 {
 	gameObject->Unselect();

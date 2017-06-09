@@ -7,7 +7,16 @@
 class GameObject;
 typedef int ImGuiTreeNodeFlags;
 
-enum ShiftSelectionStages
+enum class Selection_Type
+{
+	NONE,
+	NORMAL,
+	SHIFT,
+	CTRL_PLUS,
+	CTRL_MINUS
+};
+
+enum class ShiftStages
 {
 	NONE = 0,
 	SELECT_START,
@@ -31,6 +40,7 @@ private:
 
 	//User input management
 	void HandleUserInput(GameObject* gameObject);
+	void HandleArrows();
 	void HandleShiftSelection(GameObject* gameObject);
 
 	GameObject* GetNextHierarchyNode(GameObject* gameObject) const;
@@ -41,15 +51,18 @@ private:
 
 	//Shift selection management----------------------------
 	GameObject* shiftClickedGO = nullptr;
-	ShiftSelectionStages shiftSelectionStage = NONE;
+	ShiftStages shiftSelectionStage = ShiftStages::NONE;
+	//Shift mode needs to select or unselect?
 	bool shiftSelects = true;
-	//------------------------------------------------------
-
 	//Activates at the beggining of the draw loop if shift was presset
 	bool checkForShiftSelection = false;
 	//Is active between selection GameObject ends
 	bool shiftSelectionOn = false;
-	//Shift mode needs to select or unselect?
+	//------------------------------------------------------
+
+public:
+	Selection_Type selectionType = Selection_Type::NONE;
+	bool dragging = true;
 
 };
 

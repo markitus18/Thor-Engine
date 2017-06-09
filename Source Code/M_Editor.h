@@ -52,6 +52,7 @@ public:
 	//Selection --------------------
 	void SelectSingle(GameObject* gameObject, bool openTree = true);
 	void AddSelect(GameObject* gameObject, bool openTree = true);
+	void AddToSelect(GameObject* gameObject);
 	void UnselectSingle(GameObject* gameObject);
 	void UnselectAll();
 	void UnselectGameObjects();
@@ -92,6 +93,9 @@ public:
 	bool wireframe = false;
 
 	std::vector<GameObject*> selectedGameObjects;
+	std::vector<GameObject*> toSelectGOs;
+	std::vector<GameObject*> toDragGOs;
+
 	std::vector<Resource*> selectedResources;
 
 	GameObject* lastSelected = nullptr;
@@ -109,6 +113,8 @@ private:
 
 	bool using_keyboard;
 	bool using_mouse;
+
+	bool dragging = true;
 };
 
 #endif

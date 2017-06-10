@@ -56,46 +56,17 @@ bool M_Editor::Init(Config& config)
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
 
 	//Initializing all panels
-	panelConsole = new P_Console();
-	panelHierarchy = new P_Hierarchy();
-	panelInspector = new P_Inspector();
-	panelConfiguration = new P_Configuration();
-	panelButtons = new P_Buttons();
-	panelResources = new P_Resources();
-	panelExplorer = new P_Explorer();
-	panelResources->active = false;
-	panelConsole->active = false;
+	console = new P_Console();
+	hierarchy = new P_Hierarchy();
+	inspector = new P_Inspector();
+	configuration = new P_Configuration();
+	buttons = new P_Buttons();
+	resources = new P_Resources();
+	explorer = new P_Explorer();
+	resources->active = false;
+	console->active = false;
 
-	panelConfiguration->Init();
-
-	//Chaning ImGui style
-	ImGuiStyle style = ImGui::GetStyle();
-	/*
-	//Window rounding
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-
-	//Window title color
-	ImVec4 headerColor = style.Colors[ImGuiCol_TitleBg];
-	headerColor.w = 1.0f;
-	ImGui::PushStyleColor(ImGuiCol_TitleBg, headerColor);
-
-	headerColor = style.Colors[ImGuiCol_TitleBgActive];
-	headerColor.w = 1.0f;
-	ImGui::PushStyleColor(ImGuiCol_TitleBgActive, headerColor);
-
-
-	//Button color
-	ImVec4 buttonColor(0.37, 0.37, 0.64, 0.6);
-	ImGui::PushStyleColor(ImGuiCol_Button, buttonColor);
-
-	buttonColor = ImVec4(0.37, 0.37, 0.64, 0.8);
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, buttonColor);
-
-	buttonColor = ImVec4(0.347, 0.37, 0.64, 1.0);
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, buttonColor);
-	*/
-
-
+	configuration->Init();
 	return true;
 }
 
@@ -108,7 +79,7 @@ bool M_Editor::Start()
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			panelExplorer->folderBuffer = ilutGLBindTexImage();
+			explorer->folderBuffer = ilutGLBindTexImage();
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -118,7 +89,7 @@ bool M_Editor::Start()
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			panelExplorer->fileBuffer = ilutGLBindTexImage();
+			explorer->fileBuffer = ilutGLBindTexImage();
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -128,7 +99,7 @@ bool M_Editor::Start()
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			panelExplorer->selectedBuffer = ilutGLBindTexImage();
+			explorer->selectedBuffer = ilutGLBindTexImage();
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -274,37 +245,37 @@ void M_Editor::Draw()
 
 		if (ImGui::BeginMenu("Window"))
 		{
-			if (ImGui::MenuItem("Inspector          ", nullptr, &panelInspector->active))
+			if (ImGui::MenuItem("Inspector          ", nullptr, &inspector->active))
 			{
 			}
-			if (ImGui::MenuItem("Hierarchy          ", nullptr, &panelHierarchy->active))
+			if (ImGui::MenuItem("Hierarchy          ", nullptr, &hierarchy->active))
 			{
 			}
-			if (ImGui::MenuItem("Console          ", nullptr, &panelConsole->active))
+			if (ImGui::MenuItem("Console          ", nullptr, &console->active))
 			{
-				if (panelConsole->active == true)
+				if (console->active == true)
 				{
-					panelExplorer->explorerActive = false;
+					explorer->explorerActive = false;
 				}
 			}
-			if (ImGui::MenuItem("Configuration         ", nullptr, &panelConfiguration->active))
+			if (ImGui::MenuItem("Configuration         ", nullptr, &configuration->active))
 			{
 
 			}
-			if (ImGui::MenuItem("Explorer         ", nullptr, &panelExplorer->active))
+			if (ImGui::MenuItem("Explorer         ", nullptr, &explorer->active))
 			{
-				if (panelExplorer->active == true)
+				if (explorer->active == true)
 				{
-					panelConsole->active = false;
-					panelResources->active = false;
-					panelExplorer->explorerActive = true;
+					console->active = false;
+					resources->active = false;
+					explorer->explorerActive = true;
 				}
 			}
-			if (ImGui::MenuItem("Resources         ", nullptr, &panelResources->active))
+			if (ImGui::MenuItem("Resources         ", nullptr, &resources->active))
 			{
-				if (panelResources->active == true)
+				if (resources->active == true)
 				{
-					panelExplorer->active = false;
+					explorer->active = false;
 				}
 			}
 
@@ -355,13 +326,13 @@ void M_Editor::Draw()
 
 bool M_Editor::CleanUp()
 {
-	RELEASE(panelConsole);
-	RELEASE(panelHierarchy);
-	RELEASE(panelInspector);
-	RELEASE(panelConfiguration);
-	RELEASE(panelButtons);
-	RELEASE(panelResources);
-	RELEASE(panelExplorer);
+	RELEASE(console);
+	RELEASE(hierarchy);
+	RELEASE(inspector);
+	RELEASE(configuration);
+	RELEASE(buttons);
+	RELEASE(resources);
+	RELEASE(explorer);
 
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
@@ -369,8 +340,8 @@ bool M_Editor::CleanUp()
 
 void M_Editor::Log(const char* input)
 {
-	if (panelConsole != nullptr)
-		panelConsole->AddLog(input);
+	if (console != nullptr)
+		console->AddLog(input);
 }
 
 void M_Editor::GetEvent(SDL_Event* event)
@@ -381,37 +352,37 @@ void M_Editor::GetEvent(SDL_Event* event)
 void M_Editor::DrawPanels()
 {
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize;
-	if (panelHierarchy != nullptr)
+	if (hierarchy != nullptr)
 	{
-		panelHierarchy->Draw(windowFlags);
+		hierarchy->Draw(windowFlags);
 	}
 
-	if (panelConsole != nullptr)
+	if (console != nullptr)
 	{
-		panelConsole->Draw(windowFlags);
+		console->Draw(windowFlags);
 	}
 
-	if (panelInspector != nullptr)
+	if (inspector != nullptr)
 	{
-		panelInspector->Draw(windowFlags);
+		inspector->Draw(windowFlags);
 	}
 
-	if (panelConfiguration != nullptr)
+	if (configuration != nullptr)
 	{
-		panelConfiguration->Draw(windowFlags);
+		configuration->Draw(windowFlags);
 	}
 
-	if (panelButtons != nullptr)
+	if (buttons != nullptr)
 	{
-		panelButtons->Draw(windowFlags);
+		buttons->Draw(windowFlags);
 	}
-	if (panelResources != nullptr)
+	if (resources != nullptr)
 	{
-		panelResources->Draw(windowFlags);
+		resources->Draw(windowFlags);
 	}
-	if (panelExplorer != nullptr)
+	if (explorer != nullptr)
 	{
-		panelExplorer->Draw(windowFlags);
+		explorer->Draw(windowFlags);
 	}
 }
 
@@ -519,19 +490,19 @@ void M_Editor::OpenFileNameWindow()
 
 void M_Editor::UpdateFPSData(int fps, int ms)
 {
-	if (panelConfiguration)
-		panelConfiguration->UpdateFPSData(fps, ms);
+	if (configuration)
+		configuration->UpdateFPSData(fps, ms);
 }
 
 void M_Editor::OnResize(int screen_width, int screen_height)
 {
-	panelConsole->UpdatePosition(screen_width, screen_height);
-	panelHierarchy->UpdatePosition(screen_width, screen_height);
-	panelInspector->UpdatePosition(screen_width, screen_height);
-	panelConfiguration->UpdatePosition(screen_width, screen_height);
-	panelButtons->UpdatePosition(screen_width, screen_height);
-	panelResources->UpdatePosition(screen_width, screen_height);
-	panelExplorer->UpdatePosition(screen_width, screen_height);
+	console->UpdatePosition(screen_width, screen_height);
+	hierarchy->UpdatePosition(screen_width, screen_height);
+	inspector->UpdatePosition(screen_width, screen_height);
+	configuration->UpdatePosition(screen_width, screen_height);
+	buttons->UpdatePosition(screen_width, screen_height);
+	resources->UpdatePosition(screen_width, screen_height);
+	explorer->UpdatePosition(screen_width, screen_height);
 
 	playWindow.x = screen_width / 2 - 90;
 	playWindow.y = screen_height / 20;
@@ -550,22 +521,22 @@ bool M_Editor::UsingMouse() const
 //Timer management -------------------
 uint M_Editor::AddTimer(const char* text, const char* tag)
 {
-	return panelConfiguration->AddTimer(text, tag);
+	return configuration->AddTimer(text, tag);
 }
 
 void M_Editor::StartTimer(uint index)
 {
-	panelConfiguration->StartTimer(index);
+	configuration->StartTimer(index);
 }
 
 void M_Editor::ReadTimer(uint index)
 {
-	panelConfiguration->ReadTimer(index);
+	configuration->ReadTimer(index);
 }
 
 void M_Editor::StopTimer(uint index)
 {
-	panelConfiguration->StopTimer(index);
+	configuration->StopTimer(index);
 }
 
 

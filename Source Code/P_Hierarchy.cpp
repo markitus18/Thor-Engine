@@ -38,16 +38,16 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 
 		switch (shiftSelectionStage)
 		{
-			case(ShiftStages::SELECT_START): //TODO: uncomment
+			case(ShiftStages::SELECT_START):
 			{
-			//	if (App->moduleEditor->lastSelected == shiftClickedGO)
-			//	{
-			//		shiftSelectionStage = ShiftStages::NONE;
-			//	}
-			//	else
-			//	{
+				if (App->moduleEditor->lastSelected == shiftClickedGO)
+				{
+					shiftSelectionStage = ShiftStages::NONE;
+				}
+				else
+				{
 					shiftSelectionStage = ShiftStages::SELECTION_LOOP;
-			//	}
+				}
 				break;
 			}
 		}
@@ -293,33 +293,23 @@ void P_Hierarchy::HandleShiftSelection(GameObject* gameObject)
 		{
 			if (gameObject == App->moduleEditor->lastSelected || gameObject == shiftClickedGO)
 			{
-				shiftSelectionStage = ShiftStages::SELECTING;
-				if (App->moduleEditor->lastSelected != shiftClickedGO)
-					begunSelection = true;
-			}
-			else
-				break;
-		}
-		case(ShiftStages::SELECTING):
-		{
-			if (shiftSelects == true)
-			{
-				App->moduleEditor->AddToSelect(gameObject);
-				//App->moduleEditor->AddSelect(gameObject, false);
-			}
-			else
-			{
-				App->moduleEditor->UnselectSingle(gameObject);
-			}
-			if (begunSelection == false)
-			{
-				if (gameObject == App->moduleEditor->lastSelected || gameObject == shiftClickedGO)
+				bool finished = false;
+				GameObject* next = gameObject;
+				while (finished == false && next != nullptr)
 				{
-					App->moduleEditor->lastSelected = shiftClickedGO;
-					shiftSelectionStage = ShiftStages::NONE;
+					if (shiftSelects == true)
+					{
+						//App->moduleEditor->AddToSelect(gameObject);
+						App->moduleEditor->AddSelect(next, false);
+					}
+					else
+					{
+						App->moduleEditor->UnselectSingle(next);
+					}
+					next = GetNextHierarchyNode(next);
 				}
 			}
-
+			shiftSelectionStage = ShiftStages::NONE;
 		}
 	}
 }
@@ -340,6 +330,19 @@ GameObject* P_Hierarchy::GetPreviousHierarchyNode(GameObject* gameObject) const
 	else
 	{
 		return gameObject->parent;
+	}
+}
+
+GameObject* P_Hierarchy::GetFirstHierarchyOpen(GameObject* first, GameObject* second) const
+{
+	if (first == second) return first;
+
+	GameObject* toEvaluate = GetNextHierarchyNode(App->scene->GetRoot());
+	while (toEvaluate != nullptr)
+	{
+		if (first == toEvaluate) return first;
+		if (second == toEvaluate) return second;
+		toEvaluate = GetNextHierarchyNode(App->scene->GetRoot());
 	}
 }
 

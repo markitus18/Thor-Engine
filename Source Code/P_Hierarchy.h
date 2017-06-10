@@ -43,6 +43,7 @@ private:
 	void HandleArrows();
 	void HandleShiftSelection(GameObject* gameObject);
 
+	GameObject* GetFirstHierarchyOpen(GameObject* first, GameObject* second) const;
 	GameObject* GetNextHierarchyNode(GameObject* gameObject) const;
 	GameObject* GetPreviousHierarchyNode(GameObject* gameObject) const;
 

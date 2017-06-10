@@ -146,7 +146,6 @@ void GameObject::SetParent(GameObject* gameObject, bool worldPositionStays)
 	parent = gameObject;
 	parent->childs.push_back(this); //TODO: check if parent already has the child?
 	transform->SetGlobalTransform(global);
-
 }
 
 bool GameObject::IsParentActive() const

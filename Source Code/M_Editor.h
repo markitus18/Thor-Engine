@@ -79,13 +79,13 @@ private:
 	//TODO: move into private
 public:
 	//Panels
-	P_Hierarchy*		panelHierarchy = nullptr;
-	P_Console*			panelConsole = nullptr;
-	P_Inspector*		panelInspector = nullptr;
-	P_Configuration*	panelConfiguration = nullptr;
-	P_Buttons*			panelButtons = nullptr;
-	P_Resources*		panelResources = nullptr;
-	P_Explorer*			panelExplorer = nullptr;
+	P_Hierarchy*		hierarchy = nullptr;
+	P_Console*			console = nullptr;
+	P_Inspector*		inspector = nullptr;
+	P_Configuration*	configuration = nullptr;
+	P_Buttons*			buttons = nullptr;
+	P_Resources*		resources = nullptr;
+	P_Explorer*			explorer = nullptr;
 
 	ImVec2 playWindow;
 

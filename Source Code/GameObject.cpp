@@ -137,15 +137,18 @@ bool GameObject::HasFlippedNormals() const
 
 void GameObject::SetParent(GameObject* gameObject, bool worldPositionStays)
 {
-	float4x4 global = transform->GetTransform();
-	if (parent != nullptr)
+	if (this != gameObject && gameObject != nullptr)
 	{
-		global = transform->GetGlobalTransform();
-		parent->RemoveChild(this);
+		float4x4 global = transform->GetTransform();
+		if (parent != nullptr)
+		{
+			global = transform->GetGlobalTransform();
+			parent->RemoveChild(this);
+		}
+		parent = gameObject;
+		parent->childs.push_back(this); //TODO: check if parent already has the child?
+		transform->SetGlobalTransform(global);
 	}
-	parent = gameObject;
-	parent->childs.push_back(this); //TODO: check if parent already has the child?
-	transform->SetGlobalTransform(global);
 }
 
 bool GameObject::IsParentActive() const

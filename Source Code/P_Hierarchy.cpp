@@ -40,14 +40,32 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 		{
 			case(ShiftStages::SELECT_START):
 			{
-				if (App->moduleEditor->lastSelected == shiftClickedGO)
+				if (App->moduleEditor->lastSelected != shiftClickedGO)
 				{
-					shiftSelectionStage = ShiftStages::NONE;
+					GameObject* next = GetFirstHierarchyOpen(shiftClickedGO, App->moduleEditor->lastSelected);
+					GameObject* second = shiftClickedGO == next ? App->moduleEditor->lastSelected : shiftClickedGO;
+					while (next != nullptr)
+					{
+						if (shiftSelects == true)
+						{
+							if (next->IsSelected() == false)
+								App->moduleEditor->AddToSelect(next);
+						}
+						else
+						{
+							App->moduleEditor->UnselectSingle(next);
+						}
+						if (next == second)
+							break;
+						next = GetNextHierarchyNode(next);
+					}
+					for (uint i = 0; i < App->moduleEditor->toSelectGOs.size(); i++)
+					{
+						LOG("ToSelect: GameObject '%s' added", App->moduleEditor->toSelectGOs[i]->name.c_str());
+						LOG("---------------------------------");
+					}
 				}
-				else
-				{
-					shiftSelectionStage = ShiftStages::SELECTION_LOOP;
-				}
+				shiftSelectionStage = ShiftStages::NONE;
 				break;
 			}
 		}
@@ -57,18 +75,35 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 		//Start the dragging party!
 		if (selectionType != Selection_Type::NONE && App->input->LastClickMoved() == true)
 		{
-			dragging = true;
+			//dragging = true;
 		}
 
-		if (dragging == true)
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 		{
-			LOG("Dragging");
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			if (selectionType != Selection_Type::NONE && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && dragging == false)
 			{
-			//	dragging = false;
-				LOG("End dragging");
+				switch (selectionType)
+				{
+					case(Selection_Type::NORMAL):
+					{
+						App->moduleEditor->SelectSingle(App->moduleEditor->toSelectGOs[0]);
+						App->moduleEditor->toSelectGOs.clear();
+
+						break;
+					}
+					case(Selection_Type::SHIFT):
+					{
+						for (uint i = 0; i < App->moduleEditor->toSelectGOs.size(); i++)
+						{
+							App->moduleEditor->AddSelect(App->moduleEditor->toSelectGOs[i]);
+						}
+						App->moduleEditor->toSelectGOs.clear();
+						break;
+					}
+				}
 			}
 		}
+
 	}
 }
 
@@ -144,14 +179,19 @@ void P_Hierarchy::HandleUserInput(GameObject* gameObject)
 {
 	if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && dragging == true)
 	{
+		/*
 		if (App->moduleEditor->toSelectGOs.size() > 0)
 		{
 			App->moduleEditor->toSelectGOs[0]->SetParent(gameObject);
+			LOG("GameObject %s parentting to GameObject %s", App->moduleEditor->toSelectGOs[0], gameObject);
 			App->moduleEditor->toSelectGOs.clear();
-		}
+			selectionType = Selection_Type::NONE;
+
+		}*/
 		dragging = false;
 		LOG("End dragging");
 	}
+
 	if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
 		//If control is pressed, select / unselect only the GameObject
@@ -299,8 +339,8 @@ void P_Hierarchy::HandleShiftSelection(GameObject* gameObject)
 				{
 					if (shiftSelects == true)
 					{
-						//App->moduleEditor->AddToSelect(gameObject);
-						App->moduleEditor->AddSelect(next, false);
+						App->moduleEditor->AddToSelect(gameObject);
+						//App->moduleEditor->AddSelect(next, false);
 					}
 					else
 					{
@@ -342,7 +382,7 @@ GameObject* P_Hierarchy::GetFirstHierarchyOpen(GameObject* first, GameObject* se
 	{
 		if (first == toEvaluate) return first;
 		if (second == toEvaluate) return second;
-		toEvaluate = GetNextHierarchyNode(App->scene->GetRoot());
+		toEvaluate = GetNextHierarchyNode(toEvaluate);
 	}
 }
 

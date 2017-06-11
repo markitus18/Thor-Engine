@@ -63,7 +63,7 @@ private:
 
 public:
 	Selection_Type selectionType = Selection_Type::NONE;
-	bool dragging = true;
+	bool dragging = false;
 
 };
 

@@ -47,6 +47,8 @@ private:
 	GameObject* GetNextHierarchyNode(GameObject* gameObject) const;
 	GameObject* GetPreviousHierarchyNode(GameObject* gameObject) const;
 
+	bool IsHighlighted(GameObject* gameObject) const;
+
 private:
 	bool windowFocused = false;
 

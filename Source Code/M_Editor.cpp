@@ -228,6 +228,15 @@ void M_Editor::Draw()
 				SelectSingle(newGameObject);
 			}
 
+			if (ImGui::MenuItem("Create Empty x10"))
+			{
+				for (uint i = 0; i < 10; i++)
+				{
+					std::string name(App->scene->GetNewGameObjectName("GameObject"));
+					GameObject* newGameObject = App->scene->CreateGameObject(name.c_str());
+					SelectSingle(newGameObject);
+				}
+			}
 			if (ImGui::BeginMenu("3D Object"))
 			{
 				if (ImGui::MenuItem("Cube"))

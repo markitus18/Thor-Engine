@@ -95,6 +95,7 @@ public:
 	std::vector<GameObject*> selectedGameObjects;
 	std::vector<GameObject*> toSelectGOs;
 	std::vector<GameObject*> toDragGOs;
+	std::vector<GameObject*> toUnselectGOs;
 
 	std::vector<Resource*> selectedResources;
 

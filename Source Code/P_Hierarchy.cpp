@@ -192,7 +192,7 @@ void P_Hierarchy::DisplayGameObjectNode(GameObject* gameObject, ImGuiTreeNodeFla
 
 void P_Hierarchy::HandleUserInput(GameObject* gameObject)
 {
-	if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && dragging == true)
+	if (ImGui::IsItemHoveredRect() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && dragging == true)
 	{
 		if (App->moduleEditor->toSelectGOs.size() > 0)
 		{

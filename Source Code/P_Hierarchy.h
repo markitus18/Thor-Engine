@@ -47,6 +47,7 @@ private:
 	std::vector<GameObject*>::const_iterator GetFirstHierarchyOpen(const std::vector<GameObject*>& vector) const;
 	GameObject* GetNextHierarchyNode(GameObject* gameObject) const;
 	GameObject* GetPreviousHierarchyNode(GameObject* gameObject) const;
+	void FinishDrag();
 
 	bool IsHighlighted(GameObject* gameObject) const;
 	void SetParentByPlace(GameObject* parent, std::vector<GameObject*>& childs, GameObject* next = nullptr);

@@ -33,9 +33,10 @@ public:
 	const OBB& GetOBB() const;
 	bool HasFlippedNormals() const;
 
-	void SetParent(GameObject* gameObject, bool worldPositionStays = true);
+	void SetParent(GameObject* gameObject, GameObject* next = nullptr, bool worldPositionStays = true);
 	bool IsParentActive() const;
 	void RemoveChild(GameObject* gameObject);
+	bool HasChildInTree(GameObject* gameObject) const;
 
 	void CollectChilds(std::vector<GameObject*>& vector);
 	GameObject* FindChildByName(const char* name) const;

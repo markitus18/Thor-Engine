@@ -135,7 +135,7 @@ bool GameObject::HasFlippedNormals() const
 	return transform->flipped_normals;
 }
 
-void GameObject::SetParent(GameObject* gameObject, bool worldPositionStays)
+void GameObject::SetParent(GameObject* gameObject, GameObject* next, bool worldPositionStays)
 {
 	if (this != gameObject && gameObject != nullptr)
 	{
@@ -146,7 +146,10 @@ void GameObject::SetParent(GameObject* gameObject, bool worldPositionStays)
 			parent->RemoveChild(this);
 		}
 		parent = gameObject;
-		parent->childs.push_back(this); //TODO: check if parent already has the child?
+
+		std::vector<GameObject*>::iterator it = next ? std::find(parent->childs.begin(), parent->childs.end(), next) : parent->childs.end();
+		parent->childs.insert(it, this);
+
 		transform->SetGlobalTransform(global);
 	}
 }
@@ -173,6 +176,22 @@ void GameObject::RemoveChild(GameObject* gameObject)
 			break;
 		}
 	}
+}
+
+bool GameObject::HasChildInTree(GameObject* gameObject) const
+{
+	std::vector<GameObject*>::const_iterator it;
+	for (it = childs.begin(); it != childs.end(); ++it)
+	{
+		if (*it == gameObject)
+			return true;
+	}
+	for (it = childs.begin(); it != childs.end(); ++it)
+	{
+		if ((*it)->HasChildInTree(gameObject))
+			return true;
+	}
+	return false;
 }
 
 void GameObject::CollectChilds(std::vector<GameObject*>& vector)

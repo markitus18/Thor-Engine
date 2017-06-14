@@ -44,10 +44,13 @@ private:
 	void HandleShiftSelection(GameObject* gameObject);
 
 	GameObject* GetFirstHierarchyOpen(GameObject* first, GameObject* second) const;
+	std::vector<GameObject*>::const_iterator GetFirstHierarchyOpen(const std::vector<GameObject*>& vector) const;
 	GameObject* GetNextHierarchyNode(GameObject* gameObject) const;
 	GameObject* GetPreviousHierarchyNode(GameObject* gameObject) const;
 
 	bool IsHighlighted(GameObject* gameObject) const;
+	void SetParentByPlace(GameObject* parent, std::vector<GameObject*>& childs, GameObject* next = nullptr);
+	void RecalcOpenNodes(GameObject* parent);
 
 private:
 	bool windowFocused = false;

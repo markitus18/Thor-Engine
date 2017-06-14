@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "M_Input.h"
 #include "M_Camera3D.h"
+#include "M_Editor.h"
+#include "GameObject.h"
 
 P_Configuration::P_Configuration()
 {
@@ -82,6 +84,41 @@ void P_Configuration::Draw(ImGuiWindowFlags flags)
 					ImGui::Text("%s %f ms", timers[i].text.c_str(), timers[i].timer_read);
 
 				}
+			}
+		}
+
+		if (ImGui::CollapsingHeader("Editor: Selection"))
+		{
+			ImGui::Text("Selected GameObjects");
+			ImGui::Separator();
+			std::vector<GameObject*>::iterator it;
+			for (it = App->moduleEditor->selectedGameObjects.begin(); it != App->moduleEditor->selectedGameObjects.end(); ++it)
+			{
+				ImGui::Text((*it)->name.c_str());
+			}
+			ImGui::Separator();
+			ImGui::Separator();
+			ImGui::Text("To select GameObjects");
+			ImGui::Separator();
+			for (it = App->moduleEditor->toSelectGOs.begin(); it != App->moduleEditor->toSelectGOs.end(); ++it)
+			{
+				ImGui::Text((*it)->name.c_str());
+			}
+			ImGui::Separator();
+			ImGui::Separator();
+			ImGui::Text("To drag GameObjects");
+			ImGui::Separator();
+			for (it = App->moduleEditor->toDragGOs.begin(); it != App->moduleEditor->toDragGOs.end(); ++it)
+			{
+				ImGui::Text((*it)->name.c_str());
+			}
+			ImGui::Separator();
+			ImGui::Separator();
+			ImGui::Text("To unselect GameObjects");
+			ImGui::Separator();
+			for (it = App->moduleEditor->toUnselectGOs.begin(); it != App->moduleEditor->toUnselectGOs.end(); ++it)
+			{
+				ImGui::Text((*it)->name.c_str());
 			}
 		}
 

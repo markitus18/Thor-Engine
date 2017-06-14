@@ -36,10 +36,7 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 		{
 
 		}
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
-		{
-			int k = 5 + 3;
-		}
+
 		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
 		DrawRootChilds(App->scene->GetRoot(), default_flags);
 		ImGui::End();
@@ -98,8 +95,8 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 			{
 				case(Selection_Type::NORMAL):
 				{
-					App->moduleEditor->SelectSingle(App->moduleEditor->toSelectGOs[0]);
-					App->moduleEditor->toSelectGOs.clear();
+					if (App->moduleEditor->toSelectGOs.size() > 0)
+						App->moduleEditor->SelectSingle(App->moduleEditor->toSelectGOs[0]);
 					break;
 				}
 				case(Selection_Type::SHIFT):
@@ -108,18 +105,18 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 					{
 						App->moduleEditor->AddSelect(App->moduleEditor->toSelectGOs[i]);
 					}
-					App->moduleEditor->toSelectGOs.clear();
 					App->moduleEditor->lastSelected = shiftClickedGO;
 					break;
 				}
 				case (Selection_Type::CTRL_PLUS):
 				{
 					App->moduleEditor->AddSelect(App->moduleEditor->toSelectGOs[0]);
-					App->moduleEditor->toSelectGOs.clear();
 					break;
 				}
 			}
 			selectionType = Selection_Type::NONE;
+			App->moduleEditor->toDragGOs.clear();
+			App->moduleEditor->toSelectGOs.clear();
 		}
 	}
 }
@@ -153,6 +150,38 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 		}
 		ImGui::EndPopup();
 	}
+	
+	if (dragging == true)
+	{
+		//Drawwing inter-GO buttons
+		ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+		cursorPos.y -= 25.0f;
+		ImGui::SetCursorPos(cursorPos);
+		ImGui::PushID(gameObject->uid);
+		ImVec2 buttonSize = ImVec2(ImGui::GetWindowSize().x, 6);
+		ImGui::InvisibleButton("Button", buttonSize);
+		if (ImGui::IsItemHoveredRect() && dragging == true)
+		{
+			cursorPos.y += 19;
+			ImGui::RenderFrame(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
+			ImGui::GetCurrentWindow()->DrawList->AddRect(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TextSelectedBg));
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				GameObject* parent = gameObject->hierarchyOpen == true ? gameObject : gameObject->parent;
+				SetParentByPlace(parent, App->moduleEditor->toDragGOs, GetNextHierarchyNode(gameObject));
+				App->moduleEditor->toDragGOs.clear();
+				dragging = false;
+			}
+			cursorPos.y -= 19;
+		}
+		cursorPos = ImGui::GetCursorScreenPos();
+		cursorPos.y -= 23.0f;
+		ImGui::SetCursorPos(cursorPos);
+		ImGui::PopID();
+	}
+
+	
+
 	if (gameObject->hierarchyOpen)
 	{
 		for (uint i = 0; i < gameObject->childs.size(); i++)
@@ -174,6 +203,9 @@ void P_Hierarchy::DisplayGameObjectNode(GameObject* gameObject, ImGuiTreeNodeFla
 	if (IsHighlighted(gameObject))
 		gameObject_flag |= ImGuiTreeNodeFlags_Selected;
 
+	if (dragging == true)
+		gameObject_flag |= ImGuiTreeNodeFlags_Fill;
+
 	if (gameObject->IsParentActive() == false)
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
 
@@ -194,25 +226,27 @@ void P_Hierarchy::HandleUserInput(GameObject* gameObject)
 {
 	if (ImGui::IsItemHoveredRect() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && dragging == true)
 	{
-		if (App->moduleEditor->toSelectGOs.size() > 0)
+		if (App->moduleEditor->toDragGOs.size() > 0)
 		{
-			std::vector<GameObject*>::iterator it;
-			for (it = App->moduleEditor->toDragGOs.begin(); it != App->moduleEditor->toDragGOs.end(); ++it)
-			{
-				(*it)->SetParent(gameObject);
-			}
 			if (App->moduleEditor->toDragGOs.size() > 0)
 				gameObject->beenSelected = true;
+
+			SetParentByPlace(gameObject, App->moduleEditor->toDragGOs, nullptr);
 			App->moduleEditor->toDragGOs.clear();
+
+			std::vector<GameObject*>::const_iterator it;
 			for (it = App->moduleEditor->toSelectGOs.begin(); it != App->moduleEditor->toSelectGOs.end(); it++)
 			{
 				App->moduleEditor->AddSelect(*it);
 			}
 			App->moduleEditor->toSelectGOs.clear();
+
 			for (it = App->moduleEditor->toUnselectGOs.begin(); it != App->moduleEditor->toUnselectGOs.end(); it++)
 			{
 				App->moduleEditor->UnselectSingle(*it);
 			}
+			App->moduleEditor->toUnselectGOs.clear();
+
 			selectionType = Selection_Type::NONE;
 		}
 		dragging = false;
@@ -273,7 +307,6 @@ void P_Hierarchy::HandleUserInput(GameObject* gameObject)
 			else
 			{
 				App->moduleEditor->AddToSelect(gameObject);
-				App->moduleEditor->toDragGOs.push_back(gameObject);
 				std::vector<GameObject*>::iterator it;
 				for (it = App->moduleEditor->selectedGameObjects.begin(); it != App->moduleEditor->selectedGameObjects.end(); ++it)
 				{
@@ -430,6 +463,33 @@ bool P_Hierarchy::IsHighlighted(GameObject* gameObject) const
 	return false;
 }
 
+void P_Hierarchy::SetParentByPlace(GameObject* parent, std::vector<GameObject*>& childs, GameObject* next)
+{
+	std::vector<GameObject*>::const_iterator it = GetFirstHierarchyOpen(childs);
+	while (it != childs.end())
+	{
+		if ((*it)->HasChildInTree(parent) == false && next != *it)
+		{
+			(*it)->SetParent(parent, next);
+		}
+		childs.erase(it);
+		it = GetFirstHierarchyOpen(childs);
+	}
+	RecalcOpenNodes(parent);
+}
+
+void P_Hierarchy::RecalcOpenNodes(GameObject* parent)
+{
+	if (parent->hierarchyOpen == true)
+		parent->beenSelected = true;
+
+	std::vector<GameObject*>::const_iterator it;
+	for (it = parent->childs.begin(); it != parent->childs.end(); ++it)
+	{
+		RecalcOpenNodes(*it);
+	}
+}
+
 GameObject* P_Hierarchy::GetFirstHierarchyOpen(GameObject* first, GameObject* second) const
 {
 	if (first == second) return first;
@@ -441,6 +501,23 @@ GameObject* P_Hierarchy::GetFirstHierarchyOpen(GameObject* first, GameObject* se
 		if (second == toEvaluate) return second;
 		toEvaluate = GetNextHierarchyNode(toEvaluate);
 	}
+	return nullptr;
+}
+
+std::vector<GameObject*>::const_iterator P_Hierarchy::GetFirstHierarchyOpen(const std::vector<GameObject*>& vector) const
+{
+	GameObject* toEvaluate = GetNextHierarchyNode(App->scene->GetRoot());
+	while (toEvaluate != nullptr)
+	{
+		std::vector<GameObject*>::const_iterator it;
+		for (it = vector.begin(); it != vector.end(); ++it)
+		{
+			if (*it == toEvaluate)
+				return it;
+		}
+		toEvaluate = GetNextHierarchyNode(toEvaluate);
+	}
+	return vector.end();
 }
 
 GameObject* P_Hierarchy::GetNextHierarchyNode(GameObject* gameObject) const

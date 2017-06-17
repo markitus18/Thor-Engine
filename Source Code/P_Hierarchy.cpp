@@ -45,43 +45,7 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 		{
 			case(ShiftStages::SELECT_START):
 			{
-				if (App->moduleEditor->lastSelected != shiftClickedGO)
-				{
-					GameObject* next = GetFirstHierarchyOpen(shiftClickedGO, App->moduleEditor->lastSelected);
-					GameObject* second = shiftClickedGO == next ? App->moduleEditor->lastSelected : shiftClickedGO;
-					while (next != nullptr)
-					{
-						if (shiftSelects == true)
-						{
-							if (next->IsSelected() == false)
-							{
-								App->moduleEditor->AddToSelect(next);
-								App->moduleEditor->toDragGOs.push_back(next);
-							}
-						}
-						else if (next != shiftClickedGO)
-						{
-							App->moduleEditor->UnselectSingle(next);
-						}
-						if (next == second)
-						{
-							App->moduleEditor->lastSelected = next;
-							break;
-						}
-						next = GetNextHierarchyNode(next);
-					}
-					for (uint i = 0; i < App->moduleEditor->selectedGameObjects.size(); i++)
-					{
-						App->moduleEditor->toDragGOs.push_back(App->moduleEditor->selectedGameObjects[i]);
-					}
-				}
-				else
-				{
-					for (uint i = 0; i < App->moduleEditor->selectedGameObjects.size(); i++)
-					{
-						App->moduleEditor->toDragGOs.push_back(App->moduleEditor->selectedGameObjects[i]);
-					}
-				}
+				DoShiftSelection();
 				shiftSelectionStage = ShiftStages::NONE;
 				break;
 			}
@@ -416,6 +380,47 @@ void P_Hierarchy::HandleShiftSelection(GameObject* gameObject)
 				}
 			}
 			shiftSelectionStage = ShiftStages::NONE;
+		}
+	}
+}
+
+void P_Hierarchy::DoShiftSelection()
+{
+	if (App->moduleEditor->lastSelected != shiftClickedGO)
+	{
+		GameObject* next = GetFirstHierarchyOpen(shiftClickedGO, App->moduleEditor->lastSelected);
+		GameObject* second = shiftClickedGO == next ? App->moduleEditor->lastSelected : shiftClickedGO;
+		while (next != nullptr)
+		{
+			if (shiftSelects == true)
+			{
+				if (next->IsSelected() == false)
+				{
+					App->moduleEditor->AddToSelect(next);
+					App->moduleEditor->toDragGOs.push_back(next);
+				}
+			}
+			else if (next != shiftClickedGO)
+			{
+				App->moduleEditor->UnselectSingle(next);
+			}
+			if (next == second)
+			{
+				App->moduleEditor->lastSelected = next;
+				break;
+			}
+			next = GetNextHierarchyNode(next);
+		}
+		for (uint i = 0; i < App->moduleEditor->selectedGameObjects.size(); i++)
+		{
+			App->moduleEditor->toDragGOs.push_back(App->moduleEditor->selectedGameObjects[i]);
+		}
+	}
+	else
+	{
+		for (uint i = 0; i < App->moduleEditor->selectedGameObjects.size(); i++)
+		{
+			App->moduleEditor->toDragGOs.push_back(App->moduleEditor->selectedGameObjects[i]);
 		}
 	}
 }

@@ -42,6 +42,7 @@ private:
 	void HandleUserInput(GameObject* gameObject);
 	void HandleArrows();
 	void HandleShiftSelection(GameObject* gameObject);
+	void DoShiftSelection();
 
 	GameObject* GetFirstHierarchyOpen(GameObject* first, GameObject* second) const;
 	std::vector<GameObject*>::const_iterator GetFirstHierarchyOpen(const std::vector<GameObject*>& vector) const;

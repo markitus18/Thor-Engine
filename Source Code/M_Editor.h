@@ -100,7 +100,7 @@ public:
 	std::vector<Resource*> selectedResources;
 
 	GameObject* lastSelected = nullptr;
-
+	bool dragging = false;
 private:
 
 	//Active window controllers
@@ -115,7 +115,7 @@ private:
 	bool using_keyboard;
 	bool using_mouse;
 
-	bool dragging = true;
+
 };
 
 #endif

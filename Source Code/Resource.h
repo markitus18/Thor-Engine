@@ -4,6 +4,7 @@
 #include <string>
 #include "Globals.h"
 
+
 class Resource
 {
 friend class M_Resources;
@@ -16,6 +17,7 @@ friend class M_Animations;
 public:
 	enum Type
 	{
+		FOLDER,
 		MESH,
 		TEXTURE,
 		MATERIAL,

@@ -4,11 +4,11 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 
-GameObject::GameObject() : Selectable(this, GAMEOBJECT)
+GameObject::GameObject() : TreeNode(this, GAMEOBJECT)
 {
 }
 
-GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), Selectable(this, GAMEOBJECT)
+GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), TreeNode(this, GAMEOBJECT)
 {
 	parent = new_parent;
 	if (new_parent)
@@ -236,6 +236,16 @@ int GameObject::GetChildIndex(GameObject* gameObject) const
 		++count;
 	}
 	return -1;
+}
+
+const std::vector<GameObject*>& GameObject::GetChilds() const
+{
+	return childs;
+}
+
+const char* GameObject::GetName() const
+{
+	return name.c_str();
 }
 
 void GameObject::Select()

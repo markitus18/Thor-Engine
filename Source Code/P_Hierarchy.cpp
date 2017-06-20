@@ -14,6 +14,8 @@
 #include "M_Editor.h"
 #include "M_Input.h"
 
+#include "TreeNode.h"
+
 P_Hierarchy::P_Hierarchy()
 {
 }
@@ -58,9 +60,13 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 
 void P_Hierarchy::DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
 {
+	TreeNode<GameObject>* node = (TreeNode<GameObject>*)gameObject;
+	std::vector<TreeNode<GameObject>*> vec = node->GetChilds();
+
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
-		DrawGameObject(gameObject->childs[i], default_flags);
+		DrawGameObject(vec[i]->GetData(), default_flags);
+//		DrawGameObject(gameObject->childs[i], default_flags);
 	}
 }
 

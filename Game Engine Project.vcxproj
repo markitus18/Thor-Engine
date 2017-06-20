@@ -90,7 +90,8 @@
     <ClInclude Include="Source Code\C_Bone.h" />
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
-    <ClInclude Include="Source Code\Selectable.h" />
+    <ClInclude Include="Source Code\R_Folder.h" />
+    <ClInclude Include="Source Code\TreeNode.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\devil_internal_exports.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\il.h" />
@@ -300,6 +301,7 @@
     <ClCompile Include="Source Code\Resource.cpp" />
     <ClCompile Include="Source Code\R_Animation.cpp" />
     <ClCompile Include="Source Code\R_Bone.cpp" />
+    <ClCompile Include="Source Code\R_Folder.cpp" />
     <ClCompile Include="Source Code\R_Material.cpp" />
     <ClCompile Include="Source Code\R_Mesh.cpp" />
     <ClCompile Include="Source Code\R_Prefab.cpp" />
@@ -307,6 +309,7 @@
     <ClCompile Include="Source Code\Time.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
     <ClCompile Include="Source Code\P_Console.cpp" />
+    <ClCompile Include="Source Code\TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source Code\External Libraries\MathGeoLib\src\Geometry\KDTree.inl" />

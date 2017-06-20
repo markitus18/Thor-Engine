@@ -13,11 +13,11 @@
 #include "C_Transform.h"
 #include "C_Animation.h"
 #include "C_Bone.h"
-#include "Selectable.h"
+#include "TreeNode.h"
 
 class C_Transform;
 
-class GameObject : public Selectable<GameObject>
+class GameObject : public TreeNode<GameObject>
 {
 public:
 	GameObject();
@@ -42,6 +42,9 @@ public:
 	GameObject* FindChildByName(const char* name) const;
 	GameObject* GetChild(uint index) const;
 	int GetChildIndex(GameObject* gameObject) const;
+	const std::vector<GameObject*>& GetChilds() const;
+
+	const char* GetName() const;
 
 	//Selection methods -----------------------------------
 	void Select();

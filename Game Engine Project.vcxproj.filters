@@ -274,6 +274,12 @@
     <ClCompile Include="Source Code\C_Bone.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\R_Folder.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\TreeNode.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -669,8 +675,11 @@
     <ClInclude Include="Source Code\C_Bone.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\Selectable.h">
+    <ClInclude Include="Source Code\TreeNode.h">
       <Filter>Source Code\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Folder.h">
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "Globals.h"
 
 enum TreeNode_Type
 {
@@ -10,24 +11,35 @@ enum TreeNode_Type
 	RESOURCE,
 };
 
-template <class Type>
 class TreeNode
 {
 public:
-	TreeNode(Type* data, TreeNode_Type type)
-	{
-		this->data = data;
-		this->type = type;
-	}
+	TreeNode(TreeNode_Type type) : type(type) {}
 
-	Type* GetData() const { return data; }
 	TreeNode_Type GetType() const { return type; }
 
-	std::vector<TreeNode*> GetChilds();
-	const char* GetName() const;
-	
+	virtual std::vector<TreeNode*> GetChilds() const { std::vector<TreeNode*> ret; return ret; };
+	virtual const char* GetName() const { return nullptr;};
+	virtual unsigned long long GetID() const { return 0; };
+	virtual bool IsNodeActive() const { return true; };
+	virtual TreeNode* GetParentNode() const { return nullptr;};
+
+	uint GetChildNodeIndex(const TreeNode* child) const;
+	TreeNode* GetChildNode(uint index) const;
+	TreeNode* GetNextOpenNode() const;
+	TreeNode* GetPreviousOpenNode() const;
+
+	//Selection methods
+	void Select();
+	void Unselect();
+	bool IsSelected() const;
+	bool IsParentSelected() const;
+
+public:
+	bool hierarchyOpen = false;
+	bool beenSelected = false;
+	bool selected = false;
 private:
-	Type* data;
 	TreeNode_Type type;
 };
 

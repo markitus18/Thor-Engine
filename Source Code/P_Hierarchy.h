@@ -6,6 +6,7 @@
 
 class GameObject;
 typedef int ImGuiTreeNodeFlags;
+class TreeNode;
 
 class P_Hierarchy : public Panel
 {
@@ -17,9 +18,9 @@ public:
 	void UpdatePosition(int, int);
 
 private:
-	void DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags);
-	void DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags default_flags);
-	void DisplayGameObjectNode(GameObject* gameObject, ImGuiTreeNodeFlags defaultFlags);
+	void DrawRootChilds(TreeNode* node, ImGuiTreeNodeFlags default_flags);
+	void DrawGameObject(TreeNode* node, ImGuiTreeNodeFlags default_flags);
+	void DisplayGameObjectNode(TreeNode* node, ImGuiTreeNodeFlags defaultFlags);
 
 	//User input management
 	void HandleUserInput(GameObject* gameObject);

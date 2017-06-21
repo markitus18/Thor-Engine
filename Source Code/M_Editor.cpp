@@ -550,62 +550,62 @@ void M_Editor::StopTimer(uint index)
 
 
 //Selection----------------------------
-void M_Editor::SelectSingle(GameObject* gameObject, bool openTree)
+void M_Editor::SelectSingle(TreeNode* node, bool openTree)
 {
 	UnselectAll();
 
-	if (gameObject)
+	if (node)
 	{
-		gameObject->Select();
-		lastSelected = gameObject;
-		selectedGameObjects.push_back(gameObject);
+		node->Select();
+		lastSelected = node;
+		selectedGameObjects.push_back(node);
 
 		if (openTree)
 		{
 			//Opening tree hierarchy node
-			GameObject* it = gameObject->parent;
+			TreeNode* it = node->GetParentNode();
 			while (it != nullptr)
 			{
 				it->beenSelected = true;
-				it = it->parent;
+				it = it->GetParentNode();
 			}
 		}
 	}
 }
 
-void M_Editor::AddSelect(GameObject* gameObject, bool openTree)
+void M_Editor::AddSelect(TreeNode* node, bool openTree)
 {
 	UnselectResources();
-	if (gameObject && gameObject->IsSelected() == false)
+	if (node && node->IsSelected() == false)
 	{
-		gameObject->Select();
-		selectedGameObjects.push_back(gameObject);
+		node->Select();
+		selectedGameObjects.push_back(node);
 
 		if (openTree)
 		{
 			//Opening tree hierarchy node
-			GameObject* it = gameObject->parent;
-			while (it != nullptr && it->name != "root")
+			TreeNode* it = node->GetParentNode();
+			while (it != nullptr)
 			{
 				it->beenSelected = true;
-				it = it->parent;
+				it = it->GetParentNode();
 			}
 		}
 	}
 }
 
-void M_Editor::AddToSelect(GameObject* gameObject)
+void M_Editor::AddToSelect(TreeNode* node)
 {
-	toSelectGOs.push_back(gameObject);
+	toSelectGOs.push_back(node);
 }
 
-void M_Editor::UnselectSingle(GameObject* gameObject)
+void M_Editor::UnselectSingle(TreeNode* node)
 {
-	gameObject->Unselect();
-	std::vector<GameObject*>::iterator it = selectedGameObjects.begin();
+	node->Unselect();
+	std::vector<TreeNode*>::iterator it = selectedGameObjects.begin();
 	while (it != selectedGameObjects.end())
 	{
-		if ((*it) == gameObject)
+		if ((*it) == node)
 		{
 			selectedGameObjects.erase(it);
 			break;
@@ -640,7 +640,14 @@ void M_Editor::DeleteSelected()
 	for (uint i = 0; i < selectedGameObjects.size(); )
 	{
 		selectedGameObjects[i]->Unselect();
-		App->scene->DeleteGameObject(selectedGameObjects[i]);
+		if (selectedGameObjects[i]->GetType() == GAMEOBJECT)
+		{
+			App->scene->DeleteGameObject((GameObject*)selectedGameObjects[i]);
+		}
+		else
+		{
+			//TODO: delete resource
+		}
 	}
 	selectedGameObjects.clear();
 
@@ -661,11 +668,11 @@ void M_Editor::ResetScene()
 
 void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 {
-	for (std::vector<GameObject*>::iterator it = selectedGameObjects.begin(); it != selectedGameObjects.end();)
+	for (std::vector<TreeNode*>::iterator it = selectedGameObjects.begin(); it != selectedGameObjects.end();)
 	{
 		if (*it == gameObject)
 		{
-			it = selectedGameObjects.erase(it);
+			it = selectedGameObjects.erase(it); //TODO: check if is deleted
 			break;
 		}
 		else

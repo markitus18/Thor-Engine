@@ -1,6 +1,6 @@
 #include "Resource.h"
 
-Resource::Resource(Type type) : type(type)
+Resource::Resource(Type type) : type(type), TreeNode(RESOURCE)
 {
 
 }
@@ -18,6 +18,11 @@ Resource::Type Resource::GetType() const
 unsigned long long Resource::GetID() const
 {
 	return ID;
+}
+
+TreeNode* Resource::GetParentNode() const
+{
+	return parent;
 }
 
 const char* Resource::GetOriginalFile() const

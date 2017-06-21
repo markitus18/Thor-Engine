@@ -18,6 +18,7 @@ class Config;
 struct PathNode;
 class GameObject;
 class Resource;
+class TreeNode;
 
 class M_Editor : public Module
 {
@@ -50,10 +51,10 @@ public:
 	//------------------------------------
 
 	//Selection --------------------
-	void SelectSingle(GameObject* gameObject, bool openTree = true);
-	void AddSelect(GameObject* gameObject, bool openTree = true);
-	void AddToSelect(GameObject* gameObject);
-	void UnselectSingle(GameObject* gameObject);
+	void SelectSingle(TreeNode* node, bool openTree = true);
+	void AddSelect(TreeNode* node, bool openTree = true);
+	void AddToSelect(TreeNode* node);
+	void UnselectSingle(TreeNode* node);
 	void UnselectAll();
 	void UnselectGameObjects();
 	void UnselectResources();
@@ -92,14 +93,14 @@ public:
 	bool shaded = true;
 	bool wireframe = false;
 
-	std::vector<GameObject*> selectedGameObjects;
-	std::vector<GameObject*> toSelectGOs;
-	std::vector<GameObject*> toDragGOs;
-	std::vector<GameObject*> toUnselectGOs;
+	std::vector<TreeNode*> selectedGameObjects;
+	std::vector<TreeNode*> toSelectGOs;
+	std::vector<TreeNode*> toDragGOs;
+	std::vector<TreeNode*> toUnselectGOs;
 
 	std::vector<Resource*> selectedResources;
 
-	GameObject* lastSelected = nullptr;
+	TreeNode* lastSelected = nullptr;
 	bool dragging = false;
 private:
 

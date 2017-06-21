@@ -4,11 +4,11 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 
-GameObject::GameObject() : TreeNode(this, GAMEOBJECT)
+GameObject::GameObject() : TreeNode(GAMEOBJECT)
 {
 }
 
-GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), TreeNode(this, GAMEOBJECT)
+GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), TreeNode(GAMEOBJECT)
 {
 	parent = new_parent;
 	if (new_parent)
@@ -224,8 +224,8 @@ GameObject* GameObject::GetChild(uint index) const
 }
 
 int GameObject::GetChildIndex(GameObject* gameObject) const
-
-{	int count = 0;
+{
+	int count = 0;
 	std::vector<GameObject*>::const_iterator it;
 	for (it = childs.begin(); it != childs.end(); ++it)
 	{
@@ -238,9 +238,20 @@ int GameObject::GetChildIndex(GameObject* gameObject) const
 	return -1;
 }
 
-const std::vector<GameObject*>& GameObject::GetChilds() const
+std::vector<TreeNode*> GameObject::GetChilds() const
 {
-	return childs;
+	std::vector<TreeNode*> ret(childs.begin(), childs.end());
+	return ret;
+}
+
+TreeNode* GameObject::GetParentNode() const
+{
+	return parent;
+}
+
+bool GameObject::IsNodeActive() const
+{
+	return IsParentActive();
 }
 
 const char* GameObject::GetName() const
@@ -248,28 +259,9 @@ const char* GameObject::GetName() const
 	return name.c_str();
 }
 
-void GameObject::Select()
+unsigned long long GameObject::GetID() const
 {
-	selected = true;
-}
-
-void GameObject::Unselect()
-{
-	selected = false;
-}
-
-bool GameObject::IsSelected() const
-{
-	return selected;
-}
-
-bool GameObject::IsParentSelected() const
-{
-	if (parent)
-	{
-		return parent->IsSelected() ? true : parent->IsParentSelected();
-	}
-	return false;
+	return uid;
 }
 
 void GameObject::SetStatic(bool isStatic)

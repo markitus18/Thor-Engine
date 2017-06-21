@@ -3,9 +3,9 @@
 
 #include <string>
 #include "Globals.h"
+#include "TreeNode.h"
 
-
-class Resource
+class Resource : public TreeNode
 {
 friend class M_Resources;
 friend class M_Meshes;
@@ -32,10 +32,13 @@ public:
 
 	Type GetType() const;
 	unsigned long long GetID() const;
+	TreeNode* GetParentNode() const;
 
 	const char* GetOriginalFile() const;
 	const char* GetResourceFile() const;
 	const char* GetName() const;
+	virtual std::vector<TreeNode*> GetChilds() const { std::vector<TreeNode*> ret; return ret; };
+	virtual bool IsNodeActive() const { return true; };
 
 	virtual void LoadOnMemory() {};
 	virtual void FreeMemory() {};
@@ -52,6 +55,7 @@ protected:
 	std::string original_file = "";
 	std::string name = "";
 
+	Resource* parent;
 };
 
 #endif // !__RESOURCE_H__

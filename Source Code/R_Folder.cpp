@@ -10,7 +10,8 @@ R_Folder::~R_Folder()
 
 }
 
-const std::vector<Resource*>& R_Folder::GetChilds() const
+std::vector<TreeNode*> R_Folder::GetChilds() const
 {
-	return childs;
+	std::vector<TreeNode*> ret(childs.begin(), childs.end());
+	return ret;
 }

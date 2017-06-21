@@ -17,7 +17,7 @@
 
 class C_Transform;
 
-class GameObject : public TreeNode<GameObject>
+class GameObject : public TreeNode
 {
 public:
 	GameObject();
@@ -42,16 +42,12 @@ public:
 	GameObject* FindChildByName(const char* name) const;
 	GameObject* GetChild(uint index) const;
 	int GetChildIndex(GameObject* gameObject) const;
-	const std::vector<GameObject*>& GetChilds() const;
+	std::vector<TreeNode*> GetChilds() const;
+	TreeNode* GetParentNode() const;
+	bool IsNodeActive() const;
 
 	const char* GetName() const;
-
-	//Selection methods -----------------------------------
-	void Select();
-	void Unselect();
-	bool IsSelected() const;
-	bool IsParentSelected() const;
-	//EndOf Selection methods -----------------------------
+	unsigned long long GetID() const;
 
 	void SetStatic(bool isStatic);
 
@@ -126,10 +122,7 @@ public:
 	bool						isStatic = false;
 
 	unsigned long long			uid = 0;
-
-	bool						beenSelected = false;
-	bool						hierarchyOpen = false;
-
+	 
 private:
 	bool						flipped_normals = false;
 

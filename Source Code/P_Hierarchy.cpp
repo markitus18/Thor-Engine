@@ -58,30 +58,28 @@ void P_Hierarchy::Draw(ImGuiWindowFlags flags)
 	}
 }
 
-void P_Hierarchy::DrawRootChilds(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
+void P_Hierarchy::DrawRootChilds(TreeNode* node, ImGuiTreeNodeFlags default_flags)
 {
-	TreeNode<GameObject>* node = (TreeNode<GameObject>*)gameObject;
-	std::vector<TreeNode<GameObject>*> vec = node->GetChilds();
-
-	for (uint i = 0; i < gameObject->childs.size(); i++)
+	std::vector<TreeNode*> vec = node->GetChilds();
+	std::vector<TreeNode*>::iterator it;
+	for (it = vec.begin(); it != vec.end(); ++it)
 	{
-		DrawGameObject(vec[i]->GetData(), default_flags);
-//		DrawGameObject(gameObject->childs[i], default_flags);
+		DrawGameObject(*it, default_flags);
 	}
 }
 
-void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags default_flags)
+void P_Hierarchy::DrawGameObject(TreeNode* node, ImGuiTreeNodeFlags default_flags)
 {
 
-	DisplayGameObjectNode(gameObject, default_flags);
+	DisplayGameObjectNode(node, default_flags);
 
-	HandleUserInput(gameObject);
+	HandleUserInput((GameObject*)node); //TODO
 
-	if (ImGui::BeginPopup(gameObject->name.c_str()))
+	if (ImGui::BeginPopup(node->GetName()))
 	{
 		if (ImGui::Button("delete"))
 		{
-			App->scene->DeleteGameObject(gameObject);
+			App->scene->DeleteGameObject((GameObject*)node); //TODO
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
@@ -93,7 +91,7 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 		ImVec2 cursorPos = ImGui::GetCursorScreenPos();
 		cursorPos.y -= 25.0f;
 		ImGui::SetCursorPos(cursorPos);
-		ImGui::PushID(gameObject->uid); //TODO: should be done in tree header, we need a new id here
+		ImGui::PushID(node->GetID()); //TODO: should be done in tree header, we need a new id here
 		ImVec2 buttonSize = ImVec2(ImGui::GetWindowSize().x, 6);
 		ImGui::InvisibleButton("Button", buttonSize);
 		if (ImGui::IsItemHoveredRect() && App->moduleEditor->dragging == true)
@@ -103,8 +101,8 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 			ImGui::GetCurrentWindow()->DrawList->AddRect(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TextSelectedBg));
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 			{
-				GameObject* parent = gameObject->hierarchyOpen == true ? gameObject : gameObject->parent;
-				SetParentByPlace(parent, App->moduleEditor->toDragGOs, GetNextHierarchyNode(gameObject));
+				GameObject* parent = (GameObject*)(node->hierarchyOpen == true ? node : node->GetParentNode()); //TODO
+				SetParentByPlace(parent, App->moduleEditor->toDragGOs, GetNextHierarchyNode((GameObject*)node)); //TODO
 				FinishDrag(true);
 				App->moduleEditor->dragging = false;
 			}
@@ -116,45 +114,45 @@ void P_Hierarchy::DrawGameObject(GameObject* gameObject, ImGuiTreeNodeFlags defa
 		ImGui::PopID();
 	}
 
-	
-
-	if (gameObject->hierarchyOpen)
+	if (node->hierarchyOpen)
 	{
-		for (uint i = 0; i < gameObject->childs.size(); i++)
+		std::vector<TreeNode*> childs = node->GetChilds();
+		std::vector<TreeNode*>::iterator it;
+		for (it = childs.begin(); it != childs.end(); ++it)
 		{
-			DrawGameObject(gameObject->childs[i], default_flags);
+			DrawGameObject(*it, default_flags);
 		}
-		if (gameObject->hierarchyOpen)
+		if ((*it)->hierarchyOpen)
 			ImGui::TreePop();
 	}
 }
 
-void P_Hierarchy::DisplayGameObjectNode(GameObject* gameObject, ImGuiTreeNodeFlags defaultFlags)
+void P_Hierarchy::DisplayGameObjectNode(TreeNode* node, ImGuiTreeNodeFlags defaultFlags)
 {
 	ImGuiTreeNodeFlags gameObject_flag = defaultFlags;
-	if (gameObject->childs.empty())
+	if (node->GetChilds().empty())
 	{
 		gameObject_flag |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
-	if (IsHighlighted(gameObject))
+	if (IsHighlighted((GameObject*)node)) //TODO
 		gameObject_flag |= ImGuiTreeNodeFlags_Selected;
 
 	if (App->moduleEditor->dragging == true)
 		gameObject_flag |= ImGuiTreeNodeFlags_Fill;
 
-	if (gameObject->IsParentActive() == false)
+	if (node->IsNodeActive() == false)
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
 
-	if (gameObject->beenSelected == true)
+	if (node->beenSelected == true)
 	{
 		ImGui::SetNextTreeNodeOpen(true);
-		gameObject->beenSelected = false;
+		node->beenSelected = false;
 	}
 
-	bool nodeOpen = ImGui::TreeNodeEx(gameObject, gameObject_flag, gameObject->name.c_str());
-	gameObject->hierarchyOpen = gameObject->childs.empty() ? false : nodeOpen;
+	bool nodeOpen = ImGui::TreeNodeEx(node, gameObject_flag, node->GetName());
+	node->hierarchyOpen = node->GetChilds().empty() ? false : nodeOpen;
 
-	if (gameObject->IsParentActive() == false)
+	if (node->IsNodeActive() == false)
 		ImGui::PopStyleColor();
 }
 
@@ -253,13 +251,13 @@ void P_Hierarchy::HandleArrows()
 {
 	if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
 	{
-		GameObject* next = GetNextHierarchyNode(App->moduleEditor->lastSelected);
+		TreeNode* next = App->moduleEditor->lastSelected->GetNextOpenNode();
 		if (next != nullptr && next != App->scene->GetRoot())
 		{
 			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
 				App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
 			{
-				GameObject* previous = GetPreviousHierarchyNode(App->moduleEditor->lastSelected);
+				TreeNode* previous = App->moduleEditor->lastSelected->GetPreviousOpenNode();
 				if (previous == nullptr || (previous != nullptr && previous->IsSelected() == true))
 				{
 					App->moduleEditor->AddSelect(next);

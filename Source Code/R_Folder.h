@@ -10,7 +10,7 @@ public:
 	R_Folder();
 	~R_Folder();
 
-	const std::vector<Resource*>& GetChilds() const;
+	std::vector<TreeNode*> GetChilds() const;
 
 private:
 	std::vector<Resource*> childs;

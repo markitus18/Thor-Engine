@@ -39,3 +39,8 @@ const char* Resource::GetName() const
 {
 	return name.c_str();
 }
+
+bool Resource::DrawTreeNode() const
+{
+	return (type == FOLDER);
+}

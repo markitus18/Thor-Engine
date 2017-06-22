@@ -22,12 +22,21 @@ public:
 	virtual const char* GetName() const { return nullptr;};
 	virtual unsigned long long GetID() const { return 0; };
 	virtual bool IsNodeActive() const { return true; };
+	virtual bool DrawTreeNode() const { return true; };
 	virtual TreeNode* GetParentNode() const { return nullptr;};
 
 	uint GetChildNodeIndex(const TreeNode* child) const;
 	TreeNode* GetChildNode(uint index) const;
 	TreeNode* GetNextOpenNode() const;
 	TreeNode* GetPreviousOpenNode() const;
+
+	static TreeNode* GetFirstOpenNode(TreeNode* root, TreeNode* first, TreeNode* second);
+	static std::vector<TreeNode*>::const_iterator GetFirstOpenNode(TreeNode* root, const std::vector<TreeNode*>& vector);
+
+	virtual void SetParentNode(TreeNode* parent, TreeNode* next) {};
+
+	bool HasChildNodeInTree(TreeNode* child) const;
+	void RecalculateOpenNodes();
 
 	//Selection methods
 	void Select();

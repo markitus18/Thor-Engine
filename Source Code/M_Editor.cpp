@@ -222,7 +222,7 @@ void M_Editor::Draw()
 
 			if (ImGui::MenuItem("Create Empty Child"))
 			{
-				GameObject* parent = selectedGameObjects.size() > 0 ? selectedGameObjects[0] : nullptr;
+				GameObject* parent = (GameObject*)(selectedGameObjects.size() > 0 ? selectedGameObjects[0] : nullptr);
 				std::string name(App->scene->GetNewGameObjectName("GameObject", parent));
 				GameObject* newGameObject = App->scene->CreateGameObject(name.c_str(), parent);
 				SelectSingle(newGameObject);
@@ -656,14 +656,27 @@ void M_Editor::DeleteSelected()
 }
 //Endof Selection -----------------------
 
+void M_Editor::FinishDrag(bool drag)
+{
+
+}
+
 void M_Editor::LoadScene(Config& root, bool tmp)
 {
 	selectedGameObjects.clear();
+	toSelectGOs.clear();
+	toUnselectGOs.clear();
+	toDragGOs.clear();
+	dragging = false;
 }
 
 void M_Editor::ResetScene()
 {
 	selectedGameObjects.clear();
+	toSelectGOs.clear();
+	toUnselectGOs.clear();
+	toDragGOs.clear();
+	dragging = false;
 }
 
 void M_Editor::OnRemoveGameObject(GameObject* gameObject)

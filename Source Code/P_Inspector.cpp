@@ -47,7 +47,7 @@ void P_Inspector::Draw(ImGuiWindowFlags flags)
 
 		if (App->moduleEditor->selectedGameObjects.size() == 1)
 		{
-			GameObject* gameObject = App->moduleEditor->selectedGameObjects[0];
+			GameObject* gameObject = (GameObject*)App->moduleEditor->selectedGameObjects[0];
 			DrawGameObject(gameObject);
 		}
 		ImGui::End();

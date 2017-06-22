@@ -4,13 +4,17 @@ uint TreeNode::GetChildNodeIndex(const TreeNode* child) const
 {
 	int count = 0;
 	std::vector<TreeNode*>::const_iterator it;
-	for (it = GetChilds().begin(); it != GetChilds().end(); ++it)
+	std::vector<TreeNode*> childs = GetChilds();
+	if (childs.size() > 0)
 	{
-		if ((*it) == child)
+		for (it = childs.begin(); it != childs.end(); ++it)
 		{
-			return count;
+			if ((*it) == child)
+			{
+				return count;
+			}
+			++count;
 		}
-		++count;
 	}
 	return -1;
 }
@@ -65,7 +69,73 @@ TreeNode* TreeNode::GetPreviousOpenNode() const
 	}
 	else
 	{
-		return GetParentNode();
+		TreeNode* parent = GetParentNode();
+		return parent->GetID() != 0 ? parent : nullptr;
+	}
+}
+
+TreeNode* TreeNode::GetFirstOpenNode(TreeNode* root, TreeNode* first, TreeNode* second)
+{
+	if (first == second) return first;
+
+	TreeNode* toEvaluate = root->GetNextOpenNode();
+	while (toEvaluate != nullptr)
+	{
+		if (first == toEvaluate) return first;
+		if (second == toEvaluate) return second;
+		toEvaluate = toEvaluate->GetNextOpenNode();
+	}
+	return nullptr;
+}
+
+std::vector<TreeNode*>::const_iterator TreeNode::GetFirstOpenNode(TreeNode* root, const std::vector<TreeNode*>& vector)
+{
+	TreeNode* toEvaluate = root->GetNextOpenNode();
+	while (toEvaluate != nullptr)
+	{
+		std::vector<TreeNode*>::const_iterator it;
+		for (it = vector.begin(); it != vector.end(); ++it)
+		{
+			if (*it == toEvaluate)
+				return it;
+		}
+		toEvaluate = toEvaluate->GetNextOpenNode();
+	}
+	return vector.end();
+}
+
+bool TreeNode::HasChildNodeInTree(TreeNode* child) const
+{
+	std::vector<TreeNode*>::const_iterator it;
+	std::vector<TreeNode*> childs = GetChilds();
+	for (it = childs.begin(); it != childs.end(); ++it)
+	{
+		if (*it == child)
+			return true;
+	}
+	for (it = childs.begin(); it != childs.end(); ++it)
+	{
+		if ((*it)->HasChildNodeInTree(child))
+			return true;
+	}
+	return false;
+}
+
+void TreeNode::RecalculateOpenNodes()
+{
+	std::vector<TreeNode*> childs = GetChilds();
+	if (hierarchyOpen == true)
+	{
+		if (childs.size() > 0)
+			beenSelected = true;
+		else
+			hierarchyOpen = false;
+	}
+
+	std::vector<TreeNode*>::const_iterator it;
+	for (it = childs.begin(); it != childs.end(); ++it)
+	{
+		(*it)->RecalculateOpenNodes();
 	}
 }
 

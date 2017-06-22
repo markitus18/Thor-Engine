@@ -1,143 +1,46 @@
-#include "P_Hierarchy.h"
-#include "Application.h"
+#include "TreeDisplay.h"
+#include "ImGui/imgui.h"
+#include "TreeNode.h"
+#include "Application.h" //TODO: necessary?
+#include "M_Editor.h" //TODO: necessary?
+#include "M_Input.h"
 #include "M_Scene.h"
 #include "GameObject.h"
-#include "M_Camera3D.h"
-#include "C_Camera.h"
-#include "C_Transform.h"
-#include "C_Mesh.h"	
-#include "C_Material.h"
 
-#include "ImGui\imgui.h"
+#include <vector>
 
-#include "Application.h"
-#include "M_Editor.h"
-#include "M_Input.h"
-
-#include "TreeNode.h"
-
-P_Hierarchy::P_Hierarchy()
-{
-}
-
-P_Hierarchy::~P_Hierarchy()
+TreeDisplay::TreeDisplay()
 {
 
 }
 
-void P_Hierarchy::Draw(ImGuiWindowFlags flags)
+TreeDisplay::~TreeDisplay()
 {
-	if (active)
-	{
-		ImGui::SetNextWindowPos(position);
-		ImGui::SetNextWindowSize(size);
 
-		ImGui::Begin("Hierarchy", &active, flags);
-		windowFocused = ImGui::GetWindowIsFocused();
-		if (windowFocused == false && selecting == true)
-		{
-
-		}
-
-		ImGuiTreeNodeFlags default_flags =  ImGuiTreeNodeFlags_OpenOnArrow;
-		DrawRootChilds(App->scene->GetRoot(), default_flags);
-		ImGui::End();
-
-		HandleArrows();
-
-		if (selecting == true && App->input->LastClickMoved() == true)
-		{
-			App->moduleEditor->dragging = true;
-		}
-
-		if (selecting == true && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && App->moduleEditor->dragging == false)
-		{
-			FinishDrag(false);
-			selecting = false;
-		}
-	}
 }
 
-void P_Hierarchy::DrawRootChilds(TreeNode* node, ImGuiTreeNodeFlags default_flags)
+void TreeDisplay::DrawTree(TreeNode* root)
 {
-	std::vector<TreeNode*> vec = node->GetChilds();
-	std::vector<TreeNode*>::iterator it;
-	for (it = vec.begin(); it != vec.end(); ++it)
-	{
-		DrawGameObject(*it, default_flags);
-	}
+	DrawNodeChilds(root);
 }
 
-void P_Hierarchy::DrawGameObject(TreeNode* node, ImGuiTreeNodeFlags default_flags)
+void TreeDisplay::DrawNode(TreeNode* node)
 {
-	DisplayGameObjectNode(node, default_flags);
-
-	HandleUserInput((GameObject*)node); //TODO
-
-	if (ImGui::BeginPopup(node->GetName()))
-	{
-		if (ImGui::Button("delete"))
-		{
-			App->scene->DeleteGameObject((GameObject*)node); //TODO
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::EndPopup();
-	}
-	
-	if (App->moduleEditor->dragging == true)
-	{
-		//Drawwing inter-GO buttons
-		ImVec2 cursorPos = ImGui::GetCursorScreenPos();
-		cursorPos.y -= 25.0f;
-		ImGui::SetCursorPos(cursorPos);
-		ImGui::PushID(node->GetID()); //TODO: should be done in tree header, we need a new id here
-		ImVec2 buttonSize = ImVec2(ImGui::GetWindowSize().x, 6);
-		ImGui::InvisibleButton("Button", buttonSize);
-		if (ImGui::IsItemHoveredRect() && App->moduleEditor->dragging == true)
-		{
-			cursorPos.y += 19;
-			ImGui::RenderFrame(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
-			ImGui::GetCurrentWindow()->DrawList->AddRect(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TextSelectedBg));
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
-			{
-				GameObject* parent = (GameObject*)(node->hierarchyOpen == true ? node : node->GetParentNode()); //TODO
-				SetParentByPlace(parent, App->moduleEditor->toDragGOs, node->GetNextOpenNode()); //TODO
-				FinishDrag(true);
-				App->moduleEditor->dragging = false;
-			}
-			cursorPos.y -= 19;
-		}
-		cursorPos = ImGui::GetCursorScreenPos();
-		cursorPos.y -= 23.0f;
-		ImGui::SetCursorPos(cursorPos);
-		ImGui::PopID();
-	}
-
-	if (node->hierarchyOpen)
-	{
-		std::vector<TreeNode*> childs = node->GetChilds();
-		std::vector<TreeNode*>::iterator it;
-		for (it = childs.begin(); it != childs.end(); ++it)
-		{
-			DrawGameObject(*it, default_flags);
-		}
-		if (node->hierarchyOpen)
-			ImGui::TreePop();
-	}
+	ShowNode(node);
 }
 
-void P_Hierarchy::DisplayGameObjectNode(TreeNode* node, ImGuiTreeNodeFlags defaultFlags)
+void TreeDisplay::ShowNode(TreeNode* node)
 {
-	ImGuiTreeNodeFlags gameObject_flag = defaultFlags;
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 	if (node->GetChilds().empty())
 	{
-		gameObject_flag |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+		flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
-	if (IsHighlighted((GameObject*)node)) //TODO
-		gameObject_flag |= ImGuiTreeNodeFlags_Selected;
+	if (IsHighlighted(node)) //TODO
+		flags |= ImGuiTreeNodeFlags_Selected;
 
 	if (App->moduleEditor->dragging == true)
-		gameObject_flag |= ImGuiTreeNodeFlags_Fill;
+		flags |= ImGuiTreeNodeFlags_Fill;
 
 	if (node->IsNodeActive() == false)
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
@@ -148,20 +51,30 @@ void P_Hierarchy::DisplayGameObjectNode(TreeNode* node, ImGuiTreeNodeFlags defau
 		node->beenSelected = false;
 	}
 
-	bool nodeOpen = ImGui::TreeNodeEx(node, gameObject_flag, node->GetName());
+	bool nodeOpen = ImGui::TreeNodeEx(node, flags, node->GetName());
 	node->hierarchyOpen = node->GetChilds().empty() ? false : nodeOpen;
 
 	if (node->IsNodeActive() == false)
 		ImGui::PopStyleColor();
 }
 
-void P_Hierarchy::HandleUserInput(TreeNode* node)
+void TreeDisplay::DrawNodeChilds(TreeNode* node)
+{
+	std::vector<TreeNode*> vec = node->GetChilds();
+	std::vector<TreeNode*>::iterator it;
+	for (it = vec.begin(); it != vec.end(); ++it)
+	{
+		DrawNode(*it);
+	}
+}
+
+void TreeDisplay::HandleUserInput(TreeNode* node)
 {
 	if (ImGui::IsItemHoveredRect() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && App->moduleEditor->dragging == true)
 	{
 		if (App->moduleEditor->toDragGOs.size() > 0)
 		{
-			bool parentSet = SetParentByPlace(node, App->moduleEditor->toDragGOs, nullptr);
+			bool parentSet = SetParentByPlace(node, App->moduleEditor->toDragGOs);
 			if (parentSet)
 				node->beenSelected = true;
 
@@ -246,12 +159,12 @@ void P_Hierarchy::HandleUserInput(TreeNode* node)
 	}
 }
 
-void P_Hierarchy::HandleArrows()
+void TreeDisplay::HandleArrows()
 {
 	if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
 	{
 		TreeNode* next = App->moduleEditor->lastSelected->GetNextOpenNode();
-		if (next != nullptr && next != App->scene->GetRoot())
+		if (next != nullptr)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
 				App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
@@ -281,7 +194,7 @@ void P_Hierarchy::HandleArrows()
 	if ((App->input->GetKey(SDL_SCANCODE_UP)) == KEY_DOWN)
 	{
 		TreeNode* previous = App->moduleEditor->lastSelected->GetPreviousOpenNode();
-		if (previous != nullptr && previous != App->scene->GetRoot())
+		if (previous != nullptr)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
 				App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
@@ -310,7 +223,7 @@ void P_Hierarchy::HandleArrows()
 	}
 }
 
-void P_Hierarchy::DoShiftSelection(TreeNode* selected, bool selects)
+void TreeDisplay::DoShiftSelection(TreeNode* selected, bool selects)
 {
 	if (App->moduleEditor->lastSelected != selected)
 	{
@@ -352,34 +265,7 @@ void P_Hierarchy::DoShiftSelection(TreeNode* selected, bool selects)
 	}
 }
 
-void P_Hierarchy::FinishDrag(bool drag)
-{
-	std::vector<TreeNode*>::const_iterator it;
-	for (it = App->moduleEditor->toUnselectGOs.begin(); it != App->moduleEditor->toUnselectGOs.end(); it++)
-	{
-		App->moduleEditor->UnselectSingle(*it);
-	}
-	if (drag == true)
-	{
-		for (it = App->moduleEditor->toDragGOs.begin(); it != App->moduleEditor->toDragGOs.end(); it++)
-		{
-			App->moduleEditor->AddSelect(*it);
-		}
-	}
-	else
-	{
-		for (it = App->moduleEditor->toSelectGOs.begin(); it != App->moduleEditor->toSelectGOs.end(); it++)
-		{
-			App->moduleEditor->AddSelect(*it);
-		}
-	}
-
-	App->moduleEditor->toDragGOs.clear();
-	App->moduleEditor->toSelectGOs.clear();
-	App->moduleEditor->toUnselectGOs.clear();
-}
-
-bool P_Hierarchy::IsHighlighted(TreeNode* node) const
+bool TreeDisplay::IsHighlighted(TreeNode* node) const
 {
 	if (node->IsSelected() == true)
 		return true;
@@ -392,7 +278,7 @@ bool P_Hierarchy::IsHighlighted(TreeNode* node) const
 	return false;
 }
 
-bool P_Hierarchy::SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> childs, TreeNode* next)
+bool TreeDisplay::SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> childs, TreeNode* next)
 {
 	bool previousParentHierarchyOpen = parent->hierarchyOpen;
 	bool ret = false;
@@ -411,13 +297,4 @@ bool P_Hierarchy::SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> chil
 	parent->hierarchyOpen = previousParentHierarchyOpen;
 	parent->RecalculateOpenNodes();
 	return ret;
-}
-
-void P_Hierarchy::UpdatePosition(int screen_width, int screen_height)
-{
-	position.x = 0;
-	position.y = 19;
-	size.x = screen_width * (0.20);
-	size.y = screen_height * (0.60) - position.y;
-
 }

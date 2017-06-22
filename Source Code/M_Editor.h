@@ -1,5 +1,5 @@
-#ifndef __M_Editor_H__
-#define __M_Editor_H__
+#ifndef __M_EDITOR_H__
+#define __M_EDITOR_H__
 
 #include "Module.h"
 #include "ImGui\imgui.h"
@@ -59,6 +59,8 @@ public:
 	void UnselectGameObjects();
 	void UnselectResources();
 	void DeleteSelected();
+
+	void FinishDrag(bool drag);
 	//Endof Selection------------------------------------
 
 	void LoadScene(Config& root, bool tmp = false);
@@ -119,4 +121,4 @@ private:
 
 };
 
-#endif
+#endif //!__M_EDITOR_H__

@@ -91,6 +91,7 @@
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
     <ClInclude Include="Source Code\R_Folder.h" />
+    <ClInclude Include="Source Code\TreeDisplay.h" />
     <ClInclude Include="Source Code\TreeNode.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\devil_internal_exports.h" />
@@ -309,6 +310,7 @@
     <ClCompile Include="Source Code\Time.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />
     <ClCompile Include="Source Code\P_Console.cpp" />
+    <ClCompile Include="Source Code\TreeDisplay.cpp" />
     <ClCompile Include="Source Code\TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>

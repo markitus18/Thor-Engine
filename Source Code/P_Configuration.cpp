@@ -91,10 +91,10 @@ void P_Configuration::Draw(ImGuiWindowFlags flags)
 		{
 			ImGui::Text("Selected GameObjects");
 			ImGui::Separator();
-			std::vector<GameObject*>::iterator it;
+			std::vector<TreeNode*>::iterator it;
 			for (it = App->moduleEditor->selectedGameObjects.begin(); it != App->moduleEditor->selectedGameObjects.end(); ++it)
 			{
-				ImGui::Text((*it)->name.c_str());
+				ImGui::Text((*it)->GetName());
 			}
 			ImGui::Separator();
 			ImGui::Separator();
@@ -102,7 +102,7 @@ void P_Configuration::Draw(ImGuiWindowFlags flags)
 			ImGui::Separator();
 			for (it = App->moduleEditor->toSelectGOs.begin(); it != App->moduleEditor->toSelectGOs.end(); ++it)
 			{
-				ImGui::Text((*it)->name.c_str());
+				ImGui::Text((*it)->GetName());
 			}
 			ImGui::Separator();
 			ImGui::Separator();
@@ -110,7 +110,7 @@ void P_Configuration::Draw(ImGuiWindowFlags flags)
 			ImGui::Separator();
 			for (it = App->moduleEditor->toDragGOs.begin(); it != App->moduleEditor->toDragGOs.end(); ++it)
 			{
-				ImGui::Text((*it)->name.c_str());
+				ImGui::Text((*it)->GetName());
 			}
 			ImGui::Separator();
 			ImGui::Separator();
@@ -118,7 +118,7 @@ void P_Configuration::Draw(ImGuiWindowFlags flags)
 			ImGui::Separator();
 			for (it = App->moduleEditor->toUnselectGOs.begin(); it != App->moduleEditor->toUnselectGOs.end(); ++it)
 			{
-				ImGui::Text((*it)->name.c_str());
+				ImGui::Text((*it)->GetName());
 			}
 		}
 

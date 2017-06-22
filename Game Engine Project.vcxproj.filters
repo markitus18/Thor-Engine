@@ -280,6 +280,9 @@
     <ClCompile Include="Source Code\TreeNode.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\TreeDisplay.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -680,6 +683,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\R_Folder.h">
       <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\TreeDisplay.h">
+      <Filter>Source Code\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

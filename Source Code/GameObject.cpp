@@ -178,7 +178,7 @@ void GameObject::RemoveChild(GameObject* gameObject)
 	}
 }
 
-bool GameObject::HasChildInTree(GameObject* gameObject) const
+bool GameObject::HasChildInTree(GameObject* gameObject) const //TODO: Change to iterative function (optimization)
 {
 	std::vector<GameObject*>::const_iterator it;
 	for (it = childs.begin(); it != childs.end(); ++it)
@@ -252,6 +252,16 @@ TreeNode* GameObject::GetParentNode() const
 bool GameObject::IsNodeActive() const
 {
 	return IsParentActive();
+}
+
+bool GameObject::DrawTreeNode() const
+{
+	return true;
+}
+
+void GameObject::SetParentNode(TreeNode* parent, TreeNode* next)
+{
+	SetParent((GameObject*)parent, (GameObject*)next);
 }
 
 const char* GameObject::GetName() const

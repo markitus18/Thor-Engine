@@ -2,13 +2,14 @@
 #define __PANEL_HIERARCHY_H__
 
 #include "Panel.h"
+#include "TreeDisplay.h"
 #include <vector>
 
 class GameObject;
 typedef int ImGuiTreeNodeFlags;
 class TreeNode;
 
-class P_Hierarchy : public Panel
+class P_Hierarchy : public Panel, public TreeDisplay
 {
 public:
 	P_Hierarchy();
@@ -23,19 +24,15 @@ private:
 	void DisplayGameObjectNode(TreeNode* node, ImGuiTreeNodeFlags defaultFlags);
 
 	//User input management
-	void HandleUserInput(GameObject* gameObject);
+	void HandleUserInput(TreeNode* node);
 	void HandleArrows();
-	void DoShiftSelection(GameObject* selected, bool select);
+	void DoShiftSelection(TreeNode* selected, bool select);
 
-	GameObject* GetFirstHierarchyOpen(GameObject* first, GameObject* second) const;
-	std::vector<GameObject*>::const_iterator GetFirstHierarchyOpen(const std::vector<GameObject*>& vector) const;
-	GameObject* GetNextHierarchyNode(GameObject* gameObject) const;
-	GameObject* GetPreviousHierarchyNode(GameObject* gameObject) const;
 	void FinishDrag(bool drag);
 
-	bool IsHighlighted(GameObject* gameObject) const;
-	void SetParentByPlace(GameObject* parent, std::vector<GameObject*> childs, GameObject* next = nullptr);
-	void RecalcOpenNodes(GameObject* parent);
+	bool IsHighlighted(TreeNode* node) const;
+	//Returns true if one of the childs in the vector is set to the parent
+	bool SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> childs, TreeNode* next = nullptr);
 
 private:
 	bool windowFocused = false;

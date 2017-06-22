@@ -38,7 +38,8 @@ public:
 	const char* GetResourceFile() const;
 	const char* GetName() const;
 	virtual std::vector<TreeNode*> GetChilds() const { std::vector<TreeNode*> ret; return ret; };
-	virtual bool IsNodeActive() const { return true; };
+	bool IsNodeActive() const { return true; };
+	bool DrawTreeNode() const;
 
 	virtual void LoadOnMemory() {};
 	virtual void FreeMemory() {};

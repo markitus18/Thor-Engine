@@ -41,10 +41,13 @@ public:
 	void CollectChilds(std::vector<GameObject*>& vector);
 	GameObject* FindChildByName(const char* name) const;
 	GameObject* GetChild(uint index) const;
+
 	int GetChildIndex(GameObject* gameObject) const;
 	std::vector<TreeNode*> GetChilds() const;
 	TreeNode* GetParentNode() const;
 	bool IsNodeActive() const;
+	bool DrawTreeNode() const;
+	void SetParentNode(TreeNode* parent, TreeNode* next);
 
 	const char* GetName() const;
 	unsigned long long GetID() const;

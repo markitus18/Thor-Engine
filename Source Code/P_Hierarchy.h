@@ -18,25 +18,6 @@ public:
 	void Draw(ImGuiWindowFlags flags);
 	void UpdatePosition(int, int);
 
-private:
-	void DrawRootChilds(TreeNode* node, ImGuiTreeNodeFlags default_flags);
-	void DrawGameObject(TreeNode* node, ImGuiTreeNodeFlags default_flags);
-	void DisplayGameObjectNode(TreeNode* node, ImGuiTreeNodeFlags defaultFlags);
-
-	//User input management
-	void HandleUserInput(TreeNode* node);
-	void HandleArrows();
-	void DoShiftSelection(TreeNode* selected, bool select);
-
-	void FinishDrag(bool drag);
-
-	bool IsHighlighted(TreeNode* node) const;
-	//Returns true if one of the childs in the vector is set to the parent
-	bool SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> childs, TreeNode* next = nullptr);
-
-private:
-	bool windowFocused = false;
-
 public:
 	bool selecting = false;
 };

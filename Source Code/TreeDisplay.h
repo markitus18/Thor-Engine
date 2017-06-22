@@ -1,5 +1,6 @@
 #ifndef __TREE_DISPLAY_H__
 #define __TREE_DISPLAY_H__
+#include <vector>
 
 class TreeNode;
 
@@ -9,7 +10,7 @@ public:
 	TreeDisplay();
 	~TreeDisplay();
 
-private:
+protected:
 	void DrawTree(TreeNode* root);
 	void DrawNode(TreeNode* node);
 	void ShowNode(TreeNode* node);
@@ -22,7 +23,7 @@ private:
 	bool IsHighlighted(TreeNode* node) const;
 	bool SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> childs, TreeNode* next = nullptr);
 
-private:
+protected:
 	TreeNode* lastSelected = nullptr;
 	bool selecting = false;
 };

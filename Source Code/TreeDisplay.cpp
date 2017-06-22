@@ -22,11 +22,75 @@ TreeDisplay::~TreeDisplay()
 void TreeDisplay::DrawTree(TreeNode* root)
 {
 	DrawNodeChilds(root);
+	HandleArrows();
+	if (selecting == true && App->input->LastClickMoved() == true)
+	{
+		App->moduleEditor->dragging = true;
+	}
+
+	if (selecting == true && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && App->moduleEditor->dragging == false)
+	{
+		App->moduleEditor->FinishDrag(false, false);
+		selecting = false;
+	}
+	bool windowHovered = ImGui::IsWindowHovered();
+	if (windowHovered == false && selecting == true)
+	{
+		App->moduleEditor->toSelectGOs.clear();
+		App->moduleEditor->toUnselectGOs.clear();
+	}
 }
 
 void TreeDisplay::DrawNode(TreeNode* node)
 {
 	ShowNode(node);
+	HandleUserInput(node);
+
+	if (ImGui::BeginPopup(node->GetName()))
+	{
+		if (ImGui::Button("delete"))
+		{
+			App->scene->DeleteGameObject((GameObject*)node); //TODO
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
+	if (App->moduleEditor->dragging == true)
+	{
+		//Drawing inter-GO buttons
+		ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+		cursorPos.y -= 25.0f;
+		ImGui::SetCursorPos(cursorPos);
+		ImGui::PushID(node->GetID()); //TODO: should be done in tree header, we need a new id here
+		ImVec2 buttonSize = ImVec2(ImGui::GetWindowSize().x, 6);
+		ImGui::InvisibleButton("Button", buttonSize);
+		if (ImGui::IsItemHoveredRect() && App->moduleEditor->dragging == true)
+		{
+			cursorPos.y += 19;
+			ImGui::RenderFrame(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
+			ImGui::GetCurrentWindow()->DrawList->AddRect(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TextSelectedBg));
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				GameObject* parent = (GameObject*)(node->hierarchyOpen == true ? node : node->GetParentNode()); //TODO
+				SetParentByPlace(parent, App->moduleEditor->toDragGOs, node->GetNextOpenNode()); //TODO
+				App->moduleEditor->FinishDrag(true, true);
+				App->moduleEditor->dragging = false;
+			}
+			cursorPos.y -= 19;
+		}
+		cursorPos = ImGui::GetCursorScreenPos();
+		cursorPos.y -= 23.0f;
+		ImGui::SetCursorPos(cursorPos);
+		ImGui::PopID();
+	}
+
+	if (node->hierarchyOpen == true)
+	{
+		DrawNodeChilds(node);
+		ImGui::TreePop();
+	}
+
 }
 
 void TreeDisplay::ShowNode(TreeNode* node)
@@ -78,7 +142,7 @@ void TreeDisplay::HandleUserInput(TreeNode* node)
 			if (parentSet)
 				node->beenSelected = true;
 
-			FinishDrag(true);
+			App->moduleEditor->FinishDrag(true, true);
 			selecting = false;
 		}
 		App->moduleEditor->dragging = false;

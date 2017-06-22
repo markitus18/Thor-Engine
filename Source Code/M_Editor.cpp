@@ -126,6 +126,14 @@ void M_Editor::Draw()
 	{
 		DeleteSelected();
 	}
+
+	if (dragging == true && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE))
+	{
+		toDragGOs.clear();
+		FinishDrag(true, false);
+		dragging = false;
+	}
+
 	//Showing all windows ----------
 	if (show_About_window)
 		ShowAboutWindow();
@@ -360,7 +368,7 @@ void M_Editor::GetEvent(SDL_Event* event)
 
 void M_Editor::DrawPanels()
 {
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize;
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	if (hierarchy != nullptr)
 	{
 		hierarchy->Draw(windowFlags);
@@ -656,8 +664,34 @@ void M_Editor::DeleteSelected()
 }
 //Endof Selection -----------------------
 
-void M_Editor::FinishDrag(bool drag)
+void M_Editor::FinishDrag(bool drag, bool selectDrag)
 {
+	std::vector<TreeNode*>::const_iterator it;
+	for (it = toUnselectGOs.begin(); it != toUnselectGOs.end(); it++)
+	{
+		UnselectSingle(*it);
+	}
+	if (drag == true)
+	{
+		if (selectDrag == true)
+		{
+			for (it = toDragGOs.begin(); it != toDragGOs.end(); it++)
+			{
+				AddSelect(*it);
+			}
+		}
+	}
+	else
+	{
+		for (it = toSelectGOs.begin(); it != toSelectGOs.end(); it++)
+		{
+			AddSelect(*it);
+		}
+	}
+
+	toDragGOs.clear();
+	toSelectGOs.clear();
+	toUnselectGOs.clear();
 
 }
 

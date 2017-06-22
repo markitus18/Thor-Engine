@@ -60,7 +60,7 @@ public:
 	void UnselectResources();
 	void DeleteSelected();
 
-	void FinishDrag(bool drag);
+	void FinishDrag(bool drag, bool SelectDrag);
 	//Endof Selection------------------------------------
 
 	void LoadScene(Config& root, bool tmp = false);

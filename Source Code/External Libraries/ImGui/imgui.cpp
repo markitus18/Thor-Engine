@@ -2179,6 +2179,10 @@ void ImGui::NewFrame()
     }
 
     // Find the window we are hovering. Child windows can extend beyond the limit of their parent so we need to derive HoveredRootWindow from HoveredWindow
+	if (g.MovedWindow != nullptr)
+	{
+		int k = 5 + 3;
+	}
     g.HoveredWindow = g.MovedWindow ? g.MovedWindow : FindHoveredWindow(g.IO.MousePos, false);
     if (g.HoveredWindow && (g.HoveredWindow->Flags & ImGuiWindowFlags_ChildWindow))
         g.HoveredRootWindow = g.HoveredWindow->RootWindow;
@@ -5878,7 +5882,8 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     const ImRect interact_bb = display_frame ? bb : ImRect(bb.Min.x, bb.Min.y, bb.Min.x + text_width + style.ItemSpacing.x*2, bb.Max.y);
 	//Warning: Thorgory modification, button not being clicked on arrow
 	ImRect interact_bb_button = interact_bb; //<--
-	interact_bb_button.Min.x += text_offset_x; //<--
+	if ((display_frame || (flags & ImGuiTreeNodeFlags_NoTreePushOnOpen)) == false) //<-- Moving bb only when arrow is displayed
+		interact_bb_button.Min.x += text_offset_x; //<--
     bool is_open = TreeNodeBehaviorIsOpen(id, flags);
     if (!ItemAdd(interact_bb_button, &id)) //<--
     {

@@ -2087,7 +2087,7 @@ void ImGui::NewFrame()
     g.RenderDrawData.CmdListsCount = g.RenderDrawData.TotalVtxCount = g.RenderDrawData.TotalIdxCount = 0;
 
     // Update inputs state
-    if (g.IO.MousePos.x < 0 && g.IO.MousePos.y < 0)
+    if (g.IO .MousePos.x < 0 && g.IO.MousePos.y < 0)
         g.IO.MousePos = ImVec2(-9999.0f, -9999.0f);
     if ((g.IO.MousePos.x < 0 && g.IO.MousePos.y < 0) || (g.IO.MousePosPrev.x < 0 && g.IO.MousePosPrev.y < 0))   // if mouse just appeared or disappeared (negative coordinate) we cancel out movement in MouseDelta
         g.IO.MouseDelta = ImVec2(0.0f, 0.0f);

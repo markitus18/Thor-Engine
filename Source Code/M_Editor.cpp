@@ -436,6 +436,8 @@ void M_Editor::ShowAboutWindow()
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
 	ImGui::End();
+
+	ImVec2 vec = ImVec2('i');
 }
 
 void M_Editor::ShowPlayWindow()

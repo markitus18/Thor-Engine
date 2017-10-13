@@ -20,7 +20,7 @@
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
 
 
-//TMP TESTING
+//TMP TESTING  TODO: what is this?
 
 #include "Devil\include\ilu.h"
 #include "Devil\include\ilut.h"

@@ -398,7 +398,9 @@ void M_Scene::LoadGameObject(uint64 ID)
 
 GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
 {
-	return new GameObject(parent ? parent : root, name);
+	GameObject* go = new GameObject(parent ? parent : root, name);
+	go->uid = random.Int();
+	return go;
 }
 
 void M_Scene::DeleteGameObject(GameObject* gameObject)

@@ -1,7 +1,7 @@
 {
     "GameObjects": [
         {
-            "UID": 1673451636,
+            "UID": 224257562,
             "ParentUID": 0,
             "Name": "Street_environment_V01",
             "Active": true,
@@ -34,15 +34,15 @@
                     "Playing": false,
                     "Animations": [],
                     "HasResource": true,
-                    "Type": 3,
+                    "Type": 4,
                     "ID": 55,
                     "ResourceName": "Take 001"
                 }
             ]
         },
         {
-            "UID": 2093532912,
-            "ParentUID": 1673451636,
+            "UID": 829610312,
+            "ParentUID": 224257562,
             "Name": "Sky001",
             "Active": true,
             "Static": false,
@@ -72,8 +72,8 @@
             ]
         },
         {
-            "UID": 1992260815,
-            "ParentUID": 1673451636,
+            "UID": 1726845687,
+            "ParentUID": 224257562,
             "Name": "Dummy001",
             "Active": true,
             "Static": false,
@@ -103,8 +103,8 @@
             ]
         },
         {
-            "UID": 1516408679,
-            "ParentUID": 1992260815,
+            "UID": 2146564626,
+            "ParentUID": 1726845687,
             "Name": "City_building_004",
             "Active": true,
             "Static": false,
@@ -134,22 +134,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 3,
                     "ResourceName": "City_building_004"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 4,
                     "ResourceName": "06 - Default"
                 }
             ]
         },
         {
-            "UID": 1445070492,
-            "ParentUID": 1992260815,
+            "UID": 441348369,
+            "ParentUID": 1726845687,
             "Name": "City_building_001",
             "Active": true,
             "Static": false,
@@ -179,22 +179,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 6,
                     "ResourceName": "City_building_001"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 7,
                     "ResourceName": "Building_dnt"
                 }
             ]
         },
         {
-            "UID": 1938828876,
-            "ParentUID": 1992260815,
+            "UID": 918776873,
+            "ParentUID": 1726845687,
             "Name": "City_building_007",
             "Active": true,
             "Static": false,
@@ -224,22 +224,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 9,
                     "ResourceName": "City_building_007"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 10,
                     "ResourceName": "building_16"
                 }
             ]
         },
         {
-            "UID": 973060164,
-            "ParentUID": 1992260815,
+            "UID": 1216765591,
+            "ParentUID": 1726845687,
             "Name": "City_building_008",
             "Active": true,
             "Static": false,
@@ -269,22 +269,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 12,
                     "ResourceName": "City_building_008"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 13,
                     "ResourceName": "building_025"
                 }
             ]
         },
         {
-            "UID": 902549582,
-            "ParentUID": 1992260815,
+            "UID": 649787802,
+            "ParentUID": 1726845687,
             "Name": "Line002",
             "Active": true,
             "Static": false,
@@ -314,22 +314,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 15,
                     "ResourceName": "Line002"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 16,
                     "ResourceName": "20 - Defaulta"
                 }
             ]
         },
         {
-            "UID": 1032937202,
-            "ParentUID": 1992260815,
+            "UID": 2133538987,
+            "ParentUID": 1726845687,
             "Name": "Plane001",
             "Active": true,
             "Static": false,
@@ -359,22 +359,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 17,
                     "ResourceName": "Plane001"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 18,
                     "ResourceName": "20 - Default"
                 }
             ]
         },
         {
-            "UID": 1336053353,
-            "ParentUID": 1992260815,
+            "UID": 1968918231,
+            "ParentUID": 1726845687,
             "Name": "City_building_010",
             "Active": true,
             "Static": false,
@@ -404,8 +404,8 @@
             ]
         },
         {
-            "UID": 1263803055,
-            "ParentUID": 1336053353,
+            "UID": 2027488794,
+            "ParentUID": 1968918231,
             "Name": "City_building_010_submesh",
             "Active": true,
             "Static": false,
@@ -435,22 +435,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 19,
                     "ResourceName": "City_building_010_submesh"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 20,
                     "ResourceName": "orig_orig_orig_17 - Default"
                 }
             ]
         },
         {
-            "UID": 532507271,
-            "ParentUID": 1336053353,
+            "UID": 1697209764,
+            "ParentUID": 1968918231,
             "Name": "City_building_010_submesh(1)",
             "Active": true,
             "Static": false,
@@ -480,22 +480,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 22,
                     "ResourceName": "City_building_010_submesh(1)"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 20,
                     "ResourceName": "orig_orig_orig_17 - Default"
                 }
             ]
         },
         {
-            "UID": 1678516130,
-            "ParentUID": 1992260815,
+            "UID": 448270563,
+            "ParentUID": 1726845687,
             "Name": "City_building_011",
             "Active": true,
             "Static": false,
@@ -525,22 +525,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 23,
                     "ResourceName": "City_building_011"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 10,
                     "ResourceName": "building_16"
                 }
             ]
         },
         {
-            "UID": 353867931,
-            "ParentUID": 1992260815,
+            "UID": 1812508419,
+            "ParentUID": 1726845687,
             "Name": "City_building_013",
             "Active": true,
             "Static": false,
@@ -570,22 +570,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 24,
                     "ResourceName": "City_building_013"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 25,
                     "ResourceName": "3db _ building 06"
                 }
             ]
         },
         {
-            "UID": 706825767,
-            "ParentUID": 1992260815,
+            "UID": 362057832,
+            "ParentUID": 1726845687,
             "Name": "City_building_014",
             "Active": true,
             "Static": false,
@@ -615,22 +615,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 27,
                     "ResourceName": "City_building_014"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 4,
                     "ResourceName": "06 - Default"
                 }
             ]
         },
         {
-            "UID": 328953302,
-            "ParentUID": 1992260815,
+            "UID": 1812756833,
+            "ParentUID": 1726845687,
             "Name": "City_building_016",
             "Active": true,
             "Static": false,
@@ -660,8 +660,8 @@
             ]
         },
         {
-            "UID": 1292226934,
-            "ParentUID": 328953302,
+            "UID": 477019750,
+            "ParentUID": 1812756833,
             "Name": "City_building_016_submesh",
             "Active": true,
             "Static": false,
@@ -691,22 +691,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 28,
                     "ResourceName": "City_building_016_submesh"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 20,
                     "ResourceName": "orig_orig_orig_17 - Default"
                 }
             ]
         },
         {
-            "UID": 1598948243,
-            "ParentUID": 328953302,
+            "UID": 1904897542,
+            "ParentUID": 1812756833,
             "Name": "City_building_016_submesh(1)",
             "Active": true,
             "Static": false,
@@ -736,22 +736,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 29,
                     "ResourceName": "City_building_016_submesh(1)"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 20,
                     "ResourceName": "orig_orig_orig_17 - Default"
                 }
             ]
         },
         {
-            "UID": 1265816364,
-            "ParentUID": 1992260815,
+            "UID": 871667450,
+            "ParentUID": 1726845687,
             "Name": "City_building_017",
             "Active": true,
             "Static": false,
@@ -781,8 +781,8 @@
             ]
         },
         {
-            "UID": 1114656105,
-            "ParentUID": 1265816364,
+            "UID": 619155877,
+            "ParentUID": 871667450,
             "Name": "City_building_017_submesh",
             "Active": true,
             "Static": false,
@@ -812,22 +812,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 30,
                     "ResourceName": "City_building_017_submesh"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 20,
                     "ResourceName": "orig_orig_orig_17 - Default"
                 }
             ]
         },
         {
-            "UID": 2003618213,
-            "ParentUID": 1265816364,
+            "UID": 1959550033,
+            "ParentUID": 871667450,
             "Name": "City_building_017_submesh(1)",
             "Active": true,
             "Static": false,
@@ -857,22 +857,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 31,
                     "ResourceName": "City_building_017_submesh(1)"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 20,
                     "ResourceName": "orig_orig_orig_17 - Default"
                 }
             ]
         },
         {
-            "UID": 1955832741,
-            "ParentUID": 1992260815,
+            "UID": 491720877,
+            "ParentUID": 1726845687,
             "Name": "City_building_022",
             "Active": true,
             "Static": false,
@@ -902,22 +902,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 32,
                     "ResourceName": "City_building_022"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 33,
                     "ResourceName": "09 - Default"
                 }
             ]
         },
         {
-            "UID": 1535655832,
-            "ParentUID": 1992260815,
+            "UID": 1062360790,
+            "ParentUID": 1726845687,
             "Name": "City_building_023",
             "Active": true,
             "Static": false,
@@ -947,22 +947,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 35,
                     "ResourceName": "City_building_023"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 10,
                     "ResourceName": "building_16"
                 }
             ]
         },
         {
-            "UID": 1421313777,
-            "ParentUID": 1992260815,
+            "UID": 1136274263,
+            "ParentUID": 1726845687,
             "Name": "City_building_024",
             "Active": true,
             "Static": false,
@@ -992,22 +992,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 36,
                     "ResourceName": "City_building_024"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 13,
                     "ResourceName": "building_025"
                 }
             ]
         },
         {
-            "UID": 1534982051,
-            "ParentUID": 1992260815,
+            "UID": 1695359784,
+            "ParentUID": 1726845687,
             "Name": "City_building_026",
             "Active": true,
             "Static": false,
@@ -1037,22 +1037,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 37,
                     "ResourceName": "City_building_026"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 33,
                     "ResourceName": "09 - Default"
                 }
             ]
         },
         {
-            "UID": 1756647010,
-            "ParentUID": 1992260815,
+            "UID": 499831803,
+            "ParentUID": 1726845687,
             "Name": "City_building_028",
             "Active": true,
             "Static": false,
@@ -1082,22 +1082,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 38,
                     "ResourceName": "City_building_028"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 39,
                     "ResourceName": "Material #0"
                 }
             ]
         },
         {
-            "UID": 327786560,
-            "ParentUID": 1992260815,
+            "UID": 964940675,
+            "ParentUID": 1726845687,
             "Name": "Object010",
             "Active": true,
             "Static": false,
@@ -1127,22 +1127,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 41,
                     "ResourceName": "Object010"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 42,
                     "ResourceName": "21 - Default"
                 }
             ]
         },
         {
-            "UID": 1666860738,
-            "ParentUID": 1992260815,
+            "UID": 403805074,
+            "ParentUID": 1726845687,
             "Name": "City_building_030",
             "Active": true,
             "Static": false,
@@ -1172,22 +1172,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 43,
                     "ResourceName": "City_building_030"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 39,
                     "ResourceName": "Material #0"
                 }
             ]
         },
         {
-            "UID": 642640065,
-            "ParentUID": 1992260815,
+            "UID": 604634077,
+            "ParentUID": 1726845687,
             "Name": "City_building_031",
             "Active": true,
             "Static": false,
@@ -1217,22 +1217,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 44,
                     "ResourceName": "City_building_031"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 39,
                     "ResourceName": "Material #0"
                 }
             ]
         },
         {
-            "UID": 569663767,
-            "ParentUID": 1992260815,
+            "UID": 254626323,
+            "ParentUID": 1726845687,
             "Name": "City_building_032",
             "Active": true,
             "Static": false,
@@ -1262,22 +1262,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 45,
                     "ResourceName": "City_building_032"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 4,
                     "ResourceName": "06 - Default"
                 }
             ]
         },
         {
-            "UID": 833129511,
-            "ParentUID": 1992260815,
+            "UID": 2009211245,
+            "ParentUID": 1726845687,
             "Name": "City_building_033",
             "Active": true,
             "Static": false,
@@ -1307,22 +1307,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 46,
                     "ResourceName": "City_building_033"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 25,
                     "ResourceName": "3db _ building 06"
                 }
             ]
         },
         {
-            "UID": 1923863508,
-            "ParentUID": 1992260815,
+            "UID": 506289859,
+            "ParentUID": 1726845687,
             "Name": "City_building_034",
             "Active": true,
             "Static": false,
@@ -1352,22 +1352,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 47,
                     "ResourceName": "City_building_034"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 33,
                     "ResourceName": "09 - Default"
                 }
             ]
         },
         {
-            "UID": 598743431,
-            "ParentUID": 1992260815,
+            "UID": 1757175228,
+            "ParentUID": 1726845687,
             "Name": "City_building_035",
             "Active": true,
             "Static": false,
@@ -1397,22 +1397,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 48,
                     "ResourceName": "City_building_035"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 39,
                     "ResourceName": "Material #0"
                 }
             ]
         },
         {
-            "UID": 311337734,
-            "ParentUID": 1992260815,
+            "UID": 595629939,
+            "ParentUID": 1726845687,
             "Name": "City_building_036",
             "Active": true,
             "Static": false,
@@ -1442,22 +1442,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 49,
                     "ResourceName": "City_building_036"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 25,
                     "ResourceName": "3db _ building 06"
                 }
             ]
         },
         {
-            "UID": 1091929643,
-            "ParentUID": 1992260815,
+            "UID": 442759549,
+            "ParentUID": 1726845687,
             "Name": "City_building_037",
             "Active": true,
             "Static": false,
@@ -1487,22 +1487,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 50,
                     "ResourceName": "City_building_037"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 33,
                     "ResourceName": "09 - Default"
                 }
             ]
         },
         {
-            "UID": 312571503,
-            "ParentUID": 1992260815,
+            "UID": 382291891,
+            "ParentUID": 1726845687,
             "Name": "City_building_038",
             "Active": true,
             "Static": false,
@@ -1532,22 +1532,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 51,
                     "ResourceName": "City_building_038"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 33,
                     "ResourceName": "09 - Default"
                 }
             ]
         },
         {
-            "UID": 1088815312,
-            "ParentUID": 1992260815,
+            "UID": 1778906040,
+            "ParentUID": 1726845687,
             "Name": "City_building_039",
             "Active": true,
             "Static": false,
@@ -1577,22 +1577,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 52,
                     "ResourceName": "City_building_039"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 39,
                     "ResourceName": "Material #0"
                 }
             ]
         },
         {
-            "UID": 385581299,
-            "ParentUID": 1992260815,
+            "UID": 1688004703,
+            "ParentUID": 1726845687,
             "Name": "City_building_040",
             "Active": true,
             "Static": false,
@@ -1622,22 +1622,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 53,
                     "ResourceName": "City_building_040"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 39,
                     "ResourceName": "Material #0"
                 }
             ]
         },
         {
-            "UID": 1010030179,
-            "ParentUID": 1992260815,
+            "UID": 1680329135,
+            "ParentUID": 1726845687,
             "Name": "City_building_041",
             "Active": true,
             "Static": false,
@@ -1667,22 +1667,22 @@
                 {
                     "ComponentType": 2,
                     "HasResource": true,
-                    "Type": 0,
+                    "Type": 1,
                     "ID": 54,
                     "ResourceName": "City_building_041"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
-                    "Type": 2,
+                    "Type": 3,
                     "ID": 7,
                     "ResourceName": "Building_dnt"
                 }
             ]
         },
         {
-            "UID": 2106554791,
-            "ParentUID": 1673451636,
+            "UID": 2023037510,
+            "ParentUID": 224257562,
             "Name": "Camera001",
             "Active": true,
             "Static": false,
@@ -1712,8 +1712,8 @@
             ]
         },
         {
-            "UID": 202915993,
-            "ParentUID": 1673451636,
+            "UID": 1032011568,
+            "ParentUID": 224257562,
             "Name": "Camera001.Target",
             "Active": true,
             "Static": false,
@@ -1743,8 +1743,8 @@
             ]
         },
         {
-            "UID": 1066918687,
-            "ParentUID": 1673451636,
+            "UID": 1316998049,
+            "ParentUID": 224257562,
             "Name": "Spot001",
             "Active": true,
             "Static": false,
@@ -1774,8 +1774,8 @@
             ]
         },
         {
-            "UID": 634041544,
-            "ParentUID": 1673451636,
+            "UID": 1759377117,
+            "ParentUID": 224257562,
             "Name": "Spot001.Target",
             "Active": true,
             "Static": false,

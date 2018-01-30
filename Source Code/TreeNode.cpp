@@ -31,6 +31,7 @@ TreeNode* TreeNode::GetChildNode(uint index) const
 
 TreeNode* TreeNode::GetNextOpenNode() const
 {
+	TreeNode* ret = nullptr;
 	TreeNode* parent = GetParentNode();
 
 	std::vector<TreeNode*> childs = GetChilds();
@@ -44,7 +45,7 @@ TreeNode* TreeNode::GetNextOpenNode() const
 		{
 			int childIndex = parent->GetChildNodeIndex(toEvaluate);
 			//Returning next "sibling" if exists and is open
-			if (TreeNode* ret = parent->GetChildNode(++childIndex))
+			if (ret = parent->GetChildNode(++childIndex))
 				return ret;
 		}
 		toEvaluate = parent;
@@ -55,6 +56,7 @@ TreeNode* TreeNode::GetNextOpenNode() const
 
 TreeNode* TreeNode::GetPreviousOpenNode() const
 {
+	TreeNode* ret = nullptr;
 	int childIndex = GetParentNode()->GetChildNodeIndex(this);
 	if (childIndex > 0)
 	{

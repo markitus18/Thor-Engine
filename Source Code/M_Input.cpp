@@ -8,6 +8,8 @@
 #include "SDL/include/SDL_mouse.h"
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
+#include "ImGui/imgui_internal.h"
+
 #define MAX_KEYS 300
 
 M_Input::M_Input(bool start_enabled) : Module("Input", start_enabled)
@@ -119,7 +121,7 @@ update_status M_Input::PreUpdate(float dt)
 				//TODO: work with ImGui mouse control
 				if (infiniteHorizontal)
 				{
-					if (mouse_x > App->renderer3D->window_width - 10)
+					if (mouse_x > App->window->windowSize.x - 10)
 					{
 						int last_x = mouse_x;
 						App->input->SetMouseX(10);
@@ -130,7 +132,7 @@ update_status M_Input::PreUpdate(float dt)
 					else if (mouse_x < 10) 
 					{
 						int last_x = mouse_x;
-						App->input->SetMouseX(App->renderer3D->window_width - 10);
+						App->input->SetMouseX(App->window->windowSize.x - 10);
 						last_mouse_swap = mouse_x - last_x;
 						ResetImGuiDrag();
 					}
@@ -151,7 +153,8 @@ update_status M_Input::PreUpdate(float dt)
 			{
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 				{
-					App->renderer3D->OnResize(event.window.data1, event.window.data2);
+					App->window->windowSize = Vec2(event.window.data1, event.window.data2);
+					App->renderer3D->OnResize();
 					App->moduleEditor->OnResize(event.window.data1, event.window.data2);
 				}
 			}

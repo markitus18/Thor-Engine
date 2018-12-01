@@ -2,23 +2,23 @@
 #define __M_EDITOR_H__
 
 #include "Module.h"
-#include "ImGui\imgui.h"
+#include "ImGui\imgui.h" //TODO: try to forward declare ImVec2
+#include "SDL/include/SDL_events.h" //TODO: try to forward declare
 #include <string>
 #include <vector>
 
-class P_Console;
-class P_Hierarchy;
-class P_Inspector;
-class P_Configuration;
 class P_Buttons;
-class P_Resources;
-class P_Explorer;
 
 class Config;
 struct PathNode;
 class GameObject;
 class Resource;
 class TreeNode;
+
+class Dock;
+class W_Console;
+class W_Explorer;
+class W_EngineConfig;
 
 class M_Editor : public Module
 {
@@ -81,14 +81,16 @@ private:
 
 	//TODO: move into private
 public:
+
+	//Windows system
+	std::vector<Dock*> docks;
+	Dock* focusedDock = nullptr;
+	W_Console* w_console = nullptr;
+	W_EngineConfig* w_econfig = nullptr;
+	W_Explorer* w_explorer = nullptr;
+
 	//Panels
-	P_Hierarchy*		hierarchy = nullptr;
-	P_Console*			console = nullptr;
-	P_Inspector*		inspector = nullptr;
-	P_Configuration*	configuration = nullptr;
 	P_Buttons*			buttons = nullptr;
-	P_Resources*		resources = nullptr;
-	P_Explorer*			explorer = nullptr;
 
 	ImVec2 playWindow;
 
@@ -117,8 +119,6 @@ private:
 
 	bool using_keyboard;
 	bool using_mouse;
-
-
 };
 
 #endif //!__M_EDITOR_H__

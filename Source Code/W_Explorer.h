@@ -1,21 +1,23 @@
-#ifndef  __PANEL_EXPLORER_H__
-#define __PANEL_EXPLORER_H__
+#ifndef __W_EXPLORER_H__
+#define __W_EXPLORER_H__
 
-#include "Panel.h"
-#include "Timer.h"
+#include "DWindow.h"
+
 #include "PathNode.h"
+#include "Vec2.h"
+#include "Timer.h"
 
-class P_Explorer : public Panel
+class W_Explorer : public DWindow
 {
 public:
-	P_Explorer();
-	~P_Explorer();
+	W_Explorer(M_Editor* editor);
+	~W_Explorer() {}
 
-	void Draw(ImGuiWindowFlags flags);
-	void UpdatePosition(int, int);
+	void Draw();
+	void OnResize();
 
 private:
-	void DrawFolderNode(const PathNode& node, ImGuiTreeNodeFlags flags);
+	void DrawFolderNode(const PathNode& node);
 	void DrawNodeImage(const PathNode& node);
 	void UpdateTree();
 	std::string GetTextAdjusted(const char* text);
@@ -37,13 +39,11 @@ private:
 	PathNode currentNode;
 	PathNode explorerSelected;
 
-	ImVec2 explorerPosition;
-	ImVec2 explorerSize;
+	Vec2 explorerPosition;
+	Vec2 explorerSize;
 
 	uint updateTime = 5;
 	Timer updateTimer;
-	
 };
 
-#endif // ! __PANEL_EXPLORER_H__
-
+#endif

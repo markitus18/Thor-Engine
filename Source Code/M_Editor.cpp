@@ -5,13 +5,18 @@
 #include "M_Input.h"
 
 //Panels
-#include "P_Hierarchy.h"
-#include "P_Console.h"
-#include "P_Inspector.h"
-#include "P_Configuration.h"
 #include "P_Buttons.h"
-#include "P_Resources.h"
-#include "P_Explorer.h"
+
+//Windows
+#include "Dock.h"
+#include "W_Scene.h"
+#include "W_Hierarchy.h""
+#include "W_Inspector.h"
+#include "W_Explorer.h"
+#include "W_Console.h"
+#include "W_Resources.h"
+#include "W_EngineConfig.h"
+
 #include "M_Scene.h"
 #include "M_FileSystem.h"
 #include "M_Resources.h"
@@ -56,17 +61,38 @@ bool M_Editor::Init(Config& config)
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
 
 	//Initializing all panels
-	console = new P_Console();
-	hierarchy = new P_Hierarchy();
-	inspector = new P_Inspector();
-	configuration = new P_Configuration();
 	buttons = new P_Buttons();
-	resources = new P_Resources();
-	explorer = new P_Explorer();
-	resources->active = false;
-	console->active = false;
 
-	configuration->Init();
+	//Creating dock base windows
+	Dock* baseDock = new Dock("BaseWindowDock", App->window->windowSize);
+	docks.push_back(baseDock);
+	baseDock->position = Vec2(0.0f, 19.0f);
+	baseDock->Split(VERTICAL, 0.8f);
+	baseDock->GetDockChildren()[0]->Split(HORIZONTAL, 0.7f);
+	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->Split(VERTICAL, 0.2f);
+	baseDock->GetDockChildren()[1]->Split(HORIZONTAL, 0.6f);
+
+	W_Hierarchy* hierarchyWindow = new W_Hierarchy(this);
+	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[0]->AddChildData(hierarchyWindow);
+
+	W_Scene* sceneWindow = new W_Scene(this);
+	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(sceneWindow);
+
+	W_Inspector* inspector = new W_Inspector(this);
+	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(inspector);
+
+	w_explorer = new W_Explorer(this);
+	baseDock->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_explorer);
+
+	w_console = new W_Console(this);
+	baseDock->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_console);
+
+	W_Resources* resources = new W_Resources(this);
+	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(resources);
+
+	w_econfig = new W_EngineConfig(this);
+	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(w_econfig);
+	
 	return true;
 }
 
@@ -79,7 +105,7 @@ bool M_Editor::Start()
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			explorer->folderBuffer = ilutGLBindTexImage();
+			w_explorer->folderBuffer = ilutGLBindTexImage();
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -89,7 +115,7 @@ bool M_Editor::Start()
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			explorer->fileBuffer = ilutGLBindTexImage();
+			w_explorer->fileBuffer = ilutGLBindTexImage();
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -99,7 +125,7 @@ bool M_Editor::Start()
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			explorer->selectedBuffer = ilutGLBindTexImage();
+			w_explorer->selectedBuffer = ilutGLBindTexImage();
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -120,7 +146,8 @@ update_status M_Editor::PreUpdate(float dt)
 
 void M_Editor::Draw()
 {
-	DrawPanels();
+	//DrawPanels();
+	docks[0]->Draw(); //TOOD: Do a proper data access
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
@@ -262,6 +289,8 @@ void M_Editor::Draw()
 
 		if (ImGui::BeginMenu("Window"))
 		{
+			//TODO: fins a way to activate / deactivate windows
+			/*
 			if (ImGui::MenuItem("Inspector          ", nullptr, &inspector->active))
 			{
 			}
@@ -272,7 +301,7 @@ void M_Editor::Draw()
 			{
 				if (console->active == true)
 				{
-					explorer->explorerActive = false;
+					w_explorer->explorerActive = false;
 				}
 			}
 			if (ImGui::MenuItem("Configuration         ", nullptr, &configuration->active))
@@ -295,7 +324,7 @@ void M_Editor::Draw()
 					explorer->active = false;
 				}
 			}
-
+			*/
 			ImGui::EndMenu();
 		}
 
@@ -343,13 +372,8 @@ void M_Editor::Draw()
 
 bool M_Editor::CleanUp()
 {
-	RELEASE(console);
-	RELEASE(hierarchy);
-	RELEASE(inspector);
-	RELEASE(configuration);
+	//TODO: remove docking memory
 	RELEASE(buttons);
-	RELEASE(resources);
-	RELEASE(explorer);
 
 	ImGui_ImplSdlGL3_Shutdown();
 	return true;
@@ -357,8 +381,8 @@ bool M_Editor::CleanUp()
 
 void M_Editor::Log(const char* input)
 {
-	if (console != nullptr)
-		console->AddLog(input);
+	if (w_console != nullptr)
+		w_console->AddLog(input);
 }
 
 void M_Editor::GetEvent(SDL_Event* event)
@@ -369,37 +393,9 @@ void M_Editor::GetEvent(SDL_Event* event)
 void M_Editor::DrawPanels()
 {
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	if (hierarchy != nullptr)
-	{
-		hierarchy->Draw(windowFlags);
-	}
-
-	if (console != nullptr)
-	{
-		console->Draw(windowFlags);
-	}
-
-	if (inspector != nullptr)
-	{
-		inspector->Draw(windowFlags);
-	}
-
-	if (configuration != nullptr)
-	{
-		configuration->Draw(windowFlags);
-	}
-
 	if (buttons != nullptr)
 	{
 		buttons->Draw(windowFlags);
-	}
-	if (resources != nullptr)
-	{
-		resources->Draw(windowFlags);
-	}
-	if (explorer != nullptr)
-	{
-		explorer->Draw(windowFlags);
 	}
 }
 
@@ -436,8 +432,6 @@ void M_Editor::ShowAboutWindow()
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
 	ImGui::End();
-
-	ImVec2 vec = ImVec2('i');
 }
 
 void M_Editor::ShowPlayWindow()
@@ -509,22 +503,18 @@ void M_Editor::OpenFileNameWindow()
 
 void M_Editor::UpdateFPSData(int fps, int ms)
 {
-	if (configuration)
-		configuration->UpdateFPSData(fps, ms);
+	if (w_econfig)
+		w_econfig->UpdateFPSData(fps, ms);
 }
 
 void M_Editor::OnResize(int screen_width, int screen_height)
 {
-	console->UpdatePosition(screen_width, screen_height);
-	hierarchy->UpdatePosition(screen_width, screen_height);
-	inspector->UpdatePosition(screen_width, screen_height);
-	configuration->UpdatePosition(screen_width, screen_height);
 	buttons->UpdatePosition(screen_width, screen_height);
-	resources->UpdatePosition(screen_width, screen_height);
-	explorer->UpdatePosition(screen_width, screen_height);
 
 	playWindow.x = screen_width / 2 - 90;
 	playWindow.y = screen_height / 20;
+	
+	docks[0]->SetSize(Vec2(screen_width, screen_height));
 }
 
 bool M_Editor::UsingKeyboard() const
@@ -540,22 +530,21 @@ bool M_Editor::UsingMouse() const
 //Timer management -------------------
 uint M_Editor::AddTimer(const char* text, const char* tag)
 {
-	return configuration->AddTimer(text, tag);
+	return 0;
 }
 
 void M_Editor::StartTimer(uint index)
 {
-	configuration->StartTimer(index);
+
 }
 
 void M_Editor::ReadTimer(uint index)
 {
-	configuration->ReadTimer(index);
 }
 
 void M_Editor::StopTimer(uint index)
 {
-	configuration->StopTimer(index);
+
 }
 
 

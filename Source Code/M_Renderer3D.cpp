@@ -14,6 +14,7 @@
 #include "R_Material.h"
 #include "R_Texture.h"
 #include "M_Resources.h"
+#include "M_Materials.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -139,13 +140,10 @@ bool M_Renderer3D::Init(Config& config)
 	//	glEnable(GL_BLEND);
 	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
-
 		glShadeModel(GL_SMOOTH);
 	}
 
-	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize();
 
 	mesh_draw_timer = App->moduleEditor->AddTimer("Mesh draw", "Render");
 	box_draw_timer = App->moduleEditor->AddTimer("Box draw", "Render");
@@ -259,15 +257,38 @@ bool M_Renderer3D::CleanUp()
 	return true;
 }
 
-
-void M_Renderer3D::OnResize(int width, int height)
+void M_Renderer3D::GenerateSceneBuffers()
 {
-	window_width = width;
-	window_height = height;
+	//TODO: move into a function
+	//Generating buffers for scene render
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
-	glViewport(0, 0, width, height);
-	camera->SetAspectRatio((float)width / (float)height);
+	//Generating texture to render to
+	glGenTextures(1, &renderTexture);
+	glBindTexture(GL_TEXTURE_2D, renderTexture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->windowSize.x, App->window->windowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Configuring frame buffer
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("Error creating screen buffer");
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void M_Renderer3D::OnResize()
+{
+	glViewport(0, 0, App->window->windowSize.x, App->window->windowSize.y);
+	camera->SetAspectRatio((float)App->window->windowSize.x / (float)App->window->windowSize.y);
 	UpdateProjectionMatrix();
+	GenerateSceneBuffers();
 }
 
 void M_Renderer3D::UpdateProjectionMatrix()
@@ -316,6 +337,38 @@ void M_Renderer3D::SetCullingCamera(C_Camera* camera)
 
 void M_Renderer3D::DrawAllScene()
 {
+	//TODO: Move this into a mesh "prefab" or a renderer method
+	//Both draw and input handling
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if (drawGrid)
+	{
+
+		glLineWidth(1.0f);
+
+		glBegin(GL_LINES);
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+
+		float d = 20.0f;
+
+		for (float i = -d; i <= d; i += 1.0f)
+		{
+			glVertex3f(i, 0.0f, -d);
+			glVertex3f(i, 0.0f, d);
+			glVertex3f(-d, 0.0f, i);
+			glVertex3f(d, 0.0f, i);
+		}
+
+		glEnd();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+	{
+		drawGrid = !drawGrid;
+	}
+
 	App->moduleEditor->StartTimer(mesh_draw_timer);
 	DrawAllMeshes();
 	App->moduleEditor->ReadTimer(mesh_draw_timer);
@@ -323,6 +376,9 @@ void M_Renderer3D::DrawAllScene()
 	App->moduleEditor->StartTimer(box_draw_timer);
 	DrawAllBox();
 	App->moduleEditor->ReadTimer(box_draw_timer);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 }
 
 void M_Renderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)

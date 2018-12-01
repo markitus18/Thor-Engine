@@ -10,7 +10,6 @@
 #include "OpenGL.h"
 #include "Quadtree.h"
 #include "M_Scene.h"
-#include "P_Hierarchy.h"
 
 #include <vector>
 #include <map>
@@ -235,11 +234,8 @@ void M_Camera3D::OnClick()
 	uint mouseX = App->input->GetMouseX();
 	uint mouseY = App->input->GetMouseY();
 
-	uint screen_width = App->renderer3D->window_width;
-	uint screen_height = App->renderer3D->window_height;
-
-	float mouseNormX = (float)App->input->GetMouseX() / (float)App->renderer3D->window_width;
-	float mouseNormY = (float)App->input->GetMouseY() / (float)App->renderer3D->window_height;
+	float mouseNormX = (float)App->input->GetMouseX() / (float)App->window->windowSize.x;
+	float mouseNormY = (float)App->input->GetMouseY() / (float)App->window->windowSize.y;
 
 	//Normalizing mouse position in range of -1 / 1, -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;

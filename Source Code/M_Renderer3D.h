@@ -60,8 +60,9 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
+	void GenerateSceneBuffers();
 
-	void OnResize(int width, int height);
+	void OnResize();
 	void UpdateProjectionMatrix();
 
 	void SetActiveCamera(C_Camera* camera);
@@ -96,16 +97,17 @@ public:
 	uint SavePrefabImage(GameObject* gameObject);
 
 public:
-	//TODO: should it be moved into window module? SDL method maybe?
-	int window_width;
-	int window_height;
-
 	C_Camera* camera = nullptr;
 	C_Camera* screenshotCamera = nullptr;
 	C_Camera* culling_camera = nullptr;
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
+
+	bool drawGrid = true;
+
+	uint frameBuffer = 0;
+	uint renderTexture = 0;
 
 private:
 	uint mesh_draw_timer;

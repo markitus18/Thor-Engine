@@ -1,5 +1,5 @@
 #include "TreeDisplay.h"
-#include "ImGui/imgui.h"
+
 #include "TreeNode.h"
 #include "Application.h" //TODO: necessary?
 #include "M_Editor.h" //TODO: necessary?
@@ -8,6 +8,10 @@
 #include "GameObject.h"
 
 #include <vector>
+
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
 
 TreeDisplay::TreeDisplay()
 {
@@ -68,8 +72,8 @@ void TreeDisplay::DrawNode(TreeNode* node)
 		if (ImGui::IsItemHoveredRect() && App->moduleEditor->dragging == true)
 		{
 			cursorPos.y += 19;
-			ImGui::RenderFrame(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
-			ImGui::GetCurrentWindow()->DrawList->AddRect(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TextSelectedBg));
+			ImDrawList* drawList = ImGui::GetWindowDrawList();
+			drawList->AddRectFilled(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TextSelectedBg));
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 			{
 				GameObject* parent = (GameObject*)(node->hierarchyOpen == true ? node : node->GetParentNode()); //TODO
@@ -257,33 +261,36 @@ void TreeDisplay::HandleArrows()
 
 	if ((App->input->GetKey(SDL_SCANCODE_UP)) == KEY_DOWN)
 	{
-		TreeNode* previous = App->moduleEditor->lastSelected->GetPreviousOpenNode();
-		if (previous != nullptr)
+		if (App->moduleEditor->lastSelected != nullptr)
 		{
-			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
-				App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+			if (TreeNode* previous = App->moduleEditor->lastSelected->GetPreviousOpenNode())
 			{
-				TreeNode* next = App->moduleEditor->lastSelected->GetNextOpenNode();
-				//Bottom end of hierarchy -> next = nullptr
-				if ((next != nullptr && next->IsSelected() == true))
+				if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||
+					App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
 				{
-					App->moduleEditor->AddSelect(previous);
-				}
-				else if (previous->IsSelected() == true)
-				{
-					App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
+					TreeNode* next = App->moduleEditor->lastSelected->GetNextOpenNode();
+					//Bottom end of hierarchy -> next = nullptr
+					if ((next != nullptr && next->IsSelected() == true))
+					{
+						App->moduleEditor->AddSelect(previous);
+					}
+					else if (previous->IsSelected() == true)
+					{
+						App->moduleEditor->UnselectSingle(App->moduleEditor->lastSelected);
+					}
+					else
+					{
+						App->moduleEditor->AddSelect(previous);
+					}
 				}
 				else
 				{
-					App->moduleEditor->AddSelect(previous);
+					App->moduleEditor->SelectSingle(previous);
 				}
+				App->moduleEditor->lastSelected = previous;
 			}
-			else
-			{
-				App->moduleEditor->SelectSingle(previous);
-			}
-			App->moduleEditor->lastSelected = previous;
 		}
+
 	}
 }
 

@@ -82,7 +82,6 @@ public:
 	Quadtree* quadtree;
 
 private:
-	bool drawGrid = true;
 	GameObject* root = nullptr;
 	std::vector<const GameObject*> nonStatic;
 
@@ -93,9 +92,6 @@ private:
 	uint cullingTimer_optimized = 0;
 
 	LCG random;
-
-	//TODO: Dirty stuff to erase
-	C_Animation* animation = nullptr;
 };
 
 #endif //__MODULE_SCENE_H__

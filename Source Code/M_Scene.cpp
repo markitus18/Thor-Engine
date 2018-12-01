@@ -88,47 +88,6 @@ bool M_Scene::CleanUp()
 // Update
 update_status M_Scene::Update(float dt)
 {
-	//Dirty stuf to erase
-	if (animation == nullptr)
-	{
-		std::vector<GameObject*> gameObjects;
-		root->CollectChilds(gameObjects);
-
-		for (uint i = 0; i < gameObjects.size(); i++)
-		{
-			C_Animation* anim = gameObjects[i]->GetComponent<C_Animation>();
-			if (anim != nullptr && gameObjects[i]->name == "aniTest")
-			{
-				animation = anim;
-				break;
-			}
-		}
-	}
-
-	//Updating animation
-	if (Time::deltaTime > 0 && animation != nullptr)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_2) == KEY_REPEAT && animation->current_animation == 0)
-		{
-			animation->SetAnimation(1, 1.0f);
-		}
-		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_UP && animation->current_animation != 2)
-		{
-			animation->SetAnimation((uint)0, 1.0f);
-		}
-		else if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-		{
-			animation->SetAnimation(2, 1.0f);
-		}
-
-		if (animation->playing == false && animation->current_animation == 2)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_2) == KEY_REPEAT)
-				animation->SetAnimation((uint)1, 1.0f);
-			else
-				animation->SetAnimation((uint)0, 1.0f);
-		}
-	}
 #pragma region WindowTest
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 	{
@@ -153,32 +112,6 @@ update_status M_Scene::Update(float dt)
 	//TODO: move to renderer
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	if (drawGrid)
-	{
-		//TODO: Move this into a mesh "prefab" or a renderer method
-		glLineWidth(1.0f);
-
-		glBegin(GL_LINES);
-		glColor4f(1.0, 1.0, 1.0, 1.0);
-
-		float d = 20.0f;
-
-		for (float i = -d; i <= d; i += 1.0f)
-		{
-			glVertex3f(i, 0.0f, -d);
-			glVertex3f(i, 0.0f, d);
-			glVertex3f(-d, 0.0f, i);
-			glVertex3f(d, 0.0f, i);
-		}
-
-		glEnd();
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-	{
-		drawGrid = !drawGrid;
-	}
 
  	UpdateAllGameObjects(root, dt);
 
@@ -334,7 +267,6 @@ void M_Scene::SaveScene(Config& node) const
 void M_Scene::LoadScene(Config& node, bool tmp)
 {
 	DeleteAllGameObjects();
-	animation = nullptr;
 	quadtree->Clear();
 	std::vector<GameObject*> roots;
 	std::vector<GameObject*> newGameObjects;

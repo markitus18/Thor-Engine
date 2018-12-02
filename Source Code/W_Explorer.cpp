@@ -9,6 +9,8 @@
 
 #include "R_Texture.h"
 
+#include "Dock.h"
+
 W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 {
 	updateTimer.Start();
@@ -25,11 +27,12 @@ void W_Explorer::Draw()
 	}
 
 	DrawFolderNode(assets);
+	DrawSelectedFolderContent();
 }
 
 void W_Explorer::OnResize()
 {
-
+	columnsNumber = ((parent->size.x - imageSpacingX) * 10) / 1152;
 }
 
 void W_Explorer::DrawFolderNode(const PathNode& node)
@@ -96,6 +99,68 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 	}
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 
+}
+
+void W_Explorer::DrawSelectedFolderContent()
+{
+	ImGui::BeginChild("ExplorerFolder");
+
+	ImGui::Text(currentNode.path.c_str());
+	ImGui::Separator();
+
+	ImGui::BeginChild(5);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(50, 30));
+
+	ImVec2 vec = ImGui::GetCursorScreenPos();
+	ImVec2 vec2 = ImGui::GetCursorPos();
+
+	PathNode nextCurrent;
+	uint line = 0;
+
+	for (uint i = 0; i < currentNode.children.size(); i++)
+	{
+		ImGui::PushID(i);
+
+		ImGui::SetCursorPosX(vec2.x + (i - (line * columnsNumber)) * (imageSize + imageSpacingX) + imageSpacingX);
+		ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY));
+
+		DrawNodeImage(currentNode.children[i]);
+
+		ImGui::SetCursorPosX(vec2.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
+		ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY));
+
+		if (explorerSelected == currentNode.children[i])
+		{
+			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize, imageSize));
+		}
+
+		if (ImGui::IsItemClicked())
+		{
+			explorerSelected = currentNode.children[i];
+		}
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0) && currentNode.children[i].file == false)
+		{
+			nextCurrent = currentNode.children[i];
+		}
+
+		ImGui::SetCursorPosX(vec2.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
+		ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY) + imageSize + textOffset);
+
+		std::string textAdjusted = GetTextAdjusted(currentNode.children[i].localPath.c_str());
+		ImGui::Text(textAdjusted.c_str());
+
+		if ((i + 1) % columnsNumber == 0)
+			line++;
+
+		ImGui::PopID();
+	}
+	ImGui::PopStyleVar();
+	ImGui::EndChild();
+
+	if (nextCurrent.path != "")
+		currentNode = nextCurrent;
+
+	ImGui::EndChild();
 }
 
 void W_Explorer::UpdateTree()

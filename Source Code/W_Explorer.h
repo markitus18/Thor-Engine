@@ -19,6 +19,8 @@ public:
 private:
 	void DrawFolderNode(const PathNode& node);
 	void DrawNodeImage(const PathNode& node);
+	void DrawSelectedFolderContent();
+
 	void UpdateTree();
 	std::string GetTextAdjusted(const char* text);
 

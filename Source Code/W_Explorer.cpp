@@ -26,13 +26,23 @@ void W_Explorer::Draw()
 		updateTimer.Start();
 	}
 
+	ImGui::PushID(this);
+
+	ImGui::BeginChild("ExplorerTree", ImVec2(windowSize.x * 0.2f, windowSize.y));
 	DrawFolderNode(assets);
+	ImGui::EndChild();
+	ImGui::SameLine();
+	ImGui::BeginChild("ExplorerFolderse", ImVec2(windowSize.x * 0.8f, windowSize.y));
 	DrawSelectedFolderContent();
+	ImGui::EndChild();
+
+	ImGui::PopID();
 }
 
 void W_Explorer::OnResize()
 {
 	columnsNumber = ((parent->size.x - imageSpacingX) * 10) / 1152;
+	windowSize = parent->size - Vec2(0.0f, 25.0f);
 }
 
 void W_Explorer::DrawFolderNode(const PathNode& node)

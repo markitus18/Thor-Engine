@@ -45,12 +45,25 @@ void Dock::Draw()
 		{
 			if (data_children.empty()) break;
 
+			ImVec2 tabSpacing = ImGui::GetCursorPos();
 			DrawTabPanels();
 			ImGui::Separator();
+			tabSpacing = ImGui::GetCursorPos() - tabSpacing;
+
 			for (uint i = 0; i < data_children.size(); ++i)
 			{
 				if (data_children[i]->IsActive())
+				{
+					//Generate a child window then call draw from the window itself
+					ImGui::PushID(data_children[i]);
+					ImGui::BeginChild("DockChild", ImVec2(size.x, size.y - tabSpacing.y));
+
 					data_children[i]->Draw();
+
+					ImGui::EndChild();
+					ImGui::PopID();
+				}
+
 			}
 			break;
 		}

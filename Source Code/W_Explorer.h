@@ -46,6 +46,8 @@ private:
 
 	uint updateTime = 5;
 	Timer updateTimer;
+
+	Vec2 windowSize;
 };
 
 #endif

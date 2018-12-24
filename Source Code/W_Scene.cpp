@@ -23,10 +23,11 @@ void W_Scene::Draw()
 
 void W_Scene::OnResize()
 {
-	win_size = Vec2(parent->size.x, parent->size.y) - Vec2(10, 10);
+	//Getting window size - some margins - tab size (25) - separator (7)
+	win_size = Vec2(parent->size.x, parent->size.y) - Vec2(10, 42);
 
 	//Calculating the image size according to the window size.
-	img_size = App->window->windowSize - Vec2(0.0f, 25.0f); //Removing the tab area
+	img_size = App->window->windowSize;// -Vec2(0.0f, 25.0f); //Removing the tab area
 	if (img_size.x > win_size.x)
 	{
 		img_size /= (img_size.x / win_size.x);
@@ -35,7 +36,7 @@ void W_Scene::OnResize()
 	{
 		img_size /= (img_size.y / win_size.y);
 	}
-	img_offset = Vec2(win_size.x - img_size.x, win_size.y - img_size.y) / 2 + Vec2(0.0f, 25.0f);
+	img_offset = Vec2(win_size.x - img_size.x, win_size.y - img_size.y) / 2 + Vec2(5.0f, 12.0f);
 
 }
 

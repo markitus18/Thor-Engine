@@ -63,14 +63,14 @@ void C_Animation::LinkBones()
 
 void C_Animation::DrawLinkedBones() const
 {
-	//for (uint i = 0; i < links.size(); i++)
-	//{
-	//	C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
-	//	float3 pos = transform->GetGlobalPosition();
-	//	AABB* box = new AABB();
-	//	box->SetFromCenterAndSize(pos, float3(1, 1, 1));
-	//	App->renderer3D->AddAABB(*box, Pink);
-	//}
+	for (uint i = 0; i < links.size(); i++)
+	{
+		C_Transform* transform = (C_Transform*)links[i].gameObject->GetComponent<C_Transform>();
+		float3 pos = transform->GetGlobalPosition();
+		AABB* box = new AABB();
+		box->SetFromCenterAndSize(pos, float3(1, 1, 1));
+		App->renderer3D->AddAABB(*box, Pink);
+	}
 }
 
 void C_Animation::Start()

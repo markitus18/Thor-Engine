@@ -8,6 +8,8 @@
 #include "Application.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
+#include "M_Camera3D.h"
+#include "M_Input.h"
 
 W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 {
@@ -17,8 +19,19 @@ W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 void W_Scene::Draw()
 {
 	ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
-	img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) - Vec2(0, img_size.y);
+	img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
+	img_corner.y = App->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
+
 	ImGui::Image((ImTextureID)App->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
+
+	if (ImGui::IsItemHovered())
+	{
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		{
+			Vec2 mousePos = ScreenToWorld(Vec2(App->input->GetMouseX(), App->input->GetMouseY()));
+			App->camera->OnClick(mousePos);
+		}
+	}
 }
 
 void W_Scene::OnResize()

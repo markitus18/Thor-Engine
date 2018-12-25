@@ -80,7 +80,7 @@ void W_Explorer::DrawFolderNode(const PathNode& node)
 void W_Explorer::DrawNodeImage(const PathNode& node)
 {
 	if (node.file == false)
-		ImGui::Image((ImTextureID)folderBuffer, ImVec2(imageSize, imageSize));
+		ImGui::Image((ImTextureID)folderBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 	else
 	{
 		std::string metaFile = node.path + (".meta");
@@ -90,7 +90,7 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 		if (resource && resource->GetType() == Resource::TEXTURE)
 		{
 			R_Texture* tex = (R_Texture*)resource;
-			ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+			ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
 		else if (resource && resource->GetType() == Resource::PREFAB)
 		{
@@ -100,11 +100,11 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 			//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
 
 			//Not saving prefab screenshot by now
-			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize));
+			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
 		else
 		{
-			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize));
+			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
 	}
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
@@ -141,7 +141,7 @@ void W_Explorer::DrawSelectedFolderContent()
 
 		if (explorerSelected == currentNode.children[i])
 		{
-			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize, imageSize));
+			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
 
 		if (ImGui::IsItemClicked())

@@ -22,7 +22,7 @@ void Dock::Draw()
 		ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus |
 		ImGuiWindowFlags_NoResize;
 
-	if (separation != NONE || data_children.empty()) flags |= ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+	flags |= ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	if (root == true)
 	{
 		ImGui::SetNextWindowPos(ImVec2(position.x, position.y));
@@ -348,7 +348,7 @@ void Dock::CloseDockData(DWindow* data)
 
 void Dock::SetSize(Vec2 size)
 {
-	this->size = size - Vec2(6, 0); //Temoral fix to allow the scrollbar to appear
+	this->size = size - Vec2(6, 9); //Temoral fix to allow the scrollbar to appear
 									//ImGui window size doesn't have the exact value. 
 
 	for (uint i = 0; i < data_children.size(); ++i)

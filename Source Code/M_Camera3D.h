@@ -6,6 +6,7 @@
 
 class C_Camera;
 class Config;
+struct Vec2;
 
 class M_Camera3D : public Module
 {
@@ -33,15 +34,15 @@ public:
 	void SaveScene(Config& root) const;
 	void LoadScene(Config& root, bool tmp = false);
 
+	void OnClick(const Vec2& mousePos);
+
 private:
 
 	void Move_Keyboard(float dt);
-	void Move_Mouse();
+	void Move_Mouse(float motion_x, float motion_y);
 
 	void Orbit(float motion_x, float motion_y);
 	void Zoom(float zoom);
-
-	void OnClick();
 
 public:
 	bool drawRay = false;

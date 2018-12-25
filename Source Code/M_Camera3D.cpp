@@ -10,6 +10,7 @@
 #include "OpenGL.h"
 #include "Quadtree.h"
 #include "M_Scene.h"
+#include "Vec2.h"
 
 #include <vector>
 #include <map>
@@ -70,9 +71,9 @@ update_status M_Camera3D::Update(float dt)
 	{
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 		{
-			OnClick();
+			//OnClick();
 		}
-		Move_Mouse();
+		//Move_Mouse();
 	}
 
 	if (drawRay)
@@ -170,13 +171,9 @@ void M_Camera3D::Move_Keyboard(float dt)
 {
 }
 
-void M_Camera3D::Move_Mouse()
+void M_Camera3D::Move_Mouse(float motion_x, float motion_y)
 {
 	// Check motion for lookat / Orbit cameras
-	int motion_x, motion_y;
-	motion_x = -App->input->GetMouseXMotion();
-	motion_y = App->input->GetMouseYMotion();
-
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
 	{
 		Orbit(motion_x, -motion_y);
@@ -229,15 +226,12 @@ void M_Camera3D::Zoom(float zoom)
 	camera->frustum.SetPos(newPos);
 }
 
-void M_Camera3D::OnClick()
+void M_Camera3D::OnClick(const Vec2& mousePos)
 {
-	uint mouseX = App->input->GetMouseX();
-	uint mouseY = App->input->GetMouseY();
+	float mouseNormX = mousePos.x / (float)App->window->windowSize.x;
+	float mouseNormY = mousePos.y / (float)App->window->windowSize.y;
 
-	float mouseNormX = (float)App->input->GetMouseX() / (float)App->window->windowSize.x;
-	float mouseNormY = (float)App->input->GetMouseY() / (float)App->window->windowSize.y;
-
-	//Normalizing mouse position in range of -1 / 1, -1, -1 being at the bottom left corner
+	//Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
 	mouseNormY = -((mouseNormY - 0.5) / 0.5);
 

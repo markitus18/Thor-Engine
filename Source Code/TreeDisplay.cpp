@@ -63,15 +63,15 @@ void TreeDisplay::DrawNode(TreeNode* node)
 	if (App->moduleEditor->dragging == true)
 	{
 		//Drawing inter-GO buttons
-		ImVec2 cursorPos = ImGui::GetCursorScreenPos();
-		cursorPos.y -= 25.0f;
+		//ImVec2 cursorPos = ImVec2(0.0f, ImGui::GetCursorScreenPos().y - 58.0f);
+		ImVec2 cursorPos = ImVec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y - 58.0f);
 		ImGui::SetCursorPos(cursorPos);
 		ImGui::PushID(node->GetID()); //TODO: should be done in tree header, we need a new id here
 		ImVec2 buttonSize = ImVec2(ImGui::GetWindowSize().x, 6);
 		ImGui::InvisibleButton("Button", buttonSize);
 		if (ImGui::IsItemHoveredRect() && App->moduleEditor->dragging == true)
 		{
-			cursorPos.y += 19;
+			cursorPos.y += 52;
 			ImDrawList* drawList = ImGui::GetWindowDrawList();
 			drawList->AddRectFilled(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 6), ImGui::GetColorU32(ImGuiCol_TextSelectedBg));
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
@@ -81,11 +81,10 @@ void TreeDisplay::DrawNode(TreeNode* node)
 				App->moduleEditor->FinishDrag(true, true);
 				App->moduleEditor->dragging = false;
 			}
-			cursorPos.y -= 19;
+			cursorPos.y -= 52;
 		}
-		cursorPos = ImGui::GetCursorScreenPos();
-		cursorPos.y -= 23.0f;
-		ImGui::SetCursorPos(cursorPos);
+		ImVec2 newCursorPos = ImVec2(ImGui::GetCursorScreenPos().x ,ImGui::GetCursorScreenPos().y - 56.0f);
+		ImGui::SetCursorPos(newCursorPos);
 		ImGui::PopID();
 	}
 

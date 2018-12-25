@@ -83,9 +83,9 @@ void TreeDisplay::DrawNode(TreeNode* node)
 			}
 			cursorPos.y -= 52;
 		}
+		ImGui::PopID();
 		ImVec2 newCursorPos = ImVec2(ImGui::GetCursorScreenPos().x ,ImGui::GetCursorScreenPos().y - 56.0f);
 		ImGui::SetCursorPos(newCursorPos);
-		ImGui::PopID();
 	}
 
 	if (node->hierarchyOpen == true)

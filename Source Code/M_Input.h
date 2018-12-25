@@ -72,9 +72,9 @@ public:
 	{
 		if (GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 		{
-			if (last_mouse_click_x != mouse_x)
+			if (last_mouse_click_x > mouse_x + drag_detection_offset || last_mouse_click_x < mouse_x - drag_detection_offset)
 				return true;
-			if (last_mouse_click_y != mouse_y)
+			if (last_mouse_click_y > mouse_y + drag_detection_offset || last_mouse_click_y < mouse_y - drag_detection_offset)
 				return true;
 			return false;
 			return (last_mouse_click_x != mouse_x || last_mouse_click_y != mouse_y);
@@ -99,6 +99,8 @@ private:
 
 	int last_mouse_click_x = 0;
 	int last_mouse_click_y = 0;
+
+	float drag_detection_offset = 7.0f;
 
 	//TODO: change "ifinite mouse" functionality in a more polite way
 	int last_mouse_swap = 0;

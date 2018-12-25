@@ -377,6 +377,11 @@ void M_Renderer3D::DrawAllScene()
 	DrawAllBox();
 	App->moduleEditor->ReadTimer(box_draw_timer);
 	
+	//TODO: move to another side. Camera call to draw on renderer
+	if (App->camera->drawRay)
+	{
+		App->camera->DrawRay();
+	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 }

@@ -28,9 +28,13 @@ void W_Scene::Draw()
 	{
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 		{
-			Vec2 mousePos = ScreenToWorld(Vec2(App->input->GetMouseX(), App->input->GetMouseY()));
+			Vec2 mousePos = ScreenToWorld(Vec2(App->input->GetMouseX(), App->window->windowSize.y - App->input->GetMouseY()));
 			App->camera->OnClick(mousePos);
 		}
+		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
+
+		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
 	}
 }
 

@@ -76,22 +76,6 @@ update_status M_Camera3D::Update(float dt)
 		//Move_Mouse();
 	}
 
-	if (drawRay)
-	{
-		glColor4f(1, 0, 0, 1);
-
-		//Between-planes right
-		GLfloat pointA[3] = { lastRay.a.x, lastRay.a.y, lastRay.a.z };
-		GLfloat pointB[3] = { lastRay.b.x, lastRay.b.y, lastRay.b.z };
-
-		glBegin(GL_LINES);
-		glVertex3fv(pointA);
-		glVertex3fv(pointB);
-		glEnd();
-
-		glColor4f(1, 1, 1, 1);
-	}
-
 	return UPDATE_CONTINUE;
 }
 
@@ -176,7 +160,7 @@ void M_Camera3D::Move_Mouse(float motion_x, float motion_y)
 	// Check motion for lookat / Orbit cameras
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
 	{
-		Orbit(motion_x, -motion_y);
+		Orbit(-motion_x, -motion_y);
 		App->input->InfiniteHorizontal();
 	}
 
@@ -185,7 +169,7 @@ void M_Camera3D::Move_Mouse(float motion_x, float motion_y)
 		//TODO: Kind of magic number. Consider other options?
 		float distance = reference.Distance(camera->frustum.Pos());
 		float3 Y_add = camera->frustum.Up() * motion_y * (distance / 1800);
-		float3 X_add = camera->frustum.WorldRight() * motion_x * (distance / 1800);
+		float3 X_add = camera->frustum.WorldRight() * -motion_x * (distance / 1800);
 
 		reference += X_add;
 		reference += Y_add;
@@ -196,6 +180,22 @@ void M_Camera3D::Move_Mouse(float motion_x, float motion_y)
 	int wheel = App->input->GetMouseZ();
 	if (wheel != 0)
 		Zoom(wheel);
+}
+
+void M_Camera3D::DrawRay()
+{
+	glColor4f(1, 0, 0, 1);
+
+	//Between-planes right
+	GLfloat pointA[3] = { lastRay.a.x, lastRay.a.y, lastRay.a.z };
+	GLfloat pointB[3] = { lastRay.b.x, lastRay.b.y, lastRay.b.z };
+
+	glBegin(GL_LINES);
+	glVertex3fv(pointA);
+	glVertex3fv(pointB);
+	glEnd();
+
+	glColor4f(1, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------
@@ -229,7 +229,8 @@ void M_Camera3D::Zoom(float zoom)
 void M_Camera3D::OnClick(const Vec2& mousePos)
 {
 	float mouseNormX = mousePos.x / (float)App->window->windowSize.x;
-	float mouseNormY = mousePos.y / (float)App->window->windowSize.y;
+	//TODO: quick fix, mouse click is inverting Y
+	float mouseNormY = ((float)App->window->windowSize.y - mousePos.y) / (float)App->window->windowSize.y;
 
 	//Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
@@ -237,5 +238,5 @@ void M_Camera3D::OnClick(const Vec2& mousePos)
 
 	lastRay = App->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 
-	App->scene->OnClickSelection(lastRay);
+ 	App->scene->OnClickSelection(lastRay);
 }

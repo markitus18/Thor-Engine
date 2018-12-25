@@ -35,11 +35,12 @@ public:
 	void LoadScene(Config& root, bool tmp = false);
 
 	void OnClick(const Vec2& mousePos);
+	void Move_Mouse(float motion_x, float motion_y);
 
+	void DrawRay();
 private:
 
 	void Move_Keyboard(float dt);
-	void Move_Mouse(float motion_x, float motion_y);
 
 	void Orbit(float motion_x, float motion_y);
 	void Zoom(float zoom);

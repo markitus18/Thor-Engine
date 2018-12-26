@@ -24,18 +24,7 @@ void W_Scene::Draw()
 
 	ImGui::Image((ImTextureID)App->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
-	if (ImGui::IsItemHovered())
-	{
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-		{
-			Vec2 mousePos = ScreenToWorld(Vec2(App->input->GetMouseX(), App->window->windowSize.y - App->input->GetMouseY()));
-			App->camera->OnClick(mousePos);
-		}
-		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
-
-		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
-	}
+	HandleInput();
 }
 
 void W_Scene::OnResize()
@@ -76,5 +65,41 @@ Vec2 W_Scene::WorldToScreen(Vec2 p) const
 //Handles user input
 void W_Scene::HandleInput()
 {
+	if (ImGui::IsItemHovered())
+	{
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		{
+			Vec2 mousePos = ScreenToWorld(Vec2(App->input->GetMouseX(), App->window->windowSize.y - App->input->GetMouseY()));
+			App->camera->OnClick(mousePos);
+		}
+		draggingOrbit = App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT;
+		draggingPan = App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT;
 
+		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
+
+		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
+	}
+	if (draggingOrbit)
+	{
+		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
+
+		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
+		App->camera->Orbit(-mouseMotion_screen.x, -mouseMotion_screen.y);
+		App->input->InfiniteHorizontal();
+
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE) draggingOrbit = false;
+	}
+	if (draggingPan)
+	{
+		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
+
+		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
+		App->camera->Pan(mouseMotion_screen.x, mouseMotion_screen.y);
+		App->input->InfiniteHorizontal();
+
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE) draggingPan = false;
+	}
 }

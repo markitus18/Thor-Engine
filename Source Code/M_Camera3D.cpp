@@ -157,29 +157,22 @@ void M_Camera3D::Move_Keyboard(float dt)
 
 void M_Camera3D::Move_Mouse(float motion_x, float motion_y)
 {
-	// Check motion for lookat / Orbit cameras
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
-	{
-		Orbit(-motion_x, -motion_y);
-		App->input->InfiniteHorizontal();
-	}
-
-	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT && (motion_x != 0 || motion_y != 0))
-	{
-		//TODO: Kind of magic number. Consider other options?
-		float distance = reference.Distance(camera->frustum.Pos());
-		float3 Y_add = camera->frustum.Up() * motion_y * (distance / 1800);
-		float3 X_add = camera->frustum.WorldRight() * -motion_x * (distance / 1800);
-
-		reference += X_add;
-		reference += Y_add;
-
-		camera->frustum.SetPos(camera->frustum.Pos() + X_add + Y_add);
-	}
 	// Mouse wheel for zoom
 	int wheel = App->input->GetMouseZ();
 	if (wheel != 0)
 		Zoom(wheel);
+}
+
+void M_Camera3D::Pan(float motion_x, float motion_y)
+{
+	float distance = reference.Distance(camera->frustum.Pos());
+	float3 Y_add = camera->frustum.Up() * motion_y * (distance / 1800);
+	float3 X_add = camera->frustum.WorldRight() * -motion_x * (distance / 1800);
+
+	reference += X_add;
+	reference += Y_add;
+
+	camera->frustum.SetPos(camera->frustum.Pos() + X_add + Y_add);
 }
 
 void M_Camera3D::DrawRay()

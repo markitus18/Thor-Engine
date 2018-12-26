@@ -226,7 +226,15 @@ void TreeDisplay::HandleArrows()
 {
 	if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
 	{
-		TreeNode* next = App->moduleEditor->lastSelected->GetNextOpenNode();
+		TreeNode* next = nullptr;
+		if (App->moduleEditor->lastSelected != nullptr)
+		{
+			next = App->moduleEditor->lastSelected->GetNextOpenNode();
+		}
+		else
+		{
+			next = App->scene->GetRoot()->GetNextOpenNode();
+		}
 		if (next != nullptr)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RSHIFT) == KEY_REPEAT ||

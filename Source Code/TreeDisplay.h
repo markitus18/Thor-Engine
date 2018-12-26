@@ -24,7 +24,6 @@ protected:
 	bool SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> childs, TreeNode* next = nullptr);
 
 protected:
-	TreeNode* lastSelected = nullptr;
 	bool selecting = false;
 };
 

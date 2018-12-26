@@ -36,14 +36,15 @@ public:
 
 	void OnClick(const Vec2& mousePos);
 	void Move_Mouse(float motion_x, float motion_y);
+	void Orbit(float motion_x, float motion_y);
+	void Pan(float motion_x, float motion_y);
+
+	void Zoom(float zoom);
 
 	void DrawRay();
 private:
 
 	void Move_Keyboard(float dt);
-
-	void Orbit(float motion_x, float motion_y);
-	void Zoom(float zoom);
 
 public:
 	bool drawRay = false;

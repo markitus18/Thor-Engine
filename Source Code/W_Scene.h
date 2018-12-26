@@ -35,6 +35,8 @@ private:
 	Vec2 img_corner;
 	Vec2 img_offset;
 
+	bool draggingOrbit = false;
+	bool draggingPan = false;
 	//Rect trans_buttons[3]; //TODO: Used for 2D Gizmos
 	//Circle rot_button; //TODO: Used for 2D Gizmos
 };

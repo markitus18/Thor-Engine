@@ -230,11 +230,11 @@ void M_Camera3D::OnClick(const Vec2& mousePos)
 {
 	float mouseNormX = mousePos.x / (float)App->window->windowSize.x;
 	//TODO: quick fix, mouse click is inverting Y
-	float mouseNormY = ((float)App->window->windowSize.y - mousePos.y) / (float)App->window->windowSize.y;
+	float mouseNormY = mousePos.y / (float)App->window->windowSize.y;
 
 	//Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
-	mouseNormY = -((mouseNormY - 0.5) / 0.5);
+	mouseNormY = (mouseNormY - 0.5) / 0.5;
 
 	lastRay = App->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 

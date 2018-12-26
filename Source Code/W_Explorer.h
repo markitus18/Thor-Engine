@@ -24,6 +24,8 @@ private:
 	void UpdateTree();
 	std::string GetTextAdjusted(const char* text);
 
+	void HandleNodeDoubleClick(const PathNode& node);
+
 public:
 	bool explorerActive = true;
 	uint folderBuffer = 0;
@@ -39,6 +41,7 @@ public:
 private:
 	PathNode assets;
 	PathNode currentNode;
+	PathNode nextCurrent;
 	PathNode explorerSelected;
 
 	Vec2 explorerPosition;

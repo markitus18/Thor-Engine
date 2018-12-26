@@ -102,7 +102,7 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 			//Not saving prefab screenshot by now
 			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
-		else
+		else //Default file image
 		{
 			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
@@ -124,7 +124,6 @@ void W_Explorer::DrawSelectedFolderContent()
 	ImVec2 vec = ImGui::GetCursorScreenPos();
 	ImVec2 vec2 = ImGui::GetCursorPos();
 
-	PathNode nextCurrent;
 	uint line = 0;
 
 	for (uint i = 0; i < currentNode.children.size(); i++)
@@ -148,9 +147,9 @@ void W_Explorer::DrawSelectedFolderContent()
 		{
 			explorerSelected = currentNode.children[i];
 		}
-		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0) && currentNode.children[i].file == false)
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) 
 		{
-			nextCurrent = currentNode.children[i];
+			HandleNodeDoubleClick(currentNode.children[i]);
 		}
 
 		ImGui::SetCursorPosX(vec2.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
@@ -196,4 +195,21 @@ std::string W_Explorer::GetTextAdjusted(const char* text)
 		newText.append("...");
 	}
 	return newText;
+}
+
+void W_Explorer::HandleNodeDoubleClick(const PathNode& node)
+{
+	if (node.file == false)
+		nextCurrent = node;
+	else
+	{
+		std::string metaFile = node.path + (".meta");
+		uint64 id = App->moduleResources->GetIDFromMeta(metaFile.c_str());
+		Resource* resource = App->moduleResources->GetResource(id);
+
+		if (resource && resource->GetType() == Resource::PREFAB)
+		{
+			App->moduleResources->LoadPrefab(node.path.c_str());
+		}
+	}
 }

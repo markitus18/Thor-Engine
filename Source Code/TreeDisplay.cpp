@@ -227,7 +227,7 @@ void TreeDisplay::HandleArrows()
 	if ((App->input->GetKey(SDL_SCANCODE_DOWN)) == KEY_DOWN)
 	{
 		TreeNode* next = nullptr;
-		if (App->moduleEditor->lastSelected != nullptr)
+		if (App->moduleEditor->lastSelected != nullptr) //TODO: when removing a gameObject, set lastSelected to nullptr
 		{
 			next = App->moduleEditor->lastSelected->GetNextOpenNode();
 		}

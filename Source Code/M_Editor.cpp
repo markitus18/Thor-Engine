@@ -710,7 +710,7 @@ void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 	{
 		if (*it == gameObject)
 		{
-			it = selectedGameObjects.erase(it); //TODO: check if is deleted
+			it = selectedGameObjects.erase(it);
 			break;
 		}
 		else
@@ -718,5 +718,6 @@ void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 			it++;
 		}
 	}
+	if (lastSelected == gameObject) lastSelected = nullptr;
 }
 //------------------------------------

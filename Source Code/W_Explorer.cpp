@@ -16,6 +16,7 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 	updateTimer.Start();
 	UpdateTree();
 	currentNode = assets;
+	allowScrollbar = false;
 }
 
 void W_Explorer::Draw()
@@ -31,8 +32,9 @@ void W_Explorer::Draw()
 	ImGui::BeginChild("ExplorerTree", ImVec2(windowSize.x * 0.2f, windowSize.y));
 	DrawFolderNode(assets);
 	ImGui::EndChild();
+
 	ImGui::SameLine();
-	ImGui::BeginChild("ExplorerFolderse", ImVec2(windowSize.x * 0.8f, windowSize.y));
+	ImGui::BeginChild("ExplorerFolder", ImVec2(windowSize.x * 0.8f, windowSize.y), false, ImGuiWindowFlags_NoScrollbar);
 	DrawSelectedFolderContent();
 	ImGui::EndChild();
 
@@ -41,7 +43,7 @@ void W_Explorer::Draw()
 
 void W_Explorer::OnResize()
 {
-	columnsNumber = ((parent->size.x - imageSpacingX) * 10) / 1152;
+	columnsNumber = ((parent->size.x * 0.8f ) * 10) / 1152;
 	windowSize = parent->size - Vec2(0.0f, 25.0f);
 }
 
@@ -113,12 +115,14 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 
 void W_Explorer::DrawSelectedFolderContent()
 {
-	ImGui::BeginChild("ExplorerFolder");
+	nextCurrent.path = "";
+
+	ImGui::BeginChild("ExplorerFolder", ImVec2(0.0f, 0.0f), false, ImGuiWindowFlags_NoScrollbar);
 
 	ImGui::Text(currentNode.path.c_str());
 	ImGui::Separator();
 
-	ImGui::BeginChild(5);
+	ImGui::BeginChild("ImagesChild");
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(50, 30));
 
 	ImVec2 vec = ImGui::GetCursorScreenPos();

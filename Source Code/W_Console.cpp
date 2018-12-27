@@ -2,6 +2,8 @@
 
 #include "ImGui/imgui.h"
 
+#include "Dock.h"
+
 W_Console::W_Console(M_Editor* editor) : DWindow(editor, "Console")
 {
 	ClearLog();
@@ -15,7 +17,7 @@ void W_Console::Draw()
 	{
 		const char* item = items[i];
 
-		ImVec4 col = ImVec4(0.6f, 0.6f, 1.0f, 1.0f);
+		ImVec4 col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 		if (strstr(item, "[error]"))
 			col = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 

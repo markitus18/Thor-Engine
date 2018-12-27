@@ -157,6 +157,15 @@ update_status M_Input::PreUpdate(float dt)
 					App->renderer3D->OnResize();
 					App->moduleEditor->OnResize(event.window.data1, event.window.data2);
 				}
+				break;
+			}
+
+			case SDL_DROPFILE:
+			{
+				LOG("[error] Dropped file: %s", event.drop.file);
+				LOG("[warning] Dropped file: %s", event.drop.file);
+				//if (event.drop.file == )
+				break;
 			}
 		}
 	}

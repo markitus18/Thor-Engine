@@ -45,10 +45,10 @@ void Dock::Draw()
 		{
 			if (data_children.empty()) break;
 
-			ImVec2 tabSpacing = ImGui::GetCursorPos();
+			tabSpacing = Vec2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y);
 			DrawTabPanels();
 			ImGui::Separator();
-			tabSpacing = ImGui::GetCursorPos() - tabSpacing;
+			tabSpacing = Vec2(ImGui::GetCursorPosX(), ImGui::GetCursorPosY()) - tabSpacing;
 
 			for (uint i = 0; i < data_children.size(); ++i)
 			{
@@ -56,7 +56,7 @@ void Dock::Draw()
 				{
 					//Generate a child window then call draw from the window itself
 					ImGui::PushID(data_children[i]);
-					ImGui::BeginChild("DockChild", ImVec2(size.x, size.y - tabSpacing.y));
+					ImGui::BeginChild("DockChild", ImVec2(size.x, size.y - tabSpacing.y), false, data_children[i]->allowScrollbar ? 0 : ImGuiWindowFlags_NoScrollbar);
 
 					data_children[i]->Draw();
 

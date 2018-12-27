@@ -62,6 +62,8 @@ public:
 
 	Vec2 position;
 	Vec2 size;
+	Vec2 tabSpacing;
+
 	float min_size = 150.0f;
 
 	Separation_Type separation = NONE;

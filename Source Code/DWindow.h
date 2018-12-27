@@ -29,6 +29,7 @@ public:
 	uint child_index = 0;
 	std::string name;
 	M_Editor* editor;
+	bool allowScrollbar = true;
 
 protected:
 	Dock* parent = nullptr;

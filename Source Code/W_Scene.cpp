@@ -13,7 +13,7 @@
 
 W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 {
-
+	allowScrollbar = false;
 }
 
 void W_Scene::Draw()
@@ -29,8 +29,8 @@ void W_Scene::Draw()
 
 void W_Scene::OnResize()
 {
-	//Getting window size - some margins - tab size (25) - separator (7)
-	win_size = Vec2(parent->size.x, parent->size.y) - Vec2(10, 42);
+	//Getting window size - some margins - separator (7)
+	win_size = Vec2(parent->size.x, parent->size.y) - Vec2(17, 25 + 10); //TODO: should be using tab spacing (25) but at the beggining it has not been calculated
 
 	//Calculating the image size according to the window size.
 	img_size = App->window->windowSize;// -Vec2(0.0f, 25.0f); //Removing the tab area
@@ -42,7 +42,7 @@ void W_Scene::OnResize()
 	{
 		img_size /= (img_size.y / win_size.y);
 	}
-	img_offset = Vec2(win_size.x - img_size.x, win_size.y - img_size.y) / 2 + Vec2(5.0f, 12.0f);
+	img_offset = Vec2(win_size.x - img_size.x, win_size.y - img_size.y) / 2 + Vec2(12.0f, 5.0f);
 
 }
 

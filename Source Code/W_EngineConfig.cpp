@@ -7,6 +7,7 @@
 #include "M_Input.h"
 #include "M_Editor.h"
 
+#include "Dock.h"
 #include "TreeNode.h"
 
 W_EngineConfig::W_EngineConfig(M_Editor* editor) : DWindow(editor, "EngineConfig")
@@ -100,7 +101,6 @@ void W_EngineConfig::Draw()
 			ImGui::Text((*it)->GetName());
 		}
 	}
-
 }
 
 void W_EngineConfig::OnResize()

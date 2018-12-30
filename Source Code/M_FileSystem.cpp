@@ -4,6 +4,8 @@
 #include "PathNode.h"
 
 #include "PhysFS/include/physfs.h"
+#include <fstream>
+#include <filesystem>
 
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
@@ -16,15 +18,14 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 {
 	// needs to be created before Init so other modules can use it
 	char* base_path = SDL_GetBasePath();
-	PHYSFS_init(base_path);
+	PHYSFS_init(nullptr);
 	SDL_free(base_path);
 
-	//AddPath("Game");
-	AddPath(".");
-	AddPath("Assets");
-	if(PHYSFS_setWriteDir(".") == 0)
+	if(PHYSFS_setWriteDir("E:/Marc/Engine/Thor-Engine/ProjectFolder") == 0) //TODO: Set write Dir from a global path
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
-	// workaround VS string directory mess
+
+	AddPath("E:/Marc/Engine/Thor-Engine/ProjectFolder");
+	AddPath("ProjectFolder/Assets");
 
 	CreateDir("Library");
 	CreateDir("Library/Meshes");
@@ -198,8 +199,20 @@ void M_FileSystem::GetRealDir(const char* path, std::string& output) const
 {
 	output = PHYSFS_getBaseDir();
 
-	output.append(*PHYSFS_getSearchPath());
+	std::string baseDir = PHYSFS_getBaseDir();
+	std::string searchPath = *PHYSFS_getSearchPath();
+	std::string realDir = PHYSFS_getRealDir(path);
+
+	output.append(*PHYSFS_getSearchPath()).append("/");
 	output.append(PHYSFS_getRealDir(path)).append("/").append(path);
+}
+
+std::string M_FileSystem::GetPathRelativeToAssets(const char* originalPath) const
+{
+	std::string ret;
+	GetRealDir(originalPath, ret);
+
+	return ret;
 }
 
 bool M_FileSystem::HasExtension(const char* path) const
@@ -230,14 +243,15 @@ bool M_FileSystem::HasExtension(const char* path, std::vector<std::string> exten
 	return false;
 }
 
-void M_FileSystem::NormalizePath(char * full_path) const
+std::string M_FileSystem::NormalizePath(const char * full_path) const
 {
-	int len = strlen(full_path);
-	for (int i = 0; i < len; ++i)
+	std::string newPath(full_path);
+	for (int i = 0; i < newPath.size(); ++i)
 	{
-		if (full_path[i] == '\\')
-			full_path[i] = '/';
+		if (newPath[i] == '\\')
+			newPath[i] = '/';
 	}
+	return newPath;
 }
 
 void M_FileSystem::SplitFilePath(const char * full_path, std::string * path, std::string * file, std::string * extension) const
@@ -330,6 +344,37 @@ SDL_RWops* M_FileSystem::Load(const char* file) const
 	}
 	else
 		return nullptr;
+}
+
+bool M_FileSystem::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)
+{
+	std::string fileStr, extensionStr;
+	SplitFilePath(file, nullptr, &fileStr, &extensionStr);
+
+	relativePath = relativePath.append(dstFolder).append("/") + fileStr.append(".") + extensionStr;
+	std::string finalPath = std::string(*PHYSFS_getSearchPath()).append("/") + relativePath;
+
+	std::ifstream src;
+	src.open(file, std::ios::binary);
+	bool srcOpen = src.is_open();
+	std::ofstream  dst(finalPath.c_str(), std::ios::binary);
+	bool dstOpen = dst.is_open();
+
+	dst << src.rdbuf();
+
+	src.close();
+	dst.close();
+
+	if (srcOpen && dstOpen)
+	{
+		LOG("[success] File Duplicated Correctly");
+		return true;
+	}
+	else
+	{
+		LOG("[error] File could not be duplicated");
+		return false;
+	}
 }
 
 int close_sdl_rwops(SDL_RWops *rw)

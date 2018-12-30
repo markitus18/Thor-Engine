@@ -173,7 +173,7 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 
 void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 {
-	if (ImGui::CollapsingHeader(material->GetName()), ImGuiTreeNodeFlags_DefaultOpen)
+	if (ImGui::CollapsingHeader(material->GetName(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (material->textureID != 0)
 		{

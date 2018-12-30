@@ -20,6 +20,8 @@
 
 #include "Config.h"
 #include "M_Scene.h"
+#include "M_Editor.h"
+#include "W_Explorer.h"
 
 #include <time.h>
 
@@ -58,7 +60,7 @@ update_status M_Resources::Update(float dt)
 
 	if (updateAssets_timer.ReadSec() > 5)
 	{
-		UpdateAssetsImport();
+		//UpdateAssetsImport(); //TODO: Add to update in
 		updateAssets_timer.Start();
 	}
 
@@ -84,16 +86,28 @@ bool M_Resources::CleanUp()
 	return true;
 }
 
+void M_Resources::ImportFileFromExplorer(const char* path)
+{
+	std::string normalizedPath = App->fileSystem->NormalizePath(path);
+	std::string finalPath;
+	if (App->fileSystem->DuplicateFile(normalizedPath.c_str(), App->moduleEditor->w_explorer->GetCurrentNode().path.c_str(), finalPath))
+	{
+		ImportFileFromAssets(finalPath.c_str());
+	}
+}
+
 void M_Resources::ImportFileFromAssets(const char* path)
 {
 	Resource::Type type = GetTypeFromPath(path);
+	uint newID = 0;
 	switch (type)
 	{
 		case (Resource::TEXTURE):
 		{
 			char* buffer = nullptr;
 			uint size = App->fileSystem->Load(path, &buffer);
-			ImportRTexture(buffer, path, size);
+			if (size > 0)
+				newID = ImportRTexture(buffer, path, size);
 			break;
 		}
 		case (Resource::PREFAB):
@@ -104,7 +118,7 @@ void M_Resources::ImportFileFromAssets(const char* path)
 	}
 }
 
-void M_Resources::ImportScene(const char* source_file)
+uint64 M_Resources::ImportScene(const char* source_file)
 {
 	R_Prefab* resource = nullptr;
 	uint64 newID = 0;
@@ -120,6 +134,8 @@ void M_Resources::ImportScene(const char* source_file)
 	{
 		AddResource(resource);
 	}
+
+	return newID;
 }
 
 uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name)
@@ -398,7 +414,7 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path)
 
 	if (ext == "FBX" || ext == "fbx")
 		return Resource::PREFAB;
-	if (ext == "tga" || ext == "png" || ext == "jpg")
+	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
 		return Resource::TEXTURE;
 	return Resource::UNKNOWN;
 }
@@ -585,9 +601,6 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	config.SetNumber("Type", static_cast<int>(resource->GetType()));
 
 	//Getting file modification date
-	std::string global_path = "";
-	App->fileSystem->GetRealDir(resource->original_file.c_str(), global_path);
-
 	uint64 modDate = App->fileSystem->GetLastModTime(resource->original_file.c_str());
 	config.SetNumber("Date", modDate);
 

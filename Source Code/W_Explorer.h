@@ -16,6 +16,8 @@ public:
 	void Draw();
 	void OnResize();
 
+	const PathNode& GetCurrentNode() const { return currentNode; };
+
 private:
 	void DrawFolderNode(const PathNode& node);
 	void DrawNodeImage(const PathNode& node);

@@ -45,10 +45,13 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	//Import a file from outside the project folder
+	void ImportFileFromExplorer(const char* path);
+
 	//Import a file existing in assets creating the resources
 	void ImportFileFromAssets(const char* path);
-
-	void ImportScene(const char* source_fil);
+	
+	uint64 ImportScene(const char* source_fil);
 	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
 	uint64 ImportRTexture(const char* buffer, const char* path, uint size);
 	//Same as ImportRTexture, but we need different functions

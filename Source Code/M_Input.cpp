@@ -4,6 +4,7 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Window.h"
+#include "M_Resources.h"
 
 #include "SDL/include/SDL_mouse.h"
 #include "Assimp/include/cfileio.h"
@@ -164,7 +165,10 @@ update_status M_Input::PreUpdate(float dt)
 			{
 				LOG("[error] Dropped file: %s", event.drop.file);
 				LOG("[warning] Dropped file: %s", event.drop.file);
-				//if (event.drop.file == )
+				
+				App->moduleResources->ImportFileFromExplorer(event.drop.file);
+
+				SDL_free(event.drop.file);
 				break;
 			}
 		}

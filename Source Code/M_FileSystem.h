@@ -38,18 +38,21 @@ public:
 	void GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& file_list) const;
 	PathNode GetAllFiles(const char* directory, std::vector<std::string>* filter_ext = nullptr, std::vector<std::string>* ignore_ext = nullptr) const;
 	void GetRealDir(const char* path, std::string& output) const;
-	
+	std::string GetPathRelativeToAssets(const char* originalPath) const;
+
 	bool HasExtension(const char* path) const;
 	bool HasExtension(const char* path, std::string extension) const;
 	bool HasExtension(const char* path, std::vector<std::string> extensions) const;
 
-	void NormalizePath(char* path) const;
+	std::string NormalizePath(const char* path) const;
 	void SplitFilePath(const char* full_path, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;
 
 	// Open for Read/Write
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Load(const char* file, char** buffer) const;
 	SDL_RWops* Load(const char* file) const;
+
+	bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 
 	// IO interfaces for other libs to handle files via PHYSfs
 	aiFileIO* GetAssimpIO();

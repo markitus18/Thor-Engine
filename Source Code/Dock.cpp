@@ -99,7 +99,7 @@ void Dock::DrawSeparator()
 {
 	ImVec2 button_size = (separation == VERTICAL ?	ImVec2(5, size.y ) :
 														ImVec2(size.x, 5));
-	ImGui::Button("b", button_size);
+	ImGui::Button("SeparatorButton", button_size);
 
 	if (ImGui::IsItemHovered() && ImGui::IsMouseDown(0))
 	{

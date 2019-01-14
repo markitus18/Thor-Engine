@@ -292,6 +292,9 @@
     <ClCompile Include="Source Code\W_EngineConfig.cpp">
       <Filter>Source Code\Editor\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.cpp">
+      <Filter>External Libraries\ImGuizmo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -705,6 +708,9 @@
     <ClInclude Include="Source Code\W_EngineConfig.h">
       <Filter>Source Code\Editor\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.h">
+      <Filter>External Libraries\ImGuizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -772,6 +778,9 @@
     </Filter>
     <Filter Include="Source Code\Tools\Resources">
       <UniqueIdentifier>{879429dc-d135-49b9-bacf-adbd6f013298}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Libraries\ImGuizmo">
+      <UniqueIdentifier>{c180a6c0-8b95-4e51-a65a-55607730373a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

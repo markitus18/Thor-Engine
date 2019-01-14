@@ -123,13 +123,11 @@ void M_FileSystem::DiscoverFiles(const char* directory, vector<string> & file_li
 	char **rc = PHYSFS_enumerateFiles(directory);
 	char **i;
 
-	//string dir(directory);
-
 	for (i = rc; *i != nullptr; i++)
 	{
-		//if (PHYSFS_isDirectory((dir + *i).c_str()))
-		//	dir_list.push_back(*i);
-		//else
+		if (IsDirectory(*i))
+			dir_list.push_back(*i);
+		else
 			file_list.push_back(*i);
 	}
 
@@ -164,28 +162,31 @@ PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::strin
 
 		std::vector<string> file_list, dir_list;
 		DiscoverFiles(directory, file_list, dir_list);	
-
+		
+		//Adding all child directories
+		for (uint i = 0; i < dir_list.size(); i++)
+		{
+			std::string str = directory;
+			str.append("/").append(dir_list[i]);
+			root.children.push_back(GetAllFiles(str.c_str(), filter_ext, ignore_ext));
+		}
+		//Adding all child files
 		for (uint i = 0; i < file_list.size(); i++)
 		{
 			//Filtering extensions
 			bool filter = true, discard = false;
-			bool hasExtension = HasExtension(file_list[i].c_str());
-			if (hasExtension == true)
+			if (filter_ext != nullptr)
 			{
-				if (filter_ext != nullptr)
-				{
-					filter = HasExtension(file_list[i].c_str(), *filter_ext);
-				}
-				if (ignore_ext != nullptr)
-				{
-					discard = HasExtension(file_list[i].c_str(), *ignore_ext);
-				}
+				filter = HasExtension(file_list[i].c_str(), *filter_ext);
+			}
+			if (ignore_ext != nullptr)
+			{
+				discard = HasExtension(file_list[i].c_str(), *ignore_ext);
 			}
 			if (filter == true && discard == false)
 			{
 				std::string str = directory;
 				str.append("/").append(file_list[i]);
-
 				root.children.push_back(GetAllFiles(str.c_str(), filter_ext, ignore_ext));
 			}
 		}

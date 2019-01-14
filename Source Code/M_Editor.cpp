@@ -29,6 +29,7 @@
 
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl_gl3.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 #include "Time.h"
 
@@ -75,8 +76,8 @@ bool M_Editor::Init(Config& config)
 	W_Hierarchy* hierarchyWindow = new W_Hierarchy(this);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[0]->AddChildData(hierarchyWindow);
 
-	W_Scene* sceneWindow = new W_Scene(this);
-	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(sceneWindow);
+	w_scene = new W_Scene(this);
+	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_scene);
 
 	W_Inspector* inspector = new W_Inspector(this);
 	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(inspector);
@@ -136,6 +137,8 @@ bool M_Editor::Start()
 update_status M_Editor::PreUpdate(float dt)
 {
 	ImGui_ImplSdlGL3_NewFrame(App->window->window);
+	ImGuizmo::BeginFrame();
+
 	ImGuiIO& io = ImGui::GetIO();
 
 	using_keyboard = io.WantCaptureKeyboard;
@@ -147,7 +150,7 @@ update_status M_Editor::PreUpdate(float dt)
 void M_Editor::Draw()
 {
 	//DrawPanels();
-	docks[0]->Draw(); //TOOD: Do a proper data access
+	//docks[0]->Draw(); //TOOD: Do a proper data access
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
@@ -366,7 +369,7 @@ void M_Editor::Draw()
 	}
 	//----------------------------
 
-	
+	w_scene->Draw();
 	ImGui::Render();
 }
 

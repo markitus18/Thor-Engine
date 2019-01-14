@@ -482,7 +482,7 @@ void M_Resources::LoadResourcesData()
 	LoadMetaFromFolder(assets);
 
 	//Just to save mini-tex images
-	PathNode tex = App->fileSystem->GetAllFiles("Library/Textures", &filter_ext);
+ 	PathNode tex = App->fileSystem->GetAllFiles("Library/Textures", &filter_ext);
 	LoadMetaFromFolder(tex);
 }
 

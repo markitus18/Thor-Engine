@@ -15,6 +15,7 @@
 #include "R_Texture.h"
 #include "M_Resources.h"
 #include "M_Materials.h"
+#include "M_Input.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -29,7 +30,7 @@
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
 #pragma comment( lib, "Devil/libx86/ILU.lib" )
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
-#include "M_Input.h"
+
 
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module("Renderer", start_enabled)
@@ -141,6 +142,8 @@ bool M_Renderer3D::Init(Config& config)
 	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glShadeModel(GL_SMOOTH);
+		glEnable(GL_LINE_SMOOTH);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	}
 
 	OnResize();
@@ -349,11 +352,11 @@ void M_Renderer3D::DrawAllScene()
 		glLineWidth(1.0f);
 
 		glBegin(GL_LINES);
-		glColor4f(1.0, 1.0, 1.0, 1.0);
+		glColor4f(0.8f, 0.8f, 0.8f, 0.5f);
 
-		float d = 20.0f;
+		float d = 40.0f;
 
-		for (float i = -d; i <= d; i += 1.0f)
+		for (float i = -d; i <= d; i += 2.0f)
 		{
 			glVertex3f(i, 0.0f, -d);
 			glVertex3f(i, 0.0f, d);

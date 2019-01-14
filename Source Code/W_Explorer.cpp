@@ -125,8 +125,7 @@ void W_Explorer::DrawSelectedFolderContent()
 	ImGui::BeginChild("ImagesChild");
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(50, 30));
 
-	ImVec2 vec = ImGui::GetCursorScreenPos();
-	ImVec2 vec2 = ImGui::GetCursorPos();
+	ImVec2 vec = ImGui::GetCursorPos();
 
 	uint line = 0;
 
@@ -134,17 +133,18 @@ void W_Explorer::DrawSelectedFolderContent()
 	{
 		ImGui::PushID(i);
 
-		ImGui::SetCursorPosX(vec2.x + (i - (line * columnsNumber)) * (imageSize + imageSpacingX) + imageSpacingX);
-		ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY));
+		ImGui::SetCursorPosX(vec.x + (i - (line * columnsNumber)) * (imageSize + imageSpacingX) + imageSpacingX);
+		ImGui::SetCursorPosY(vec.y + line * (imageSize + imageSpacingY) + topMarginOffset);
 
 		DrawNodeImage(currentNode.children[i]);
 
-		ImGui::SetCursorPosX(vec2.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
-		ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY));
-
 		if (explorerSelected == currentNode.children[i])
 		{
-			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::SetCursorPosX(vec.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX - 10.0f);
+			ImGui::SetCursorPosY(vec.y + line * (imageSize + imageSpacingY));
+
+			float textSize = ImGui::GetTextLineHeight();
+			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize +  24.0f), ImVec2(0, 1), ImVec2(1, 0));
 		}
 
 		if (ImGui::IsItemClicked())
@@ -156,8 +156,8 @@ void W_Explorer::DrawSelectedFolderContent()
 			HandleNodeDoubleClick(currentNode.children[i]);
 		}
 
-		ImGui::SetCursorPosX(vec2.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
-		ImGui::SetCursorPosY(vec2.y + line * (imageSize + imageSpacingY) + imageSize + textOffset);
+		ImGui::SetCursorPosX(vec.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
+		ImGui::SetCursorPosY(vec.y + line * (imageSize + imageSpacingY) + imageSize + textOffset + topMarginOffset);
 
 		std::string textAdjusted = GetTextAdjusted(currentNode.children[i].localPath.c_str());
 		ImGui::Text(textAdjusted.c_str());
@@ -190,11 +190,12 @@ std::string W_Explorer::GetTextAdjusted(const char* text)
 
 	const char* text_end = text + textLenght;
 	uint textSizeX = ImGui::CalcTextSize(text, text_end, false, 0).x;
+	uint dotsSizeX = ImGui::CalcTextSize("...", nullptr, false, 0).x;
 
-	if (textSizeX > imageSize)
+	if (textSizeX > imageSize - dotsSizeX)
 	{
 		uint charSize = textSizeX / textLenght;
-		uint newLenght = (imageSize / charSize) - 1;
+		uint newLenght = ((imageSize - dotsSizeX) / charSize) - 1;
 		newText = newText.substr(0, newLenght);
 		newText.append("...");
 	}

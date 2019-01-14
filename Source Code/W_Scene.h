@@ -3,6 +3,7 @@
 
 #include "DWindow.h"
 #include "Vec2.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 class W_Scene : public DWindow
 {
@@ -21,7 +22,7 @@ public:
 private:
 	//Handles user input
 	void HandleInput();
-
+	void HandleGizmoUsage();
 public:
 	//Gizmo_Op gizmo_op = Gizmo_Op::TRANSLATION //TODO: Used for 2D Gizmos
 	//Drag_Type drag = Drag_Type::NONE; //TODO: Used for 2D Gizmos
@@ -39,6 +40,8 @@ private:
 	bool draggingPan = false;
 	//Rect trans_buttons[3]; //TODO: Used for 2D Gizmos
 	//Circle rot_button; //TODO: Used for 2D Gizmos
+
+
 };
 
 #endif

@@ -16,6 +16,7 @@ class Resource;
 class TreeNode;
 
 class Dock;
+class W_Scene;
 class W_Console;
 class W_Explorer;
 class W_EngineConfig;
@@ -85,9 +86,11 @@ public:
 	//Windows system
 	std::vector<Dock*> docks;
 	Dock* focusedDock = nullptr;
+
 	W_Console* w_console = nullptr;
 	W_EngineConfig* w_econfig = nullptr;
 	W_Explorer* w_explorer = nullptr;
+	W_Scene* w_scene = nullptr;
 
 	//Panels
 	P_Buttons*			buttons = nullptr;

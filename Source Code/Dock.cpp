@@ -5,6 +5,8 @@
 #include "ImGui\imgui_internal.h"
 
 #include "DWindow.h"
+#include "Application.h"
+#include "M_Editor.h"
 
 Dock::Dock(const char* name, Vec2 size): size(size), name(name)
 {
@@ -44,6 +46,11 @@ void Dock::Draw()
 		case(NONE):
 		{
 			if (data_children.empty()) break;
+
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDown(0))
+			{
+				App->moduleEditor->focusedDock = this;
+			}
 
 			tabSpacing = Vec2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y);
 			DrawTabPanels();
@@ -348,7 +355,7 @@ void Dock::CloseDockData(DWindow* data)
 
 void Dock::SetSize(Vec2 size)
 {
-	this->size = size - Vec2(6, 9); //Temoral fix to allow the scrollbar to appear
+	this->size = size - Vec2(5, 7); //Temporal fix to allow the scrollbar to appear
 									//ImGui window size doesn't have the exact value. 
 
 	for (uint i = 0; i < data_children.size(); ++i)

@@ -142,6 +142,8 @@ update_status M_Scene::Update(float dt)
 	if (drawQuadtree)
 		quadtree->Draw();
 
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		App->moduleEditor->SelectSingle(root->GetChild(0));
 	return UPDATE_CONTINUE;
 }
 

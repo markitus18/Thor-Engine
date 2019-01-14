@@ -739,12 +739,12 @@ void ImGui::StyleColorsClassic(ImGuiStyle* dst)
     colors[ImGuiCol_PopupBg]                = ImVec4(0.05f, 0.05f, 0.10f, 0.90f);
     colors[ImGuiCol_Border]                 = ImVec4(0.70f, 0.70f, 0.70f, 0.40f);
     colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_FrameBg]                = ImVec4(0.80f, 0.80f, 0.80f, 0.30f);   // Background of checkbox, radio button, plot, slider, text input
+	colors[ImGuiCol_FrameBg]				= ImVec4(0.80f, 0.80f, 0.80f, 0.30f);	// Background of checkbox, radio button, plot, slider, text input
     colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.90f, 0.80f, 0.80f, 0.40f);
     colors[ImGuiCol_FrameBgActive]          = ImVec4(0.90f, 0.65f, 0.65f, 0.45f);
     colors[ImGuiCol_TitleBg]                = ImVec4(0.27f, 0.27f, 0.54f, 0.83f);	colors[ImGuiCol_TitleBg] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
 	colors[ImGuiCol_TitleBgCollapsed]		= ImVec4(0.40f, 0.40f, 0.80f, 0.20f);	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.39f, 0.39f, 0.39f, 0.59f);
-	colors[ImGuiCol_TitleBgActive]			= ImVec4(0.32f, 0.32f, 0.63f, 0.87f);	colors[ImGuiCol_TitleBgActive] = ImVec4(0.39f, 0.39f, 0.59f, 1.00f);
+	colors[ImGuiCol_TitleBgActive]			= ImVec4(0.32f, 0.32f, 0.63f, 0.87f);	colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 1.0f, 1.0f, 1.00f);
 	colors[ImGuiCol_MenuBarBg]				= ImVec4(0.40f, 0.40f, 0.55f, 0.80f);	colors[ImGuiCol_MenuBarBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 	colors[ImGuiCol_ScrollbarBg]			= ImVec4(0.20f, 0.25f, 0.30f, 0.60f);	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
 	colors[ImGuiCol_ScrollbarGrab]			= ImVec4(0.40f, 0.40f, 0.80f, 0.30f);	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.59f, 0.59f, 0.59f, 1.00f);
@@ -773,7 +773,7 @@ void ImGui::StyleColorsClassic(ImGuiStyle* dst)
     colors[ImGuiCol_PlotLinesHovered]       = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
     colors[ImGuiCol_PlotHistogram]          = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
     colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
-    colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.00f, 0.00f, 1.00f, 0.35f);
+    colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.00f, 0.00f, 1.00f, 0.35f);	colors[ImGuiCol_TextSelectedBg] = ImVec4(0.45f, 0.45f, 0.8f, 0.5f);
     colors[ImGuiCol_ModalWindowDarkening]   = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
 }
 
@@ -6316,7 +6316,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
         SetItemAllowOverlap();
 
     // Render
-    const ImU32 col = GetColorU32(display_fill ? ImGuiCol_TitleBgActive : (held && hovered) ? ImGuiCol_HeaderActive : hovered ? ImGuiCol_HeaderHovered : ImGuiCol_Header); //ThorUI modification: setting line back to previous versions (enable fill)
+    const ImU32 col = GetColorU32(display_fill ? ImGuiCol_TextSelectedBg : (held && hovered) ? ImGuiCol_HeaderActive : hovered ? ImGuiCol_HeaderHovered : ImGuiCol_Header); //ThorUI modification: setting line back to previous versions (enable fill)
     const ImVec2 text_pos = bb.Min + ImVec2(text_offset_x, text_base_offset_y);
     if (display_frame || display_fill) //ThorUI:: added display_fill
     {
@@ -6325,7 +6325,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
 
 		if (display_fill) //<--ThorUI
 		{
-			window->DrawList->AddRect(bb.Min, bb.Max, GetColorU32(ImGuiCol_TextSelectedBg), 0.0f, 0, 2.0f); //<--ThorUI
+			window->DrawList->AddRect(bb.Min, bb.Max, GetColorU32(ImGuiCol_TitleBgActive), 0.0f, 0, 2.0f); //<--ThorUI
 		}
 		else
 		{

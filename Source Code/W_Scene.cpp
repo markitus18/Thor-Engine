@@ -10,21 +10,31 @@
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
+#include "M_Editor.h"
+#include "C_Camera.h"
+#include "TreeNode.h"
+#include "GameObject.h"
+#include "C_Transform.h"
+#include "Component.h"
 
 W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 {
 	allowScrollbar = false;
+	ImGuizmo::Enable(true);
 }
 
 void W_Scene::Draw()
 {
+	ImGui::Begin("Window");
 	ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
 	img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
 	img_corner.y = App->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
 
 	ImGui::Image((ImTextureID)App->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
+	HandleGizmoUsage();
 	HandleInput();
+	ImGui::End();
 }
 
 void W_Scene::OnResize()
@@ -101,5 +111,29 @@ void W_Scene::HandleInput()
 		App->input->InfiniteHorizontal();
 
 		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE) draggingPan = false;
+	}
+}
+
+void W_Scene::HandleGizmoUsage()
+{
+	if (App->moduleEditor->selectedGameObjects.size() <= 0) return;
+
+	GameObject* gameObject = (GameObject*)App->moduleEditor->selectedGameObjects[0];
+
+	float4x4 viewMatrix = App->camera->GetCamera()->frustum.ViewMatrix();
+	viewMatrix.Transpose();
+	float4x4 projectionMatrix = App->camera->GetCamera()->frustum.ProjectionMatrix().Transposed();
+	float4x4 modelProjection = gameObject->GetComponent<C_Transform>()->GetGlobalTransform().Transposed();
+
+	float modelPtr[16];
+	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
+	ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, modelPtr);
+
+	if (ImGuizmo::IsUsing())
+	{
+		float4x4 newMatrix;
+		newMatrix.Set(modelPtr);
+		modelProjection = newMatrix.Transposed();
+		gameObject->GetComponent<C_Transform>()->SetGlobalTransform(modelProjection);
 	}
 }

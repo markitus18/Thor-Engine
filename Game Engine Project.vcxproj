@@ -92,6 +92,7 @@
     <ClInclude Include="Source Code\C_Transform.h" />
     <ClInclude Include="Source Code\Dock.h" />
     <ClInclude Include="Source Code\DWindow.h" />
+    <ClInclude Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Source Code\R_Folder.h" />
     <ClInclude Include="Source Code\TreeDisplay.h" />
     <ClInclude Include="Source Code\TreeNode.h" />
@@ -231,6 +232,7 @@
     <ClCompile Include="Source Code\C_Transform.cpp" />
     <ClCompile Include="Source Code\Dock.cpp" />
     <ClCompile Include="Source Code\DWindow.cpp" />
+    <ClCompile Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui_draw.cpp" />

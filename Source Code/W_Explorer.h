@@ -38,7 +38,8 @@ public:
 	uint columnsNumber = 0;
 	uint imageSpacingX = 50;
 	uint imageSpacingY = 50;
-	uint textOffset = 10;
+	uint textOffset = 6;
+	uint topMarginOffset = 10;
 
 private:
 	PathNode assets;

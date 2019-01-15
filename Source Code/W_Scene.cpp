@@ -25,7 +25,6 @@ W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 
 void W_Scene::Draw()
 {
-	ImGui::Begin("Window");
 	ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
 	img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
 	img_corner.y = App->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
@@ -33,8 +32,9 @@ void W_Scene::Draw()
 	ImGui::Image((ImTextureID)App->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
 	HandleGizmoUsage();
-	HandleInput();
-	ImGui::End();
+
+	if (ImGuizmo::IsUsing() == false)
+		HandleInput();
 }
 
 void W_Scene::OnResize()
@@ -124,6 +124,10 @@ void W_Scene::HandleGizmoUsage()
 	viewMatrix.Transpose();
 	float4x4 projectionMatrix = App->camera->GetCamera()->frustum.ProjectionMatrix().Transposed();
 	float4x4 modelProjection = gameObject->GetComponent<C_Transform>()->GetGlobalTransform().Transposed();
+
+	ImGuizmo::SetDrawlist();
+	cornerPos = Vec2(img_corner.x, App->window->windowSize.y - img_corner.y - img_size.y);
+	ImGuizmo::SetRect(img_corner.x, cornerPos.y, img_size.x, img_size.y);
 
 	float modelPtr[16];
 	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));

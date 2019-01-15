@@ -150,7 +150,7 @@ update_status M_Editor::PreUpdate(float dt)
 void M_Editor::Draw()
 {
 	//DrawPanels();
-	//docks[0]->Draw(); //TOOD: Do a proper data access
+	docks[0]->Draw(); //TOOD: Do a proper data access
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
@@ -369,7 +369,6 @@ void M_Editor::Draw()
 	}
 	//----------------------------
 
-	w_scene->Draw();
 	ImGui::Render();
 }
 

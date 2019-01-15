@@ -6,6 +6,7 @@
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Editor.h"
+#include "W_Scene.h"
 
 #include "Dock.h"
 #include "TreeNode.h"
@@ -100,6 +101,12 @@ void W_EngineConfig::Draw()
 		{
 			ImGui::Text((*it)->GetName());
 		}
+	}
+
+	if (ImGui::CollapsingHeader("Editor - Scene"))
+	{
+		ImGui::Text("Image corner: %i, %i", (int)App->moduleEditor->w_scene->cornerPos.x, (int)App->moduleEditor->w_scene->cornerPos.y);
+		ImGui::Text("Image size: %i, %i", (int)App->moduleEditor->w_scene->img_size.x, (int)App->moduleEditor->w_scene->img_size.y);
 	}
 }
 

@@ -30,10 +30,12 @@ public:
 	Vec2 start_drag;
 	Vec2 init_drag_val;
 
+
+	Vec2 img_corner;
+	Vec2 img_size;
+	Vec2 cornerPos;
 private:
 	Vec2 win_size;
-	Vec2 img_size;
-	Vec2 img_corner;
 	Vec2 img_offset;
 
 	bool draggingOrbit = false;

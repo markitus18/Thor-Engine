@@ -711,6 +711,7 @@
     <ClInclude Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.h">
       <Filter>External Libraries\ImGuizmo</Filter>
     </ClInclude>
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -805,5 +806,11 @@
     <None Include="Source Code\External Libraries\MathGeoLib\src\Math\Matrix.inl">
       <Filter>External Libraries\MathGeoLib\Math</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ThorIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ThorEngine.rc" />
   </ItemGroup>
 </Project>

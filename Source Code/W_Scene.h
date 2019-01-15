@@ -40,8 +40,10 @@ private:
 
 	bool draggingOrbit = false;
 	bool draggingPan = false;
-	//Rect trans_buttons[3]; //TODO: Used for 2D Gizmos
-	//Circle rot_button; //TODO: Used for 2D Gizmos
+
+	//Variables for gizmo handling
+	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+	ImGuizmo::MODE gizmoMode = ImGuizmo::MODE::WORLD;
 
 
 };

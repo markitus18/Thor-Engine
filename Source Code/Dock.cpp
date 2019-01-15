@@ -295,12 +295,12 @@ void Dock::Split(Separation_Type type, float pos)
 		data_children.erase(data_children.begin());
 	}
 	dock_children[0]->root = false;
-
-	UpdateChildrenPosition();
-
 	dock_children[1]->root = false;
 	dock_children[0]->parent = this;
 	dock_children[1]->parent = this;
+
+	UpdateChildrenPosition();
+
 }
 
 void Dock::Close()
@@ -355,8 +355,12 @@ void Dock::CloseDockData(DWindow* data)
 
 void Dock::SetSize(Vec2 size)
 {
-	this->size = size - Vec2(5, 7); //Temporal fix to allow the scrollbar to appear
-									//ImGui window size doesn't have the exact value. 
+	this->size = size;
+	
+	//Temporal fix to allow the scrollbar to appear
+	//ImGui window size doesn't have the exact value. 
+	if (root == false)
+		this->size -= Vec2(7, 7);
 
 	for (uint i = 0; i < data_children.size(); ++i)
 	{

@@ -113,6 +113,7 @@ void C_Transform::OnUpdateTransform(const float4x4& global, const float4x4& pare
 {
 	global_transform = parent_global * transform;
 	global_transformT = global_transform.Transposed();
+	UpdateTRS();
 	transform_updated = false;
 }
 

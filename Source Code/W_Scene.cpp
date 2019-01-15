@@ -112,6 +112,16 @@ void W_Scene::HandleInput()
 
 		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE) draggingPan = false;
 	}
+
+	if (editor->UsingKeyboard() == false)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+			gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+			gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+			gizmoOperation = ImGuizmo::OPERATION::SCALE;
+	}
 }
 
 void W_Scene::HandleGizmoUsage()
@@ -131,7 +141,8 @@ void W_Scene::HandleGizmoUsage()
 
 	float modelPtr[16];
 	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
-	ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, modelPtr);
+	ImGuizmo::MODE finalMode = (gizmoOperation == ImGuizmo::OPERATION::SCALE ? ImGuizmo::MODE::LOCAL : gizmoMode);
+	ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr);
 
 	if (ImGuizmo::IsUsing())
 	{

@@ -27,8 +27,9 @@
 
 #include "OpenGL.h"
 
-#include "ImGui\imgui.h"
-#include "ImGui\imgui_impl_sdl_gl3.h"
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_sdl_gl3.h"
+#include "ImGui/imgui_internal.h"
 #include "ImGuizmo/ImGuizmo.h"
 
 #include "Time.h"
@@ -67,7 +68,6 @@ bool M_Editor::Init(Config& config)
 	//Creating dock base windows
 	Dock* baseDock = new Dock("BaseWindowDock", App->window->windowSize);
 	docks.push_back(baseDock);
-	baseDock->position = Vec2(0.0f, 19.0f);
 	baseDock->Split(VERTICAL, 0.8f);
 	baseDock->GetDockChildren()[0]->Split(HORIZONTAL, 0.7f);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->Split(VERTICAL, 0.2f);
@@ -516,7 +516,11 @@ void M_Editor::OnResize(int screen_width, int screen_height)
 	playWindow.x = screen_width / 2 - 90;
 	playWindow.y = screen_height / 20;
 	
-	docks[0]->SetSize(Vec2(screen_width, screen_height));
+	ImGuiContext& g = *ImGui::GetCurrentContext();
+	float iconbar_size = 30.0f;
+
+	docks[0]->SetSize(Vec2(screen_width, screen_height - 49));
+	docks[0]->position = Vec2(0, 49);
 }
 
 bool M_Editor::UsingKeyboard() const

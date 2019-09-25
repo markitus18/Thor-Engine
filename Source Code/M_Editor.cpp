@@ -130,6 +130,7 @@ bool M_Editor::Start()
 		}
 		RELEASE_ARRAY(buffer);
 	}
+
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 	return true;
 }

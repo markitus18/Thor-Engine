@@ -127,7 +127,7 @@ uint64 M_Resources::ImportScene(const char* source_file)
 	App->fileSystem->SplitFilePath(source_file, nullptr, &name);
 	ResourceMeta* meta = FindResourceInLibrary(source_file, name.c_str(), Resource::PREFAB);
 
-	newID = (meta == nullptr) ? ++nextID : meta->id;
+	newID = (meta == nullptr) ? random.Int() : meta->id;
 
 	resource = App->moduleImport->ImportFile(source_file, newID);
 	if (resource)
@@ -307,7 +307,7 @@ uint64 M_Resources::ImportRBone(const aiBone* bone, const char* source_file, con
 	}
 	else
 	{
-		newID = ++nextID;
+		newID = random.Int();
 	}
 
 	//Importing resource

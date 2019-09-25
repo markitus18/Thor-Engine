@@ -2,6 +2,16 @@
 #include "Application.h"
 #include "M_Window.h"
 #include "SDL\include\SDL_video.h"
+#include "M_FileSystem.h"
+
+#include "SDL/include/SDL.h"
+#include "OpenGL.h"
+#include "Devil\include\ilu.h"
+#include "Devil\include\ilut.h"
+
+#pragma comment( lib, "Devil/libx86/DevIL.lib" )
+#pragma comment( lib, "Devil/libx86/ILU.lib" )
+#pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
 M_Window::M_Window(bool start_enabled) : Module("Window", start_enabled)
 {

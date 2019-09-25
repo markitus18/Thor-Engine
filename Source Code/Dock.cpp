@@ -151,8 +151,8 @@ void Dock::DrawSingleTab(DWindow* data)
 	}
 
 	float line_height = ImGui::GetTextLineHeightWithSpacing();
-	ImVec2 size(ImGui::CalcTextSize(data->name.c_str(), data->name.c_str() + data->name.length()).x, line_height);
-	if (ImGui::InvisibleButton(data->name.c_str(), size))
+	ImVec2 tabSize(ImGui::CalcTextSize(data->name.c_str(), data->name.c_str() + data->name.length()).x, line_height);
+	if (ImGui::InvisibleButton(data->name.c_str(), tabSize))
 	{
 		SetDataActive(data);
 	}
@@ -165,11 +165,23 @@ void Dock::DrawSingleTab(DWindow* data)
 	}
 
 	ImU32 color = ImGui::GetColorU32(ImGuiCol_FrameBg);
-	ImU32 color_active = ImGui::GetColorU32(ImGuiCol_FrameBgActive);
-	ImU32 color_hovered = ImGui::GetColorU32(ImGuiCol_FrameBgHovered);
+	ImU32 color_active = ImGui::GetColorU32(ImGuiCol_FrameBgHovered);
+	ImU32 color_hovered = ImGui::GetColorU32(ImGuiCol_FrameBgActive);
 	ImU32 color_dock_active = ImGui::GetColorU32(ImVec4(0.85, 0.65, 0.68, 0.8));
 
 	ImVec2 pos = ImGui::GetItemRectMin();
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	ImU32 finalColor = focused ? color_dock_active : (hovered ? color_hovered : (data->IsActive() ? color_active : color));
+
+	DrawTabGeometry(pos, tabSize, finalColor, true);
+	if (focused || data->IsActive())
+		DrawTabGeometry(pos, tabSize, ImGui::GetColorU32(ImGuiCol_TitleBgActive), false);
+
+	draw_list->AddText(pos, ImGui::GetColorU32(ImGuiCol_Text), data->name.c_str(), nullptr);
+}
+
+void Dock::DrawTabGeometry(ImVec2 pos, ImVec2 size, uint color, bool filled)
+{
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
 	draw_list->PathClear();
@@ -181,8 +193,11 @@ void Dock::DrawSingleTab(DWindow* data)
 		pos + ImVec2(size.x + 10, size.y),
 		pos + ImVec2(size.x + 15, size.y),
 		10);
-	draw_list->PathFillConvex(focused ? color_dock_active : (hovered ? color_hovered : (data->IsActive() ? color_active : color)));
-	draw_list->AddText(pos, ImGui::GetColorU32(ImGuiCol_Text), data->name.c_str(), nullptr);
+
+	if (filled)
+		draw_list->PathFillConvex(color);
+	else
+		draw_list->PathStroke(color, true, 2.0f);
 }
 
 void Dock::AddChildData(DWindow* data, int position)
@@ -202,7 +217,7 @@ void Dock::AddChildData(DWindow* data, int position)
 	}
 }
 
-bool Dock::DoesTabFit(DWindow* data)
+bool Dock::DoesTabFit(DWindow* data) const
 {
 	ImVec2 cursor_pos = ImGui::GetCursorPos();
 	ImVec2 size(ImGui::CalcTextSize(data->name.c_str(), data->name.c_str() + data->name.length()).x, 0);

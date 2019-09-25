@@ -7,6 +7,7 @@
 
 typedef unsigned int uint;
 class DWindow;
+struct ImVec2;
 
 struct Separator
 {
@@ -49,7 +50,9 @@ public:
 private:
 	void DrawTabPanels();
 	void DrawSingleTab(DWindow* data);
-	bool DoesTabFit(DWindow* dock);
+	void DrawTabGeometry(ImVec2 pos, ImVec2 size, uint color, bool filled);
+
+	bool DoesTabFit(DWindow* dock) const;
 
 	void UpdateChildrenPosition();
 	void CapSeparatorPosition();

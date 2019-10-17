@@ -6,6 +6,8 @@
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Editor.h"
+#include "M_Renderer3D.h"
+
 #include "W_Scene.h"
 
 #include "Dock.h"
@@ -41,6 +43,15 @@ void W_EngineConfig::Draw()
 		ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
 	}
 
+	if (ImGui::CollapsingHeader("Renderer"))
+	{
+		bool enabled = App->renderer3D->depthEnabled;
+		if (ImGui::Checkbox("Depth Buffer", &enabled))
+		{
+			App->renderer3D->SetDepthBufferEnabled(enabled);
+		}
+	}
+
 	if (ImGui::CollapsingHeader("Camera"))
 	{
 		float3 camera_pos = App->camera->GetPosition();
@@ -55,11 +66,6 @@ void W_EngineConfig::Draw()
 			App->camera->Look(camera_ref);
 		}
 	}
-
-	//if (ImGui::CollapsingHeader("File System"))
-	//{
-
-	//}
 
 	if (ImGui::CollapsingHeader("Input"))
 	{

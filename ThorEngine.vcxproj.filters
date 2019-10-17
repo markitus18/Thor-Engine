@@ -184,9 +184,6 @@
     <ClCompile Include="Source Code\Resource.cpp">
       <Filter>Source Code\Tools\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\M_Audio.cpp">
-      <Filter>Source Code\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\M_Camera3D.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -596,9 +593,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\Resource.h">
       <Filter>Source Code\Tools\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Audio.h">
-      <Filter>Source Code\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\M_Camera3D.h">
       <Filter>Source Code\Modules</Filter>

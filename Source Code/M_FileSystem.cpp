@@ -21,10 +21,10 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 	PHYSFS_init(nullptr);
 	SDL_free(base_path);
 
-	if(PHYSFS_setWriteDir("E:/Marc/Engine/Thor-Engine/ProjectFolder") == 0) //TODO: Set write Dir from a global path
+	if(PHYSFS_setWriteDir("E:/Marc/Thor-Engine/ProjectFolder") == 0) //TODO: Set write Dir from a global path
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
-	AddPath("E:/Marc/Engine/Thor-Engine/ProjectFolder");
+	AddPath("E:/Marc/Thor-Engine/ProjectFolder");
 	AddPath("ProjectFolder/Assets");
 
 	CreateDir("Library");
@@ -125,7 +125,8 @@ void M_FileSystem::DiscoverFiles(const char* directory, vector<string> & file_li
 
 	for (i = rc; *i != nullptr; i++)
 	{
-		if (IsDirectory(*i))
+		string str = string(directory) + string("/") + string(*i);
+		if (IsDirectory(str.c_str()))
 			dir_list.push_back(*i);
 		else
 			file_list.push_back(*i);

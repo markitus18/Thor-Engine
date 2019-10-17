@@ -96,6 +96,12 @@ public:
 	uint SaveImage(const char* pathr);
 	uint SavePrefabImage(GameObject* gameObject);
 
+	//Rendering Settings ---------------------------
+	void SetDepthBufferEnabled(bool enabled);
+
+
+	//----------------------------------------------
+
 public:
 	C_Camera* camera = nullptr;
 	C_Camera* screenshotCamera = nullptr;
@@ -107,7 +113,10 @@ public:
 	bool drawGrid = true;
 
 	uint frameBuffer = 0;
+	uint depthBuffer = 0;
 	uint renderTexture = 0;
+
+	bool depthEnabled = false;
 
 private:
 	uint mesh_draw_timer;

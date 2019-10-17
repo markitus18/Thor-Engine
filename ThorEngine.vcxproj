@@ -14,7 +14,7 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>ThorEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -182,7 +182,6 @@
     <ClInclude Include="Source Code\C_Mesh.h" />
     <ClInclude Include="Source Code\Module.h" />
     <ClInclude Include="Source Code\M_Animations.h" />
-    <ClInclude Include="Source Code\M_Audio.h" />
     <ClInclude Include="Source Code\M_Camera3D.h" />
     <ClInclude Include="Source Code\M_FileSystem.h" />
     <ClInclude Include="Source Code\M_Import.h" />
@@ -285,7 +284,6 @@
     <ClCompile Include="Source Code\Main.cpp" />
     <ClCompile Include="Source Code\C_Material.cpp" />
     <ClCompile Include="Source Code\C_Mesh.cpp" />
-    <ClCompile Include="Source Code\M_Audio.cpp" />
     <ClCompile Include="Source Code\M_Camera3D.cpp" />
     <ClCompile Include="Source Code\M_Import.cpp" />
     <ClCompile Include="Source Code\M_Input.cpp" />

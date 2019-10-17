@@ -4,7 +4,6 @@
 #include "M_FileSystem.h"
 #include "M_Window.h"
 #include "M_Input.h"
-#include "M_Audio.h"
 #include "M_Scene.h"
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -24,7 +23,6 @@ Application::Application()
 	fileSystem = new M_FileSystem();
 	window = new M_Window();
 	input = new M_Input();
-	audio = new M_Audio();
 
 	scene = new M_Scene();
 
@@ -49,7 +47,6 @@ Application::Application()
 	AddModule(moduleEditor);
 
 	AddModule(input);
-	AddModule(audio);
 
 	AddModule(scene);
 

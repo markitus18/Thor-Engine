@@ -13,7 +13,6 @@ class Module;
 class M_FileSystem;
 class M_Window;
 class M_Input;
-class M_Audio;
 class M_Scene;
 
 class M_Renderer3D;
@@ -33,7 +32,6 @@ public:
 	M_FileSystem* fileSystem;
 	M_Window* window = nullptr;
 	M_Input* input = nullptr;
-	M_Audio* audio = nullptr;
 	M_Scene* scene = nullptr;
 
 	M_Renderer3D* renderer3D = nullptr;

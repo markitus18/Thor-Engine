@@ -250,6 +250,15 @@ uint M_Renderer3D::SavePrefabImage(GameObject* gameObject)
 	return ID;
 }
 
+void M_Renderer3D::SetDepthBufferEnabled(bool enabled)
+{
+	depthEnabled = enabled;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, enabled ? depthBuffer : 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 // Called before quitting
 bool M_Renderer3D::CleanUp()
 {
@@ -275,6 +284,15 @@ void M_Renderer3D::GenerateSceneBuffers()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->windowSize.x, App->window->windowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Generating the depth buffer
+	glGenRenderbuffers(1, &depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, App->window->windowSize.x, App->window->windowSize.y);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	//Configuring frame buffer
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
@@ -345,6 +363,7 @@ void M_Renderer3D::DrawAllScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	if (drawGrid)
 	{

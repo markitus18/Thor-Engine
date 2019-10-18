@@ -134,8 +134,6 @@ private:
 
 	AABB						aabb;
 	OBB							obb;
-
-	bool						selected = false;
 };
 
 #endif

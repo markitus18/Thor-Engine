@@ -116,7 +116,7 @@ public:
 	uint depthBuffer = 0;
 	uint renderTexture = 0;
 
-	bool depthEnabled = false;
+	bool depthEnabled = true;
 
 private:
 	uint mesh_draw_timer;

@@ -109,18 +109,6 @@
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.cpp">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_demo.cpp">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_draw.cpp">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_impl_sdl_gl3.cpp">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\External Libraries\ImGui\imgui.cpp">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Application.cpp">
       <Filter>Source Code</Filter>
     </ClCompile>
@@ -291,6 +279,24 @@
     </ClCompile>
     <ClCompile Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.cpp">
       <Filter>External Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\ImGui\imgui.cpp">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_demo.cpp">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_draw.cpp">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_widgets.cpp">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_impl_sdl.cpp">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\External Libraries\ImGui\imgui_impl_opengl3.cpp">
+      <Filter>External Libraries\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -482,27 +488,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.h">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\ImGui\imgui.h">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\ImGui\imgui_impl_sdl_gl3.h">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\ImGui\imgui_internal.h">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\ImGui\stb_rect_pack.h">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\ImGui\stb_textedit.h">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\ImGui\stb_truetype.h">
-      <Filter>External Libraries\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\External Libraries\ImGui\imconfig.h">
-      <Filter>External Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Application.h">
       <Filter>Source Code</Filter>
@@ -706,6 +691,30 @@
       <Filter>External Libraries\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="resource1.h" />
+    <ClInclude Include="Source Code\External Libraries\ImGui\imconfig.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGui\imgui.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGui\imgui_internal.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGui\imstb_rectpack.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGui\imstb_textedit.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGui\imstb_truetype.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGui\imgui_impl_sdl.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\ImGui\imgui_impl_opengl3.h">
+      <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">

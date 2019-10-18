@@ -68,7 +68,7 @@ void TreeDisplay::DrawNode(TreeNode* node)
 		ImGui::PushID(node->GetID()); //TODO: should be done in tree header, we need a new id here
 		ImVec2 buttonSize = ImVec2(ImGui::GetWindowSize().x, 4);
 		ImGui::InvisibleButton("Button", buttonSize);
-		if (ImGui::IsItemHoveredRect())
+		if (ImGui::IsItemHovered())
 		{
 			ImDrawList* drawList = ImGui::GetWindowDrawList();
 			drawList->AddRectFilled(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 4), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
@@ -102,8 +102,8 @@ void TreeDisplay::ShowNode(TreeNode* node)
 	if (IsHighlighted(node)) //TODO
 		flags |= ImGuiTreeNodeFlags_Selected;
 
-	if (App->moduleEditor->dragging == true)
-		flags |= ImGuiTreeNodeFlags_Fill;
+	//if (App->moduleEditor->dragging == true)
+		//flags |= ImGuiTreeNodeFlags_Fill;
 
 	if (node->IsNodeActive() == false)
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
@@ -133,7 +133,7 @@ void TreeDisplay::DrawNodeChilds(TreeNode* node)
 
 void TreeDisplay::HandleUserInput(TreeNode* node)
 {
-	if (ImGui::IsItemHoveredRect() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && App->moduleEditor->dragging == true)
+	if (ImGui::IsItemHovered() && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && App->moduleEditor->dragging == true)
 	{
 		if (App->moduleEditor->toDragGOs.size() > 0)
 		{

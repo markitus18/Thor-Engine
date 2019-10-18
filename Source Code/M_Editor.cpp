@@ -21,6 +21,7 @@
 #include "M_FileSystem.h"
 #include "M_Resources.h"
 #include "M_Camera3D.h"
+#include "M_Renderer3D.h"
 
 #include "GameObject.h"
 #include "Resource.h"
@@ -28,7 +29,8 @@
 #include "OpenGL.h"
 
 #include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_sdl_gl3.h"
+#include "ImGui/imgui_impl_sdl.h"
+#include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_internal.h"
 #include "ImGuizmo/ImGuizmo.h"
 
@@ -52,7 +54,9 @@ M_Editor::~M_Editor()
 
 bool M_Editor::Init(Config& config)
 {
-	ImGui_ImplSdlGL3_Init(App->window->window);
+	ImGui::CreateContext();
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
+	ImGui_ImplOpenGL3_Init();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = nullptr;
@@ -137,8 +141,11 @@ bool M_Editor::Start()
 
 update_status M_Editor::PreUpdate(float dt)
 {
-	ImGui_ImplSdlGL3_NewFrame(App->window->window);
-	ImGuizmo::BeginFrame();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+
+	//ImGuizmo::BeginFrame();
 
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -169,7 +176,7 @@ void M_Editor::Draw()
 	if (show_About_window)
 		ShowAboutWindow();
 	if (show_Demo_window)
-		ImGui::ShowTestWindow(&show_Demo_window);
+		ImGui::ShowDemoWindow(&show_Demo_window);
 	if (show_fileName_window)
 		ShowFileNameWindow();
 
@@ -291,47 +298,6 @@ void M_Editor::Draw()
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Window"))
-		{
-			//TODO: fins a way to activate / deactivate windows
-			/*
-			if (ImGui::MenuItem("Inspector          ", nullptr, &inspector->active))
-			{
-			}
-			if (ImGui::MenuItem("Hierarchy          ", nullptr, &hierarchy->active))
-			{
-			}
-			if (ImGui::MenuItem("Console          ", nullptr, &console->active))
-			{
-				if (console->active == true)
-				{
-					w_explorer->explorerActive = false;
-				}
-			}
-			if (ImGui::MenuItem("Configuration         ", nullptr, &configuration->active))
-			{
-
-			}
-			if (ImGui::MenuItem("Explorer         ", nullptr, &explorer->active))
-			{
-				if (explorer->active == true)
-				{
-					console->active = false;
-					resources->active = false;
-					explorer->explorerActive = true;
-				}
-			}
-			if (ImGui::MenuItem("Resources         ", nullptr, &resources->active))
-			{
-				if (resources->active == true)
-				{
-					explorer->active = false;
-				}
-			}
-			*/
-			ImGui::EndMenu();
-		}
-
 		if (ImGui::BeginMenu("Help"))
 		{
 			ImGui::MenuItem("About Thor Engine   ", nullptr, &show_About_window);
@@ -371,6 +337,7 @@ void M_Editor::Draw()
 	//----------------------------
 
 	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 bool M_Editor::CleanUp()
@@ -378,7 +345,9 @@ bool M_Editor::CleanUp()
 	//TODO: remove docking memory
 	RELEASE(buttons);
 
-	ImGui_ImplSdlGL3_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
 	return true;
 }
 
@@ -390,7 +359,7 @@ void M_Editor::Log(const char* input)
 
 void M_Editor::GetEvent(SDL_Event* event)
 {
-	ImGui_ImplSdlGL3_ProcessEvent(event);
+	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
 void M_Editor::DrawPanels()

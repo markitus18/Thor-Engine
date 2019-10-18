@@ -5304,7 +5304,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (selected != was_selected) //-V547
         window->DC.LastItemStatusFlags |= ImGuiItemStatusFlags_ToggledSelection;
 
-	bool fill = IsItemHovered() && (flags & ImGuiTreeNodeFlags_Fill); //Thor -- Display a frame when hovering for drag
+	bool fill = IsItemHovered(ImGuiHoveredFlags_RectOnly) && (flags & ImGuiTreeNodeFlags_Fill); //Thor -- Display a frame when hovering for drag
 
     // Render
     const ImU32 text_col = GetColorU32(ImGuiCol_Text);
@@ -5312,17 +5312,27 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (display_frame || fill) //Thor
     {
         // Framed type
-        const ImU32 bg_col = GetColorU32((held && hovered) ? ImGuiCol_HeaderActive : hovered ? ImGuiCol_HeaderHovered : ImGuiCol_Header);
-        RenderFrame(frame_bb.Min, frame_bb.Max, bg_col, true, style.FrameRounding);
-        RenderNavHighlight(frame_bb, id, nav_highlight_flags);
-        if (flags & ImGuiTreeNodeFlags_Bullet)
-            RenderBullet(window->DrawList, ImVec2(text_pos.x - text_offset_x * 0.60f, text_pos.y + g.FontSize * 0.5f), text_col);
-        else if (!is_leaf)
-            RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y), text_col, is_open ? ImGuiDir_Down : ImGuiDir_Right, 1.0f);
-        else // Leaf without bullet, left-adjusted text
-            text_pos.x -= text_offset_x;
-        if (flags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton)
-            frame_bb.Max.x -= g.FontSize + style.FramePadding.x;
+		if (fill)
+		{
+			window->DrawList->AddRect(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_HeaderActive), 0.0f, 0, 2.0f); //<--ThorUI
+		}
+		else
+		{
+			const ImU32 bg_col = GetColorU32((held && hovered) ? ImGuiCol_HeaderActive : hovered ? ImGuiCol_HeaderHovered : ImGuiCol_Header);
+			RenderFrame(frame_bb.Min, frame_bb.Max, bg_col, true, style.FrameRounding);
+
+			RenderNavHighlight(frame_bb, id, nav_highlight_flags);
+			if (flags & ImGuiTreeNodeFlags_Bullet)
+				RenderBullet(window->DrawList, ImVec2(text_pos.x - text_offset_x * 0.60f, text_pos.y + g.FontSize * 0.5f), text_col);
+			else if (!is_leaf)
+				RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y), text_col, is_open ? ImGuiDir_Down : ImGuiDir_Right, 1.0f);
+			else // Leaf without bullet, left-adjusted text
+				text_pos.x -= text_offset_x;
+			if (flags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton)
+				frame_bb.Max.x -= g.FontSize + style.FramePadding.x;
+		}
+
+
         if (g.LogEnabled)
         {
             // NB: '##' is normally used to hide text (as a library-wide feature), so we need to specify the text range to make sure the ## aren't stripped out here.

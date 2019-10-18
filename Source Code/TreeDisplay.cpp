@@ -71,7 +71,7 @@ void TreeDisplay::DrawNode(TreeNode* node)
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_RectOnly))
 		{
 			ImDrawList* drawList = ImGui::GetWindowDrawList();
-			drawList->AddRectFilled(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 4), ImGui::GetColorU32(ImGuiCol_TitleBgActive));
+			drawList->AddRectFilled(ImVec2(cursorPos), ImVec2(cursorPos) + ImVec2(ImGui::GetWindowSize().x, 4), ImGui::GetColorU32(ImGuiCol_HeaderActive));
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 			{
 				GameObject* parent = (GameObject*)(node->hierarchyOpen == true ? node : node->GetParentNode()); //TODO

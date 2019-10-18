@@ -5222,6 +5222,12 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (!display_frame && (flags & (ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth)) == 0)
         interact_bb.Max.x = frame_bb.Min.x + text_width + style.ItemSpacing.x * 2.0f;
     
+	//Thor Modification -------------- The node is not selected when clicking the arrow
+	ImRect interact_bb_button = interact_bb;
+	if ((display_frame || (flags & ImGuiTreeNodeFlags_NoTreePushOnOpen)) == false) //<-- Moving bb only when arrow is displayed
+		interact_bb_button.Min.x += text_offset_x;
+	//--------------------------------
+
     // Store a flag for the current depth to tell if we will allow closing this node when navigating one of its child.
     // For this purpose we essentially compare if g.NavIdIsAlive went from 0 to 1 between TreeNode() and TreePop().
     // This is currently only support 32 level deep and we are fine with (1 << Depth) overflowing into a zero.
@@ -5230,7 +5236,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (is_open && !g.NavIdIsAlive && (flags & ImGuiTreeNodeFlags_NavLeftJumpsBackHere) && !(flags & ImGuiTreeNodeFlags_NoTreePushOnOpen))
         window->DC.TreeMayJumpToParentOnPopMask |= (1 << window->DC.TreeDepth);
 
-    bool item_add = ItemAdd(interact_bb, id);
+    bool item_add = ItemAdd(interact_bb_button, id); //Thor -- Switched interact_bb by interact_bb_button
     window->DC.LastItemStatusFlags |= ImGuiItemStatusFlags_HasDisplayRect;
     window->DC.LastItemDisplayRect = frame_bb;
 
@@ -5298,10 +5304,12 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (selected != was_selected) //-V547
         window->DC.LastItemStatusFlags |= ImGuiItemStatusFlags_ToggledSelection;
 
+	bool fill = IsItemHovered() && (flags & ImGuiTreeNodeFlags_Fill); //Thor -- Display a frame when hovering for drag
+
     // Render
     const ImU32 text_col = GetColorU32(ImGuiCol_Text);
     ImGuiNavHighlightFlags nav_highlight_flags = ImGuiNavHighlightFlags_TypeThin;
-    if (display_frame)
+    if (display_frame || fill) //Thor
     {
         // Framed type
         const ImU32 bg_col = GetColorU32((held && hovered) ? ImGuiCol_HeaderActive : hovered ? ImGuiCol_HeaderHovered : ImGuiCol_Header);

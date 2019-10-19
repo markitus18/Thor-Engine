@@ -60,8 +60,11 @@ bool M_Editor::Init(Config& config)
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = nullptr;
-	io.MouseDrawCursor = true;
-
+	io.MouseDrawCursor = false;
+	
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_DragDropTarget] = ImVec4(0.0f, 1.0f, 1.0f, 1.0f);
+	style.WindowRounding = 0.0f;
 
 	int screen_width = GetSystemMetrics(SM_CXSCREEN);
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
@@ -145,13 +148,11 @@ update_status M_Editor::PreUpdate(float dt)
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
-	//ImGuizmo::BeginFrame();
-
 	ImGuiIO& io = ImGui::GetIO();
 
 	using_keyboard = io.WantCaptureKeyboard;
 	using_mouse = io.WantCaptureMouse;
-
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -245,16 +246,6 @@ void M_Editor::Draw()
 				}
 				ImGui::EndMenu();
 			}
-
-			if (ImGui::BeginMenu("Load Imported Scene"))
-			{
-				//TODO: avoid doing this every frame
-				PathNode assets = App->moduleResources->CollectImportedScenes();
-				DisplayScenesWindows(assets);
-
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("GameObject"))
@@ -368,30 +359,6 @@ void M_Editor::DrawPanels()
 	if (buttons != nullptr)
 	{
 		buttons->Draw(windowFlags);
-	}
-}
-
-void M_Editor::DisplayScenesWindows(const PathNode& folder)
-{
-	if (folder.file == true)
-	{
-		if (ImGui::MenuItem(folder.localPath.c_str()))
-		{
-			App->moduleResources->LoadPrefab(folder.path.c_str());
-		}
-	}
-
-	//If node folder has something inside
-	else if (folder.leaf == false)
-	{
-		if (ImGui::BeginMenu(folder.localPath.c_str()))
-		{
-			for (uint i = 0; i < folder.children.size(); i++)
-			{
-				DisplayScenesWindows(folder.children[i]);
-			}
-			ImGui::EndMenu();
-		}
 	}
 }
 

@@ -1,6 +1,9 @@
 #include "W_Explorer.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
+
 #include "Glew/include/glew.h"
 
 #include "Application.h"
@@ -10,6 +13,7 @@
 #include "R_Texture.h"
 
 #include "Dock.h"
+
 
 W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 {
@@ -81,36 +85,26 @@ void W_Explorer::DrawFolderNode(const PathNode& node)
 
 void W_Explorer::DrawNodeImage(const PathNode& node)
 {
-	if (node.file == false)
-		ImGui::Image((ImTextureID)folderBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
-	else
+
+	uint64 resourceID = 0;
+	std::string dnd_event("NONE");
+	uint textureID = GetTextureFromNode(node, &resourceID, &dnd_event);
+
+	ImGui::Image((ImTextureID)textureID, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
+
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
-		std::string metaFile = node.path + (".meta");
-		uint64 id = App->moduleResources->GetIDFromMeta(metaFile.c_str());
-		Resource* resource = App->moduleResources->GetResource(id);
-
-		if (resource && resource->GetType() == Resource::TEXTURE)
+		if (dnd_event != "NONE")
 		{
-			R_Texture* tex = (R_Texture*)resource;
-			ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::SetDragDropPayload(dnd_event.c_str(), &resourceID, sizeof(uint64));
+			ImGui::Text(node.localPath.c_str());
+			ImGui::SetCursorPos(ImGui::GetCursorPos() - ImVec2(0.0f, 20.0f));
+			ImGui::Image((ImTextureID)textureID, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
-		else if (resource && resource->GetType() == Resource::PREFAB)
-		{
-			//R_Prefab* prefab = (R_Prefab*)resource;
-			//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
-			//if (tex)
-			//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
-
-			//Not saving prefab screenshot by now
-			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
-		}
-		else //Default file image
-		{
-			ImGui::Image((ImTextureID)fileBuffer, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
-		}
+		ImGui::EndDragDropSource();
 	}
-	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 
+	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 }
 
 void W_Explorer::DrawSelectedFolderContent()
@@ -215,6 +209,46 @@ void W_Explorer::HandleNodeDoubleClick(const PathNode& node)
 		if (resource && resource->GetType() == Resource::PREFAB)
 		{
 			App->moduleResources->LoadPrefab(node.path.c_str());
+		}
+	}
+}
+
+uint W_Explorer::GetTextureFromNode(const PathNode& node, uint64* resource_id, std::string* dnd_event)
+{
+	uint64 resourceID = 0;
+
+	if (node.file == false)
+	{
+		if (dnd_event) dnd_event->assign("DND_FOLDER");
+		return folderBuffer;
+	}
+	else
+	{
+		std::string metaFile = node.path + (".meta");
+		resourceID = App->moduleResources->GetIDFromMeta(metaFile.c_str());
+		Resource* resource = App->moduleResources->GetResource(resourceID);
+
+		if (resource_id) *resource_id = resourceID;
+
+		if (resource && resource->GetType() == Resource::TEXTURE)
+		{
+			if (dnd_event) dnd_event->assign("DND_TEXTURE");
+			return ((R_Texture*)resource)->buffer;
+		}
+		else if (resource && resource->GetType() == Resource::PREFAB)
+		{
+			//R_Prefab* prefab = (R_Prefab*)resource;
+			//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
+			//if (tex)
+			//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+
+			//Not saving prefab screenshot by now
+			if (dnd_event) dnd_event->assign("DND_PREFAB");
+			return fileBuffer;
+		}
+		else //Default file image
+		{
+			return fileBuffer;
 		}
 	}
 }

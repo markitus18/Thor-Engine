@@ -27,6 +27,7 @@ private:
 	std::string GetTextAdjusted(const char* text);
 
 	void HandleNodeDoubleClick(const PathNode& node);
+	uint GetTextureFromNode(const PathNode& node, uint64* resource_id = nullptr, std::string* dnd_event = nullptr);
 
 public:
 	bool explorerActive = true;

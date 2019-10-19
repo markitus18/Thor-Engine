@@ -46,6 +46,8 @@ void W_Inspector::OnResize()
 
 void W_Inspector::DrawGameObject(GameObject* gameObject)
 {
+	ImGui::Indent();
+
 	//Active button
 	ImGui::Checkbox("##", &gameObject->active);
 	ImGui::SameLine();
@@ -62,6 +64,9 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	{
 		App->scene->SetStaticGameObject(gameObject, gameObject_static, true);
 	}
+
+	ImGui::Unindent();
+
 	ImGui::Separator();
 	ImGui::Separator();
 
@@ -88,6 +93,8 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Indent();
+
 		if (ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[1])
 		{
 			ImGui::OpenPopup("reset");
@@ -124,6 +131,8 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 			App->input->InfiniteHorizontal();
 			transform->SetScale(scale);
 		}
+
+		ImGui::Unindent();
 	}
 }
 
@@ -138,6 +147,8 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 	{
 		if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 		{
+			ImGui::Indent();
+
 			ImGui::Text("Materials");
 			ImGui::Separator();
 			ImGui::Text("Size: %i", materials.size());
@@ -146,6 +157,8 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 				R_Material* rMat = (R_Material*)materials[i]->GetResource();
 				ImGui::Text("Element %i: %s", i, rMat->GetName());
 			}
+
+			ImGui::Unindent();
 		}
 	}
 
@@ -175,6 +188,8 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 {
 	if (ImGui::CollapsingHeader(material->GetName(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Indent();
+
 		if (material->textureID != 0)
 		{
 			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(material->textureID);
@@ -182,6 +197,25 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 			{
 				ImGui::Text(rTex->GetName());
 				ImGui::Image((ImTextureID)rTex->buffer, ImVec2(128, 128));
+
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_TEXTURE"))
+					{
+						if (payload->DataSize == sizeof(uint64))
+						{
+							uint64 resourceID = *(const uint64*)payload->Data;
+							Resource* resource = App->moduleResources->GetResource(resourceID);
+
+							if (resource->GetType() == Resource::Type::TEXTURE)
+							{
+								material->textureID = resourceID;
+							}
+
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
 			}
 		}
 
@@ -191,6 +225,8 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 			material->color.Set(color[0], color[1], color[2]);
 			material->needs_save = true;
 		}
+
+		ImGui::Unindent();
 	}
 }
 
@@ -200,6 +236,8 @@ void W_Inspector::DrawCamera(GameObject* gameObject, C_Camera* camera)
 
 	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Indent();
+
 		if (ImGui::Button("Match camera"))
 		{
 			App->camera->Match(camera);
@@ -233,6 +271,8 @@ void W_Inspector::DrawCamera(GameObject* gameObject, C_Camera* camera)
 		{
 			camera->SetFarPlane(camera_far_plane);
 		}
+
+		ImGui::Unindent();
 	}
 }
 
@@ -242,6 +282,8 @@ void W_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation)
 
 	if (ImGui::CollapsingHeader("Animation", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Indent();
+
 		R_Animation* rAnimation = (R_Animation*)animation->GetResource();
 		if (ImGui::Checkbox("Playing", &animation->playing))
 		{
@@ -304,6 +346,8 @@ void W_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation)
 		{
 			animation->AddAnimation();
 		}
+
+		ImGui::Unindent();
 	}
 }
 
@@ -313,6 +357,8 @@ void W_Inspector::DrawBone(GameObject* gameObject, C_Bone* bone)
 
 	if (ImGui::CollapsingHeader("Bone", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Indent();
 
+		ImGui::Unindent();
 	}
 }

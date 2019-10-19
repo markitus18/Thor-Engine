@@ -11,6 +11,8 @@
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Editor.h"
+#include "M_Resources.h"
+
 #include "C_Camera.h"
 #include "TreeNode.h"
 #include "GameObject.h"
@@ -30,6 +32,25 @@ void W_Scene::Draw()
 	img_corner.y = App->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
 
 	ImGui::Image((ImTextureID)App->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_PREFAB"))
+		{
+			if (payload->DataSize == sizeof(uint64))
+			{
+				uint64 resourceID = *(const uint64*)payload->Data;
+				Resource* resource = App->moduleResources->GetResource(resourceID);
+
+				if (resource->GetType() == Resource::Type::PREFAB)
+				{
+					App->moduleResources->LoadPrefab(resource->GetOriginalFile());
+				}
+
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 
 	HandleGizmoUsage();
 

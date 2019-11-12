@@ -246,6 +246,7 @@ void M_Editor::Draw()
 				}
 				ImGui::EndMenu();
 			}
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("GameObject"))

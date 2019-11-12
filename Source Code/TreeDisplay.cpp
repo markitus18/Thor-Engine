@@ -3,6 +3,7 @@
 #include "TreeNode.h"
 #include "Application.h" //TODO: necessary?
 #include "M_Editor.h" //TODO: necessary?
+#include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Scene.h"
 #include "GameObject.h"
@@ -214,8 +215,10 @@ void TreeDisplay::HandleUserInput(TreeNode* node)
 
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
-			//float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition(); //TODO: move to another function
-			//App->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
+			//TODO: move to another function, this is for generic tree display
+			GameObject* gameObject = (GameObject*)node;
+			float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
+			App->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
 			//LOG("New camera look position: %f x, %f y, %f z", pos.x, pos.y, pos.z);
 		}
 

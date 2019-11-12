@@ -1,7 +1,7 @@
 {
     "GameObjects": [
         {
-            "UID": 598801295,
+            "UID": 1941307552,
             "ParentUID": 0,
             "Name": "aniTest",
             "Active": true,
@@ -35,14 +35,14 @@
                     "Animations": [],
                     "HasResource": true,
                     "Type": 4,
-                    "ID": 63,
+                    "ID": 60,
                     "ResourceName": "Take 001"
                 }
             ]
         },
         {
-            "UID": 44919984,
-            "ParentUID": 598801295,
+            "UID": 1742270200,
+            "ParentUID": 1941307552,
             "Name": "Object02",
             "Active": true,
             "Static": false,
@@ -73,21 +73,21 @@
                     "ComponentType": 2,
                     "HasResource": true,
                     "Type": 1,
-                    "ID": 60,
+                    "ID": 57,
                     "ResourceName": "Object02"
                 },
                 {
                     "ComponentType": 3,
                     "HasResource": true,
                     "Type": 3,
-                    "ID": 61,
+                    "ID": 58,
                     "ResourceName": "lambert2"
                 }
             ]
         },
         {
-            "UID": 638016032,
-            "ParentUID": 598801295,
+            "UID": 127277052,
+            "ParentUID": 1941307552,
             "Name": "transform1",
             "Active": true,
             "Static": false,
@@ -117,8 +117,8 @@
             ]
         },
         {
-            "UID": 762409324,
-            "ParentUID": 638016032,
+            "UID": 638109770,
+            "ParentUID": 127277052,
             "Name": "Bip001 Pelvis",
             "Active": true,
             "Static": false,
@@ -149,14 +149,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1665606267,
+                    "ID": 1869859991,
                     "ResourceName": "Bip001 Pelvis"
                 }
             ]
         },
         {
-            "UID": 346243305,
-            "ParentUID": 762409324,
+            "UID": 846091681,
+            "ParentUID": 638109770,
             "Name": "Bip001 Spine",
             "Active": true,
             "Static": false,
@@ -187,14 +187,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1351944101,
+                    "ID": 1063752271,
                     "ResourceName": "Bip001 Spine"
                 }
             ]
         },
         {
-            "UID": 301199830,
-            "ParentUID": 346243305,
+            "UID": 272485691,
+            "ParentUID": 846091681,
             "Name": "Bip001 Spine1",
             "Active": true,
             "Static": false,
@@ -225,14 +225,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1639491358,
+                    "ID": 1375808849,
                     "ResourceName": "Bip001 Spine1"
                 }
             ]
         },
         {
-            "UID": 1803035122,
-            "ParentUID": 301199830,
+            "UID": 2003239160,
+            "ParentUID": 272485691,
             "Name": "Bip001 Neck",
             "Active": true,
             "Static": false,
@@ -263,14 +263,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 469355180,
+                    "ID": 333301076,
                     "ResourceName": "Bip001 Neck"
                 }
             ]
         },
         {
-            "UID": 99127024,
-            "ParentUID": 1803035122,
+            "UID": 1335587592,
+            "ParentUID": 2003239160,
             "Name": "Bip001 L Clavicle",
             "Active": true,
             "Static": false,
@@ -301,14 +301,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 306621086,
+                    "ID": 1664496286,
                     "ResourceName": "Bip001 L Clavicle"
                 }
             ]
         },
         {
-            "UID": 1457580093,
-            "ParentUID": 99127024,
+            "UID": 1049311179,
+            "ParentUID": 1335587592,
             "Name": "Bip001 L UpperArm",
             "Active": true,
             "Static": false,
@@ -339,14 +339,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 443467905,
+                    "ID": 1827302046,
                     "ResourceName": "Bip001 L UpperArm"
                 }
             ]
         },
         {
-            "UID": 991399415,
-            "ParentUID": 1457580093,
+            "UID": 994889513,
+            "ParentUID": 1049311179,
             "Name": "Bip001 L Forearm",
             "Active": true,
             "Static": false,
@@ -377,14 +377,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1279177226,
+                    "ID": 1383368192,
                     "ResourceName": "Bip001 L Forearm"
                 }
             ]
         },
         {
-            "UID": 2094257135,
-            "ParentUID": 991399415,
+            "UID": 265234235,
+            "ParentUID": 994889513,
             "Name": "Bip001 L Hand",
             "Active": true,
             "Static": false,
@@ -415,14 +415,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1450810256,
+                    "ID": 1130294576,
                     "ResourceName": "Bip001 L Hand"
                 }
             ]
         },
         {
-            "UID": 873782770,
-            "ParentUID": 2094257135,
+            "UID": 1808278029,
+            "ParentUID": 265234235,
             "Name": "Bip001 L Finger0",
             "Active": true,
             "Static": false,
@@ -453,14 +453,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1835015299,
+                    "ID": 924392797,
                     "ResourceName": "Bip001 L Finger0"
                 }
             ]
         },
         {
-            "UID": 1860961601,
-            "ParentUID": 873782770,
+            "UID": 43335281,
+            "ParentUID": 1808278029,
             "Name": "Bip001 L Finger01",
             "Active": true,
             "Static": false,
@@ -491,14 +491,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1797971649,
+                    "ID": 1360986641,
                     "ResourceName": "Bip001 L Finger01"
                 }
             ]
         },
         {
-            "UID": 24232417,
-            "ParentUID": 1860961601,
+            "UID": 1978558113,
+            "ParentUID": 43335281,
             "Name": "Bip001 L Finger02",
             "Active": true,
             "Static": false,
@@ -529,14 +529,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1909875046,
+                    "ID": 1977460127,
                     "ResourceName": "Bip001 L Finger02"
                 }
             ]
         },
         {
-            "UID": 1310441062,
-            "ParentUID": 2094257135,
+            "UID": 1003332005,
+            "ParentUID": 265234235,
             "Name": "Bip001 L Finger1",
             "Active": true,
             "Static": false,
@@ -567,14 +567,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 2114979978,
+                    "ID": 1995398675,
                     "ResourceName": "Bip001 L Finger1"
                 }
             ]
         },
         {
-            "UID": 521918354,
-            "ParentUID": 1310441062,
+            "UID": 1776934136,
+            "ParentUID": 1003332005,
             "Name": "Bip001 L Finger11",
             "Active": true,
             "Static": false,
@@ -605,14 +605,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 509824489,
+                    "ID": 934027745,
                     "ResourceName": "Bip001 L Finger11"
                 }
             ]
         },
         {
-            "UID": 1054416594,
-            "ParentUID": 521918354,
+            "UID": 1841029727,
+            "ParentUID": 1776934136,
             "Name": "Bip001 L Finger12",
             "Active": true,
             "Static": false,
@@ -643,14 +643,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 881031053,
+                    "ID": 2140803485,
                     "ResourceName": "Bip001 L Finger12"
                 }
             ]
         },
         {
-            "UID": 2104185473,
-            "ParentUID": 1803035122,
+            "UID": 1769152272,
+            "ParentUID": 2003239160,
             "Name": "Bip001 R Clavicle",
             "Active": true,
             "Static": false,
@@ -681,14 +681,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 186128132,
+                    "ID": 825883020,
                     "ResourceName": "Bip001 R Clavicle"
                 }
             ]
         },
         {
-            "UID": 604868334,
-            "ParentUID": 2104185473,
+            "UID": 1225755227,
+            "ParentUID": 1769152272,
             "Name": "Bip001 R UpperArm",
             "Active": true,
             "Static": false,
@@ -719,14 +719,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 510351974,
+                    "ID": 2074570642,
                     "ResourceName": "Bip001 R UpperArm"
                 }
             ]
         },
         {
-            "UID": 1531447391,
-            "ParentUID": 604868334,
+            "UID": 1599494481,
+            "ParentUID": 1225755227,
             "Name": "Bip001 R Forearm",
             "Active": true,
             "Static": false,
@@ -757,14 +757,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1197706719,
+                    "ID": 2102691884,
                     "ResourceName": "Bip001 R Forearm"
                 }
             ]
         },
         {
-            "UID": 483218908,
-            "ParentUID": 1531447391,
+            "UID": 640746516,
+            "ParentUID": 1599494481,
             "Name": "Bip001 R Hand",
             "Active": true,
             "Static": false,
@@ -795,14 +795,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 896954136,
+                    "ID": 1846407268,
                     "ResourceName": "Bip001 R Hand"
                 }
             ]
         },
         {
-            "UID": 1852263613,
-            "ParentUID": 483218908,
+            "UID": 1882874952,
+            "ParentUID": 640746516,
             "Name": "Bip001 R Finger0",
             "Active": true,
             "Static": false,
@@ -833,14 +833,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 166931343,
+                    "ID": 349296008,
                     "ResourceName": "Bip001 R Finger0"
                 }
             ]
         },
         {
-            "UID": 51998323,
-            "ParentUID": 1852263613,
+            "UID": 940253018,
+            "ParentUID": 1882874952,
             "Name": "Bip001 R Finger01",
             "Active": true,
             "Static": false,
@@ -871,14 +871,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 312826136,
+                    "ID": 877633732,
                     "ResourceName": "Bip001 R Finger01"
                 }
             ]
         },
         {
-            "UID": 1665300388,
-            "ParentUID": 51998323,
+            "UID": 1758838324,
+            "ParentUID": 940253018,
             "Name": "Bip001 R Finger02",
             "Active": true,
             "Static": false,
@@ -909,14 +909,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 523644369,
+                    "ID": 786490407,
                     "ResourceName": "Bip001 R Finger02"
                 }
             ]
         },
         {
-            "UID": 1531178712,
-            "ParentUID": 483218908,
+            "UID": 417919617,
+            "ParentUID": 640746516,
             "Name": "Bip001 R Finger1",
             "Active": true,
             "Static": false,
@@ -947,14 +947,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 962222677,
+                    "ID": 1858078188,
                     "ResourceName": "Bip001 R Finger1"
                 }
             ]
         },
         {
-            "UID": 1104871072,
-            "ParentUID": 1531178712,
+            "UID": 1873205601,
+            "ParentUID": 417919617,
             "Name": "Bip001 R Finger11",
             "Active": true,
             "Static": false,
@@ -985,14 +985,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 152627252,
+                    "ID": 1141598762,
                     "ResourceName": "Bip001 R Finger11"
                 }
             ]
         },
         {
-            "UID": 1512151819,
-            "ParentUID": 1104871072,
+            "UID": 2060232205,
+            "ParentUID": 1873205601,
             "Name": "Bip001 R Finger12",
             "Active": true,
             "Static": false,
@@ -1023,14 +1023,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1893017086,
+                    "ID": 232554340,
                     "ResourceName": "Bip001 R Finger12"
                 }
             ]
         },
         {
-            "UID": 1430963718,
-            "ParentUID": 1803035122,
+            "UID": 698593881,
+            "ParentUID": 2003239160,
             "Name": "Bip001 Head",
             "Active": true,
             "Static": false,
@@ -1061,14 +1061,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1636750229,
+                    "ID": 1533331128,
                     "ResourceName": "Bip001 Head"
                 }
             ]
         },
         {
-            "UID": 1211142901,
-            "ParentUID": 1430963718,
+            "UID": 594951845,
+            "ParentUID": 698593881,
             "Name": "Bone001",
             "Active": true,
             "Static": false,
@@ -1099,14 +1099,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 262932448,
+                    "ID": 634370118,
                     "ResourceName": "Bone001"
                 }
             ]
         },
         {
-            "UID": 34511066,
-            "ParentUID": 346243305,
+            "UID": 477817409,
+            "ParentUID": 846091681,
             "Name": "Bip001 L Thigh",
             "Active": true,
             "Static": false,
@@ -1137,14 +1137,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 2124513621,
+                    "ID": 974769088,
                     "ResourceName": "Bip001 L Thigh"
                 }
             ]
         },
         {
-            "UID": 1808208640,
-            "ParentUID": 34511066,
+            "UID": 1604139959,
+            "ParentUID": 477817409,
             "Name": "Bip001 L Calf",
             "Active": true,
             "Static": false,
@@ -1175,14 +1175,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 679136869,
+                    "ID": 1767946801,
                     "ResourceName": "Bip001 L Calf"
                 }
             ]
         },
         {
-            "UID": 1654854653,
-            "ParentUID": 1808208640,
+            "UID": 1941023304,
+            "ParentUID": 1604139959,
             "Name": "Bip001 L Foot",
             "Active": true,
             "Static": false,
@@ -1213,14 +1213,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1040500650,
+                    "ID": 1051520969,
                     "ResourceName": "Bip001 L Foot"
                 }
             ]
         },
         {
-            "UID": 138134963,
-            "ParentUID": 1654854653,
+            "UID": 1279993015,
+            "ParentUID": 1941023304,
             "Name": "Bip001 L Toe0",
             "Active": true,
             "Static": false,
@@ -1251,14 +1251,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1777373046,
+                    "ID": 223856519,
                     "ResourceName": "Bip001 L Toe0"
                 }
             ]
         },
         {
-            "UID": 662487757,
-            "ParentUID": 346243305,
+            "UID": 264797756,
+            "ParentUID": 846091681,
             "Name": "Bip001 R Thigh",
             "Active": true,
             "Static": false,
@@ -1289,14 +1289,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1097842239,
+                    "ID": 375020403,
                     "ResourceName": "Bip001 R Thigh"
                 }
             ]
         },
         {
-            "UID": 1553843478,
-            "ParentUID": 662487757,
+            "UID": 1484944628,
+            "ParentUID": 264797756,
             "Name": "Bip001 R Calf",
             "Active": true,
             "Static": false,
@@ -1327,14 +1327,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1784041042,
+                    "ID": 189297037,
                     "ResourceName": "Bip001 R Calf"
                 }
             ]
         },
         {
-            "UID": 648064213,
-            "ParentUID": 1553843478,
+            "UID": 1319695761,
+            "ParentUID": 1484944628,
             "Name": "Bip001 R Foot",
             "Active": true,
             "Static": false,
@@ -1365,14 +1365,14 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 562209896,
+                    "ID": 2089354985,
                     "ResourceName": "Bip001 R Foot"
                 }
             ]
         },
         {
-            "UID": 247149803,
-            "ParentUID": 648064213,
+            "UID": 598223333,
+            "ParentUID": 1319695761,
             "Name": "Bip001 R Toe0",
             "Active": true,
             "Static": false,
@@ -1403,7 +1403,7 @@
                     "ComponentType": 6,
                     "HasResource": true,
                     "Type": 5,
-                    "ID": 1578219194,
+                    "ID": 1031097493,
                     "ResourceName": "Bip001 R Toe0"
                 }
             ]

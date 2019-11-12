@@ -196,7 +196,7 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 			if (rTex)
 			{
 				ImGui::Text(rTex->GetName());
-				ImGui::Image((ImTextureID)rTex->buffer, ImVec2(128, 128));
+				ImGui::Image((ImTextureID)rTex->buffer, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
 
 				if (ImGui::BeginDragDropTarget())
 				{
@@ -211,7 +211,6 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 							{
 								material->textureID = resourceID;
 							}
-
 						}
 					}
 					ImGui::EndDragDropTarget();

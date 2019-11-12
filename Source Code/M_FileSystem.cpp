@@ -21,11 +21,12 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 	PHYSFS_init(nullptr);
 	SDL_free(base_path);
 
-	if(PHYSFS_setWriteDir("E:/Marc/Thor-Engine/ProjectFolder") == 0) //TODO: Set write Dir from a global path
+	//Setting the working directory as the writing directory
+	if (PHYSFS_setWriteDir(".") == 0)
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
-	AddPath("E:/Marc/Thor-Engine/ProjectFolder");
-	AddPath("ProjectFolder/Assets");
+	AddPath("."); //Adding ProjectFolder (working directory)
+	AddPath("Assets");
 
 	CreateDir("Library");
 	CreateDir("Library/Meshes");

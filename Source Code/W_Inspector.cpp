@@ -464,7 +464,7 @@ void W_Inspector::DrawBillboard(GameObject* gameObject, C_Billboard* billboard)
 			int currentLockOption = (int)billboard->lockAxis;
 			if (ImGui::Combo("Axis Lock", &currentLockOption, billboardLockOptions.data(), (int)C_Billboard::Axis::Unknown))
 			{
-				billboard->alignment = (C_Billboard::Alignment)currentAlignmentOption;
+				billboard->lockAxis = (C_Billboard::Axis)currentLockOption;
 			}
 		}
 

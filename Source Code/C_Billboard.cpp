@@ -27,86 +27,51 @@ void C_Billboard::Update(float dt)
 	}
 	if (cameraRef == nullptr) return;
 	
-	if (cameraRef->gameObject->GetComponent<C_Transform>()->GetGlobalPosition().x != lastCameraPosition.x ||
-		lastPosition.x != gameObject->GetComponent<C_Transform>()->GetGlobalPosition().x)
+	float3 right, up, fwd;
+	C_Transform& transform = *gameObject->GetComponent<C_Transform>();
+	C_Transform& cameraTransform = *cameraRef->gameObject->GetComponent<C_Transform>();
+	GetVectorsFromAlignment(transform, cameraTransform, right, up, fwd);
 
+	/* Read line 140 from float4x4 to understand function usage */
+	float4x4 resultMatrix(right.ToDir4(), up.ToDir4(), fwd.ToDir4(), transform.GetGlobalPosition().ToPos4());
+	transform.SetGlobalTransform(resultMatrix);
+}
+
+void C_Billboard::GetVectorsFromAlignment(const C_Transform& transform, const C_Transform& cameraTransform, float3&right, float3&up, float3& fwd) const
+{
 	switch (alignment)
 	{
 		case(Alignment::Screen_Aligned):
-			AlignToScreen();
+			fwd = cameraTransform.GetGlobalTransform().WorldZ().Normalized().Neg();
+			up = cameraTransform.GetGlobalTransform().WorldY().Normalized();
+			right = up.Cross(fwd).Normalized();
 			break;
 		case(Alignment::Camera_Aligned):
-			AlignToCamera();
+			fwd = float3(cameraTransform.GetGlobalPosition() - transform.GetGlobalPosition()).Normalized();
+			right = cameraTransform.GetGlobalTransform().WorldY().Normalized().Cross(fwd).Normalized();
+			up = fwd.Cross(right).Normalized();
 			break;
 		case(Alignment::Axis_Aligned):
-			AlignToAxis();
+			float3 direction = float3(cameraTransform.GetGlobalPosition() - transform.GetGlobalPosition()).Normalized();
+			switch (lockAxis)
+			{
+				//TODO: same as Unreal, this could be xy, xz, yx, yz, zx, zy. Here we are taking arbitrary decisions on which is the "forward" vector
+				case(Axis::x):
+					right = float3::unitX;
+					up = direction.Cross(right).Normalized();
+					fwd = right.Cross(up).Normalized();
+					break;
+				case(Axis::y):
+					up = float3::unitY;
+					right = up.Cross(direction).Normalized();
+					fwd = right.Cross(up).Normalized();
+					break;
+				case(Axis::z):
+					fwd = float3::unitZ;
+					right = direction.Cross(fwd).Normalized();
+					up = fwd.Cross(right).Normalized();
+					break;
+			}
 			break;
 	}
-}
-
-void C_Billboard::AlignToScreen()
-{
-	C_Transform* transform = gameObject->GetComponent<C_Transform>();
-	C_Transform* cameraTransform = cameraRef->gameObject->GetComponent<C_Transform>();
-	float4x4 cameraMatrix = cameraTransform->GetGlobalTransform();
-
-	//Using camera's inverted forward as our new forward vector
-	float3 forward = cameraMatrix.WorldZ().Normalized().Neg();
-	float3 up = cameraMatrix.WorldY().Normalized();
-	float3 right = up.Cross(forward).Normalized();
-		//forward.Cross(up).Normalized();
-
-	/* Read line 140 from float4x4 to understand function usage */
-	float4x4 resultMatrix(right.ToDir4(), up.ToDir4(), forward.ToDir4(), transform->GetGlobalPosition().ToPos4());
-	transform->SetGlobalTransform(resultMatrix);
-}
-
-void C_Billboard::AlignToCamera()
-{
-	C_Transform* transform = gameObject->GetComponent<C_Transform>();
-	C_Transform* cameraTransform = cameraRef->gameObject->GetComponent<C_Transform>();
-	float4x4 cameraMatrix = cameraTransform->GetGlobalTransform();
-	
-	//Our new forward vector is the direction from the billboard to the camera
-	float3 forward = float3(cameraTransform->GetGlobalPosition() - transform->GetGlobalPosition()).Normalized();
-	float3 right = cameraMatrix.WorldY().Normalized().Cross(forward).Normalized();
-	float3 up = forward.Cross(right).Normalized();
-
-	/* Read line 140 from float4x4 to understand function usage*/
-	float4x4 resultMatrix(right.ToDir4(), up.ToDir4(), forward.ToDir4(), transform->GetGlobalPosition().ToPos4());
-	transform->SetGlobalTransform(resultMatrix);
-}
-
-void C_Billboard::AlignToAxis()
-{
-	C_Transform* transform = gameObject->GetComponent<C_Transform>();
-	C_Transform* cameraTransform = cameraRef->gameObject->GetComponent<C_Transform>();
-	float4x4 cameraMatrix = cameraTransform->GetGlobalTransform();
-
-	//TODO: is there a way to find a generic method for all 3 axis?
-	float3 forward, right, up;
-	switch (lockAxis)
-	{
-	case(Axis::x):
-	{
-
-		break;
-	}
-	case(Axis::y):
-	{
-		up = float3::unitY;
-		float3 direction = float3(cameraTransform->GetGlobalPosition() - transform->GetGlobalPosition()).Normalized();
-		right = up.Cross(direction).Normalized();
-		forward = right.Cross(up).Normalized();
-		break;
-	}
-	case(Axis::z):
-	{
-		break;
-	}
-	}
-
-	/* Read line 140 from float4x4 to understand function usage*/
-	float4x4 resultMatrix(right.ToDir4(), up.ToDir4(), forward.ToDir4(), transform->GetGlobalPosition().ToPos4());
-	transform->SetGlobalTransform(resultMatrix);
 }

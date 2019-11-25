@@ -4,6 +4,7 @@
 #include "Component.h"
 
 class C_Camera;
+class C_Transform;
 
 class C_Billboard : public Component
 {
@@ -32,9 +33,7 @@ public:
 	void Update(float dt);
 
 private:
-	void AlignToScreen();
-	void AlignToCamera();
-	void AlignToAxis();
+	void GetVectorsFromAlignment(const C_Transform& transform, const C_Transform& cameraTransform, float3&right, float3&up, float3& fwd) const;
 
 public:
 	Alignment alignment = Alignment::Camera_Aligned;
@@ -43,8 +42,6 @@ public:
 private:
 	//Keeping a reference to the camera for faster iterations
 	const C_Camera* cameraRef = nullptr;
-	float3 lastCameraPosition;
-	float3 lastPosition;
 };
 
 #endif // !

@@ -1,11 +1,16 @@
 #include "C_Animation.h"
-#include "R_Animation.h"
-#include "R_Bone.h"
 
 #include "Application.h"
 #include "M_Renderer3D.h"
 
 #include "GameObject.h"
+
+#include "R_Animation.h"
+#include "R_Bone.h"
+
+#include "C_Transform.h"
+#include "C_Mesh.h"
+#include "C_Bone.h"
 
 float AnimationSettings::GetDuration()
 {
@@ -214,11 +219,6 @@ void C_Animation::SetAnimation(const char* name, float blendTime)
 			}
 		}
 	}
-}
-
-Component::Type C_Animation::GetType()
-{
-	return Component::Type::Animation;
 }
 
 void C_Animation::UpdateChannelsTransform(const AnimationSettings* settings, const AnimationSettings* blend, float blendRatio)

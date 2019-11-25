@@ -1,12 +1,16 @@
 #include "M_Animations.h"
+
 #include "Application.h"
 #include "M_Resources.h"
-#include "GameObject.h"
 #include "M_FileSystem.h"
 
-#include "Resource.h"
-#include "R_Animation.h"
+#include "GameObject.h"
+
 #include "R_Bone.h"
+#include "R_Animation.h"
+
+#include "C_Mesh.h"
+#include "C_Bone.h"
 
 #include "Assimp/include/scene.h"
 

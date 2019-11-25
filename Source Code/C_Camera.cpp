@@ -147,8 +147,3 @@ void C_Camera::UpdatePlanes()
 {
 	frustum.GetPlanes(planes);
 }
-
-Component::Type C_Camera::GetType()
-{
-	return Component::Type::Camera;
-}

@@ -11,8 +11,3 @@ C_Material::~C_Material()
 {
 
 }
-
-Component::Type C_Material::GetType()
-{
-	return Component::Type::Material;
-}

@@ -21,6 +21,8 @@ public:
 		Camera,
 		Animation,
 		Bone,
+		Billboard,
+		Unknown
 	};
 
 public:

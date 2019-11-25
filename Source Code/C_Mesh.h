@@ -21,7 +21,7 @@ public:
 
 	void AddBone(C_Bone* bone);
 	const AABB& GetAABB() const;
-	static Component::Type GetType();
+	static inline Type GetType() { return Type::Mesh; };
 
 	void StartBoneDeformation();
 	void DeformAnimMesh();

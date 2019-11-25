@@ -127,11 +127,6 @@ void C_Transform::Load()
 
 }
 
-Component::Type C_Transform::GetType()
-{
-	return Component::Type::Transform;
-}
-
 void C_Transform::UpdateLocalTransform()
 {
 	transform = float4x4::FromTRS(position, rotation, scale);

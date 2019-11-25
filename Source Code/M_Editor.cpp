@@ -138,6 +138,16 @@ bool M_Editor::Start()
 		RELEASE_ARRAY(buffer);
 	}
 
+	size = App->fileSystem->Load("ProjectSettings/Icons/ThorIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			w_explorer->sceneBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 	return true;
 }

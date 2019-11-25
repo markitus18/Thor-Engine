@@ -6,6 +6,9 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
+#include "Brofiler/Brofiler.h"
+#pragma comment (lib, "Brofiler/ProfilerCore32.lib")
+
 enum main_states
 {
 	MAIN_CREATION,
@@ -54,6 +57,7 @@ int main(int argc, char ** argv)
 
 		case MAIN_UPDATE:
 		{
+			BROFILER_FRAME("Engine Frame")
 			int update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR)

@@ -17,6 +17,7 @@
 #include "Config.h"
 
 #include "parson/parson.h"
+#include "Brofiler/Brofiler.h"
 
 Application::Application()
 {
@@ -108,7 +109,9 @@ bool Application::Init()
 	
 	//Setting up all timers
 	frameTimer.Start();
-	frame_ms_cap = (float)1000 / (float)maxFPS;
+
+	if (maxFPS > 0)
+		frame_ms_cap = (float)1000 / (float)maxFPS;
 
 	//Time::Start(maxFPS);
 
@@ -155,16 +158,17 @@ update_status Application::Update()
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
+	BROFILER_CATEGORY("App PreUpdate", Profiler::Color::Yellow)
 	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
 		ret = list_modules[i]->PreUpdate(dt);
 	}
-
+	BROFILER_CATEGORY("App Update", Profiler::Color::Purple)
 	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
 		ret = list_modules[i]->Update(dt);
 	}
-
+	BROFILER_CATEGORY("App PostUpdate", Profiler::Color::Green)
 	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
 		ret = list_modules[i]->PostUpdate(dt);
@@ -233,7 +237,8 @@ void Application::OpenSceneWindow()
 
 void Application::SaveScene(const char* scene, bool tmp)
 {
-	scene_to_save = scene;
+	scene_to_save = tmp ? "" : "Assets/";
+	scene_to_save += scene;
 	tmpScene = tmp;
 	save_scene = true;
 }

@@ -34,6 +34,7 @@ public:
 	uint folderBuffer = 0;
 	uint fileBuffer = 0;
 	uint selectedBuffer = 0;
+	uint sceneBuffer = 0;
 
 	uint imageSize = 64;
 	uint columnsNumber = 0;

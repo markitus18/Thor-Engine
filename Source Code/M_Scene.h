@@ -12,6 +12,7 @@ class GameObject;
 class Config;
 class Quadtree;
 class C_Animation;
+class C_Camera;
 
 class M_Scene : public Module
 {
@@ -58,6 +59,8 @@ public:
 
 	//----------------------------------------
 
+	const C_Camera* GetMainCamera() const { return mainCamera; };
+
 	void Play();
 	void Stop();
 
@@ -84,7 +87,6 @@ public:
 private:
 	GameObject* root = nullptr;
 	std::vector<const GameObject*> nonStatic;
-
 	std::vector<GameObject*> toRemove;
 
 	uint cullingTimer_library = 0;
@@ -92,6 +94,8 @@ private:
 	uint cullingTimer_optimized = 0;
 
 	LCG random;
+
+	C_Camera* mainCamera = nullptr;
 };
 
 #endif //__MODULE_SCENE_H__

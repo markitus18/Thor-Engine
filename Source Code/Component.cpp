@@ -20,16 +20,6 @@ void Component::SetActive(bool set)
 	active = set;
 }
 
-bool Component::IsActive() const
-{
-	return active;
-}
-
-Component::Type Component::GetType() const
-{
-	return type;
-}
-
 void Component::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
 {
 
@@ -37,7 +27,6 @@ void Component::OnUpdateTransform(const float4x4& global, const float4x4& parent
 
 void Component::SetResource(Resource* resource)
 {
-
 	Resource* oldResource = GetResource();
 	if (oldResource != nullptr)
 		oldResource->instances--;

@@ -3,12 +3,17 @@
 
 #include "DWindow.h"
 
+#include <vector>
+#include <string>
+
 class GameObject;
 class C_Transform;
 class C_Mesh;
 class C_Camera;
 class C_Animation;
 class C_Bone;
+class C_Billboard;
+
 class R_Material;
 
 class W_Inspector : public DWindow
@@ -29,6 +34,13 @@ private:
 	void DrawCamera(GameObject* gameObject, C_Camera* camera);
 	void DrawAnimation(GameObject* gameObject, C_Animation* animation);
 	void DrawBone(GameObject* gameObject, C_Bone* bone);
+	void DrawBillboard(GameObject* gameObject, C_Billboard* billboard);
+
+private:
+	std::vector<char*> billboardAlignmentOptions;
+	std::vector<char*> billboardLockOptions;
+
+	bool showDebug = true;
 };
 
 #endif // !__W_INSPECTOR_H__

@@ -19,6 +19,7 @@
 #include "C_Bone.h"
 #include "C_Animation.h"
 #include "C_Camera.h"
+#include "C_Billboard.h"
 
 #include "R_Material.h"
 #include "R_Texture.h"
@@ -26,6 +27,13 @@
 
 W_Inspector::W_Inspector(M_Editor* editor) : DWindow(editor, "Inspector")
 {
+	billboardAlignmentOptions.push_back("Screen");
+	billboardAlignmentOptions.push_back("Camera");
+	billboardAlignmentOptions.push_back("Axis");
+
+	billboardLockOptions.push_back("x");
+	billboardLockOptions.push_back("y");
+	billboardLockOptions.push_back("z");
 
 }
 
@@ -87,6 +95,47 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	C_Bone* bone = gameObject->GetComponent<C_Bone>();
 	DrawBone(gameObject, bone);
 
+	C_Billboard* billboard = gameObject->GetComponent<C_Billboard>();
+	DrawBillboard(gameObject, billboard);
+
+	ImGui::Separator();
+	ImGui::Separator();
+
+	if (ImGui::Button("Add Component"))
+	{
+		ImGui::OpenPopup("Add Component Popup");
+	}
+
+	if (ImGui::BeginPopup("Add Component Popup"))
+	{
+		if (ImGui::MenuItem("Mesh"))
+		{
+			gameObject->CreateComponent(Component::Type::Mesh);
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Material"))
+		{
+			gameObject->CreateComponent(Component::Type::Material);
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Camera"))
+		{
+			gameObject->CreateComponent(Component::Type::Camera);
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Animation"))
+		{
+			gameObject->CreateComponent(Component::Type::Animation);
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Billboard"))
+		{
+			gameObject->CreateComponent(Component::Type::Billboard);
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
 }
 
 void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
@@ -132,6 +181,39 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 			transform->SetScale(scale);
 		}
 
+		if (showDebug)
+		{
+			ImGui::Separator();
+			ImGui::Separator();
+
+			ImGui::Text("Local Matrix");
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					ImGui::Text("%f", transform->GetTransform()[j][i]);
+					if (j < 3) ImGui::SameLine();
+				}
+			}
+			ImGui::PopStyleColor();
+			ImGui::Separator();
+
+			ImGui::Text("Global Matrix");
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					ImGui::Text("%f", transform->GetGlobalTransform()[j][i]);
+					if (j < 3) ImGui::SameLine();
+				}
+			}
+			ImGui::PopStyleColor();
+			ImGui::Separator();
+		}
 		ImGui::Unindent();
 	}
 }
@@ -186,6 +268,8 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 
 void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 {
+	if (material == nullptr) return;
+
 	if (ImGui::CollapsingHeader(material->GetName(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
@@ -357,6 +441,32 @@ void W_Inspector::DrawBone(GameObject* gameObject, C_Bone* bone)
 	if (ImGui::CollapsingHeader("Bone", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
+
+		ImGui::Unindent();
+	}
+}
+
+void W_Inspector::DrawBillboard(GameObject* gameObject, C_Billboard* billboard)
+{
+	if (billboard == nullptr) return;
+
+	if (ImGui::CollapsingHeader("Billboard", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Indent();
+
+		int currentAlignmentOption = (int)billboard->alignment;
+		if (ImGui::Combo("Alignment", &currentAlignmentOption, billboardAlignmentOptions.data(), (int)C_Billboard::Alignment::Unknown))
+		{
+			billboard->alignment = (C_Billboard::Alignment)currentAlignmentOption;
+		}
+		if (billboard->alignment == C_Billboard::Alignment::Axis_Aligned)
+		{
+			int currentLockOption = (int)billboard->lockAxis;
+			if (ImGui::Combo("Axis Lock", &currentLockOption, billboardLockOptions.data(), (int)C_Billboard::Axis::Unknown))
+			{
+				billboard->alignment = (C_Billboard::Alignment)currentAlignmentOption;
+			}
+		}
 
 		ImGui::Unindent();
 	}

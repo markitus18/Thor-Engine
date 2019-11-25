@@ -44,19 +44,20 @@ GameObject::~GameObject()
 
 void GameObject::Update(float dt)
 {
-	if (transform)
+	//Throw on update transform event if matrix has been updated
+	if (transform && transform->transform_updated)
 	{
-		if (transform->transform_updated)
-		{
-			OnUpdateTransform();
-		}
-	}
-	C_Animation* anim = (C_Animation*)GetComponent<C_Animation>();
-	if (anim != nullptr)
-	{
-		anim->Update(dt);
+		OnUpdateTransform();
 	}
 
+	//Updating all components
+	std::vector<Component*>::iterator it;
+	for (it = components.begin(); it != components.end(); ++it)
+	{
+		(*it)->Update(dt);
+	}
+
+	//Iterate through all children
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)

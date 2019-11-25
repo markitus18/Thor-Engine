@@ -30,9 +30,10 @@ public:
 	virtual ~Component();
 
 	void SetActive(bool set);
-	bool IsActive() const;
-	Type GetType() const;
+	inline bool IsActive() const { return active; };
+	inline Type GetType() const { return type; };
 
+	virtual void Update(float dt) {}; //TODO: should return bool?
 	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	//Resource handling
@@ -44,7 +45,7 @@ public:
 	bool HasResource() const;
 
 public:
-	GameObject* gameObject;
+	GameObject* gameObject = nullptr;
 
 protected:
 	bool hasResource = false;

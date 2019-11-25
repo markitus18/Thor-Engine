@@ -37,7 +37,10 @@ void C_Mesh::AddBone(C_Bone* bone)
 
 const AABB& C_Mesh::GetAABB() const
 {
-	return ((R_Mesh*)App->moduleResources->GetResource(resourceID))->aabb;
+	if (resourceID != 0)
+		return ((R_Mesh*)App->moduleResources->GetResource(resourceID))->aabb;
+	else
+		return AABB(float3(-.5f, -.5f, .5f), float3(.5f, .5f, .5f));
 }
 
 void C_Mesh::StartBoneDeformation()

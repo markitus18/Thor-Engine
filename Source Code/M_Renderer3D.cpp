@@ -430,6 +430,7 @@ void M_Renderer3D::DrawAllMeshes()
 void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 {
 	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
+	if (resMesh == nullptr) return;
 
 	//Generate buffers for animation mesh
 	if (rMesh.mesh->animMesh != nullptr)

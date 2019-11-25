@@ -444,6 +444,8 @@ GameObject* M_Scene::CreateCamera()
 	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
 	camera->uid = random.Int();
 
+	//Keeping a reference to the last camera, by now
+	mainCamera = camera->GetComponent<C_Camera>();
 	return camera;
 }
 

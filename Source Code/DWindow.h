@@ -6,6 +6,7 @@
 class Dock;
 typedef unsigned int uint;
 class M_Editor;
+class Config;
 
 class DWindow
 {
@@ -20,6 +21,9 @@ public:
 
 	virtual void OnResize() {};
 
+	virtual void SaveConfig(Config& config);
+	virtual void LoadConfig(Config& config);
+
 	Dock* GetParent() const;
 	bool IsActive() const;
 
@@ -30,6 +34,7 @@ public:
 	std::string name;
 	M_Editor* editor;
 	bool allowScrollbar = true;
+	bool showDebugInfo = false;
 
 protected:
 	Dock* parent = nullptr;

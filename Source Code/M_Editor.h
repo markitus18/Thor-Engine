@@ -16,6 +16,7 @@ class Resource;
 class TreeNode;
 
 class Dock;
+class DWindow;
 class W_Scene;
 class W_Console;
 class W_Explorer;
@@ -64,6 +65,9 @@ public:
 	void FinishDrag(bool drag, bool SelectDrag);
 	//Endof Selection------------------------------------
 
+	void SaveConfig(Config& config) const;
+	void LoadConfig(Config& config);
+
 	void LoadScene(Config& root, bool tmp = false);
 	void ResetScene();
 
@@ -85,6 +89,8 @@ public:
 
 	//Windows system
 	std::vector<Dock*> docks;
+	std::vector<DWindow*> windows;
+
 	Dock* focusedDock = nullptr;
 
 	W_Console* w_console = nullptr;
@@ -109,6 +115,9 @@ public:
 
 	TreeNode* lastSelected = nullptr;
 	bool dragging = false;
+
+	bool showDebugInfo = false;
+
 private:
 
 	//Active window controllers

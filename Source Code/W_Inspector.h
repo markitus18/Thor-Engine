@@ -40,7 +40,6 @@ private:
 	std::vector<char*> billboardAlignmentOptions;
 	std::vector<char*> billboardLockOptions;
 
-	bool showDebug = true;
 };
 
 #endif // !__W_INSPECTOR_H__

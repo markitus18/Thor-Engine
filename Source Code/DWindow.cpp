@@ -1,5 +1,6 @@
 #include "DWindow.h"
 
+#include "Config.h"
 #include "Dock.h"
 
 DWindow::DWindow(M_Editor* editor, std::string name) : editor(editor), name(name)
@@ -30,6 +31,16 @@ void DWindow::SetParent(Dock* dock)
 void DWindow::SetActive(bool active)
 {
 	this->active = active;
+}
+
+void DWindow::SaveConfig(Config& config)
+{ 
+	config.SetBool("Show Debug Info", showDebugInfo);
+}
+
+void DWindow::LoadConfig(Config& config)
+{
+	showDebugInfo = config.GetBool("Show Debug Info", false);
 }
 
 Dock* DWindow::GetParent() const

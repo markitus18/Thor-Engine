@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Config.h"
 #include "M_Editor.h"
 #include "M_Window.h"
 
@@ -81,26 +82,36 @@ bool M_Editor::Init(Config& config)
 	baseDock->GetDockChildren()[1]->Split(HORIZONTAL, 0.6f);
 
 	W_Hierarchy* hierarchyWindow = new W_Hierarchy(this);
+	windows.push_back(hierarchyWindow);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[0]->AddChildData(hierarchyWindow);
 
 	w_scene = new W_Scene(this);
+	windows.push_back(w_scene);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_scene);
 
 	W_Inspector* inspector = new W_Inspector(this);
+	windows.push_back(inspector);
 	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(inspector);
 
 	w_explorer = new W_Explorer(this);
+	windows.push_back(w_explorer);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_explorer);
 
 	w_console = new W_Console(this);
+	windows.push_back(w_console);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_console);
 
 	W_Resources* resources = new W_Resources(this);
+	windows.push_back(resources);
 	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(resources);
 
 	w_econfig = new W_EngineConfig(this);
+	windows.push_back(w_econfig);
 	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(w_econfig);
 	
+	//TODO: not sure if this should be done here too, but it's kinda valid
+	LoadConfig(config);
+
 	return true;
 }
 
@@ -297,6 +308,22 @@ void M_Editor::Draw()
 				ImGui::EndMenu();
 			}
 
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Windows"))
+		{
+			ImGui::Checkbox("Show All Debug Info", &showDebugInfo);
+
+			std::vector<DWindow*>::iterator it;
+			for (it = windows.begin(); it != windows.end(); ++it)
+			{
+				if (ImGui::BeginMenu((*it)->name.c_str()))
+				{
+					ImGui::Checkbox("Show Debug Info", &(*it)->showDebugInfo);
+					ImGui::EndMenu();
+				}
+			}
 			ImGui::EndMenu();
 		}
 
@@ -638,6 +665,28 @@ void M_Editor::FinishDrag(bool drag, bool selectDrag)
 	toSelectGOs.clear();
 	toUnselectGOs.clear();
 
+}
+
+void M_Editor::SaveConfig(Config& config) const
+{
+	config.SetBool("Show Debug Info", showDebugInfo);
+
+	std::vector<DWindow*>::const_iterator it;
+	for (it = windows.begin(); it != windows.end(); ++it)
+	{
+		(*it)->SaveConfig(config.SetNode((*it)->name.c_str()));
+	}
+}
+
+void M_Editor::LoadConfig(Config& config)
+{
+	showDebugInfo = config.GetBool("Show Debug Info", false);
+
+	std::vector<DWindow*>::const_iterator it;
+	for (it = windows.begin(); it != windows.end(); ++it)
+	{
+		(*it)->LoadConfig(config.GetNode((*it)->name.c_str()));
+	}
 }
 
 void M_Editor::LoadScene(Config& root, bool tmp)

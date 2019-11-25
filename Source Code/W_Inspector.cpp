@@ -181,7 +181,7 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 			transform->SetScale(scale);
 		}
 
-		if (showDebug)
+		if (showDebugInfo)
 		{
 			ImGui::Separator();
 			ImGui::Separator();

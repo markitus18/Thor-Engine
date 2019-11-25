@@ -1,11 +1,17 @@
 #include "C_Mesh.h"
-#include "OpenGL.h"
-#include "GameObject.h"
-#include "R_Mesh.h"
+
 #include "Application.h"
 #include "M_Resources.h"
-#include "C_Bone.h"
+
+#include "GameObject.h"
+
+#include "R_Mesh.h"
 #include "R_Bone.h"
+
+#include "C_Transform.h"
+#include "C_Bone.h"
+
+#include "OpenGL.h"
 
 C_Mesh::C_Mesh() : Component(Type::Mesh, nullptr, true)
 {
@@ -32,11 +38,6 @@ void C_Mesh::AddBone(C_Bone* bone)
 const AABB& C_Mesh::GetAABB() const
 {
 	return ((R_Mesh*)App->moduleResources->GetResource(resourceID))->aabb;
-}
-
-Component::Type C_Mesh::GetType()
-{
-	return Component::Type::Mesh;
 }
 
 void C_Mesh::StartBoneDeformation()

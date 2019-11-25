@@ -54,7 +54,7 @@ public:
 	void SetAnimation(uint index, float blendTime = 0.0f);
 	void SetAnimation(const char* name, float blendTime = 0.0f);
 
-	static Component::Type GetType();
+	static inline Type GetType() { return Type::Animation; };
 
 private:
 

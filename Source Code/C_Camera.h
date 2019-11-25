@@ -37,7 +37,7 @@ public:
 	void Save();
 	void Load();
 
-	static Component::Type GetType();
+	static inline Type GetType() { return Type::Camera; };
 
 private:
 	void UpdatePlanes();

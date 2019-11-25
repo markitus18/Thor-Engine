@@ -11,7 +11,8 @@ public:
 
 	float4x4 GetSystemTransform();
 	C_Bone* GetRoot();
-	static Component::Type GetType();
+
+	static inline Type GetType() { return Type::Bone; };
 };
 
 #endif

@@ -298,6 +298,9 @@
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui_impl_opengl3.cpp">
       <Filter>External Libraries\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\C_Billboard.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -714,6 +717,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\External Libraries\ImGui\imgui_impl_opengl3.h">
       <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\C_Billboard.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

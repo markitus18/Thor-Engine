@@ -3,17 +3,10 @@
 
 #include "MathGeoLib/src/MathBuildConfig.h"
 #include "MathGeoLib/src/MathGeoLib.h"
+#include "TreeNode.h"
 
 #include <vector>
 #include "Component.h"
-
-#include "C_Mesh.h"
-#include "C_Material.h"
-#include "C_Camera.h"
-#include "C_Transform.h"
-#include "C_Animation.h"
-#include "C_Bone.h"
-#include "TreeNode.h"
 
 class C_Transform;
 
@@ -130,7 +123,7 @@ private:
 	bool						flipped_normals = false;
 
 	C_Transform*				transform = nullptr;
-	std::vector<Component*>		components;
+	std::vector<Component*>		components; //TODO: move into map? 
 
 	AABB						aabb;
 	OBB							obb;

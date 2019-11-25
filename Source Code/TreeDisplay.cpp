@@ -6,7 +6,10 @@
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Scene.h"
+
 #include "GameObject.h"
+
+#include "C_Transform.h"
 
 #include <vector>
 

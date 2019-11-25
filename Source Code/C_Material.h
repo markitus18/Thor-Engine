@@ -13,7 +13,7 @@ public:
 	C_Material(GameObject* gameObject);
 	~C_Material();
 
-	static Component::Type GetType();
+	static inline Type GetType() { return Type::Material; };
 };
 
 #endif // __C_MATERIAL_H__

@@ -1,5 +1,9 @@
 #include "C_Bone.h"
+
 #include "GameObject.h"
+
+#include "C_Transform.h"
+
 #include "MathGeoLib\src\MathGeoLib.h"
 
 C_Bone::C_Bone(GameObject* new_GameObject) : Component(Component::Bone, new_GameObject, true)
@@ -22,9 +26,4 @@ C_Bone* C_Bone::GetRoot()
 {
 	C_Bone* parentBone = gameObject->parent->GetComponent<C_Bone>();
 	return parentBone == nullptr ? this : parentBone->GetRoot();
-}
-
-Component::Type C_Bone::GetType()
-{
-	return Component::Type::Bone;
 }

@@ -1,5 +1,10 @@
 #include "Globals.h"
 #include "Application.h"
+#include "Intersections.h"
+#include "Config.h"
+#include "Quadtree.h"
+#include "Time.h"
+
 #include "M_Scene.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
@@ -7,30 +12,23 @@
 #include "M_Editor.h"
 #include "M_Renderer3D.h"
 #include "M_FileSystem.h"
-
-#include "GameObject.h"
-#include "C_Camera.h"
-#include "C_Transform.h"
-#include "R_Mesh.h"
-
-#include <gl/GL.h>
-#include <gl/GLU.h>
-//#include <stdio.h>
-#include "C_Camera.h"
-#include "Intersections.h"
-#include "Config.h"
 #include "M_Meshes.h"
 #include "M_Materials.h"
 #include "M_Resources.h"
 
-#include "Quadtree.h"
+#include "GameObject.h"
+
+#include "R_Mesh.h"
+
+#include "C_Mesh.h"
+#include "C_Transform.h"
+#include "C_Camera.h"
+
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 #include <windows.h>
 #include <shobjidl.h> 
-
-#include "Time.h"
-
-//#include <GLFW/glfw3.h>
 
 M_Scene::M_Scene(bool start_enabled) : Module("Scene", start_enabled)
 {
@@ -404,7 +402,7 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 	for (std::map<float, const GameObject*>::iterator it = candidates.begin(); it != candidates.end() && toSelect == nullptr; it++)
 	{
 		//Testing triangle by triangle
-		const C_Mesh* mesh = it->second->GetComponent<C_Mesh>();
+		const Component* mesh = it->second->GetComponent<C_Mesh>();
 		if (mesh)
 		{
 			const R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();

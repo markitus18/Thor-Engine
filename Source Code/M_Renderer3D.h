@@ -17,7 +17,7 @@ class Config;
 
 struct RenderMesh
 {
-	RenderMesh(float4x4 trans, const C_Mesh* m, const C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected, bool flippedNormals) : transform(trans), mesh(m), material(mat),
+	RenderMesh(const float4x4& trans, const C_Mesh* m, const C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected, bool flippedNormals) : transform(trans), mesh(m), material(mat),
 		shaded(sh), wireframe(wire), selected(selected), parentSelected(parentSelected), flippedNormals(flippedNormals)
 	{}
 
@@ -50,6 +50,14 @@ struct RenderLine
 	Color color;
 };
 
+struct RenderParticle
+{
+	RenderParticle(const float4x4& tr, uint64 mat) : transform(tr), materialID(mat) {}
+
+	float4x4 transform;
+	uint64 materialID;
+};
+
 class M_Renderer3D : public Module
 {
 public:
@@ -71,9 +79,13 @@ public:
 
 	C_Camera* GetActiveCamera();
 
-	void AddMesh(float4x4 transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
+	void AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
 	void DrawAllMeshes();
 	void DrawMesh(RenderMesh& mesh);
+
+	void AddParticle(const float4x4& transform, uint64 material);
+	void DrawAllParticles();
+	void DrawParticle(RenderParticle& particle);
 
 	void AddAABB(const AABB& box, const Color& color);
 	void AddOBB(const OBB& box, const Color& color);
@@ -123,7 +135,8 @@ private:
 	uint box_draw_timer;
 
 	std::vector<RenderMesh> meshes;
-	
+	std::vector<RenderParticle> particles;
+
 	std::vector<RenderBox<AABB>> aabb;
 	std::vector<RenderBox<OBB>> obb;
 	std::vector<RenderBox<Frustum>> frustum;

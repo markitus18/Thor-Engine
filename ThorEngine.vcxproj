@@ -91,6 +91,7 @@
     <ClInclude Include="Source Code\C_Billboard.h" />
     <ClInclude Include="Source Code\C_Bone.h" />
     <ClInclude Include="Source Code\C_Camera.h" />
+    <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
     <ClInclude Include="Source Code\Dock.h" />
     <ClInclude Include="Source Code\DWindow.h" />
@@ -103,7 +104,9 @@
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source Code\Particle.h" />
     <ClInclude Include="Source Code\R_Folder.h" />
+    <ClInclude Include="Source Code\R_ParticleSystem.h" />
     <ClInclude Include="Source Code\TreeDisplay.h" />
     <ClInclude Include="Source Code\TreeNode.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
@@ -232,6 +235,7 @@
     <ClCompile Include="Source Code\C_Billboard.cpp" />
     <ClCompile Include="Source Code\C_Bone.cpp" />
     <ClCompile Include="Source Code\C_Camera.cpp" />
+    <ClCompile Include="Source Code\C_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
     <ClCompile Include="Source Code\Dock.cpp" />
     <ClCompile Include="Source Code\DWindow.cpp" />
@@ -300,6 +304,7 @@
     <ClCompile Include="Source Code\M_Editor.cpp" />
     <ClCompile Include="Source Code\M_Window.cpp" />
     <ClCompile Include="Source Code\Panel.cpp" />
+    <ClCompile Include="Source Code\Particle.cpp" />
     <ClCompile Include="Source Code\P_Buttons.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\Primitive.cpp" />
@@ -310,6 +315,7 @@
     <ClCompile Include="Source Code\R_Folder.cpp" />
     <ClCompile Include="Source Code\R_Material.cpp" />
     <ClCompile Include="Source Code\R_Mesh.cpp" />
+    <ClCompile Include="Source Code\R_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\R_Prefab.cpp" />
     <ClCompile Include="Source Code\R_Texture.cpp" />
     <ClCompile Include="Source Code\Time.cpp" />

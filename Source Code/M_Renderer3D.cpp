@@ -407,7 +407,7 @@ void M_Renderer3D::DrawAllScene()
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 }
 
-void M_Renderer3D::AddMesh(float4x4 transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
+void M_Renderer3D::AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
 {
 	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected, flippedNormals));
 }
@@ -535,6 +535,58 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	}
 
 	glPopMatrix();
+}
+
+void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material)
+{
+	particles.push_back(RenderParticle(transform, material));
+}
+
+void M_Renderer3D::DrawAllParticles()
+{
+	for (uint i = 0; i < meshes.size(); i++)
+	{
+		DrawParticle(particles[i]);
+	}
+	meshes.clear();
+}
+
+void M_Renderer3D::DrawParticle(RenderParticle& particle)
+{
+	glPushMatrix();
+	glMultMatrixf((float*)&particle.transform);
+
+	//Binding particle Texture
+	R_Material* mat = (R_Material*)App->moduleResources->GetResource(particle.materialID);
+	if (mat->textureID)
+	{
+		R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID);
+		if (rTex && rTex->buffer != 0)
+		{
+			glBindTexture(GL_TEXTURE_2D, rTex->buffer);
+		}
+	}
+
+	//Drawing to tris in direct mode
+	glBegin(GL_TRIANGLES);
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(.5f, -.5f, .0f);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-.5f, .5f, .0f);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-.5f, -.5f, .0f);
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(.5f, -.5f, .0f);
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(.5f, .5f, .0f);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-.5f, .5f, .0f);
+
+	glEnd();
+	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void M_Renderer3D::AddAABB(const AABB& box, const Color& color)

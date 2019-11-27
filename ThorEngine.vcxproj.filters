@@ -301,6 +301,15 @@
     <ClCompile Include="Source Code\C_Billboard.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\R_ParticleSystem.cpp">
+      <Filter>Source Code\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\C_ParticleSystem.cpp">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Particle.cpp">
+      <Filter>Source Code\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -720,6 +729,15 @@
     </ClInclude>
     <ClInclude Include="Source Code\C_Billboard.h">
       <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_ParticleSystem.h">
+      <Filter>Source Code\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\C_ParticleSystem.h">
+      <Filter>Source Code\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Particle.h">
+      <Filter>Source Code\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -44,6 +44,7 @@ void Component::SetResource(unsigned long long id)
 	if (oldResource != nullptr)
 		oldResource->instances--;
 
+	//TODO: resource pointer check
 	resourceID = id;
 	Resource* newResource = GetResource();
 	newResource->instances++;

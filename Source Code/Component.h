@@ -22,6 +22,7 @@ public:
 		Animation,
 		Bone,
 		Billboard,
+		ParticleSystem,
 		Unknown
 	};
 
@@ -37,8 +38,8 @@ public:
 	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	//Resource handling
-	void SetResource(Resource* resource);
-	void SetResource(unsigned long long id);
+	virtual void SetResource(Resource* resource);
+	virtual void SetResource(unsigned long long id);
 	
 	Resource* GetResource();
 	const Resource* GetResource() const;

@@ -24,6 +24,7 @@ public:
 		ANIMATION,
 		BONE,
 		PREFAB,
+		PARTICLESYSTEM,
 		UNKNOWN,
 	};
 

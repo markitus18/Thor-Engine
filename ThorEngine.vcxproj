@@ -95,6 +95,8 @@
     <ClInclude Include="Source Code\C_Transform.h" />
     <ClInclude Include="Source Code\Dock.h" />
     <ClInclude Include="Source Code\DWindow.h" />
+    <ClInclude Include="Source Code\Emitter.h" />
+    <ClInclude Include="Source Code\EmitterInstance.h" />
     <ClInclude Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imconfig.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imgui.h" />
@@ -105,6 +107,7 @@
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source Code\Particle.h" />
+    <ClInclude Include="Source Code\ParticleModule.h" />
     <ClInclude Include="Source Code\R_Folder.h" />
     <ClInclude Include="Source Code\R_ParticleSystem.h" />
     <ClInclude Include="Source Code\TreeDisplay.h" />
@@ -239,6 +242,8 @@
     <ClCompile Include="Source Code\C_Transform.cpp" />
     <ClCompile Include="Source Code\Dock.cpp" />
     <ClCompile Include="Source Code\DWindow.cpp" />
+    <ClCompile Include="Source Code\Emitter.cpp" />
+    <ClCompile Include="Source Code\EmitterInstance.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui.cpp" />
     <ClCompile Include="Source Code\External Libraries\ImGui\imgui_demo.cpp" />
@@ -305,6 +310,7 @@
     <ClCompile Include="Source Code\M_Window.cpp" />
     <ClCompile Include="Source Code\Panel.cpp" />
     <ClCompile Include="Source Code\Particle.cpp" />
+    <ClCompile Include="Source Code\ParticleModule.cpp" />
     <ClCompile Include="Source Code\P_Buttons.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\Primitive.cpp" />

@@ -16,19 +16,20 @@ public:
 	~Particle();
 
 	void Update(float dt);
-	void Draw();
-	void SetMaterial();
 
-	inline bool IsActive() const { return active; };
+public:
+	float3 position;			//Current location
+	float relativeLifetime;		//Lifetime, in range [0, 1]
 
-private:
-	float lifetime = 3.0f;
-	float3 speed = float3::zero;
-	uint64 materialID = 0;
+	float oneOverMaxLifetime;	// = 1.0f / MaxLifeTime
+	float rotation;				//Rotation in radians
 
+	float4 velocity;			//Current velocity. Another trick from Unreal, storing speed in w ;)
+	float size;
+
+	float4 color;
 	//Yup... we are going to store position data in a transform (can it be done differently?)
 	//Let's try to fake the transform system.
-	C_Transform transform;
 	bool active = false;
 };
 

@@ -537,9 +537,9 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	glPopMatrix();
 }
 
-void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material)
+void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material, float4 color)
 {
-	particles.push_back(RenderParticle(transform, material));
+	particles.push_back(RenderParticle(transform, material, color));
 }
 
 void M_Renderer3D::DrawAllParticles()

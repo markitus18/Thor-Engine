@@ -52,10 +52,11 @@ struct RenderLine
 
 struct RenderParticle
 {
-	RenderParticle(const float4x4& tr, uint64 mat) : transform(tr), materialID(mat) {}
+	RenderParticle(const float4x4& tr, uint64 mat, float4 color) : transform(tr), materialID(mat), color(color) {}
 
 	float4x4 transform;
 	uint64 materialID;
+	float4 color;
 };
 
 class M_Renderer3D : public Module
@@ -83,7 +84,7 @@ public:
 	void DrawAllMeshes();
 	void DrawMesh(RenderMesh& mesh);
 
-	void AddParticle(const float4x4& transform, uint64 material);
+	void AddParticle(const float4x4& transform, uint64 material, float4 color);
 	void DrawAllParticles();
 	void DrawParticle(RenderParticle& particle);
 

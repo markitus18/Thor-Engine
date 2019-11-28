@@ -308,7 +308,16 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Particle.cpp">
-      <Filter>Source Code\GameObjects</Filter>
+      <Filter>Source Code\GameObjects\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ParticleModule.cpp">
+      <Filter>Source Code\GameObjects\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Emitter.cpp">
+      <Filter>Source Code\GameObjects\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\EmitterInstance.cpp">
+      <Filter>Source Code\GameObjects\Particles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -737,7 +746,16 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Particle.h">
-      <Filter>Source Code\GameObjects</Filter>
+      <Filter>Source Code\GameObjects\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ParticleModule.h">
+      <Filter>Source Code\GameObjects\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Emitter.h">
+      <Filter>Source Code\GameObjects\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\EmitterInstance.h">
+      <Filter>Source Code\GameObjects\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -809,6 +827,9 @@
     </Filter>
     <Filter Include="External Libraries\ImGuizmo">
       <UniqueIdentifier>{c180a6c0-8b95-4e51-a65a-55607730373a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\GameObjects\Particles">
+      <UniqueIdentifier>{d92a79be-d03c-4d4c-9979-e3b4f0067120}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

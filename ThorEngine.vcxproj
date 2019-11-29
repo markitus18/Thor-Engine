@@ -106,6 +106,7 @@
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source Code\M_ParticleSystems.h" />
     <ClInclude Include="Source Code\Particle.h" />
     <ClInclude Include="Source Code\ParticleModule.h" />
     <ClInclude Include="Source Code\R_Folder.h" />
@@ -303,6 +304,7 @@
     <ClCompile Include="Source Code\M_Input.cpp" />
     <ClCompile Include="Source Code\M_Materials.cpp" />
     <ClCompile Include="Source Code\M_Meshes.cpp" />
+    <ClCompile Include="Source Code\M_ParticleSystems.cpp" />
     <ClCompile Include="Source Code\M_Renderer3D.cpp" />
     <ClCompile Include="Source Code\M_Resources.cpp" />
     <ClCompile Include="Source Code\M_Scene.cpp" />

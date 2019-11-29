@@ -3,10 +3,7 @@
 
 #include "Globals.h"
 
-#include "C_Transform.h"
-
 #include "MathGeoLib/src/Math/float3.h"
-
 
 class Particle
 {

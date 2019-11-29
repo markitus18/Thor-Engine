@@ -14,9 +14,15 @@ public:
 	//Loop through all modules, loop through particles, update them
 	void Update(float dt);
 
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
+	bool AddModuleFromType(ParticleModule::Type type);
+
 public:
 	std::string name;
-	std::vector<ParticleModule> modules;
+	std::vector<ParticleModule*> modules;
 	uint64 materialID;
 };
 

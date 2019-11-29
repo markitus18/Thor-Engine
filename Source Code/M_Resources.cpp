@@ -6,6 +6,7 @@
 #include "M_Materials.h"
 #include "M_Import.h"
 #include "M_Animations.h"
+#include "M_ParticleSystems.h"
 
 //Resources
 #include "R_Mesh.h"
@@ -321,6 +322,24 @@ uint64 M_Resources::ImportRBone(const aiBone* bone, const char* source_file, con
 	return ret;
 }
 
+uint64 M_Resources::ImportRParticleSystem(const char* assetsPath)
+{
+	return 0;
+}
+
+void M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)
+{
+	switch (type)
+	{
+		case(Resource::Type::PARTICLESYSTEM):
+		{	
+			uint64 newID = ++nextID;
+			App->moduleParticleSystems->CreateNewParticleSystem(assetsPath, newID);
+
+		}
+	}
+}
+
 Resource* M_Resources::GetResource(uint64 ID)
 {
 	Resource* ret = nullptr;
@@ -417,6 +436,17 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path)
 	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
 		return Resource::TEXTURE;
 	return Resource::UNKNOWN;
+}
+
+bool M_Resources::GetAllMetaFromType(Resource::Type type, std::vector<const ResourceMeta*>& metas) const
+{
+	std::map<uint64, ResourceMeta>::const_iterator it;
+	for (it = existingResources.begin(); it != existingResources.end(); ++it)
+	{
+		if ((*it).second.type == type)
+			metas.push_back(&(*it).second);
+	}
+	return metas.size() > 0;
 }
 
 void M_Resources::LoadPrefab(const char* path)
@@ -554,6 +584,7 @@ bool M_Resources::LoadMetaInfo(const char* file)
 			LoadSceneMeta(resFile.c_str(), sourceFile.c_str());
 		}
 
+		delete buffer;
 		return true;
 	}
 	return false;
@@ -610,6 +641,7 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	{
 		std::string path = resource->original_file + ".meta";
 		App->fileSystem->Save(path.c_str(), buffer, size);
+		delete buffer;
 	}
 }
 

@@ -7,12 +7,34 @@
 class Particle;
 class Emitter;
 class EmitterInstance;
+struct Config;
 
 struct ParticleModule
 {
-	ParticleModule() {};
-	virtual void Spawn(EmitterInstance* emitter, Particle* particle) {};
-	virtual void Update(float dt, EmitterInstance* emitter) {};
+	enum Type
+	{
+		None,
+		EmitterBase,
+		EmitterSpawn,
+		EmitterArea,
+		ParticlePosition,
+		ParticleRotation,
+		ParticleSize,
+		ParticleColor,
+		ParticleLifetime,
+		ParticleVelocity,
+		Unknown
+	} type;
+
+	ParticleModule(Type type) : type(type) {};
+
+	virtual void Spawn(EmitterInstance* emitter, Particle* particle) = 0;
+	virtual void Update(float dt, EmitterInstance* emitter) = 0;
+
+	virtual void SaveAsset(Config& config);
+	virtual void SaveResource(char* buffer);
+
+	virtual void Load(Config& config) = 0;
 
 	Emitter* emitterContainer = nullptr;
 };
@@ -33,93 +55,137 @@ struct EmitterBase : ParticleModule
 		Unknown
 	} alignment;
 
-	EmitterBase() {};
+	EmitterBase() : ParticleModule(Type::EmitterBase) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
+
 	float3 emitterOrigin;
 	//float3 emitterRotation;
-
-	float spawnRatio = 1.0f;
-	float currentTimer = 0.0f;
 };
 
 struct EmitterSpawn : ParticleModule
 {
-	EmitterSpawn() {};
+	EmitterSpawn() : ParticleModule(Type::EmitterSpawn) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
+
 	float spawnRatio = 1.0f;
 	float currentTimer = 0.0f;
 };
 
 struct EmitterArea: ParticleModule
 {
-	EmitterArea() {};
+	EmitterArea() : ParticleModule(Type::EmitterArea) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
+
 	//Variable Type? Setting and AABB, Cylinder, point?
 };
 
 struct ParticlePosition : ParticleModule
 {
-	ParticlePosition() {};
+	ParticlePosition() : ParticleModule(Type::ParticlePosition) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
 
 	float3 initialPosition;
 };
 
 struct ParticleRotation : ParticleModule
 {
-	ParticleRotation() {};
+	ParticleRotation() : ParticleModule(Type::ParticleRotation) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
 
 	float initialRotation;
 };
 
 struct ParticleSize : ParticleModule
 {
-	ParticleSize() {};
+	ParticleSize() : ParticleModule(Type::ParticleSize) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
 
 	float initialSize;
 };
 
 struct ParticleColor : ParticleModule
 {
-	ParticleColor() {};
+	ParticleColor() : ParticleModule(Type::ParticleColor) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
 
 	float4 initialColor;
 };
 
 struct ParticleLifetime : ParticleModule
 {
-	ParticleLifetime() {};
+	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
 
 	float initialLifetime;
 };
 
 struct ParticleVelocity : ParticleModule
 {
-	ParticleVelocity() {};
+	ParticleVelocity() : ParticleModule(Type::ParticleVelocity) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
+
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+
+	void Load(Config& config);
 
 	float4 initialVelocity;
 };

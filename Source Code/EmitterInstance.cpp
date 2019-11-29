@@ -37,13 +37,19 @@ void EmitterInstance::DrawParticles()
 	}
 }
 
+void EmitterInstance::Reset()
+{
+	emitterTime = 0.0f;
+	KillAllParticles();
+}
+
 void EmitterInstance::SpawnParticle()
 {
 	if (activeParticles = particles.size()) return;		//Ignoring spawn call by now when no more particles are available
 
 	for (int i = 0; i < emitterReference->modules.size(); ++i)
 	{
-		emitterReference->modules[i].Spawn(this, &particles[activeParticles]);
+		emitterReference->modules[i]->Spawn(this, &particles[activeParticles]);
 	}
 
 	++activeParticles;
@@ -51,7 +57,7 @@ void EmitterInstance::SpawnParticle()
 
 void EmitterInstance::KillDeadParticles()
 {
-	for (int i = activeParticles; i >= 0; --i)
+	for (int i = activeParticles - 1; i >= 0; --i)
 	{
 		unsigned int particleIndex = particleIndices[i];
 		Particle* particle = &particles[particleIndex];
@@ -66,10 +72,15 @@ void EmitterInstance::KillDeadParticles()
 	}
 }
 
+void EmitterInstance::KillAllParticles()
+{
+	activeParticles = 0;
+}
+
 void EmitterInstance::UpdateModules(float dt)
 {
 	for (int i = 0; i < emitterReference->modules.size(); ++i)
 	{
-		emitterReference->modules[i].Update(dt, this);
+		emitterReference->modules[i]->Update(dt, this);
 	}
 }

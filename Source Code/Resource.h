@@ -7,12 +7,15 @@
 
 class Resource : public TreeNode
 {
+
+//Huh... can it be done differently?
 friend class M_Resources;
 friend class M_Meshes;
 friend class M_Materials;
 friend struct ResourceMeta;
 friend class M_Import;
 friend class M_Animations;
+friend class M_ParticleSystems;
 
 public:
 	enum Type

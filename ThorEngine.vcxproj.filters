@@ -319,6 +319,9 @@
     <ClCompile Include="Source Code\EmitterInstance.cpp">
       <Filter>Source Code\GameObjects\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\M_ParticleSystems.cpp">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -756,6 +759,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\EmitterInstance.h">
       <Filter>Source Code\GameObjects\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_ParticleSystems.h">
+      <Filter>Source Code\Modules\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,10 +20,12 @@
 #include "C_Animation.h"
 #include "C_Camera.h"
 #include "C_Billboard.h"
+#include "C_ParticleSystem.h"
 
 #include "R_Material.h"
 #include "R_Texture.h"
 #include "R_Animation.h"
+#include "R_ParticleSystem.h"
 
 W_Inspector::W_Inspector(M_Editor* editor) : DWindow(editor, "Inspector")
 {
@@ -469,5 +471,33 @@ void W_Inspector::DrawBillboard(GameObject* gameObject, C_Billboard* billboard)
 		}
 
 		ImGui::Unindent();
+	}
+}
+
+void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* particleSystem)
+{
+	R_ParticleSystem* resource = (R_ParticleSystem*)particleSystem->GetResource();
+	std::string menuName = resource ? resource->GetName() : "-- Select Particle System --";
+
+	if (ImGui::BeginMenu(menuName.c_str()))
+	{
+		if (ImGui::MenuItem("Create New"))
+		{
+
+		}
+		ImGui::Separator();
+
+		std::vector<const ResourceMeta*> resourceMetas;
+		if (App->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, resourceMetas))
+		{
+			for (uint i = 0; i < resourceMetas.size(); ++i)
+			{
+				if (ImGui::MenuItem(resourceMetas[i]->resource_name.c_str()))
+				{
+					particleSystem->SetResource(resourceMetas[i]->id);
+				}
+			}
+		}
+		ImGui::EndMenu();
 	}
 }

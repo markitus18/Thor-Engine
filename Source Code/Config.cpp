@@ -155,6 +155,15 @@ void Config_Array::AddFloat3(const float3& data)
 	size += 3;
 }
 
+void Config_Array::AddFloat4(const float4& data)
+{
+	json_array_append_number(arr, data.x);
+	json_array_append_number(arr, data.y);
+	json_array_append_number(arr, data.z);
+	json_array_append_number(arr, data.w);
+	size += 4;
+}
+
 void Config_Array::AddQuat(const Quat& data)
 {
 	json_array_append_number(arr, data.x);
@@ -203,6 +212,19 @@ float3 Config_Array::GetFloat3(uint index, float3 default) const
 	ret.x = GetNumber(index + 0, ret.x);
 	ret.y = GetNumber(index + 1, ret.y);
 	ret.z = GetNumber(index + 2, ret.z);
+
+	return ret;
+}
+
+float4 Config_Array::GetFloat4(uint index, float4 default) const
+{
+	index *= 4;
+	float4 ret = default;
+
+	ret.x = GetNumber(index + 0, ret.x);
+	ret.y = GetNumber(index + 1, ret.y);
+	ret.z = GetNumber(index + 2, ret.z);
+	ret.w = GetNumber(index + 3, ret.z);
 
 	return ret;
 }

@@ -2,7 +2,9 @@
 #define __R_PARTICLE_SYSTEM_H__
 
 #include "Resource.h"
-#include "MathGeoLib/src/Math/float3.h"
+
+#include "Emitter.h"
+struct Config;
 
 class R_ParticleSystem : public Resource
 {
@@ -10,11 +12,14 @@ public:
 	R_ParticleSystem();
 	~R_ParticleSystem();
 
-public:
-	int particleLifetime = 3.0f;
-	float3 particleSpeed = float3(0.0f, 1.0f, 0.0f);
-	float spawnRate = 1.0f;
+	void InitDefaultSystem();
 
+	void SaveAsset(Config& config);
+	void SaveResource(char* buffer);
+	void Load(Config& config);
+
+public:
+	std::vector<Emitter> emitters;
 };
 
 #endif

@@ -12,13 +12,16 @@ public:
 	EmitterInstance();
 
 	void Init(Emitter* emitterReference, C_ParticleSystem* component);
+
 	void Update(float dt);
 	void DrawParticles();
+	void Reset();
 
 	void SpawnParticle();
 
 private:
 	void KillDeadParticles();
+	void KillAllParticles();
 	void UpdateModules(float dt);
 
 public:

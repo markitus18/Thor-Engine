@@ -23,6 +23,7 @@ class M_Materials;
 class M_Meshes;
 class M_Resources;
 class M_Animations;
+class M_ParticleSystems;
 
 class GameObject;
 
@@ -44,6 +45,7 @@ public:
 	M_Materials* moduleMaterials = nullptr;
 	M_Meshes* moduleMeshes = nullptr;
 	M_Animations* moduleAnimations = nullptr;
+	M_ParticleSystems* moduleParticleSystems = nullptr;
 
 private:
 

@@ -4,7 +4,7 @@
 #include "Component.h"
 #include <vector>
 
-#include "Particle.h"
+#include "EmitterInstance.h"
 
 class GameObject;
 
@@ -16,6 +16,7 @@ public:
 	~C_ParticleSystem();
 
 	void Update(float dt);
+	void Reset();
 
 	void SetResource(Resource* resource);
 	void SetResource(unsigned long long id);
@@ -24,7 +25,7 @@ public:
 
 private:
 	//TODO: can we avoid this necessary include? Vector needs to know particle size
-	std::vector<Particle> particles;
+	std::vector<EmitterInstance> emitters;
 };
 
 #endif

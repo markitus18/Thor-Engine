@@ -51,7 +51,7 @@ public:
 	//Import a file existing in assets creating the resources
 	void ImportFileFromAssets(const char* path);
 	
-	uint64 ImportScene(const char* source_fil);
+	uint64 ImportScene(const char* source_file);
 	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
 	uint64 ImportRTexture(const char* buffer, const char* path, uint size);
 	//Same as ImportRTexture, but we need different functions
@@ -59,11 +59,17 @@ public:
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
 	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name);
 	uint64 ImportRBone(const aiBone* bone, const char* source_file, const char* name, uint64 meshID);
+	//Called when a particle system is modified externally (due to copy-paste or commit update)
+	uint64 ImportRParticleSystem(const char* assetsPath);
+	
+	//Used for internal resources (external referring to fbx, textures,...)
+	void CreateNewResource(const char* assetsPath, Resource::Type type);
 
-	///Getting a resource by ID
+	//Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene
 	Resource* GetResource(uint64 ID);
 	Resource::Type GetTypeFromPath(const char* path);
+	bool GetAllMetaFromType(Resource::Type type, std::vector<const ResourceMeta*>& metas) const;
 
 	void LoadPrefab(const char* path);
 
@@ -97,7 +103,6 @@ private:
 
 	bool IsFileModified(const char* path);
 
-
 	void SaveChangedResources();
 
 	//Adds a new resource (importion previous to this)
@@ -117,6 +122,7 @@ public:
 	std::map<uint64, Resource*> textures;
 	std::map<uint64, Resource*> scenes;
 	std::map<uint64, Resource*> animations;
+	//TODO: is this really used anywhere?
 
 private:
 	//Resources loaded in memory

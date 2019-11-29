@@ -13,6 +13,7 @@ class C_Camera;
 class C_Animation;
 class C_Bone;
 class C_Billboard;
+class C_ParticleSystem;
 
 class R_Material;
 
@@ -35,6 +36,7 @@ private:
 	void DrawAnimation(GameObject* gameObject, C_Animation* animation);
 	void DrawBone(GameObject* gameObject, C_Bone* bone);
 	void DrawBillboard(GameObject* gameObject, C_Billboard* billboard);
+	void DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* particleSystem);
 
 private:
 	std::vector<char*> billboardAlignmentOptions;

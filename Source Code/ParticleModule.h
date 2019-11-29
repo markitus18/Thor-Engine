@@ -53,7 +53,7 @@ struct EmitterBase : ParticleModule
 		LockZX,
 		LockZY,
 		Unknown
-	} alignment;
+	} alignment = Camera;
 
 	EmitterBase() : ParticleModule(Type::EmitterBase) {};
 
@@ -65,7 +65,7 @@ struct EmitterBase : ParticleModule
 
 	void Load(Config& config);
 
-	float3 emitterOrigin;
+	float3 emitterOrigin = float3::zero;
 	//float3 emitterRotation;
 };
 
@@ -112,7 +112,7 @@ struct ParticlePosition : ParticleModule
 
 	void Load(Config& config);
 
-	float3 initialPosition;
+	float3 initialPosition = float3::zero;
 };
 
 struct ParticleRotation : ParticleModule
@@ -127,7 +127,7 @@ struct ParticleRotation : ParticleModule
 
 	void Load(Config& config);
 
-	float initialRotation;
+	float initialRotation = 0.0f;
 };
 
 struct ParticleSize : ParticleModule
@@ -142,7 +142,7 @@ struct ParticleSize : ParticleModule
 
 	void Load(Config& config);
 
-	float initialSize;
+	float initialSize = 1.0f;
 };
 
 struct ParticleColor : ParticleModule
@@ -157,7 +157,7 @@ struct ParticleColor : ParticleModule
 
 	void Load(Config& config);
 
-	float4 initialColor;
+	float4 initialColor = float4(1.0f, 0.0f, 1.0f, 1.0f);
 };
 
 struct ParticleLifetime : ParticleModule
@@ -172,7 +172,7 @@ struct ParticleLifetime : ParticleModule
 
 	void Load(Config& config);
 
-	float initialLifetime;
+	float initialLifetime = 3.0f;
 };
 
 struct ParticleVelocity : ParticleModule
@@ -187,7 +187,7 @@ struct ParticleVelocity : ParticleModule
 
 	void Load(Config& config);
 
-	float4 initialVelocity;
+	float4 initialVelocity = float4(0.0f, 1.0f, 0.0f, 2.0f);
 };
 
 #endif;

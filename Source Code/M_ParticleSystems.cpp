@@ -21,7 +21,7 @@ M_ParticleSystems::~M_ParticleSystems()
 R_ParticleSystem* M_ParticleSystems::CreateNewParticleSystem(const char* assetsPath, uint64 ID)
 {
 	R_ParticleSystem* particleSystem = new R_ParticleSystem;
-	particleSystem->original_file = std::string(assetsPath) + "NewParticleSystem.particles";
+	particleSystem->original_file = std::string(assetsPath) + "/" + "NewParticleSystem.particles";
 	particleSystem->name = "NewParticleSystem";
 	particleSystem->resource_file = std::string("/Library/ParticleSystems/") + std::to_string(ID);
 	particleSystem->ID = ID;

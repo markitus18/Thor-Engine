@@ -63,7 +63,7 @@ public:
 	uint64 ImportRParticleSystem(const char* assetsPath);
 	
 	//Used for internal resources (external referring to fbx, textures,...)
-	void CreateNewResource(const char* assetsPath, Resource::Type type);
+	Resource* CreateNewResource(const char* assetsPath, Resource::Type type);
 
 	//Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene

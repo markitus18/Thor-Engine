@@ -15,6 +15,7 @@
 #include "R_Prefab.h"
 #include "R_Animation.h"
 #include "R_Bone.h"
+#include "R_ParticleSystem.h"
 
 #include "M_FileSystem.h"
 #include "PathNode.h"
@@ -327,17 +328,23 @@ uint64 M_Resources::ImportRParticleSystem(const char* assetsPath)
 	return 0;
 }
 
-void M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)
+Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)
 {
+	Resource* ret = nullptr;
 	switch (type)
 	{
 		case(Resource::Type::PARTICLESYSTEM):
 		{	
 			uint64 newID = ++nextID;
-			App->moduleParticleSystems->CreateNewParticleSystem(assetsPath, newID);
+			ret = App->moduleParticleSystems->CreateNewParticleSystem(assetsPath, random.Int());
 
 		}
 	}
+
+	if (ret != nullptr)
+		AddResource(ret);
+
+	return ret;
 }
 
 Resource* M_Resources::GetResource(uint64 ID)
@@ -511,6 +518,7 @@ void M_Resources::LoadResourcesData()
 	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_ext);
 	LoadMetaFromFolder(assets);
 
+	//TODO: check what this bunch of code does
 	//Just to save mini-tex images
  	PathNode tex = App->fileSystem->GetAllFiles("Library/Textures", &filter_ext);
 	LoadMetaFromFolder(tex);
@@ -573,6 +581,7 @@ bool M_Resources::LoadMetaInfo(const char* file)
 		meta.original_file = sourceFile;
 		meta.resource_name = config.GetString("Name");
 		meta.id = config.GetNumber("ID");
+		if (meta.id > nextID) nextID = meta.id + 1; //TODO: quick workaround to load highest ID in library
 		meta.type = static_cast<Resource::Type>((int)(config.GetNumber("Type")));
 		existingResources[meta.id] = meta;
 

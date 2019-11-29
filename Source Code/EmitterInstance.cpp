@@ -15,6 +15,14 @@ void EmitterInstance::Init(Emitter* emitterReference, C_ParticleSystem* componen
 {
 	this->emitterReference = emitterReference;
 	this->component = component;
+
+	particles.resize(emitterReference->maxParticleCount);
+	particleIndices = new unsigned int[emitterReference->maxParticleCount];
+	
+	for (uint i = 0; i < emitterReference->maxParticleCount; ++i)
+	{
+		particleIndices[i] = i;
+	}
 }
 
 void EmitterInstance::Update(float dt)
@@ -23,6 +31,7 @@ void EmitterInstance::Update(float dt)
 
 	KillDeadParticles();
 	UpdateModules(dt);
+	DrawParticles();
 }
 
 void EmitterInstance::DrawParticles()
@@ -45,7 +54,7 @@ void EmitterInstance::Reset()
 
 void EmitterInstance::SpawnParticle()
 {
-	if (activeParticles = particles.size()) return;		//Ignoring spawn call by now when no more particles are available
+	if (activeParticles == particles.size()) return;		//Ignoring spawn call by now when no more particles are available
 
 	for (int i = 0; i < emitterReference->modules.size(); ++i)
 	{

@@ -18,6 +18,7 @@ void Emitter::SaveAsset(Config& config)
 {
 	config.SetString("Name", name.c_str());
 	config.SetNumber("Material ID", materialID);
+	config.SetNumber("Max Particle Count", maxParticleCount);
 
 	Config_Array modulesArray = config.SetArray("Modules");
 
@@ -36,6 +37,7 @@ void Emitter::Load(Config& config)
 {
 	name = config.GetString("Name");
 	materialID = config.GetNumber("Material ID", 0);
+	maxParticleCount = config.GetNumber("Max Particle Count");
 
 	Config_Array modulesArray = config.GetArray("Modules");
 

@@ -15,6 +15,8 @@ public:
 	C_ParticleSystem(GameObject* gameObject);
 	~C_ParticleSystem();
 
+	static inline Type GetType() { return Type::ParticleSystem; };
+
 	void Update(float dt);
 	void Reset();
 

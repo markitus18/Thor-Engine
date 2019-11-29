@@ -11,6 +11,7 @@
 #include "C_Animation.h"
 #include "C_Bone.h"
 #include "C_Billboard.h"
+#include "C_ParticleSystem.h"
 
 GameObject::GameObject() : TreeNode(GAMEOBJECT)
 {
@@ -330,6 +331,11 @@ Component* GameObject::CreateComponent(Component::Type type)
 		{
 			if (!HasComponent(Component::Billboard))
 				new_component = new C_Billboard(this);
+		}
+		case(Component::Type::ParticleSystem):
+		{
+			if (!HasComponent(Component::ParticleSystem))
+				new_component = new C_ParticleSystem(this);
 		}
 	}
 	if (new_component)

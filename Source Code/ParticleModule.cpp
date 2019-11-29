@@ -3,6 +3,9 @@
 #include "Config.h"
 
 #include "EmitterInstance.h"
+#include "C_ParticleSystem.h"
+#include "GameObject.h"
+#include "C_Transform.h"
 #include "Particle.h"
 
 void ParticleModule::SaveAsset(Config& config)
@@ -17,7 +20,7 @@ void ParticleModule::SaveResource(char* buffer)
 
 void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-
+	particle->position += emitter->component->gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
 }
 
 void EmitterBase::Update(float dt, EmitterInstance* emitter)
@@ -47,6 +50,7 @@ void EmitterBase::Load(Config & config)
 void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 	particle->active = true;
+	particle->position = float3(.0f, .0f, .0f);
 }
 
 void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
@@ -103,7 +107,7 @@ void EmitterArea::Load(Config & config)
 
 void ParticlePosition::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->position = initialPosition;
+	particle->position += initialPosition;
 }
 
 void ParticlePosition::Update(float dt, EmitterInstance* emitter)
@@ -250,9 +254,15 @@ void ParticleVelocity::Spawn(EmitterInstance* emitter, Particle* particle)
 }
 
 void ParticleVelocity::Update(float dt, EmitterInstance* emitter)
-
 {
+	//TODO: should not be here, will be moved later
+	for (int i = emitter->activeParticles - 1; i >= 0; --i)
+	{
+		unsigned int particleIndex = emitter->particleIndices[i];
+		Particle* particle = &emitter->particles[particleIndex];
 
+		particle->position += particle->velocity.Float3Part() * particle->velocity.w * dt;
+	}
 }
 
 void ParticleVelocity::SaveAsset(Config& config)

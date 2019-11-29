@@ -9,6 +9,7 @@
 #include "M_Resources.h"
 #include "M_Camera3D.h"
 #include "M_Renderer3D.h"
+#include "W_Explorer.h"
 
 #include "TreeNode.h"
 #include "GameObject.h"
@@ -100,6 +101,9 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	C_Billboard* billboard = gameObject->GetComponent<C_Billboard>();
 	DrawBillboard(gameObject, billboard);
 
+	C_ParticleSystem* particleSystem = gameObject->GetComponent<C_ParticleSystem>();
+	DrawParticleSystem(gameObject, particleSystem);
+
 	ImGui::Separator();
 	ImGui::Separator();
 
@@ -133,6 +137,11 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 		if (ImGui::MenuItem("Billboard"))
 		{
 			gameObject->CreateComponent(Component::Type::Billboard);
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Particle System"))
+		{
+			gameObject->CreateComponent(Component::Type::ParticleSystem);
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
@@ -476,28 +485,39 @@ void W_Inspector::DrawBillboard(GameObject* gameObject, C_Billboard* billboard)
 
 void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* particleSystem)
 {
-	R_ParticleSystem* resource = (R_ParticleSystem*)particleSystem->GetResource();
-	std::string menuName = resource ? resource->GetName() : "-- Select Particle System --";
+	if (particleSystem == nullptr) return;
 
-	if (ImGui::BeginMenu(menuName.c_str()))
+	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::MenuItem("Create New"))
-		{
+		ImGui::Indent();
 
-		}
-		ImGui::Separator();
+		R_ParticleSystem* resource = (R_ParticleSystem*)particleSystem->GetResource();
+		std::string menuName = resource ? resource->GetName() : "-- Select Particle System --";
 
-		std::vector<const ResourceMeta*> resourceMetas;
-		if (App->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, resourceMetas))
+		if (ImGui::BeginMenu(menuName.c_str()))
 		{
-			for (uint i = 0; i < resourceMetas.size(); ++i)
+			if (ImGui::MenuItem("Create New"))
 			{
-				if (ImGui::MenuItem(resourceMetas[i]->resource_name.c_str()))
+				if (Resource* resource = App->moduleResources->CreateNewResource(editor->w_explorer->GetCurrentNode().path.c_str(), Resource::Type::PARTICLESYSTEM))
 				{
-					particleSystem->SetResource(resourceMetas[i]->id);
+					particleSystem->SetResource(resource->GetID());
 				}
 			}
+			/*
+			std::vector<const ResourceMeta*> resourceMetas;
+			if (App->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, resourceMetas))
+			{
+				ImGui::Separator();
+				for (uint i = 0; i < resourceMetas.size(); ++i)
+				{
+					if (ImGui::MenuItem(resourceMetas[i]->resource_name.c_str()))
+					{
+						particleSystem->SetResource(resourceMetas[i]->id);
+					}
+				}
+			}*/
+			ImGui::EndMenu();
 		}
-		ImGui::EndMenu();
+		ImGui::Unindent();
 	}
 }

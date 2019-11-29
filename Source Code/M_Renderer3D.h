@@ -133,6 +133,7 @@ public:
 
 private:
 	uint mesh_draw_timer;
+	uint particles_draw_timer;
 	uint box_draw_timer;
 
 	std::vector<RenderMesh> meshes;

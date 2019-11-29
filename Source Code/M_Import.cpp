@@ -9,6 +9,7 @@
 #include "C_Transform.h"
 #include "C_Camera.h"
 #include "C_Animation.h"
+#include "C_ParticleSystem.h"
 
 #include "M_Resources.h"
 

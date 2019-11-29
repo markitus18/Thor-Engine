@@ -149,6 +149,7 @@ bool M_Renderer3D::Init(Config& config)
 	OnResize();
 
 	mesh_draw_timer = App->moduleEditor->AddTimer("Mesh draw", "Render");
+	particles_draw_timer = App->moduleEditor->AddTimer("Particles draw", "Render");
 	box_draw_timer = App->moduleEditor->AddTimer("Box draw", "Render");
 
 	//Creating screenshot camera----------------
@@ -394,6 +395,10 @@ void M_Renderer3D::DrawAllScene()
 	DrawAllMeshes();
 	App->moduleEditor->ReadTimer(mesh_draw_timer);
 
+	App->moduleEditor->StartTimer(particles_draw_timer);
+	DrawAllParticles();
+	App->moduleEditor->ReadTimer(particles_draw_timer);
+
 	App->moduleEditor->StartTimer(box_draw_timer);
 	DrawAllBox();
 	App->moduleEditor->ReadTimer(box_draw_timer);
@@ -544,11 +549,11 @@ void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material, float
 
 void M_Renderer3D::DrawAllParticles()
 {
-	for (uint i = 0; i < meshes.size(); i++)
+	for (uint i = 0; i < particles.size(); i++)
 	{
 		DrawParticle(particles[i]);
 	}
-	meshes.clear();
+	particles.clear();
 }
 
 void M_Renderer3D::DrawParticle(RenderParticle& particle)
@@ -557,15 +562,19 @@ void M_Renderer3D::DrawParticle(RenderParticle& particle)
 	glMultMatrixf((float*)&particle.transform);
 
 	//Binding particle Texture
-	R_Material* mat = (R_Material*)App->moduleResources->GetResource(particle.materialID);
-	if (mat->textureID)
+	if (R_Material* mat = (R_Material*)App->moduleResources->GetResource(particle.materialID))
 	{
-		R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID);
-		if (rTex && rTex->buffer != 0)
+		if (mat->textureID)
 		{
-			glBindTexture(GL_TEXTURE_2D, rTex->buffer);
+			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID);
+			if (rTex && rTex->buffer != 0)
+			{
+				glBindTexture(GL_TEXTURE_2D, rTex->buffer);
+			}
 		}
 	}
+
+	glColor4f(particle.color.x, particle.color.y, particle.color.z, particle.color.w);
 
 	//Drawing to tris in direct mode
 	glBegin(GL_TRIANGLES);

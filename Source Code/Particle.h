@@ -22,7 +22,7 @@ public:
 	float rotation;				//Rotation in radians
 
 	float4 velocity;			//Current velocity. Another trick from Unreal, storing speed in w ;)
-	float size;
+	float size = 1.0f;
 
 	float4 color;
 	//Yup... we are going to store position data in a transform (can it be done differently?)

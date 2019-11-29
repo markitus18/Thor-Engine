@@ -224,6 +224,7 @@
     <ClInclude Include="Source Code\W_Explorer.h" />
     <ClInclude Include="Source Code\W_Hierarchy.h" />
     <ClInclude Include="Source Code\W_Inspector.h" />
+    <ClInclude Include="Source Code\W_ParticleEditor.h" />
     <ClInclude Include="Source Code\W_Resources.h" />
     <ClInclude Include="Source Code\W_Scene.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
@@ -336,6 +337,7 @@
     <ClCompile Include="Source Code\W_Explorer.cpp" />
     <ClCompile Include="Source Code\W_Hierarchy.cpp" />
     <ClCompile Include="Source Code\W_Inspector.cpp" />
+    <ClCompile Include="Source Code\W_ParticleEditor.cpp" />
     <ClCompile Include="Source Code\W_Resources.cpp" />
     <ClCompile Include="Source Code\W_Scene.cpp" />
   </ItemGroup>

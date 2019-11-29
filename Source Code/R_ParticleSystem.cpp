@@ -17,14 +17,19 @@ R_ParticleSystem::~R_ParticleSystem()
 void R_ParticleSystem::InitDefaultSystem()
 {
 	emitters.clear();
+
+}
+
+void R_ParticleSystem::AddDefaultEmitter()
+{
 	emitters.push_back(Emitter());
 
-	emitters[0].modules.push_back(new EmitterBase());
-	emitters[0].modules.push_back(new EmitterSpawn());
-	emitters[0].modules.push_back(new ParticleLifetime());
-	emitters[0].modules.push_back(new ParticleSize());
-	emitters[0].modules.push_back(new ParticleVelocity());
-	emitters[0].modules.push_back(new ParticleColor());
+	emitters.back().modules.push_back(new EmitterBase());
+	emitters.back().modules.push_back(new EmitterSpawn());
+	emitters.back().modules.push_back(new ParticleLifetime());
+	emitters.back().modules.push_back(new ParticleVelocity());
+	emitters.back().modules.push_back(new ParticleSize());
+	emitters.back().modules.push_back(new ParticleColor());
 }
 
 void R_ParticleSystem::SaveAsset(Config& config)

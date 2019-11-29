@@ -21,6 +21,9 @@ class W_Scene;
 class W_Console;
 class W_Explorer;
 class W_EngineConfig;
+class W_ParticleEditor;
+class W_Resources;
+class W_Inspector;
 
 class M_Editor : public Module
 {
@@ -97,7 +100,9 @@ public:
 	W_EngineConfig* w_econfig = nullptr;
 	W_Explorer* w_explorer = nullptr;
 	W_Scene* w_scene = nullptr;
-
+	W_ParticleEditor* w_particles = nullptr;
+	W_Inspector* w_inspector = nullptr;
+	W_Resources* w_resources = nullptr;
 	//Panels
 	P_Buttons*			buttons = nullptr;
 

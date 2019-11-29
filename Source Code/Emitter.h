@@ -23,8 +23,8 @@ public:
 public:
 	std::string name = "Particle Emitter";
 	std::vector<ParticleModule*> modules;
-	uint64 materialID = 2130760874;
-	int maxParticleCount = 400;
+	uint64 materialID = 2130760876;
+	int maxParticleCount = 100;
 };
 
 #endif // !__EMITTER_H__

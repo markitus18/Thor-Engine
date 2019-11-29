@@ -107,10 +107,6 @@ update_status M_Scene::Update(float dt)
 		}
 	}
 #pragma endregion
-	//TODO: move to renderer
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
  	UpdateAllGameObjects(root, dt);
 
 	if (App->renderer3D->culling_camera)

@@ -11,8 +11,9 @@ class R_ParticleSystem : public Resource
 public:
 	R_ParticleSystem();
 	~R_ParticleSystem();
-
+	
 	void InitDefaultSystem();
+	void AddDefaultEmitter();
 
 	void SaveAsset(Config& config);
 	void SaveResource(char* buffer);

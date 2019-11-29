@@ -77,6 +77,8 @@ R_ParticleSystem* M_ParticleSystems::LoadParticleSystemResource(uint64 ID)
 
 		R_ParticleSystem* particleSystem = new R_ParticleSystem();
 		particleSystem->Load(config);
+		particleSystem->ID = ID;
+		particleSystem->resource_file = path;
 
 		delete buffer;
 		return particleSystem;

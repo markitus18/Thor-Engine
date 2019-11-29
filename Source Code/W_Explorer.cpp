@@ -9,6 +9,7 @@
 #include "Application.h"
 #include "M_Resources.h"
 #include "M_FileSystem.h"
+#include "M_Editor.h"
 
 #include "R_Texture.h"
 
@@ -144,6 +145,13 @@ void W_Explorer::DrawSelectedFolderContent()
 		if (ImGui::IsItemClicked())
 		{
 			explorerSelected = currentNode.children[i];
+
+			//TODO: quick workaround to select resources
+			App->moduleEditor->selectedResources.clear();
+			std::string metaFile = explorerSelected.path + (".meta");
+			uint64 resourceID = App->moduleResources->GetIDFromMeta(metaFile.c_str());
+			Resource* resource = App->moduleResources->GetResource(resourceID);
+			App->moduleEditor->selectedResources.push_back(resource);
 		}
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) 
 		{

@@ -420,6 +420,12 @@ Resource* M_Resources::GetResource(uint64 ID)
 						LoadResource(ret);
 					break;
 				}
+				case (Resource::PARTICLESYSTEM):
+				{
+					if (ret = App->moduleParticleSystems->LoadParticleSystemResource(ID))
+						LoadResource(ret);
+					break;
+				}
 			}
 
 			if (ret != nullptr)

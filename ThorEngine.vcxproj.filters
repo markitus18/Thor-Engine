@@ -322,6 +322,9 @@
     <ClCompile Include="Source Code\M_ParticleSystems.cpp">
       <Filter>Source Code\Modules\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\W_ParticleEditor.cpp">
+      <Filter>Source Code\Editor\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -762,6 +765,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\M_ParticleSystems.h">
       <Filter>Source Code\Modules\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_ParticleEditor.h">
+      <Filter>Source Code\Editor\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

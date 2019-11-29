@@ -17,6 +17,7 @@
 #include "W_Console.h"
 #include "W_Resources.h"
 #include "W_EngineConfig.h"
+#include "W_ParticleEditor.h"
 
 #include "M_Scene.h"
 #include "M_FileSystem.h"
@@ -89,9 +90,13 @@ bool M_Editor::Init(Config& config)
 	windows.push_back(w_scene);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_scene);
 
-	W_Inspector* inspector = new W_Inspector(this);
-	windows.push_back(inspector);
-	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(inspector);
+	w_inspector = new W_Inspector(this);
+	windows.push_back(w_inspector);
+	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(w_inspector);
+	
+	w_particles = new W_ParticleEditor(this);
+	windows.push_back(w_particles);
+	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(w_particles);
 
 	w_explorer = new W_Explorer(this);
 	windows.push_back(w_explorer);
@@ -101,9 +106,9 @@ bool M_Editor::Init(Config& config)
 	windows.push_back(w_console);
 	baseDock->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_console);
 
-	W_Resources* resources = new W_Resources(this);
-	windows.push_back(resources);
-	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(resources);
+	w_resources = new W_Resources(this);
+	windows.push_back(w_resources);
+	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(w_resources);
 
 	w_econfig = new W_EngineConfig(this);
 	windows.push_back(w_econfig);

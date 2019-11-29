@@ -138,9 +138,6 @@ bool M_Renderer3D::Init(Config& config)
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 
-	//	glEnable(GL_BLEND);
-	//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -562,17 +559,17 @@ void M_Renderer3D::DrawParticle(RenderParticle& particle)
 	glMultMatrixf((float*)&particle.transform);
 
 	//Binding particle Texture
-	if (R_Material* mat = (R_Material*)App->moduleResources->GetResource(particle.materialID))
-	{
-		if (mat->textureID)
-		{
-			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID);
+	//if (R_Material* mat = (R_Material*)App->moduleResources->GetResource(particle.materialID))
+	//{
+	//	if (mat->textureID)
+	//	{
+			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(particle.materialID);
 			if (rTex && rTex->buffer != 0)
 			{
 				glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 			}
-		}
-	}
+		//}
+	//}
 
 	glColor4f(particle.color.x, particle.color.y, particle.color.z, particle.color.w);
 

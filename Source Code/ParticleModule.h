@@ -8,6 +8,7 @@ class Particle;
 class Emitter;
 class EmitterInstance;
 struct Config;
+#include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
 struct ParticleModule
 {
@@ -81,7 +82,7 @@ struct EmitterSpawn : ParticleModule
 
 	void Load(Config& config);
 
-	float spawnRatio = 1.0f;
+	float spawnRatio = 0.1f;
 	float currentTimer = 0.0f;
 };
 
@@ -157,7 +158,7 @@ struct ParticleColor : ParticleModule
 
 	void Load(Config& config);
 
-	float4 initialColor = float4(1.0f, 0.0f, 1.0f, 1.0f);
+	float4 initialColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 };
 
 struct ParticleLifetime : ParticleModule
@@ -187,7 +188,10 @@ struct ParticleVelocity : ParticleModule
 
 	void Load(Config& config);
 
-	float4 initialVelocity = float4(0.0f, 1.0f, 0.0f, 2.0f);
+	float4 initialVelocity1 = float4(1.0f, 1.0f, 1.0f, 2.0f);
+	float4 initialVelocity2 = float4(-1.0f, 1.0f, -1.0f, 2.0f);
+
+	LCG random;
 };
 
 #endif;

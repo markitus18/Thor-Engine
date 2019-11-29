@@ -56,9 +56,12 @@ void EmitterInstance::SpawnParticle()
 {
 	if (activeParticles == particles.size()) return;		//Ignoring spawn call by now when no more particles are available
 
+	unsigned int particleIndex = particleIndices[activeParticles];
+	particles[particleIndex].position = float3::zero;
+
 	for (int i = 0; i < emitterReference->modules.size(); ++i)
 	{
-		emitterReference->modules[i]->Spawn(this, &particles[activeParticles]);
+		emitterReference->modules[i]->Spawn(this, &particles[particleIndex]);
 	}
 
 	++activeParticles;
@@ -72,9 +75,9 @@ void EmitterInstance::KillDeadParticles()
 		Particle* particle = &particles[particleIndex];
 
 		//Sending the particle to the end of the list (nice unreal trick here)
-		if (particle->active == false)
+		if (particle->relativeLifetime >= 1.0f)
 		{
-			particleIndices[particleIndex] = particleIndices[activeParticles - 1]; //We swap the last alive particle with the new dead one
+			particleIndices[i] = particleIndices[activeParticles - 1]; //We swap the last alive particle with the new dead one
 			particleIndices[activeParticles - 1] = particleIndex;
 			--activeParticles;
 		}

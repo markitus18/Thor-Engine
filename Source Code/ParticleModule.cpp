@@ -20,7 +20,8 @@ void ParticleModule::SaveResource(char* buffer)
 
 void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->position += emitter->component->gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
+	float3 position = emitter->component->gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
+	particle->position += position;
 }
 
 void EmitterBase::Update(float dt, EmitterInstance* emitter)
@@ -49,8 +50,7 @@ void EmitterBase::Load(Config & config)
 
 void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->active = true;
-	particle->position = float3(.0f, .0f, .0f);
+
 }
 
 void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
@@ -227,7 +227,7 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		particle->relativeLifetime += particle->oneOverMaxLifetime *= dt;
+		particle->relativeLifetime += particle->oneOverMaxLifetime * dt;
 	}
 }
 
@@ -250,7 +250,8 @@ void ParticleLifetime::Load(Config & config)
 
 void ParticleVelocity::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->velocity = initialVelocity;
+	float3 direction = float3(math::Lerp(initialVelocity1.x, initialVelocity2.x, random.Float()), math::Lerp(initialVelocity1.y, initialVelocity2.y, random.Float()), math::Lerp(initialVelocity1.z, initialVelocity2.z, random.Float()));
+	particle->velocity = float4(direction, initialVelocity1.w);
 }
 
 void ParticleVelocity::Update(float dt, EmitterInstance* emitter)
@@ -269,7 +270,8 @@ void ParticleVelocity::SaveAsset(Config& config)
 {
 	ParticleModule::SaveAsset(config);
 
-	config.SetArray("Initial Velocity").AddFloat4(initialVelocity);
+	config.SetArray("Initial Velocity 1").AddFloat4(initialVelocity1);
+	config.SetArray("Initial Velocity 2").AddFloat4(initialVelocity2);
 }
 
 void ParticleVelocity::SaveResource(char* buffer)
@@ -279,5 +281,7 @@ void ParticleVelocity::SaveResource(char* buffer)
 
 void ParticleVelocity::Load(Config & config)
 {
-	initialVelocity = config.GetArray("Initial Velocity").GetFloat4(0);
+	initialVelocity1 = config.GetArray("Initial Velocity 1").GetFloat4(0);
+	initialVelocity2 = config.GetArray("Initial Velocity 2").GetFloat4(0);
+
 }

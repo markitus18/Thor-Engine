@@ -17,7 +17,5 @@ Particle::~Particle()
 
 void Particle::Update(float dt)
 {
-	//Security check
-	if (active == false) return;
 
 }

@@ -503,7 +503,7 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 					particleSystem->SetResource(resource->GetID());
 				}
 			}
-			/*
+			
 			std::vector<const ResourceMeta*> resourceMetas;
 			if (App->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, resourceMetas))
 			{
@@ -515,9 +515,39 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 						particleSystem->SetResource(resourceMetas[i]->id);
 					}
 				}
-			}*/
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::Unindent();
+
+		if (showDebugInfo)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+			ImGui::Separator();
+			ImGui::Text("Emitters:");
+			ImGui::Indent();
+
+			for (uint i = 0; i < particleSystem->emitters.size(); ++i)
+			{
+				ImGui::Text(particleSystem->emitters[i].emitterReference->name.c_str());
+				ImGui::Text("Particles");
+				ImGui::Indent();
+
+				EmitterInstance* instance = &particleSystem->emitters[i];
+				for (uint i = 0; i < instance->activeParticles; ++i)
+				{
+					unsigned int particleIndex = instance->particleIndices[i];
+					Particle* particle = &instance->particles[particleIndex];
+
+					ImGui::Text("Particle %i - %f", particleIndex, particle->relativeLifetime);
+				}
+
+				ImGui::Unindent();
+				ImGui::Separator();
+			}
+
+			ImGui::PopStyleColor();
+			ImGui::Unindent();
+		}
 	}
 }

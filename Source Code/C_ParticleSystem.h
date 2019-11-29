@@ -24,8 +24,6 @@ public:
 	void SetResource(unsigned long long id);
 
 public:
-
-private:
 	//TODO: can we avoid this necessary include? Vector needs to know particle size
 	std::vector<EmitterInstance> emitters;
 };

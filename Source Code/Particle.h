@@ -25,9 +25,6 @@ public:
 	float size = 1.0f;
 
 	float4 color;
-	//Yup... we are going to store position data in a transform (can it be done differently?)
-	//Let's try to fake the transform system.
-	bool active = false;
 };
 
 #endif // !__PARTICLE_H__

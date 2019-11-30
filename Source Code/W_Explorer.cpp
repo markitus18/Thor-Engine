@@ -150,8 +150,8 @@ void W_Explorer::DrawSelectedFolderContent()
 			App->moduleEditor->selectedResources.clear();
 			std::string metaFile = explorerSelected.path + (".meta");
 			uint64 resourceID = App->moduleResources->GetIDFromMeta(metaFile.c_str());
-			Resource* resource = App->moduleResources->GetResource(resourceID);
-			App->moduleEditor->selectedResources.push_back(resource);
+			if (Resource* resource = App->moduleResources->GetResource(resourceID))
+				App->moduleEditor->selectedResources.push_back(resource);
 		}
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) 
 		{

@@ -18,10 +18,21 @@ void ParticleModule::SaveResource(char* buffer)
 	//TODO: by now it is being saved as json file, same as asset
 }
 
+float3 ParticleModule::RandomFloat3(const float3& a, const float3& b)
+{
+	return float3(math::Lerp(a.x, b.x, random.Float()), math::Lerp(a.y, b.y, random.Float()), math::Lerp(a.z, b.z, random.Float()));
+}
+
+float4 ParticleModule::RandomFloat4(const float4& a, const float4& b)
+{
+	return float4(math::Lerp(a.x, b.x, random.Float()), math::Lerp(a.y, b.y, random.Float()),
+				  math::Lerp(a.z, b.z, random.Float()), math::Lerp(a.w, b.w, random.Float()));
+}
+
 void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 	float3 position = emitter->component->gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
-	particle->position += position;
+	particle->position += position + emitterOrigin;
 }
 
 void EmitterBase::Update(float dt, EmitterInstance* emitter)
@@ -107,7 +118,7 @@ void EmitterArea::Load(Config & config)
 
 void ParticlePosition::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->position += initialPosition;
+	particle->position += RandomFloat3(initialPosition1, initialPosition2);
 }
 
 void ParticlePosition::Update(float dt, EmitterInstance* emitter)
@@ -119,7 +130,8 @@ void ParticlePosition::SaveAsset(Config& config)
 {
 	ParticleModule::SaveAsset(config);
 
-	config.SetArray("Initial Position").AddFloat3(initialPosition);
+	config.SetArray("Initial Position 1").AddFloat3(initialPosition1);
+	config.SetArray("Initial Position 2").AddFloat3(initialPosition2);
 }
 
 void ParticlePosition::SaveResource(char* buffer)
@@ -129,16 +141,16 @@ void ParticlePosition::SaveResource(char* buffer)
 
 void ParticlePosition::Load(Config & config)
 {
-	initialPosition = config.GetArray("Initial Position").GetFloat3(0);
+	initialPosition1 = config.GetArray("Initial Position 1").GetFloat3(0);
+	initialPosition2 = config.GetArray("Initial Position 2").GetFloat3(0);
 }
 
 void ParticleRotation::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->rotation = initialRotation;
+	particle->rotation = math::Lerp(initialRotation1, initialRotation2, random.Float());
 }
 
 void ParticleRotation::Update(float dt, EmitterInstance* emitter)
-
 {
 
 }
@@ -147,7 +159,8 @@ void ParticleRotation::SaveAsset(Config& config)
 {
 	ParticleModule::SaveAsset(config);
 
-	config.SetNumber("Initial Rotation", initialRotation);
+	config.SetNumber("Initial Rotation 1", initialRotation1);
+	config.SetNumber("Initial Rotation 2", initialRotation2);
 }
 
 void ParticleRotation::SaveResource(char* buffer)
@@ -157,12 +170,14 @@ void ParticleRotation::SaveResource(char* buffer)
 
 void ParticleRotation::Load(Config & config)
 {
-	initialRotation = config.GetNumber("Initial Rotation");
+	initialRotation1 = config.GetNumber("Initial Rotation 1");
+	initialRotation2 = config.GetNumber("Initial Rotation 2");
+
 }
 
 void ParticleSize::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->size = initialSize;
+	particle->size = math::Lerp(initialSize1, initialSize2, random.Float());
 }
 
 void ParticleSize::Update(float dt, EmitterInstance* emitter)
@@ -174,7 +189,9 @@ void ParticleSize::SaveAsset(Config& config)
 {
 	ParticleModule::SaveAsset(config);
 
-	config.SetNumber("Initial Size", initialSize);
+	config.SetNumber("Initial Size 1", initialSize1);
+	config.SetNumber("Initial Size 2", initialSize2);
+
 }
 
 void ParticleSize::SaveResource(char* buffer)
@@ -184,12 +201,13 @@ void ParticleSize::SaveResource(char* buffer)
 
 void ParticleSize::Load(Config & config)
 {
-	initialSize = config.GetNumber("Initial Size");
+	initialSize1 = config.GetNumber("Initial Size 1");
+	initialSize2 = config.GetNumber("Initial Size 2");
 }
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->color = initialColor;
+	particle->color = RandomFloat4(initialColor1, initialColor2);
 }
 
 void ParticleColor::Update(float dt, EmitterInstance* emitter)
@@ -201,7 +219,8 @@ void ParticleColor::SaveAsset(Config& config)
 {
 	ParticleModule::SaveAsset(config);
 
-	config.SetArray("Initial Color").AddFloat4(initialColor);
+	config.SetArray("Initial Color 1").AddFloat4(initialColor1);
+	config.SetArray("Initial Color 2").AddFloat4(initialColor2);
 }
 
 void ParticleColor::SaveResource(char* buffer)
@@ -211,12 +230,14 @@ void ParticleColor::SaveResource(char* buffer)
 
 void ParticleColor::Load(Config & config)
 {
-	initialColor = config.GetArray("Initial Color").GetFloat4(0);
+	initialColor1 = config.GetArray("Initial Color 1").GetFloat4(0);
+	initialColor2 = config.GetArray("Initial Color 2").GetFloat4(0);
 }
 
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->oneOverMaxLifetime = 1.0f / initialLifetime;
+	float lifetime = math::Lerp(initialLifetime1, initialLifetime2, random.Float());
+	particle->oneOverMaxLifetime = 1.0f / lifetime;
 	particle->relativeLifetime = 0.0f;
 }
 
@@ -235,7 +256,8 @@ void ParticleLifetime::SaveAsset(Config& config)
 {
 	ParticleModule::SaveAsset(config);
 
-	config.SetNumber("Initial Lifetime", initialLifetime);
+	config.SetNumber("Initial Lifetime 1", initialLifetime1);
+	config.SetNumber("Initial Lifetime 2", initialLifetime2);
 }
 
 void ParticleLifetime::SaveResource(char* buffer)
@@ -245,7 +267,8 @@ void ParticleLifetime::SaveResource(char* buffer)
 
 void ParticleLifetime::Load(Config & config)
 {
-	initialLifetime = config.GetNumber("Initial Lifetime");
+	initialLifetime1 = config.GetNumber("Initial Lifetime 1");
+	initialLifetime2 = config.GetNumber("Initial Lifetime 2");
 }
 
 void ParticleVelocity::Spawn(EmitterInstance* emitter, Particle* particle)

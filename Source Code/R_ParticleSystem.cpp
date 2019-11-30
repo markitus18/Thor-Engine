@@ -6,7 +6,7 @@
 
 R_ParticleSystem::R_ParticleSystem() : Resource(Resource::Type::PARTICLESYSTEM)
 {
-
+	emitters.reserve(4);
 }
 
 R_ParticleSystem::~R_ParticleSystem()
@@ -17,7 +17,8 @@ R_ParticleSystem::~R_ParticleSystem()
 void R_ParticleSystem::InitDefaultSystem()
 {
 	emitters.clear();
-
+	emitters.reserve(4);
+	AddDefaultEmitter();
 }
 
 void R_ParticleSystem::AddDefaultEmitter()

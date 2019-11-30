@@ -3,12 +3,12 @@
 
 #include "MathGeoLib/src/Math/float3.h"
 #include "MathGeoLib/src/Math/float4.h"
+#include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
 class Particle;
 class Emitter;
 class EmitterInstance;
 struct Config;
-#include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
 struct ParticleModule
 {
@@ -37,7 +37,10 @@ struct ParticleModule
 
 	virtual void Load(Config& config) = 0;
 
-	Emitter* emitterContainer = nullptr;
+	//TODO: use a single random for all modules
+	LCG random;
+	float3 RandomFloat3(const float3& a, const float3& b);
+	float4 RandomFloat4(const float4& a, const float4& b);
 };
 
 struct EmitterBase : ParticleModule
@@ -113,7 +116,8 @@ struct ParticlePosition : ParticleModule
 
 	void Load(Config& config);
 
-	float3 initialPosition = float3::zero;
+	float3 initialPosition1 = float3::zero;
+	float3 initialPosition2 = float3::zero;
 };
 
 struct ParticleRotation : ParticleModule
@@ -128,7 +132,8 @@ struct ParticleRotation : ParticleModule
 
 	void Load(Config& config);
 
-	float initialRotation = 0.0f;
+	float initialRotation1 = 0.0f;
+	float initialRotation2 = 0.0f;
 };
 
 struct ParticleSize : ParticleModule
@@ -143,7 +148,8 @@ struct ParticleSize : ParticleModule
 
 	void Load(Config& config);
 
-	float initialSize = 1.0f;
+	float initialSize1 = 1.0f;
+	float initialSize2 = 1.0f;
 };
 
 struct ParticleColor : ParticleModule
@@ -158,7 +164,8 @@ struct ParticleColor : ParticleModule
 
 	void Load(Config& config);
 
-	float4 initialColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 initialColor1 = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 initialColor2 = float4(1.0f, 1.0f, 1.0f, 1.0f);
 };
 
 struct ParticleLifetime : ParticleModule
@@ -173,7 +180,8 @@ struct ParticleLifetime : ParticleModule
 
 	void Load(Config& config);
 
-	float initialLifetime = 3.0f;
+	float initialLifetime1 = 3.0f;
+	float initialLifetime2 = 3.0f;
 };
 
 struct ParticleVelocity : ParticleModule
@@ -190,8 +198,6 @@ struct ParticleVelocity : ParticleModule
 
 	float4 initialVelocity1 = float4(1.0f, 1.0f, 1.0f, 2.0f);
 	float4 initialVelocity2 = float4(-1.0f, 1.0f, -1.0f, 2.0f);
-
-	LCG random;
 };
 
 #endif;

@@ -3,14 +3,14 @@
     "Window": {},
     "Camera": {
         "Position": [
-            35.668941,
-            61.473320,
-            58.951298
+            14.718121,
+            14.524812,
+            27.343117
         ],
         "Reference": [
-            -4.887531,
-            7.705155,
-            -9.321568
+            -2.538904,
+            4.685967,
+            -1.804342
         ]
     },
     "Editor": {},
@@ -52,17 +52,252 @@
                         "NearPlane": 0.100000,
                         "FarPlane": 1000,
                         "HasResource": false
+                    },
+                    {
+                        "ComponentType": 8,
+                        "HasResource": true,
+                        "Type": 7,
+                        "ID": 181604832,
+                        "ResourceName": "NewParticleSystem"
                     }
                 ]
             },
             {
-                "UID": 1941307552,
+                "UID": 99851067,
                 "ParentUID": 0,
-                "Name": "aniTest",
+                "Name": "GameObject",
                 "Active": true,
                 "Static": false,
-                "Selected": true,
-                "OpenInHierarchy": true,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Translation": [
+                    -6.975685,
+                    0,
+                    3.408514
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    },
+                    {
+                        "ComponentType": 8,
+                        "HasResource": true,
+                        "Type": 7,
+                        "ID": 2019323854,
+                        "ResourceName": "NewParticleSystem"
+                    }
+                ]
+            },
+            {
+                "UID": 326570268,
+                "ParentUID": 0,
+                "Name": "GameObject (1)",
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Translation": [
+                    3.880260,
+                    0,
+                    -0.737576
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    },
+                    {
+                        "ComponentType": 8,
+                        "HasResource": true,
+                        "Type": 7,
+                        "ID": 1273778783,
+                        "ResourceName": "NewParticleSystem"
+                    }
+                ]
+            },
+            {
+                "UID": 739257639,
+                "ParentUID": 0,
+                "Name": "GameObject (2)",
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Translation": [
+                    -13.206866,
+                    0,
+                    -10.587481
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    },
+                    {
+                        "ComponentType": 8,
+                        "HasResource": true,
+                        "Type": 7,
+                        "ID": 1415448378,
+                        "ResourceName": "NewParticleSystem"
+                    }
+                ]
+            },
+            {
+                "UID": 1263000817,
+                "ParentUID": 0,
+                "Name": "GameObject (3)",
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Translation": [
+                    6.753825,
+                    0,
+                    -14.941669
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    },
+                    {
+                        "ComponentType": 8,
+                        "HasResource": true,
+                        "Type": 7,
+                        "ID": 1201931202,
+                        "ResourceName": "NewParticleSystem"
+                    }
+                ]
+            },
+            {
+                "UID": 514470295,
+                "ParentUID": 0,
+                "Name": "GameObject (4)",
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Translation": [
+                    -20.182922,
+                    0,
+                    -4.136086
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    },
+                    {
+                        "ComponentType": 8,
+                        "HasResource": true,
+                        "Type": 7,
+                        "ID": 804425440,
+                        "ResourceName": "NewParticleSystem"
+                    }
+                ]
+            },
+            {
+                "UID": 56659882,
+                "ParentUID": 0,
+                "Name": "GameObject (5)",
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
+                "Translation": [
+                    0.843336,
+                    0,
+                    3.645616
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    },
+                    {
+                        "ComponentType": 8,
+                        "HasResource": true,
+                        "Type": 7,
+                        "ID": 677528127,
+                        "ResourceName": "NewParticleSystem"
+                    }
+                ]
+            },
+            {
+                "UID": 1937668830,
+                "ParentUID": 0,
+                "Name": "GameObject (6)",
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": false,
                 "Translation": [
                     0,
                     0,
@@ -83,31 +318,13 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 5,
-                        "Playing": true,
-                        "Animations": [
-                            {
-                                "Name": "Default",
-                                "Loopable": true,
-                                "StartFrame": 0,
-                                "EndFrame": 119,
-                                "TicksPerSecond": 24,
-                                "CurrentAnimation": true
-                            }
-                        ],
-                        "HasResource": true,
-                        "Type": 4,
-                        "ID": 60,
-                        "ResourceName": "Take 001"
                     }
                 ]
             },
             {
-                "UID": 1742270200,
-                "ParentUID": 1941307552,
-                "Name": "Object02",
+                "UID": 1813876184,
+                "ParentUID": 0,
+                "Name": "GameObject (7)",
                 "Active": true,
                 "Static": false,
                 "Selected": false,
@@ -118,86 +335,10 @@
                     0
                 ],
                 "Rotation": [
-                    -0.707107,
                     0,
                     0,
-                    0.707107
-                ],
-                "Scale": [
-                    2.540000,
-                    2.540001,
-                    2.540001
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 2,
-                        "HasResource": true,
-                        "Type": 1,
-                        "ID": 57,
-                        "ResourceName": "Object02"
-                    },
-                    {
-                        "ComponentType": 3,
-                        "HasResource": true,
-                        "Type": 3,
-                        "ID": 58,
-                        "ResourceName": "lambert2"
-                    }
-                ]
-            },
-            {
-                "UID": 127277052,
-                "ParentUID": 1941307552,
-                "Name": "transform1",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    -1.116104,
-                    15.688704,
-                    -0.138407
-                ],
-                "Rotation": [
-                    -0.448792,
-                    -0.330551,
-                    -0.448005,
-                    0.699009
-                ],
-                "Scale": [
-                    2.540000,
-                    2.540001,
-                    2.540000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    }
-                ]
-            },
-            {
-                "UID": 638109770,
-                "ParentUID": 127277052,
-                "Name": "Bip001 Pelvis",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
                     0,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0.500000,
-                    0.500000,
-                    0.500000,
-                    -0.500000
+                    1
                 ],
                 "Scale": [
                     1,
@@ -208,34 +349,27 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1869859991,
-                        "ResourceName": "Bip001 Pelvis"
                     }
                 ]
             },
             {
-                "UID": 846091681,
-                "ParentUID": 638109770,
-                "Name": "Bip001 Spine",
+                "UID": 1097944429,
+                "ParentUID": 0,
+                "Name": "GameObject (8)",
                 "Active": true,
                 "Static": false,
                 "Selected": false,
                 "OpenInHierarchy": false,
                 "Translation": [
-                    0.627852,
-                    0.318001,
+                    0,
+                    0,
                     0
                 ],
                 "Rotation": [
-                    -0.000002,
-                    -0.000001,
-                    0.000398,
-                    1.000000
+                    0,
+                    0,
+                    0,
+                    1
                 ],
                 "Scale": [
                     1,
@@ -246,262 +380,27 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1063752271,
-                        "ResourceName": "Bip001 Spine"
                     }
                 ]
             },
             {
-                "UID": 272485691,
-                "ParentUID": 846091681,
-                "Name": "Bip001 Spine1",
+                "UID": 308676444,
+                "ParentUID": 0,
+                "Name": "GameObject (9)",
                 "Active": true,
                 "Static": false,
                 "Selected": false,
                 "OpenInHierarchy": false,
                 "Translation": [
-                    1.798031,
-                    -0.001359,
-                    -0.000495
+                    0,
+                    0,
+                    0
                 ],
                 "Rotation": [
-                    0.195421,
-                    -0.149881,
-                    0.324897,
-                    0.913120
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
+                    0,
+                    0,
+                    0,
                     1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1375808849,
-                        "ResourceName": "Bip001 Spine1"
-                    }
-                ]
-            },
-            {
-                "UID": 2003239160,
-                "ParentUID": 272485691,
-                "Name": "Bip001 Neck",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    2.997202,
-                    -0.234361,
-                    0
-                ],
-                "Rotation": [
-                    -0.031274,
-                    0.199826,
-                    0.152198,
-                    0.967433
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 333301076,
-                        "ResourceName": "Bip001 Neck"
-                    }
-                ]
-            },
-            {
-                "UID": 1335587592,
-                "ParentUID": 2003239160,
-                "Name": "Bip001 L Clavicle",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    -0.455274,
-                    -0.096788,
-                    0.797643
-                ],
-                "Rotation": [
-                    0.314116,
-                    -0.103876,
-                    0.936518,
-                    0.116079
-                ],
-                "Scale": [
-                    0.999999,
-                    0.999999,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1664496286,
-                        "ResourceName": "Bip001 L Clavicle"
-                    }
-                ]
-            },
-            {
-                "UID": 1049311179,
-                "ParentUID": 1335587592,
-                "Name": "Bip001 L UpperArm",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.986254,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    -0.244845,
-                    0.320889,
-                    -0.128541,
-                    0.905847
-                ],
-                "Scale": [
-                    1.000000,
-                    1,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1827302046,
-                        "ResourceName": "Bip001 L UpperArm"
-                    }
-                ]
-            },
-            {
-                "UID": 994889513,
-                "ParentUID": 1049311179,
-                "Name": "Bip001 L Forearm",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    2.375838,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    -0.327701,
-                    0.944781
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1383368192,
-                        "ResourceName": "Bip001 L Forearm"
-                    }
-                ]
-            },
-            {
-                "UID": 265234235,
-                "ParentUID": 994889513,
-                "Name": "Bip001 L Hand",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    1.846415,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    -0.182656,
-                    0.041463,
-                    0.100543,
-                    0.977143
-                ],
-                "Scale": [
-                    1,
-                    1.000000,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1130294576,
-                        "ResourceName": "Bip001 L Hand"
-                    }
-                ]
-            },
-            {
-                "UID": 1808278029,
-                "ParentUID": 265234235,
-                "Name": "Bip001 L Finger0",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.940946,
-                    0.081812,
-                    -0.580381
-                ],
-                "Rotation": [
-                    0.582628,
-                    0.394046,
-                    0.071983,
-                    0.707171
                 ],
                 "Scale": [
                     1,
@@ -512,34 +411,27 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 924392797,
-                        "ResourceName": "Bip001 L Finger0"
                     }
                 ]
             },
             {
-                "UID": 43335281,
-                "ParentUID": 1808278029,
-                "Name": "Bip001 L Finger01",
+                "UID": 493852195,
+                "ParentUID": 0,
+                "Name": "GameObject (10)",
                 "Active": true,
                 "Static": false,
                 "Selected": false,
                 "OpenInHierarchy": false,
                 "Translation": [
-                    0.517244,
+                    0,
                     0,
                     0
                 ],
                 "Rotation": [
                     0,
                     0,
-                    0.078393,
-                    0.996923
+                    0,
+                    1
                 ],
                 "Scale": [
                     1,
@@ -550,34 +442,27 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1360986641,
-                        "ResourceName": "Bip001 L Finger01"
                     }
                 ]
             },
             {
-                "UID": 1978558113,
-                "ParentUID": 43335281,
-                "Name": "Bip001 L Finger02",
+                "UID": 1270479625,
+                "ParentUID": 0,
+                "Name": "GameObject (11)",
                 "Active": true,
                 "Static": false,
                 "Selected": false,
                 "OpenInHierarchy": false,
                 "Translation": [
-                    0.304696,
+                    0,
                     0,
                     0
                 ],
                 "Rotation": [
                     0,
                     0,
-                    0.172682,
-                    0.984978
+                    0,
+                    1
                 ],
                 "Scale": [
                     1,
@@ -588,72 +473,27 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1977460127,
-                        "ResourceName": "Bip001 L Finger02"
                     }
                 ]
             },
             {
-                "UID": 1003332005,
-                "ParentUID": 265234235,
-                "Name": "Bip001 L Finger1",
+                "UID": 1505519489,
+                "ParentUID": 0,
+                "Name": "GameObject (12)",
                 "Active": true,
                 "Static": false,
                 "Selected": false,
                 "OpenInHierarchy": false,
                 "Translation": [
-                    1.770775,
-                    0.000361,
-                    -0.041459
-                ],
-                "Rotation": [
-                    -0.086713,
-                    -0.063716,
-                    0.196425,
-                    0.974597
-                ],
-                "Scale": [
-                    1.000000,
-                    1,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1995398675,
-                        "ResourceName": "Bip001 L Finger1"
-                    }
-                ]
-            },
-            {
-                "UID": 1776934136,
-                "ParentUID": 1003332005,
-                "Name": "Bip001 L Finger11",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.341537,
+                    0,
                     0,
                     0
                 ],
                 "Rotation": [
-                    -0.080334,
-                    -0.021903,
-                    0.262140,
-                    0.961431
+                    0,
+                    0,
+                    0,
+                    1
                 ],
                 "Scale": [
                     1,
@@ -664,300 +504,27 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 934027745,
-                        "ResourceName": "Bip001 L Finger11"
                     }
                 ]
             },
             {
-                "UID": 1841029727,
-                "ParentUID": 1776934136,
-                "Name": "Bip001 L Finger12",
+                "UID": 1390500893,
+                "ParentUID": 0,
+                "Name": "GameObject (13)",
                 "Active": true,
                 "Static": false,
                 "Selected": false,
                 "OpenInHierarchy": false,
                 "Translation": [
-                    0.252604,
+                    0,
                     0,
                     0
                 ],
                 "Rotation": [
-                    -0.079599,
-                    -0.024440,
-                    0.292494,
-                    0.952635
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
+                    0,
+                    0,
+                    0,
                     1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 2140803485,
-                        "ResourceName": "Bip001 L Finger12"
-                    }
-                ]
-            },
-            {
-                "UID": 1769152272,
-                "ParentUID": 2003239160,
-                "Name": "Bip001 R Clavicle",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.267881,
-                    -0.097360,
-                    -0.878430
-                ],
-                "Rotation": [
-                    -0.639018,
-                    -0.064630,
-                    0.745032,
-                    0.180019
-                ],
-                "Scale": [
-                    1.000001,
-                    1.000001,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 825883020,
-                        "ResourceName": "Bip001 R Clavicle"
-                    }
-                ]
-            },
-            {
-                "UID": 1225755227,
-                "ParentUID": 1769152272,
-                "Name": "Bip001 R UpperArm",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.986254,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0.471325,
-                    -0.337544,
-                    -0.107370,
-                    0.807706
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 2074570642,
-                        "ResourceName": "Bip001 R UpperArm"
-                    }
-                ]
-            },
-            {
-                "UID": 1599494481,
-                "ParentUID": 1225755227,
-                "Name": "Bip001 R Forearm",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    2.375838,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    -0.272294,
-                    0.962214
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 2102691884,
-                        "ResourceName": "Bip001 R Forearm"
-                    }
-                ]
-            },
-            {
-                "UID": 640746516,
-                "ParentUID": 1599494481,
-                "Name": "Bip001 R Hand",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    1.846414,
-                    -0.000001,
-                    0
-                ],
-                "Rotation": [
-                    0.560236,
-                    0.069631,
-                    0.169535,
-                    0.807803
-                ],
-                "Scale": [
-                    1.000000,
-                    0.999999,
-                    0.999999
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1846407268,
-                        "ResourceName": "Bip001 R Hand"
-                    }
-                ]
-            },
-            {
-                "UID": 1882874952,
-                "ParentUID": 640746516,
-                "Name": "Bip001 R Finger0",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.940946,
-                    0.081812,
-                    0.580381
-                ],
-                "Rotation": [
-                    -0.553193,
-                    -0.344939,
-                    0.191452,
-                    0.733717
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 349296008,
-                        "ResourceName": "Bip001 R Finger0"
-                    }
-                ]
-            },
-            {
-                "UID": 940253018,
-                "ParentUID": 1882874952,
-                "Name": "Bip001 R Finger01",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.517245,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    0.233381,
-                    0.972385
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 877633732,
-                        "ResourceName": "Bip001 R Finger01"
-                    }
-                ]
-            },
-            {
-                "UID": 1758838324,
-                "ParentUID": 940253018,
-                "Name": "Bip001 R Finger02",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.304696,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    0.172681,
-                    0.984978
                 ],
                 "Scale": [
                     1,
@@ -968,507 +535,6 @@
                     {
                         "ComponentType": 1,
                         "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 786490407,
-                        "ResourceName": "Bip001 R Finger02"
-                    }
-                ]
-            },
-            {
-                "UID": 417919617,
-                "ParentUID": 640746516,
-                "Name": "Bip001 R Finger1",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    1.770776,
-                    0.000361,
-                    0.041459
-                ],
-                "Rotation": [
-                    0.005108,
-                    0.198577,
-                    0.394997,
-                    0.896949
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1858078188,
-                        "ResourceName": "Bip001 R Finger1"
-                    }
-                ]
-            },
-            {
-                "UID": 1873205601,
-                "ParentUID": 417919617,
-                "Name": "Bip001 R Finger11",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.341537,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    0.426589,
-                    0.904446
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1141598762,
-                        "ResourceName": "Bip001 R Finger11"
-                    }
-                ]
-            },
-            {
-                "UID": 2060232205,
-                "ParentUID": 1873205601,
-                "Name": "Bip001 R Finger12",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.252603,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    0.538307,
-                    0.842749
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 232554340,
-                        "ResourceName": "Bip001 R Finger12"
-                    }
-                ]
-            },
-            {
-                "UID": 698593881,
-                "ParentUID": 2003239160,
-                "Name": "Bip001 Head",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    1.101905,
-                    -0.000001,
-                    0
-                ],
-                "Rotation": [
-                    -0.331613,
-                    -0.046233,
-                    -0.461536,
-                    0.821511
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1533331128,
-                        "ResourceName": "Bip001 Head"
-                    }
-                ]
-            },
-            {
-                "UID": 594951845,
-                "ParentUID": 698593881,
-                "Name": "Bone001",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.192795,
-                    0.020197,
-                    -0.000001
-                ],
-                "Rotation": [
-                    0.587549,
-                    0.808784,
-                    0.020709,
-                    0.015043
-                ],
-                "Scale": [
-                    1.000001,
-                    1.000000,
-                    1.000001
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 634370118,
-                        "ResourceName": "Bone001"
-                    }
-                ]
-            },
-            {
-                "UID": 477817409,
-                "ParentUID": 846091681,
-                "Name": "Bip001 L Thigh",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    -0.628105,
-                    -0.317504,
-                    1.153569
-                ],
-                "Rotation": [
-                    0.270843,
-                    0.955050,
-                    0.043753,
-                    -0.112290
-                ],
-                "Scale": [
-                    1.000000,
-                    1,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 974769088,
-                        "ResourceName": "Bip001 L Thigh"
-                    }
-                ]
-            },
-            {
-                "UID": 1604139959,
-                "ParentUID": 477817409,
-                "Name": "Bip001 L Calf",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    2.656434,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    -0.329094,
-                    0.944297
-                ],
-                "Scale": [
-                    1.000000,
-                    1.000000,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1767946801,
-                        "ResourceName": "Bip001 L Calf"
-                    }
-                ]
-            },
-            {
-                "UID": 1941023304,
-                "ParentUID": 1604139959,
-                "Name": "Bip001 L Foot",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    3.316416,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0.137424,
-                    -0.150500,
-                    0.196026,
-                    0.959186
-                ],
-                "Scale": [
-                    1.000000,
-                    1,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1051520969,
-                        "ResourceName": "Bip001 L Foot"
-                    }
-                ]
-            },
-            {
-                "UID": 1279993015,
-                "ParentUID": 1941023304,
-                "Name": "Bip001 L Toe0",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.806603,
-                    1.325963,
-                    0
-                ],
-                "Rotation": [
-                    0.000000,
-                    0.000001,
-                    0.707107,
-                    0.707107
-                ],
-                "Scale": [
-                    0.999999,
-                    0.999999,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 223856519,
-                        "ResourceName": "Bip001 L Toe0"
-                    }
-                ]
-            },
-            {
-                "UID": 264797756,
-                "ParentUID": 846091681,
-                "Name": "Bip001 R Thigh",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    -0.628105,
-                    -0.317498,
-                    -1.153570
-                ],
-                "Rotation": [
-                    0.461757,
-                    0.862043,
-                    0.015327,
-                    0.208391
-                ],
-                "Scale": [
-                    0.999999,
-                    1.000000,
-                    0.999999
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 375020403,
-                        "ResourceName": "Bip001 R Thigh"
-                    }
-                ]
-            },
-            {
-                "UID": 1484944628,
-                "ParentUID": 264797756,
-                "Name": "Bip001 R Calf",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    2.656434,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    -0.461439,
-                    0.887172
-                ],
-                "Scale": [
-                    1,
-                    1,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 189297037,
-                        "ResourceName": "Bip001 R Calf"
-                    }
-                ]
-            },
-            {
-                "UID": 1319695761,
-                "ParentUID": 1484944628,
-                "Name": "Bip001 R Foot",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    3.316417,
-                    0,
-                    0
-                ],
-                "Rotation": [
-                    -0.040511,
-                    0.140725,
-                    0.121334,
-                    0.981750
-                ],
-                "Scale": [
-                    1,
-                    1.000000,
-                    1.000000
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 2089354985,
-                        "ResourceName": "Bip001 R Foot"
-                    }
-                ]
-            },
-            {
-                "UID": 598223333,
-                "ParentUID": 1319695761,
-                "Name": "Bip001 R Toe0",
-                "Active": true,
-                "Static": false,
-                "Selected": false,
-                "OpenInHierarchy": false,
-                "Translation": [
-                    0.806603,
-                    1.325963,
-                    0
-                ],
-                "Rotation": [
-                    0,
-                    0,
-                    0.707107,
-                    0.707107
-                ],
-                "Scale": [
-                    0.999999,
-                    0.999999,
-                    1
-                ],
-                "Components": [
-                    {
-                        "ComponentType": 1,
-                        "HasResource": false
-                    },
-                    {
-                        "ComponentType": 6,
-                        "HasResource": true,
-                        "Type": 5,
-                        "ID": 1031097493,
-                        "ResourceName": "Bip001 R Toe0"
                     }
                 ]
             }

@@ -8,6 +8,7 @@
 class Particle;
 class Emitter;
 class EmitterInstance;
+class C_Transform;
 struct Config;
 
 struct ParticleModule
@@ -63,7 +64,8 @@ struct EmitterBase : ParticleModule
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
-
+	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
+	
 	void SaveAsset(Config& config);
 	void SaveResource(char* buffer);
 

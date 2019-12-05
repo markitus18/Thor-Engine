@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Light.h"
 #include "MathGeoLib\src\MathGeoLib.h"
+#include <map>
 
 #define MAX_LIGHTS 8
 
@@ -84,7 +85,7 @@ public:
 	void DrawAllMeshes();
 	void DrawMesh(RenderMesh& mesh);
 
-	void AddParticle(const float4x4& transform, uint64 material, float4 color);
+	void AddParticle(const float4x4& transform, uint64 material, float4 color, float distanceToCamera);
 	void DrawAllParticles();
 	void DrawParticle(RenderParticle& particle);
 
@@ -137,7 +138,7 @@ private:
 	uint box_draw_timer;
 
 	std::vector<RenderMesh> meshes;
-	std::vector<RenderParticle> particles;
+	std::map<float, RenderParticle> particles;
 
 	std::vector<RenderBox<AABB>> aabb;
 	std::vector<RenderBox<OBB>> obb;

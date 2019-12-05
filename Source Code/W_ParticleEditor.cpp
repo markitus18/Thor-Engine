@@ -144,7 +144,7 @@ void W_ParticleEditor::DrawModule(EmitterBase* module)
 {
 	ImGui::InputFloat3("Origin: ", module->emitterOrigin.ptr());
 
-	static char* alignmentOptions[9] = { "None, Screen, Camera, LockYZ, LockYX, LockXY, LockXZ, LockZX, LockZY" };
+	static char* alignmentOptions[9] = { "None", "Screen", "Camera", "LockYZ", "LockYX", "LockXY", "LockXZ", "LockZX", "LockZY" };
 	int currentOption = (int)module->alignment;
 
 	if (ImGui::BeginCombo("Alignment", alignmentOptions[(int)currentOption]))

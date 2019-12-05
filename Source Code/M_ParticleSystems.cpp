@@ -66,21 +66,21 @@ void M_ParticleSystems::ImportParticleSystemResource(const char* assetsPath, uin
 
 R_ParticleSystem* M_ParticleSystems::LoadParticleSystemResource(uint64 ID)
 {
+	R_ParticleSystem* particleSystem = nullptr;
 	char* buffer = nullptr;
 	std::string path = std::string("Library/ParticleSystems/") + std::to_string(ID);
 
 	uint size = App->fileSystem->Load(path.c_str(), &buffer);
-
 	if (size > 0)
 	{
 		Config config(buffer);
 
-		R_ParticleSystem* particleSystem = new R_ParticleSystem();
+		particleSystem = new R_ParticleSystem();
 		particleSystem->Load(config);
 		particleSystem->ID = ID;
 		particleSystem->resource_file = path;
 
 		delete buffer;
-		return particleSystem;
 	}
+	return particleSystem;
 }

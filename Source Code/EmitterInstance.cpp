@@ -6,6 +6,8 @@
 #include "Emitter.h"
 #include "ParticleModule.h"
 
+#include <map>
+
 EmitterInstance::EmitterInstance()
 {
 
@@ -41,8 +43,8 @@ void EmitterInstance::DrawParticles()
 		unsigned int particleIndex = particleIndices[i];
 		Particle* particle = &particles[particleIndex];
 
-		float4x4 transform = float4x4::FromTRS(particle->position, Quat::identity, float3(particle->size)).Transposed();
-		App->renderer3D->AddParticle(transform, emitterReference->materialID, particle->color);
+		float4x4 transform = float4x4::FromTRS(particle->position, particle->worldRotation, float3(particle->size)).Transposed();
+		App->renderer3D->AddParticle(transform, emitterReference->materialID, particle->color, particle->distanceToCamera);
 	}
 }
 

@@ -7,6 +7,10 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "Particle.h"
+#include "Application.h"
+#include "M_Camera3D.h"
+#include "C_Camera.h"
+#include "MathGeoLib/src/Geometry/Frustum.h"
 
 void ParticleModule::SaveAsset(Config& config)
 {
@@ -37,7 +41,80 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void EmitterBase::Update(float dt, EmitterInstance* emitter)
 {
+	for (unsigned int i = 0; i < emitter->activeParticles; ++i)
+	{
+		unsigned int particleIndex = emitter->particleIndices[i];
+		Particle* particle = &emitter->particles[particleIndex];
 
+		//TODO: should this be handled in particle lifetime?
+		particle->relativeLifetime += particle->oneOverMaxLifetime * dt;
+		//TODO: find a way to link the camera
+		particle->worldRotation = GetAlignmentRotation(particle->position, App->camera->GetCamera()->frustum.WorldMatrix());
+		particle->distanceToCamera = float3(App->camera->GetCamera()->frustum.WorldMatrix().TranslatePart() - particle->position).LengthSq();
+	}
+}
+
+Quat EmitterBase::GetAlignmentRotation(const float3& position, const float4x4& cameraTransform)
+{
+	float3 fwd, up, right;
+	float3 direction = float3(cameraTransform.TranslatePart() - position).Normalized();
+
+	switch (alignment)
+	{
+		case(Alignment::Screen):
+			fwd = cameraTransform.WorldZ().Normalized().Neg();
+			up = cameraTransform.WorldY().Normalized();
+			right = up.Cross(fwd).Normalized();
+			break;
+		case(Alignment::Camera):
+			fwd = float3(cameraTransform.TranslatePart() - position).Normalized();
+			right = cameraTransform.WorldY().Normalized().Cross(fwd).Normalized();
+			up = fwd.Cross(right).Normalized();
+			break;
+		case(Alignment::LockXY):
+		{
+			right = float3::unitX;
+			fwd = direction.Cross(right).Normalized();
+			up = fwd.Cross(right).Normalized();
+			break;
+		}
+		case(Alignment::LockXZ):
+		{
+			right = float3::unitX;
+			up = direction.Cross(right).Normalized();
+			fwd = right.Cross(up).Normalized();
+			break;
+		}
+		case(Alignment::LockYX):
+		{
+			up = float3::unitY;
+			fwd = up.Cross(direction).Normalized();
+			right = up.Cross(fwd).Normalized();
+			break;
+		}
+		case(Alignment::LockYZ):
+		{
+			up = float3::unitY;
+			right = up.Cross(direction).Normalized();
+			fwd = right.Cross(up).Normalized();
+			break;
+		}
+		case(Alignment::LockZX):
+		{
+			fwd = float3::unitZ;
+			up = direction.Cross(fwd).Normalized();
+			right = up.Cross(fwd).Normalized();
+			break;
+		}
+		case(Alignment::LockZY):
+		{
+			fwd = float3::unitZ;
+			right = direction.Cross(fwd).Normalized();
+			up = fwd.Cross(right).Normalized();
+			break;
+		}
+	}
+	return Quat(float3x3(right, up, fwd));
 }
 
 void EmitterBase::SaveAsset(Config& config)

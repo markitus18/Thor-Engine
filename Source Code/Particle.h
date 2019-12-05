@@ -4,6 +4,7 @@
 #include "Globals.h"
 
 #include "MathGeoLib/src/Math/float3.h"
+#include "MathGeoLib/src/Math/Quat.h"
 
 class Particle
 {
@@ -16,6 +17,8 @@ public:
 
 public:
 	float3 position;			//Current location
+	Quat worldRotation;
+
 	float relativeLifetime;		//Lifetime, in range [0, 1]
 
 	float oneOverMaxLifetime;	// = 1.0f / MaxLifeTime
@@ -25,6 +28,8 @@ public:
 	float size = 1.0f;
 
 	float4 color;
+
+	float distanceToCamera;
 };
 
 #endif // !__PARTICLE_H__

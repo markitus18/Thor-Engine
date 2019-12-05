@@ -540,16 +540,17 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	glPopMatrix();
 }
 
-void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material, float4 color)
+void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material, float4 color, float distanceToCamera)
 {
-	particles.push_back(RenderParticle(transform, material, color));
+	particles.insert(std::pair<float, RenderParticle>(distanceToCamera, RenderParticle(transform, material, color)));
 }
 
 void M_Renderer3D::DrawAllParticles()
 {
-	for (uint i = 0; i < particles.size(); i++)
+	std::map<float, RenderParticle>::reverse_iterator it;
+	for (it = particles.rbegin(); it != particles.rend(); ++it)
 	{
-		DrawParticle(particles[i]);
+		DrawParticle((*it).second);
 	}
 	particles.clear();
 }

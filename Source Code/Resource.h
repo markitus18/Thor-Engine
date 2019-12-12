@@ -28,6 +28,7 @@ public:
 		BONE,
 		PREFAB,
 		PARTICLESYSTEM,
+		SHADER,
 		UNKNOWN,
 	};
 

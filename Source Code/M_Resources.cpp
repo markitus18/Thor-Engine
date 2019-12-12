@@ -16,6 +16,7 @@
 #include "R_Animation.h"
 #include "R_Bone.h"
 #include "R_ParticleSystem.h"
+#include "R_Shader.h"
 
 #include "M_FileSystem.h"
 #include "PathNode.h"
@@ -116,6 +117,10 @@ void M_Resources::ImportFileFromAssets(const char* path)
 		{
 			ImportScene(path);
 			break;
+		}
+		case(Resource::SHADER):
+		{
+
 		}
 	}
 }
@@ -328,6 +333,25 @@ uint64 M_Resources::ImportRParticleSystem(const char* assetsPath)
 	return 0;
 }
 
+uint64 M_Resources::ImportRShader(const char* assetsPath)
+{
+	uint ret = 0;
+	uint newID = 0;
+	R_Shader* resource = nullptr;
+	uint64 instances = 0;
+
+	//Find if the resource already exists and delete it
+	ResourceMeta* meta = FindResourceInLibrary(assetsPath, assetsPath, Resource::SHADER);
+	if (meta != nullptr)
+	{
+		newID = meta->id;
+		instances = DeleteResource(newID);
+	}
+
+	//Find if the resource already exists and delete it
+	return 0;
+}
+
 Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)
 {
 	Resource* ret = nullptr;
@@ -448,6 +472,8 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path)
 		return Resource::PREFAB;
 	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
 		return Resource::TEXTURE;
+	if (ext == "shader")
+		return Resource::SHADER;
 	return Resource::UNKNOWN;
 }
 

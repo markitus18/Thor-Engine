@@ -107,10 +107,12 @@
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source Code\M_ParticleSystems.h" />
+    <ClInclude Include="Source Code\M_Shaders.h" />
     <ClInclude Include="Source Code\Particle.h" />
     <ClInclude Include="Source Code\ParticleModule.h" />
     <ClInclude Include="Source Code\R_Folder.h" />
     <ClInclude Include="Source Code\R_ParticleSystem.h" />
+    <ClInclude Include="Source Code\R_Shader.h" />
     <ClInclude Include="Source Code\TreeDisplay.h" />
     <ClInclude Include="Source Code\TreeNode.h" />
     <ClInclude Include="Source Code\External Libraries\Devil\include\config.h" />
@@ -310,6 +312,7 @@
     <ClCompile Include="Source Code\M_Resources.cpp" />
     <ClCompile Include="Source Code\M_Scene.cpp" />
     <ClCompile Include="Source Code\M_Editor.cpp" />
+    <ClCompile Include="Source Code\M_Shaders.cpp" />
     <ClCompile Include="Source Code\M_Window.cpp" />
     <ClCompile Include="Source Code\Panel.cpp" />
     <ClCompile Include="Source Code\Particle.cpp" />
@@ -326,6 +329,7 @@
     <ClCompile Include="Source Code\R_Mesh.cpp" />
     <ClCompile Include="Source Code\R_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\R_Prefab.cpp" />
+    <ClCompile Include="Source Code\R_Shader.cpp" />
     <ClCompile Include="Source Code\R_Texture.cpp" />
     <ClCompile Include="Source Code\Time.cpp" />
     <ClCompile Include="Source Code\Timer.cpp" />

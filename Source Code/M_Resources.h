@@ -59,8 +59,12 @@ public:
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
 	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name);
 	uint64 ImportRBone(const aiBone* bone, const char* source_file, const char* name, uint64 meshID);
+
 	//Called when a particle system is modified externally (due to copy-paste or commit update)
 	uint64 ImportRParticleSystem(const char* assetsPath);
+	
+	//Called when a shader is modified externally (due to copy-paste or commit update)
+	uint64 ImportRShader(const char* assetsPath);
 	
 	//Used for internal resources (external referring to fbx, textures,...)
 	Resource* CreateNewResource(const char* assetsPath, Resource::Type type);

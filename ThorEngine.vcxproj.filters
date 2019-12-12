@@ -325,6 +325,12 @@
     <ClCompile Include="Source Code\W_ParticleEditor.cpp">
       <Filter>Source Code\Editor\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\M_Shaders.cpp">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\R_Shader.cpp">
+      <Filter>Source Code\Tools\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -768,6 +774,12 @@
     </ClInclude>
     <ClInclude Include="Source Code\W_ParticleEditor.h">
       <Filter>Source Code\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\M_Shaders.h">
+      <Filter>Source Code\Modules\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Shader.h">
+      <Filter>Source Code\Tools\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

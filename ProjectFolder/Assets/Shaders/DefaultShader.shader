@@ -1,4 +1,3 @@
-#version 330 core
 
 #ifdef __COMPILE_VERTEX__
 
@@ -14,7 +13,7 @@ uniform mat4 projection;
 
 void main()
 {
-	gl_Position = projection * view * model_matrix * vec4(position, 1.0f);
+	gl_Position = projection * view * model_matrix * vec4(position, 1.0);
 	TexCoord = texCoord;
 }
 

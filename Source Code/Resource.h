@@ -16,6 +16,7 @@ friend struct ResourceMeta;
 friend class M_Import;
 friend class M_Animations;
 friend class M_ParticleSystems;
+friend class M_Shaders;
 
 public:
 	enum Type

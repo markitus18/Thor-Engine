@@ -7,6 +7,7 @@
 #include "M_Import.h"
 #include "M_Animations.h"
 #include "M_ParticleSystems.h"
+#include "M_Shaders.h"
 
 //Resources
 #include "R_Mesh.h"
@@ -120,7 +121,8 @@ void M_Resources::ImportFileFromAssets(const char* path)
 		}
 		case(Resource::SHADER):
 		{
-
+			ImportRShader(path);
+			break;
 		}
 	}
 }
@@ -347,9 +349,21 @@ uint64 M_Resources::ImportRShader(const char* assetsPath)
 		newID = meta->id;
 		instances = DeleteResource(newID);
 	}
+	else
+	{
+		newID = random.Int();
+	}
 
-	//Find if the resource already exists and delete it
-	return 0;
+	//Importing resource
+	resource = App->moduleShaders->ImportShaderResource(assetsPath, newID);
+	if (resource)
+	{
+		resource->instances = instances;
+		AddResource(resource);
+		ret = resource->ID;
+	}
+
+	return ret;
 }
 
 Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)

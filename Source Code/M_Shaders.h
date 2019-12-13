@@ -18,7 +18,7 @@ public:
 
 	//Called when we get an external update from the particle system. 
 	//If it is modified within the engine, both assets and library file are updated, no need to re-import.
-	void ImportParticleSystemResource(const char* assetsPath, uint64 ID = 0);
+	R_Shader* ImportShaderResource(const char* assetsPath, uint64 ID = 0);
 	R_Shader* LoadShaderResource(uint64 ID);
 };
 #endif // !

@@ -14,6 +14,7 @@
 #include "M_Meshes.h"
 #include "M_Animations.h"
 #include "M_ParticleSystems.h"
+#include "M_Shaders.h"
 
 #include "Config.h"
 
@@ -38,6 +39,7 @@ Application::Application()
 	moduleMeshes = new M_Meshes();
 	moduleAnimations = new M_Animations();
 	moduleParticleSystems = new M_ParticleSystems();
+	moduleShaders = new M_Shaders();
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order

@@ -45,19 +45,60 @@ R_Shader* M_Shaders::ImportShaderResource(const char* assetsPath, uint64 ID)
 			full_path.append(std::to_string(ID));
 			newShader->resource_file = full_path;
 			newShader->original_file = assetsPath;
+			newShader->ID = ID;
 			newShader->Link();
+
+			//TODO: simply duplicating shader in library, not saving it as binary yet
+			uint ret = App->fileSystem->Save(newShader->resource_file.c_str(), buffer, size);
+			/*
+			char* binaryShader = nullptr;
+			if (int size = newShader->Save(&binaryShader))
+			{
+				uint ret = App->fileSystem->Save(newShader->resource_file.c_str(), binaryShader, size);
+				RELEASE_ARRAY(binaryShader);
+			}*/
+			
 		}
 		else
 		{
-			delete newShader;
-			newShader = nullptr;
+			RELEASE(newShader);
 		}
+		RELEASE_ARRAY(buffer);
 	}
 	return newShader;
 }
 
 R_Shader* M_Shaders::LoadShaderResource(uint64 ID)
 {
+	R_Shader* loadedShader = nullptr;
 
-	return nullptr;
+	std::string full_path = "/Library/Shaders/";
+	full_path.append(std::to_string(ID));
+
+	char* buffer;
+	uint size = App->fileSystem->Load(full_path.c_str(), &buffer);
+
+	if (size > 0)
+	{
+		//TODO: simply duplicating shader in library, not saving it as binary yet.
+		//Read method from library is the same as assets
+		loadedShader = new R_Shader();
+		if (loadedShader->LoadFromText(buffer) == false)
+		{
+			RELEASE(loadedShader);
+		}
+		else
+		{
+			loadedShader->Link();
+		}
+		/*
+		if (loadedShader->LoadFromBinary(buffer, size) == false)
+		{
+			LOG("Could not load shader from binary file: %s", full_path.c_str());
+			RELEASE(loadedShader);
+		}
+		RELEASE_ARRAY(buffer);
+		*/
+	}
+	return loadedShader;
 }

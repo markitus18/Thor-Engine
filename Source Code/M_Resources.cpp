@@ -464,6 +464,12 @@ Resource* M_Resources::GetResource(uint64 ID)
 						LoadResource(ret);
 					break;
 				}
+				case (Resource::SHADER):
+				{
+					if (ret = App->moduleShaders->LoadShaderResource(ID))
+						LoadResource(ret);
+					break;
+				}
 			}
 
 			if (ret != nullptr)

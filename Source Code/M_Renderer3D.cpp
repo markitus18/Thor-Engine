@@ -418,131 +418,14 @@ void M_Renderer3D::AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Mate
 
 void M_Renderer3D::DrawAllMeshes()
 {
-//	glEnableClientState(GL_VERTEX_ARRAY);
-//	glEnableClientState(GL_NORMAL_ARRAY);
-//	glUseProgram(3);
-
 	for (uint i = 0; i < meshes.size(); i++)
 	{
-		DrawMesh_Shader(meshes[i]);
+		DrawMesh(meshes[i]);
 	}
 	meshes.clear();
-//	glUseProgram(0);
-//	glDisableClientState(GL_NORMAL_ARRAY);
-//	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
-{
-	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
-	if (resMesh == nullptr) return;
-
-	//Generate buffers for animation mesh
-	if (rMesh.mesh->animMesh != nullptr)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh->buffers[R_Mesh::b_vertices]);
-		glBufferData(GL_ARRAY_BUFFER, resMesh->buffersSize[R_Mesh::b_vertices] * sizeof(float) * 3, rMesh.mesh->animMesh->vertices, GL_STATIC_DRAW);
-
-		if (resMesh->buffersSize[R_Mesh::b_normals] > 0)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh->buffers[R_Mesh::b_normals]);
-			glBufferData(GL_ARRAY_BUFFER, resMesh->buffersSize[R_Mesh::b_normals] * sizeof(float) * 3, rMesh.mesh->animMesh->normals, GL_STATIC_DRAW);
-		}
-	}
-
-	glPushMatrix();
-	glMultMatrixf((float*)&rMesh.transform);
-
-	glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh ? rMesh.mesh->animMesh->buffers[R_Mesh::b_vertices] :  resMesh->buffers[R_Mesh::b_vertices]);
-	glVertexPointer(3, GL_FLOAT, 0, nullptr);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_indices]);
-
-
-	//Selected wireframe drawing
-	if (rMesh.selected || rMesh.parentSelected || rMesh.wireframe)
-	{
-		if (rMesh.selected)
-		{
-			glColor3f(0.71, 0.78, 0.88);
-			glLineWidth(1);
-		}
-
-		else if (rMesh.parentSelected)
-		{
-			glColor3f(0.51, 0.58, 0.68);
-		}
-
-		else if (rMesh.wireframe)
-		{
-			glColor3f(0, 0, 0);
-		}
-
-		glDisable(GL_LIGHTING);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glEnable(GL_LIGHTING);
-		glLineWidth(1);
-		glColor4f(1, 1, 1, 1);
-	}
-
-	if (rMesh.shaded)
-	{
-		if (resMesh->buffersSize[R_Mesh::b_normals] > 0)
-		{
-			if (rMesh.flippedNormals)
-			{
-				glFrontFace(GL_CW);
-			}
-
-			glBindBuffer(GL_ARRAY_BUFFER, rMesh.mesh->animMesh ? rMesh.mesh->animMesh->buffers[R_Mesh::b_normals] : resMesh->buffers[R_Mesh::b_normals]);
-			glNormalPointer(GL_FLOAT, 0, nullptr);
-		}
-
-		if (resMesh->buffersSize[R_Mesh::b_tex_coords] > 0)
-		{
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, resMesh->buffers[R_Mesh::b_tex_coords]);
-			glTexCoordPointer(2, GL_FLOAT, 0, nullptr);
-		}
-
-		if (rMesh.material)
-		{
-			R_Material* mat = (R_Material*)rMesh.material->GetResource();
-			if (mat->textureID)
-			{
-				R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID);
-				if (rTex && rTex->buffer != 0)
-				{
-					glBindTexture(GL_TEXTURE_2D, rTex->buffer);
-				}
-			}
-			glColor4f(mat->color.r, mat->color.g, mat->color.b, mat->color.a);
-		}
-
-		glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
-
-		//Back to default OpenGL state --------------
-		if (rMesh.material)
-		{
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glColor4f(255, 255, 255, 1.0f);
-		}
-
-		if (resMesh->buffersSize[R_Mesh::b_tex_coords] > 0)
-		{
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		}
-		glFrontFace(GL_CCW);
-		//------------------------------------------
-	}
-
-	glPopMatrix();
-}
-
-void M_Renderer3D::DrawMesh_Shader(RenderMesh& rMesh)
 {
 	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
 	if (resMesh == nullptr) return;

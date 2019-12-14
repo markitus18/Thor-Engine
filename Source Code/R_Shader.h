@@ -19,7 +19,7 @@ public:
 
 	int Save(char** buffer);
 	bool LoadFromText(const char* buffer);
-	bool LoadFromBinary(const char* buffer);
+	bool LoadFromBinary(const char* buffer, int size);
 	bool Link();
 
 	void DeleteShaderObject(int index);

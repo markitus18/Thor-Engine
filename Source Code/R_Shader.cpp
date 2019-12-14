@@ -16,9 +16,34 @@ R_Shader::~R_Shader()
 
 int R_Shader::Save(char** buffer)
 {
-	int size = 0;
+	GLint formats = 0;
+	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &formats);
+	if (formats < 1) return 0;
 
-	return size;
+	int totalLenght = 0, binaryLenght;
+	glGetProgramiv(shaderProgram, GL_PROGRAM_BINARY_LENGTH, &binaryLenght);
+
+	if (binaryLenght > 0)
+	{
+		//We will store the shader binary format first, then the binary data
+		totalLenght = sizeof(unsigned int) + binaryLenght;
+		*buffer = new char[totalLenght];
+
+		char* binaryBuffer = new char[binaryLenght];
+
+		GLenum format;
+		glGetProgramBinary(shaderProgram, binaryLenght, nullptr, &format, binaryBuffer);
+
+		char* cursor = *buffer;
+		memcpy(cursor, &format, sizeof(unsigned int));
+		cursor += sizeof(unsigned int);
+
+		memcpy(cursor, &binaryBuffer, binaryLenght);
+
+		RELEASE_ARRAY(binaryBuffer);
+	}
+
+	return totalLenght;
 }
 
 bool R_Shader::LoadFromText(const char* buffer)
@@ -62,9 +87,28 @@ bool R_Shader::LoadFromText(const char* buffer)
 	return ret;
 }
 
-bool R_Shader::LoadFromBinary(const char* buffer)
+bool R_Shader::LoadFromBinary(const char* buffer, int size)
 {
 	bool ret = true;
+	GLenum format;
+
+	const char* cursor = buffer;
+	memcpy(&format, cursor, sizeof(unsigned int));
+	cursor += sizeof(unsigned int);
+
+	shaderProgram = glCreateProgram();
+	glProgramBinary(shaderProgram, format, cursor, size - sizeof(unsigned int));
+
+	GLint status;
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
+
+	if (status == GL_FALSE)
+	{
+		char str[512];
+		glGetProgramInfoLog(shaderProgram, 512, nullptr, str);
+		LOG("Shader Compilation Error: %s", str);
+		glDeleteProgram(shaderProgram);
+	}
 
 	return ret;
 }
@@ -86,7 +130,8 @@ bool R_Shader::Link()
 	{
 		char str[512];
 		glGetProgramInfoLog(shaderProgram, 512, nullptr, str);
-		
+		glDeleteProgram(shaderProgram);
+
 		LOG("Shader Linking Error %s", str);
 	}
 

@@ -36,6 +36,7 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 	CreateDir("Library/Animations");
 	CreateDir("Library/Bones");
 	CreateDir("Library/ParticleSystems");
+	CreateDir("Library/Shaders");
 
 	// Generate IO interfaces
 	CreateAssimpIO();

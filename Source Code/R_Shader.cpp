@@ -26,44 +26,6 @@ bool R_Shader::LoadFromText(const char* buffer)
 	//TODO: this seems like a rather slow process, measure it and (maybe) optimize
 	bool ret = false;
 	std::string file(buffer);
-	std::string text("#ifdef __COMPILE_VERTEX__								 \
-																					 \
-	layout(location = 0) in vec3 position;											 \
-	layout(location = 1) in vec3 color;												 \
-	layout(location = 2) in vec2 texCoord;											 \
-																					 \
-	out vec2 TexCoord;																 \
-																					 \
-	uniform mat4 model_matrix;														 \
-	uniform mat4 view;																 \
-	uniform mat4 projection;														 \
-																					 \
-	void main()																		 \
-	{																				 \
-		gl_Position = projection * view * model_matrix * vec4(position, 1.0);		 \
-		TexCoord = texCoord;														 \
-	}																				 \
-																					 \
-#endif																				 \
-																					 \
-	//---------------------------------------------------------------------------	 \
-																					 \
-#ifdef __COMPILE_FRAGMENT__															 \
-																					 \
-	in vec2 TexCoord;																 \
-																					 \
-	out vec4 color;																	 \
-																					 \
-	uniform sampler2D ourTexture;													 \
-																					 \
-	void main()																		 \
-	{																				 \
-		color = vec4(1.0, 0.0, 0.0, 1.0);											 \
-		color = texture(ourTexture, TexCoord);										 \
-	}																				 \
-																					 \
-#endif");
-	file = text;
 	for (uint i = 0; i < (int)Object_Type::Unknown; ++i)
 	{
 		//Searching for each shader object macro type. If found, compile it
@@ -73,7 +35,6 @@ bool R_Shader::LoadFromText(const char* buffer)
 			if (int GLmacro = GetShaderMacro((Object_Type)i))
 			{
 				//Compile the shader, type and define are ready
-
 				std::string define = "#version 330 core\n"; //TODO: temporal to make it work
 				define += std::string("#define ") + macroStr + "\n";
 
@@ -98,7 +59,6 @@ bool R_Shader::LoadFromText(const char* buffer)
 			}
 		}
 	}
-
 	return ret;
 }
 

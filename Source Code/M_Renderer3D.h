@@ -84,6 +84,7 @@ public:
 	void AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
 	void DrawAllMeshes();
 	void DrawMesh(RenderMesh& mesh);
+	void DrawMesh_Shader(RenderMesh& mesh);
 
 	void AddParticle(const float4x4& transform, uint64 material, float4 color, float distanceToCamera);
 	void DrawAllParticles();

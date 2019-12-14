@@ -42,7 +42,6 @@ uint64 M_Animations::ImportSceneAnimations(const aiScene* scene, GameObject* roo
 R_Animation* M_Animations::ImportAnimation(const aiAnimation* anim, uint64 ID, const char* source_file)
 {
 	R_Animation* animation = new R_Animation();
-
 	
 	//Animation data
 	animation->duration = anim->mDuration;

@@ -312,7 +312,7 @@ uint M_FileSystem::Load(const char* file, char** buffer) const
 
 		if (size > 0)
 		{
-			*buffer = new char[size];
+			*buffer = new char[size+1];
 			uint readed = (uint)PHYSFS_read(fs_file, *buffer, 1, size);
 			if (readed != size)
 			{
@@ -320,7 +320,11 @@ uint M_FileSystem::Load(const char* file, char** buffer) const
 				RELEASE(buffer);
 			}
 			else
+			{
 				ret = readed;
+				//Adding end of file at the end of the buffer. Loading a shader file does not add this for some reason
+				(*buffer)[size] = '\0';
+			}
 		}
 
 		if (PHYSFS_close(fs_file) == 0)

@@ -46,7 +46,6 @@ R_Shader* M_Shaders::ImportShaderResource(const char* assetsPath, uint64 ID)
 			newShader->resource_file = full_path;
 			newShader->original_file = assetsPath;
 			newShader->Link();
-
 		}
 		else
 		{

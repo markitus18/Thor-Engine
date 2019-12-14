@@ -574,6 +574,9 @@ void M_Renderer3D::DrawMesh_Shader(RenderMesh& rMesh)
 				glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 			}
 		}
+
+		uint colorLoc = glGetUniformLocation(3, "baseColor");
+		glUniform4fv(colorLoc, 1, &mat->color);
 	}
 
 	glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
@@ -582,10 +585,9 @@ void M_Renderer3D::DrawMesh_Shader(RenderMesh& rMesh)
 	if (rMesh.material)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glColor4f(255, 255, 255, 1.0f);
 	}
 	glFrontFace(GL_CCW);
-	glUseProgram(0); //TODO: meshes won't render if the program is cleared later...?
+	glUseProgram(0);
 	glBindVertexArray(0);
 	//------------------------------------------
 }

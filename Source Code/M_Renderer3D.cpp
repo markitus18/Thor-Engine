@@ -356,6 +356,7 @@ void M_Renderer3D::SetCullingCamera(C_Camera* camera)
 
 void M_Renderer3D::DrawAllScene()
 {
+	glUseProgram(0);
 	//TODO: Move this into a mesh "prefab" or a renderer method
 	//Both draw and input handling
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -417,17 +418,18 @@ void M_Renderer3D::AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Mate
 
 void M_Renderer3D::DrawAllMeshes()
 {
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
+//	glEnableClientState(GL_VERTEX_ARRAY);
+//	glEnableClientState(GL_NORMAL_ARRAY);
+//	glUseProgram(3);
 
 	for (uint i = 0; i < meshes.size(); i++)
 	{
-		DrawMesh(meshes[i]);
+		DrawMesh_Shader(meshes[i]);
 	}
 	meshes.clear();
-
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
+//	glUseProgram(0);
+//	glDisableClientState(GL_NORMAL_ARRAY);
+//	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
@@ -538,6 +540,54 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	}
 
 	glPopMatrix();
+}
+
+void M_Renderer3D::DrawMesh_Shader(RenderMesh& rMesh)
+{
+	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
+	if (resMesh == nullptr) return;
+
+	glUseProgram(3);
+
+	//Sending model matrix
+	uint modelLoc = glGetUniformLocation(3, "model_matrix");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, rMesh.transform.ptr());
+
+	//Sending view matrix
+	uint projectionLoc = glGetUniformLocation(3, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetCamera()->GetOpenGLProjectionMatrix());
+
+	//Sending projection matrix
+	uint viewLoc = glGetUniformLocation(3, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, App->camera->GetCamera()->GetOpenGLViewMatrix());
+	
+	glBindVertexArray(resMesh->VAO);
+
+	if (rMesh.material)
+	{
+		R_Material* mat = (R_Material*)rMesh.material->GetResource();
+		if (mat->textureID)
+		{
+			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID);
+			if (rTex && rTex->buffer != 0)
+			{
+				glBindTexture(GL_TEXTURE_2D, rTex->buffer);
+			}
+		}
+	}
+
+	glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
+
+	//Back to default OpenGL state --------------
+	if (rMesh.material)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glColor4f(255, 255, 255, 1.0f);
+	}
+	glFrontFace(GL_CCW);
+	glUseProgram(0); //TODO: meshes won't render if the program is cleared later...?
+	glBindVertexArray(0);
+	//------------------------------------------
 }
 
 void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material, float4 color, float distanceToCamera)

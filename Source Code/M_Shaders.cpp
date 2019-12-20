@@ -48,6 +48,10 @@ R_Shader* M_Shaders::ImportShaderResource(const char* assetsPath, uint64 ID)
 			newShader->ID = ID;
 			newShader->Link();
 
+			std::string file, extension;
+			App->fileSystem->SplitFilePath(newShader->original_file.c_str(), nullptr, &file, &extension);
+			newShader->name = file;
+
 			//TODO: simply duplicating shader in library, not saving it as binary yet
 			uint ret = App->fileSystem->Save(newShader->resource_file.c_str(), buffer, size);
 			/*
@@ -90,6 +94,8 @@ R_Shader* M_Shaders::LoadShaderResource(uint64 ID)
 		else
 		{
 			loadedShader->Link();
+			loadedShader->ID = ID;
+			loadedShader->resource_file = full_path;
 		}
 		/*
 		if (loadedShader->LoadFromBinary(buffer, size) == false)

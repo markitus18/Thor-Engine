@@ -1,21 +1,27 @@
 #include "Application.h"
+
+#include "Gizmos.h"
+#include "OpenGL.h"
+#include "GameObject.h"
+
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
-#include "C_Camera.h"
-#include "C_Material.h"
-#include "C_Mesh.h"
-#include "R_Mesh.h"
-#include "Gizmos.h"
-#include "M_Editor.h"
-#include "OpenGL.h"
-#include "M_Import.h"
-#include "GameObject.h"
-#include "R_Material.h"
-#include "R_Texture.h"
 #include "M_Resources.h"
 #include "M_Materials.h"
 #include "M_Input.h"
+#include "M_Editor.h"
+#include "M_Import.h"
+
+#include "C_Camera.h"
+#include "C_Material.h"
+#include "C_Mesh.h"
+
+#include "R_Mesh.h"
+#include "R_Material.h"
+#include "R_Texture.h"
+#include "R_Shader.h"
+
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -429,38 +435,39 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 {
 	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
 	if (resMesh == nullptr) return;
+	if (rMesh.material == nullptr) return;
 
-	glUseProgram(3);
+	R_Material* mat = (R_Material*)rMesh.material->GetResource();
+	if (mat->shaderID == 0) return;
+	
+	R_Shader* shader = (R_Shader*)App->moduleResources->GetResource(mat->shaderID);
+	glUseProgram(shader->shaderProgram);
+
+	uint64 textureID = mat->textureID ? mat->textureID : 65; //TODO: Default texture is set manually from library ID
+
+	R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(textureID);
+	if (rTex && rTex->buffer != 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, rTex->buffer);
+	}
+
+	uint colorLoc = glGetUniformLocation(shader->shaderProgram, "baseColor");
+	glUniform4fv(colorLoc, 1, &mat->color);
 
 	//Sending model matrix
-	uint modelLoc = glGetUniformLocation(3, "model_matrix");
+	uint modelLoc = glGetUniformLocation(shader->shaderProgram, "model_matrix");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, rMesh.transform.ptr());
 
 	//Sending view matrix
-	uint projectionLoc = glGetUniformLocation(3, "projection");
+	uint projectionLoc = glGetUniformLocation(shader->shaderProgram, "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetCamera()->GetOpenGLProjectionMatrix());
 
 	//Sending projection matrix
-	uint viewLoc = glGetUniformLocation(3, "view");
+	uint viewLoc = glGetUniformLocation(shader->shaderProgram, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, App->camera->GetCamera()->GetOpenGLViewMatrix());
 	
+	//Binding vertex array object
 	glBindVertexArray(resMesh->VAO);
-
-	if (rMesh.material)
-	{
-		R_Material* mat = (R_Material*)rMesh.material->GetResource();
-		if (mat->textureID)
-		{
-			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(mat->textureID);
-			if (rTex && rTex->buffer != 0)
-			{
-				glBindTexture(GL_TEXTURE_2D, rTex->buffer);
-			}
-		}
-
-		uint colorLoc = glGetUniformLocation(3, "baseColor");
-		glUniform4fv(colorLoc, 1, &mat->color);
-	}
 
 	glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
 

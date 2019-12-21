@@ -269,11 +269,11 @@ void M_Import::SaveGameObjectSingle(Config& config, GameObject* gameObject)
 	}
 }
 
-R_Prefab* M_Import::ImportFile(const char* path, Uint32 ID)
+R_Prefab* M_Import::ImportFile(const char* path, uint size, Uint32 ID)
 {
 	R_Prefab* ret = nullptr;
 
-	const aiScene* file = aiImportFileEx(path, aiProcessPreset_TargetRealtime_MaxQuality, App->fileSystem->GetAssimpIO());
+	const aiScene* file = aiImportFileFromMemory(path, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 	if (file)
 	{
 		LOG("Starting scene load %s", path);

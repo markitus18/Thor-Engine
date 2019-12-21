@@ -54,21 +54,10 @@ public:
 
 	bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 
-	// IO interfaces for other libs to handle files via PHYSfs
-	aiFileIO* GetAssimpIO();
-
 	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
 	bool Remove(const char* file);
 
 	uint64 GetLastModTime(const char* filename);
-
-private:
-
-	void CreateAssimpIO();
-
-private:
-
-	aiFileIO* AssimpIO = nullptr;
 };
 
 #endif // __MODULEFILESYSTEM_H__

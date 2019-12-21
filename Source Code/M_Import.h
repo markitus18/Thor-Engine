@@ -28,7 +28,7 @@ public:
 	M_Import(bool start_enabled = true);
 	~M_Import();
 
-	R_Prefab* ImportFile(const char* path, Uint32 ID);
+	R_Prefab* ImportFile(const char* path, uint size, Uint32 ID);
 	GameObject* CreateGameObjects(const aiScene*, const aiNode*, GameObject*, const char*, std::vector<GameObject*>&, std::vector<const aiMesh*>&, std::vector<const GameObject*>&);
 	bool Init(Config& config);
 	bool CleanUp();

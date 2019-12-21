@@ -106,6 +106,7 @@
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source Code\Importer.h" />
     <ClInclude Include="Source Code\M_ParticleSystems.h" />
     <ClInclude Include="Source Code\M_Shaders.h" />
     <ClInclude Include="Source Code\Particle.h" />

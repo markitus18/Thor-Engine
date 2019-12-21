@@ -138,7 +138,15 @@ uint64 M_Resources::ImportScene(const char* source_file)
 
 	newID = (meta == nullptr) ? random.Int() : meta->id;
 
-	resource = App->moduleImport->ImportFile(source_file, newID);
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(source_file, &buffer);
+	if (size > 0)
+	{
+		resource = App->moduleImport->ImportFile(buffer, size, newID);
+
+	}
+	//TODO: how do we read assimp ai file from module resources? This is now done by Importer::Meshes
+
 	if (resource)
 	{
 		AddResource(resource);
@@ -165,7 +173,9 @@ uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, con
 		newID = ++nextID;
 	}
 
-	resource = App->moduleMeshes->ImportMeshResource(mesh, newID, source_file, name);
+	resource = Importer::Meshes::Import(mesh, newID);
+	//resource = App->moduleMeshes->ImportMeshResource(mesh, newID, source_file, name);
+
 	if (resource)
 	{
 		AddResource(resource);

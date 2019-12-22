@@ -32,6 +32,7 @@ public:
 	bool HasChildInTree(GameObject* gameObject) const;
 
 	void CollectChilds(std::vector<GameObject*>& vector);
+	void CollectChilds(std::vector<const GameObject*>& vector) const;
 	GameObject* FindChildByName(const char* name) const;
 	GameObject* GetChild(uint index) const;
 

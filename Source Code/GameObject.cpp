@@ -211,6 +211,13 @@ void GameObject::CollectChilds(std::vector<GameObject*>& vector)
 		childs[i]->CollectChilds(vector);
 }
 
+void GameObject::CollectChilds(std::vector<const GameObject*>& vector) const
+{
+	vector.push_back(this);
+	for (uint i = 0; i < childs.size(); i++)
+		childs[i]->CollectChilds(vector);
+}
+
 GameObject* GameObject::FindChildByName(const char* name) const
 {
 	std::vector<GameObject*>::const_iterator it;

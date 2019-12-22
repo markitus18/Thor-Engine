@@ -85,6 +85,114 @@ void M_Import::SaveGameObjectConfig(Config& config, std::vector<GameObject*>& ga
 	}
 }
 
+uint64 Importer::Scenes::SaveScene(const GameObject* root, char** buffer)
+{
+	Config file;
+	Config_Array goArray = file.SetArray("GameObjects");
+	
+	std::vector<const GameObject*> gameObjects;
+	root->CollectChilds(gameObjects);
+
+	for (uint i = 0; i < gameObjects.size(); ++i)
+	{
+		SaveGameObject(goArray.AddNode(), gameObjects[i]);
+	}
+
+	return file.Serialize(buffer);
+}
+
+void Importer::Scenes::SaveGameObject(Config& config, const GameObject* gameObject)
+{
+	config.SetNumber("UID", gameObject->uid);
+
+	config.SetNumber("ParentUID", gameObject->parent ? gameObject->parent->uid : 0);
+	config.SetString("Name", gameObject->name.c_str());
+
+	config.SetBool("Active", gameObject->active);
+	config.SetBool("Static", gameObject->isStatic);
+	config.SetBool("Selected", gameObject->IsSelected());
+	config.SetBool("OpenInHierarchy", gameObject->hierarchyOpen);
+
+	const C_Transform* transform = gameObject->GetComponent<C_Transform>();
+
+	//Translation part
+	config.SetArray("Translation").AddFloat3(transform->GetPosition());
+
+	//Rotation part
+	config.SetArray("Rotation").AddQuat(transform->GetQuatRotation());
+
+	//Scale part
+	config.SetArray("Scale").AddFloat3(transform->GetScale());
+
+	Config_Array compConfig = config.SetArray("Components");
+	const std::vector<Component*> components = gameObject->GetAllComponents();
+
+	for (uint i = 0; i < components.size(); i++)
+	{
+		SaveComponentBase(compConfig.AddNode(), components[i]);
+	}
+}
+
+void Importer::Scenes::SaveComponentBase(Config& config, const Component* component)
+{
+	config.SetNumber("ComponentType", (int)component->GetType());
+	SaveComponent(config, component);
+
+	config.SetBool("HasResource", component->HasResource());
+	if (component->HasResource())
+	{
+		const Resource* resource = component->GetResource();
+		if (resource != nullptr)
+		{
+			config.SetNumber("Type", static_cast<int>(resource->GetType()));
+			config.SetNumber("ID", resource->GetID());
+			config.SetString("ResourceName", resource->GetName());
+		}
+	}
+}
+
+void Importer::Scenes::SaveComponent(Config& config, const Component* component)
+{
+	switch (component->GetType())
+	{
+		case(Component::Camera):
+			SaveComponent(config, (C_Camera*)component);
+			break;
+		case(Component::Animation):
+			SaveComponent(config, (C_Animation*)component);
+			break;
+	}
+
+}
+
+void Importer::Scenes::SaveComponent(Config& config, const C_Camera* camera)
+{
+	config.SetNumber("FOV", camera->frustum.VerticalFov() * RADTODEG);
+	config.SetNumber("NearPlane", camera->frustum.NearPlaneDistance());
+	config.SetNumber("FarPlane", camera->frustum.FarPlaneDistance());
+}
+
+void Importer::Scenes::SaveComponent(Config& config, const C_Animation* animation)
+{
+	config.SetBool("Playing", animation->playing);
+	Config_Array array = config.SetArray("Animations");
+	for (uint i = 0; i < animation->animations.size(); i++)
+	{
+		Config node = array.AddNode();
+		node.SetString("Name", animation->animations[i].name.c_str());
+		node.SetBool("Loopable", animation->animations[i].loopable);
+		node.SetNumber("StartFrame", animation->animations[i].start_frame);
+		node.SetNumber("EndFrame", animation->animations[i].end_frame);
+		node.SetNumber("TicksPerSecond", animation->animations[i].ticksPerSecond);
+		node.SetBool("CurrentAnimation", animation->animations[i].current);
+	}
+}
+
+void Importer::Scenes::SaveComponent(Config& config, const C_ParticleSystem* component)
+{
+
+}
+
 void M_Import::SaveGameObjectComponent(Config& config, Component* component)
 {
 	config.SetNumber("ComponentType", (int)component->GetType());

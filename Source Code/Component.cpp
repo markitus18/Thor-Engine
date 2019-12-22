@@ -38,15 +38,19 @@ void Component::SetResource(Resource* resource)
 	}
 }
 
-void Component::SetResource(unsigned long long id)
+void Component::SetResource(unsigned long long id, bool load)
 {
 	Resource* oldResource = GetResource();
 	if (oldResource != nullptr)
 		oldResource->instances--;
 
 	resourceID = id;
-	if (Resource* newResource = GetResource())
-		newResource->instances++;
+	if (load)
+	{
+		if (Resource* newResource = GetResource())
+			newResource->instances++;
+	}
+
 }
 
 

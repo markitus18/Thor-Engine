@@ -32,7 +32,7 @@ namespace Importer
 	{
 		//Processes aiMesh data into a ready-to-use R_Mesh to be saved later.
 		//Returns nullptr if any errors occured during the process.
-		R_Mesh* Import(const aiMesh* mesh, unsigned long long ID);
+		R_Mesh* Import(const aiMesh* mesh);
 
 		//Process R_Mesh data into a buffer ready to save
 		//Returns the size of the buffer file (0 if any errors)

@@ -63,4 +63,24 @@ private:
 
 };
 
+namespace Importer
+{
+	namespace Scenes
+	{
+		//Processes an already loaded FBX file and loads it into an assimp scene structure
+		//Warning: (TODO) do we need to release aiScene data later? (aiReleaseImport is not specificed in Assimp)
+		const aiScene* ProcessAssimpScene(const char* buffer, uint size);
+
+		//Processes an already loaded FBX file and generates all the hierarchy and components setup
+		//Warning: meshes, materials and lights need to be linked later, this function only loads the hierarchy
+		//GameObjects that are meant to have a mesh, material or light, are added the component and given the id from the aiScene container.
+		GameObject* Import(const aiScene* scene);
+
+		//Processes an aiNode structure and generates the GameObject hierarchy recursively.
+		//Warning: meshes, materials and lights need to be linked later, this function only loads the hierarchy
+		//GameObjects that are meant to have a mesh, material or light, are added the component and given the id from the aiScene container.
+		GameObject* CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent);
+	}
+}
+
 #endif

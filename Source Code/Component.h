@@ -39,7 +39,7 @@ public:
 
 	//Resource handling
 	virtual void SetResource(Resource* resource);
-	virtual void SetResource(unsigned long long id);
+	virtual void SetResource(unsigned long long id, bool load = true);
 	
 	Resource* GetResource();
 	const Resource* GetResource() const;

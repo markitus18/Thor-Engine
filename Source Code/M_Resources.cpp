@@ -173,7 +173,7 @@ uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, con
 		newID = ++nextID;
 	}
 
-	resource = Importer::Meshes::Import(mesh, newID);
+	resource = Importer::Meshes::Import(mesh);
 	//resource = App->moduleMeshes->ImportMeshResource(mesh, newID, source_file, name);
 
 	if (resource)

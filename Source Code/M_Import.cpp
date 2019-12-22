@@ -334,6 +334,92 @@ R_Prefab* M_Import::ImportFile(const char* path, uint size, Uint32 ID)
 	return ret;
 }
 
+//TODO: kind of a dirty method to have a private variable in the namespace
+namespace Importer { namespace Scenes { LCG randomID; } }
+
+const aiScene* Importer::Scenes::ProcessAssimpScene(const char* buffer, uint size)
+{
+	return aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+}
+
+GameObject* Importer::Scenes::Import(const aiScene* scene)
+{
+	return CreateGameObjectFromNode(scene, scene->mRootNode, nullptr);
+}
+
+GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent)
+{
+	aiVector3D		translation;
+	aiVector3D		scaling;
+	aiQuaternion	rotation;
+
+	//Decomposing transform matrix into translation rotation and scale
+	node->mTransformation.Decompose(scaling, rotation, translation);
+
+	float3 pos(translation.x, translation.y, translation.z);
+	float3 scale(scaling.x, scaling.y, scaling.z);
+	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
+	//Assimp loads "dummy" modules to stack fbx transformation. Here we collapse all those transformations
+	//to the first node that is not a dummy
+	std::string node_name = node->mName.C_Str();
+	bool dummyFound = true;
+	do
+	{
+		//All dummy modules have one children (next dummy module or last module containing the mesh)
+		if (node_name.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1)
+		{
+			//Dummy module have only one child node, so we use that one as our next GameObject
+			node = node->mChildren[0];
+
+			// Accumulate transform 
+			node->mTransformation.Decompose(scaling, rotation, translation);
+			pos += float3(translation.x, translation.y, translation.z);
+			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
+			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+
+			node_name = node->mName.C_Str();
+			dummyFound = true;
+		}
+	} while (dummyFound == true);
+
+	//TODO: Set first GameObject name (RootNode by now)
+
+	GameObject* gameObject = new GameObject(parent, node_name.c_str(), pos, scale, rot);
+	gameObject->uid = randomID.Int();
+
+	// Loading node meshes ----------------------------------------
+	for (uint i = 0; i < node->mNumMeshes; i++)
+	{
+		const aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
+		GameObject* child = gameObject;
+
+		if (node->mNumMeshes > 1)
+		{
+			node_name = newMesh->mName.C_Str();
+			if (node_name == "")
+				node_name = gameObject->name + "_submesh";
+			if (i > 0)
+				node_name.append("(" + std::to_string(i) + ")");
+			child = new GameObject(gameObject, node_name.c_str());
+			child->uid = randomID.Int();
+		}
+
+		C_Mesh* cMesh = (C_Mesh*)child->CreateComponent(Component::Mesh);
+		cMesh->SetResource(node->mMeshes[i]);
+
+		C_Material* cMaterial = (C_Material*)child->CreateComponent(Component::Material);
+		cMaterial->SetResource(newMesh->mMaterialIndex);
+	}
+
+	// Load all children from the current node
+	for (uint i = 0; i < node->mNumChildren; i++)
+	{
+		CreateGameObjectFromNode(scene, node->mChildren[i], gameObject);
+	}
+	return gameObject;
+}
+
 GameObject* M_Import::CreateGameObjects(const aiScene* scene, const aiNode* node, GameObject* parent, const char* path, std::vector<GameObject*>& vector, std::vector<const aiMesh*>& bonedMeshes, std::vector<const GameObject*>& meshGameObjects)
 {
 	aiVector3D		translation;

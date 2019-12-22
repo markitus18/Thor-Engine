@@ -104,7 +104,7 @@ R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, 
 	return resMesh;
 }
 
-R_Mesh* Importer::Meshes::Import(const aiMesh* mesh, unsigned long long ID)
+R_Mesh* Importer::Meshes::Import(const aiMesh* mesh)
 {
 	R_Mesh* resMesh = new R_Mesh;
 

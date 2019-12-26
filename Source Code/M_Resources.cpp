@@ -142,10 +142,16 @@ uint64 M_Resources::ImportScene(const char* source_file)
 	uint size = App->fileSystem->Load(source_file, &buffer);
 	if (size > 0)
 	{
-		resource = App->moduleImport->ImportFile(buffer, size, newID);
+		const aiScene* scene = Importer::Scenes::ProcessAssimpScene(buffer, size);
+		GameObject* root = Importer::Scenes::Import(scene);
+		resource = (R_Prefab*)CreateResourceBase(source_file, Resource::Type::PREFAB);
 
+		char* buffer = nullptr;
+		if (uint64 size = Importer::Scenes::SaveScene(root, &buffer))
+		{
+			App->fileSystem->Save(resource->resource_file.c_str(), buffer, size);
+		}
 	}
-	//TODO: how do we read assimp ai file from module resources? This is now done by Importer::Meshes
 
 	if (resource)
 	{
@@ -376,6 +382,62 @@ uint64 M_Resources::ImportRShader(const char* assetsPath)
 	return ret;
 }
 
+Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type type)
+{
+	Resource* ret = nullptr;
+	std::string resourcePath;
+
+	switch (type)
+	{
+		case Resource::FOLDER:
+			break;
+		case Resource::MESH:
+			ret = new R_Mesh();
+			ret->resource_file = MESHES_PATH;
+			break;
+		case Resource::TEXTURE:
+			ret = new R_Material();
+			ret->resource_file = TEXTURES_PATH;
+			break;
+		case Resource::MATERIAL:
+			ret = new R_Material();
+			ret->resource_file = MATERIALS_PATH;
+			break;
+		case Resource::ANIMATION:
+			ret = new R_Animation();
+			ret->resource_file = ANIMATIONS_PATH;
+			break;
+		case Resource::BONE:
+			ret = new R_Bone();
+			ret->resource_file = BONES_PATH;
+			break;
+		case Resource::PREFAB:
+			ret = new R_Prefab();
+			ret->resource_file = GAMEOBJECTS_PATH;
+			break;
+		case Resource::PARTICLESYSTEM:
+			ret = new R_ParticleSystem();
+			ret->resource_file = PARTICLES_PATH;
+			break;
+		case Resource::SHADER:
+			ret = new R_Shader();
+			ret->resource_file = SHADERS_PATH;
+			break;
+	}
+
+	if (ret == nullptr) return nullptr;
+
+	//The name can be overriden later by the importer
+	std::string fileName;
+	App->fileSystem->SplitFilePath(assetsPath, nullptr, &ret->name);
+
+	ret->ID = random.Int();
+	ret->original_file = assetsPath;
+	ret->resource_file.append(std::to_string(ret->ID));
+
+	return ret;
+}
+
 Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)
 {
 	Resource* ret = nullptr;
@@ -383,7 +445,6 @@ Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type 
 	{
 		case(Resource::Type::PARTICLESYSTEM):
 		{	
-			uint64 newID = ++nextID;
 			ret = App->moduleParticleSystems->CreateNewParticleSystem(assetsPath, random.Int());
 
 		}
@@ -714,22 +775,6 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 		App->fileSystem->Save(path.c_str(), buffer, size);
 		delete buffer;
 	}
-}
-
-void M_Resources::SaveFileDate(const char* path, Config& config)
-{
-	struct tm* clock;
-	struct stat attr;
-
-	stat(path, &attr);
-	clock = localtime(&(attr.st_mtime));
-	
-	config.SetNumber("Day", clock->tm_mday);
-	config.SetNumber("Month", clock->tm_mon);
-	config.SetNumber("Year", clock->tm_year);
-	config.SetNumber("Hour", clock->tm_hour);
-	config.SetNumber("Minutes", clock->tm_min);
-	config.SetNumber("Seconds", clock->tm_sec);
 }
 
 void M_Resources::UpdateAssetsImport()

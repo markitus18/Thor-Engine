@@ -4,7 +4,7 @@
 #include "Globals.h"
 
 //TODO: move into .cpp?
-#include "MathGeoLib\src\MathGeoLib.h"
+#include "MathGeoLib/src/Math/float4x4.h"
 
 class GameObject;
 class Resource;
@@ -43,7 +43,7 @@ public:
 	
 	Resource* GetResource();
 	const Resource* GetResource() const;
-	bool HasResource() const;
+	inline bool HasResource() const { return hasResource; };
 
 public:
 	GameObject* gameObject = nullptr;

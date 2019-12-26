@@ -105,6 +105,18 @@ namespace Importer
 
 		//Process a Particle System component data into a config file
 		void SaveComponent(Config& config, const C_ParticleSystem* component);
+
+		//Process an json scene buffer and loads all the GameObject hierarchy
+		uint LoadScene(const char* buffer, std::vector<GameObject*>& roots);
+
+		//Loads the base for all components and calls the specific component load function
+		void LoadComponent(Config& config, Component* component);
+
+		void LoadComponent(Config& config, C_Camera* camera);
+
+		void LoadComponent(Config& config, C_Animation* animation);
+
+		void LoadComponent(Config& config, C_ParticleSystem* particleSystem);
 	}
 }
 

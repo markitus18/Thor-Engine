@@ -1,5 +1,6 @@
-
 #include "Application.h"
+#include "Globals.h"
+
 #include "M_Import.h"
 #include "M_Scene.h"
 
@@ -188,7 +189,124 @@ void Importer::Scenes::SaveComponent(Config& config, const C_Animation* animatio
 	}
 }
 
+//TODO: Do we need to fill this function ??
 void Importer::Scenes::SaveComponent(Config& config, const C_ParticleSystem* component)
+{
+
+}
+
+uint Importer::Scenes::LoadScene(const char* buffer, std::vector<GameObject*>& roots)
+{
+	Config file(buffer);
+	
+	std::map<uint64, GameObject*> createdGameObjects;
+	Config_Array gameObjects_array = file.GetArray("GameObjects");
+
+	for (uint i = 0; i < gameObjects_array.GetSize(); ++i)
+	{
+		//Single GameObject load
+		Config gameObject_node = gameObjects_array.GetNode(i);
+
+		float3 position = gameObject_node.GetArray("Translation").GetFloat3(0);
+		Quat rotation = gameObject_node.GetArray("Rotation").GetQuat(0);
+		float3 scale = gameObject_node.GetArray("Scale").GetFloat3(0);
+
+		//Parent setup
+		GameObject* parent = nullptr;
+		std::map<uint64, GameObject*>::iterator it = createdGameObjects.find(gameObject_node.GetNumber("ParentUID"));
+		if (it != createdGameObjects.end())
+			parent = it->second;
+
+		GameObject* gameObject = new GameObject(parent, gameObject_node.GetString("Name").c_str(), position, scale, rotation);
+		gameObject->uid = gameObject_node.GetNumber("UID");
+		createdGameObjects[gameObject->uid] = gameObject;
+
+		if (parent == nullptr) roots.push_back(gameObject);
+
+		gameObject->active = gameObject_node.GetBool("Active");
+		gameObject->isStatic = gameObject_node.GetBool("Static");
+		
+		if (gameObject_node.GetBool("Selected", false))
+			App->moduleEditor->AddSelect(gameObject);
+
+		gameObject->beenSelected = gameObject->hierarchyOpen = gameObject_node.GetBool("OpenInHierarchy", false);
+
+		Config_Array components = gameObject_node.GetArray("Components");
+
+		for (uint i = 0; i < components.GetSize(); i++)
+		{
+			Config comp = components.GetNode(i);
+			Component::Type type = (Component::Type)((int)comp.GetNumber("ComponentType"));
+
+			if (Component* component = gameObject->CreateComponent(type))
+			{
+				LoadComponent(comp, component);
+				if (comp.GetBool("HasResource") == true)
+				{
+					if (Resource* resource = App->moduleResources->GetResource(comp.GetNumber("ID")))
+						component->SetResource(resource->GetID());
+				}
+				//TODO: kinda dirty
+				if (component->GetType() == Component::Animation)
+				{
+					C_Animation* anim = (C_Animation*)component;
+					if (anim->animations.size() == 0)
+						anim->AddAnimation();
+				}
+
+			}
+
+		}
+
+		//Call OnUpdateTransform() to init all components according to the GameObject
+		gameObject->OnUpdateTransform();
+	}
+	//TODO:
+	return 1;
+}
+
+void Importer::Scenes::LoadComponent(Config& config, Component* component)
+{
+	switch (component->GetType())
+	{
+	case(Component::Camera):
+	{
+		LoadComponent(config, (C_Camera*)component);
+		break;
+	}
+	case(Component::Animation):
+	{
+		LoadComponent(config, (C_Animation*)component);
+		break;
+	}
+	}
+}
+
+void Importer::Scenes::LoadComponent(Config& config, C_Camera* camera)
+{
+	camera->SetFOV(config.GetNumber("FOV"));
+	camera->SetNearPlane(config.GetNumber("NearPlane"));
+	camera->SetFarPlane(config.GetNumber("FarPlane"));
+
+}
+
+void Importer::Scenes::LoadComponent(Config& config, C_Animation* animation)
+{
+	animation->playing = config.GetBool("Playing");
+	Config_Array array = config.GetArray("Animations");
+	for (uint i = 0; i < array.GetSize(); i++)
+	{
+		Config node = array.GetNode(i);
+		animation->AddAnimation(node.GetString("Name").c_str(), node.GetNumber("StartFrame"), node.GetNumber("EndFrame"), node.GetNumber("TicksPerSecond"));
+		animation->animations[i].loopable = node.GetBool("Loopable", false);
+		animation->animations[i].current = node.GetBool("CurrentAnimation");
+		if (animation->animations[i].current == true)
+			animation->SetAnimation(i);
+	}
+
+}
+
+void Importer::Scenes::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
 {
 
 }
@@ -471,9 +589,10 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 	//Assimp loads "dummy" modules to stack fbx transformation. Here we collapse all those transformations
 	//to the first node that is not a dummy
 	std::string node_name = node->mName.C_Str();
-	bool dummyFound = true;
+	bool dummyFound = false;
 	do
 	{
+		dummyFound = false;
 		//All dummy modules have one children (next dummy module or last module containing the mesh)
 		if (node_name.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1)
 		{

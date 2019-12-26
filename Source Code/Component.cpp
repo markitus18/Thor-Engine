@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include "Application.h"
 #include "M_Resources.h"
+#include "Config.h"
 
 Component::Component(Type type, GameObject* gameObject, bool hasResource) : type(type), hasResource(hasResource), gameObject(gameObject)
 {
@@ -40,8 +41,7 @@ void Component::SetResource(Resource* resource)
 
 void Component::SetResource(unsigned long long id, bool load)
 {
-	Resource* oldResource = GetResource();
-	if (oldResource != nullptr)
+	if (Resource* oldResource = GetResource())
 		oldResource->instances--;
 
 	resourceID = id;
@@ -50,7 +50,6 @@ void Component::SetResource(unsigned long long id, bool load)
 		if (Resource* newResource = GetResource())
 			newResource->instances++;
 	}
-
 }
 
 
@@ -62,9 +61,4 @@ Resource* Component::GetResource()
 const Resource* Component::GetResource() const
 {
 	return App->moduleResources->GetResource(resourceID);
-}
-
-bool Component::HasResource() const
-{
-	return hasResource;
 }

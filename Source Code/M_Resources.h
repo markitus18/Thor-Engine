@@ -66,6 +66,9 @@ public:
 	//Called when a shader is modified externally (due to copy-paste or commit update)
 	uint64 ImportRShader(const char* assetsPath);
 	
+	//Generates the base data for a resource
+	Resource* CreateResourceBase(const char* assetsPath, Resource::Type type);
+
 	//Used for internal resources (external referring to fbx, textures,...)
 	Resource* CreateNewResource(const char* assetsPath, Resource::Type type);
 
@@ -79,8 +82,10 @@ public:
 
 	PathNode CollectImportedScenes();
 	Component::Type M_Resources::ResourceToComponentType(Resource::Type type);
+
 	//TMP: move into private? usage in P_Explorer.cpp
 	uint64 GetIDFromMeta(const char* path);
+	inline uint64 GetNewID() { return random.Int(); } ;
 
 private:
 	void LoadResourcesData();
@@ -91,7 +96,6 @@ private:
 
 	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
-	void SaveFileDate(const char* path, Config& config);
 
 	bool LoadMetaInfo(const char* file);
 	bool LoadSceneMeta(const char* file, const char* source_file);

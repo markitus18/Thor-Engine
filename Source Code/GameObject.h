@@ -9,6 +9,7 @@
 #include "Component.h"
 
 class C_Transform;
+class Config;
 
 class GameObject : public TreeNode
 {

@@ -170,7 +170,7 @@
       <Filter>Source Code\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Resource.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\M_Camera3D.cpp">
       <Filter>Source Code\Modules</Filter>
@@ -197,19 +197,19 @@
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Mesh.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Texture.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Material.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Time.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Prefab.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\M_Materials.cpp">
       <Filter>Source Code\Modules\Importers</Filter>
@@ -224,7 +224,7 @@
       <Filter>Source Code\Modules\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Animation.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\M_Animations.cpp">
       <Filter>Source Code\Modules\Importers</Filter>
@@ -233,13 +233,13 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Bone.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\C_Bone.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Folder.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\TreeNode.cpp">
       <Filter>Source Code\Editor</Filter>
@@ -302,7 +302,7 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_ParticleSystem.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\C_ParticleSystem.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
@@ -329,7 +329,7 @@
       <Filter>Source Code\Modules\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Shader.cpp">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -610,7 +610,7 @@
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Resource.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\M_Camera3D.h">
       <Filter>Source Code\Modules</Filter>
@@ -637,19 +637,19 @@
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Mesh.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Texture.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Material.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Time.h">
       <Filter>Source Code\Tools</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Prefab.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\M_Materials.h">
       <Filter>Source Code\Modules\Importers</Filter>
@@ -667,7 +667,7 @@
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Animation.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\M_Animations.h">
       <Filter>Source Code\Modules\Importers</Filter>
@@ -676,7 +676,7 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Bone.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\C_Bone.h">
       <Filter>Source Code\GameObjects\Components</Filter>
@@ -685,7 +685,7 @@
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Folder.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\TreeDisplay.h">
       <Filter>Source Code\Editor</Filter>
@@ -752,7 +752,7 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_ParticleSystem.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\C_ParticleSystem.h">
       <Filter>Source Code\GameObjects\Components</Filter>
@@ -779,7 +779,7 @@
       <Filter>Source Code\Modules\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Shader.h">
-      <Filter>Source Code\Tools\Resources</Filter>
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Importer.h">
       <Filter>Source Code\Modules\Importers</Filter>
@@ -846,9 +846,6 @@
     <Filter Include="Source Code\Math">
       <UniqueIdentifier>{58dbb61c-d778-4c94-bfd3-7fb7d7f203f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Code\Tools\Resources">
-      <UniqueIdentifier>{879429dc-d135-49b9-bacf-adbd6f013298}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External Libraries\ImGuizmo">
       <UniqueIdentifier>{c180a6c0-8b95-4e51-a65a-55607730373a}</UniqueIdentifier>
     </Filter>
@@ -857,6 +854,9 @@
     </Filter>
     <Filter Include="Source Code\Modules\Importers">
       <UniqueIdentifier>{3150bfbf-0070-4964-814c-181000b057ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Resources">
+      <UniqueIdentifier>{879429dc-d135-49b9-bacf-adbd6f013298}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

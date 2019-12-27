@@ -103,20 +103,25 @@ void M_Resources::ImportFileFromExplorer(const char* path)
 void M_Resources::ImportFileFromAssets(const char* path)
 {
 	Resource::Type type = GetTypeFromPath(path);
-	uint newID = 0;
+	Resource* resource = CreateResourceBase(path, type);
+
+	//TODO: Build resource name
+	if (ResourceMeta* meta = FindResourceInLibrary(path, name.c_str(), type))
+		resource->ID = meta->id;
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(path, &buffer);
+
 	switch (type)
 	{
 		case (Resource::TEXTURE):
 		{
-			char* buffer = nullptr;
-			uint size = App->fileSystem->Load(path, &buffer);
-			if (size > 0)
-				newID = ImportRTexture(buffer, path, size);
+			ImportRTexture(buffer, size, (R_Texture*)resource);
 			break;
 		}
 		case (Resource::PREFAB):
 		{
-			ImportScene(path);
+			ImportScene(buffer, size, (R_Prefab*)resource);
 			break;
 		}
 		case(Resource::SHADER):
@@ -125,95 +130,38 @@ void M_Resources::ImportFileFromAssets(const char* path)
 			break;
 		}
 	}
+
+	AddResource(resource);
 }
 
-uint64 M_Resources::ImportScene(const char* source_file)
+uint64 M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
 {
-	R_Prefab* resource = nullptr;
-	uint64 newID = 0;
-	std::string name = "";
+	const aiScene* scene = Importer::Scenes::ProcessAssimpScene(buffer, size);
+	GameObject* root = Importer::Scenes::Import(scene);
 
-	App->fileSystem->SplitFilePath(source_file, nullptr, &name);
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name.c_str(), Resource::PREFAB);
-
-	newID = (meta == nullptr) ? random.Int() : meta->id;
-
-	char* buffer = nullptr;
-	uint size = App->fileSystem->Load(source_file, &buffer);
-	if (size > 0)
+	char* saveBuffer = nullptr;
+	if (uint64 saveSize = Importer::Scenes::SaveScene(root, &saveBuffer))
 	{
-		const aiScene* scene = Importer::Scenes::ProcessAssimpScene(buffer, size);
-		GameObject* root = Importer::Scenes::Import(scene);
-		resource = (R_Prefab*)CreateResourceBase(source_file, Resource::Type::PREFAB);
-
-		char* buffer = nullptr;
-		if (uint64 size = Importer::Scenes::SaveScene(root, &buffer))
-		{
-			App->fileSystem->Save(resource->resource_file.c_str(), buffer, size);
-		}
+		App->fileSystem->Save(prefab->resource_file.c_str(), saveBuffer, saveSize);
 	}
-
-	if (resource)
-	{
-		AddResource(resource);
-	}
-
-	return newID;
+	return prefab->ID;
 }
 
-uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file, const char* name)
+uint64 M_Resources::ImportRMesh(const aiMesh* mesh, R_Mesh* resourceMesh)
 {
-	uint64 ret = 0;
-	uint64 newID = 0;
-	R_Mesh* resource = nullptr;
-	uint instances = 0;
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::MESH);
+	Importer::Meshes::Import(mesh, resourceMesh);
 
-	if (meta != nullptr)
+	char* saveBuffer = nullptr;
+	if (uint64 saveSize = Importer::Meshes::Save(resourceMesh, &saveBuffer))
 	{
-		newID = meta->id;
-		instances =	DeleteResource(newID);
-	}
-	else
-	{
-		newID = ++nextID;
+		App->fileSystem->Save(resourceMesh->resource_file.c_str(), saveBuffer, saveSize);
 	}
 
-	resource = Importer::Meshes::Import(mesh);
-	//resource = App->moduleMeshes->ImportMeshResource(mesh, newID, source_file, name);
-
-	if (resource)
-	{
-		AddResource(resource);
-		resource->instances = instances;
-		ret = resource->ID;
-	}
-
-	return ret;
+	return resourceMesh->ID;
 }
 
-uint64 M_Resources::ImportRTexture(const char* buffer, const char* source_file, uint size)
+uint64 M_Resources::ImportRTexture(const char* buffer, uint size, R_Texture* texture)
 {
-	uint64 ret = 0;
-	uint64 newID = 0;
-	R_Texture* resource = nullptr;
-	uint64 instances = 0;
-
-	std::string name = "", extension = "";
-	App->fileSystem->SplitFilePath(source_file, nullptr, &name, &extension);
-	name.append(".").append(extension);
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name.c_str(), Resource::TEXTURE);
-	//If ID is not 0 it means we have a resource imported and want to reimport it
-	if (meta != nullptr)
-	{
-		newID = meta->id;
-		instances = DeleteResource(newID);
-	}	
-	else
-	{
-		newID = ++nextID;
-	}
-
 	//Importing resource
 	resource = App->moduleMaterials->ImportTextureResource(buffer, newID, source_file, size);
 	if (resource)
@@ -242,7 +190,7 @@ uint64 M_Resources::ImportPrefabImage(char* buffer, const char* source_file, uin
 	}
 	else
 	{
-		newID = ++nextID;
+		newID = GetNewID();
 	}
 
 	//Importing resource
@@ -272,7 +220,7 @@ uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_fi
 	}
 	else
 	{
-		newID = ++nextID;
+		newID = GetNewID();
 	}
 
 	//Importing resource
@@ -302,7 +250,7 @@ uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source
 	}
 	else
 	{
-		newID = ++nextID;
+		newID = GetNewID();
 	}
 
 	//Importing resource
@@ -431,7 +379,7 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 	std::string fileName;
 	App->fileSystem->SplitFilePath(assetsPath, nullptr, &ret->name);
 
-	ret->ID = random.Int();
+	ret->ID = GetNewID();
 	ret->original_file = assetsPath;
 	ret->resource_file.append(std::to_string(ret->ID));
 
@@ -460,101 +408,97 @@ Resource* M_Resources::GetResource(uint64 ID)
 {
 	Resource* ret = nullptr;
 	//First find if the wanted resource is loaded
-	std::map<uint64, Resource*>::iterator it = resources.find(ID);
-	if (it != resources.end())
+	std::map<uint64, Resource*>::iterator resourcesIt = resources.find(ID);
+	if (resourcesIt != resources.end()) return resourcesIt->second;
+
+	//If resource is not loaded, search in library
+	std::map<uint64, ResourceMeta>::iterator metasIt = existingResources.find(ID);
+	if (metasIt != existingResources.end())
 	{
-		ret = it->second;
-	}
-	else
-	{	//If resource is not loaded, search in library
-		std::map<uint64, ResourceMeta>::iterator it = existingResources.find(ID);
-		if (it != existingResources.end())
+		switch (metasIt->second.type)
 		{
-			switch (it->second.type)
+			case (Resource::MESH):
 			{
-				case (Resource::MESH):
-				{
-					if (ret = App->moduleMeshes->LoadMeshResource(ID))
-						LoadResource(ret);
-					break;
-				}
-				case (Resource::TEXTURE):
-				{
-					if (ret = App->moduleMaterials->LoadTextureResource(ID))
-					{
-						ret->original_file = it->second.original_file;
-						ret->name = it->second.resource_name;
-						LoadResource(ret);
-					}
-					break;
-				}
-				case (Resource::MATERIAL):
-				{
-					if (ret = App->moduleMaterials->LoadMaterialResource(ID))
-					{
-						if (((R_Material*)ret)->textureID != 0)
-						{
-							//TODO: move into import
-							R_Texture* rTex = (R_Texture*)GetResource(((R_Material*)ret)->textureID);
-							rTex->instances++;
-						}
-						LoadResource(ret);
-					}
-
-					break;
-				}
-				case (Resource::PREFAB):
-				{
-					if (ret = App->moduleImport->LoadPrefabResource(ID))
-					{
-						if (ret && ((R_Prefab*)ret)->miniTextureID != 0)
-						{
-							//TODO: move into import
-							R_Texture* rTex = (R_Texture*)GetResource(((R_Prefab*)ret)->miniTextureID);
-							rTex->instances++;
-						}
-						LoadResource(ret);
-					}
-					break;
-				}
-				case (Resource::ANIMATION):
-				{
-					if (ret = App->moduleAnimations->LoadAnimation(ID))
-						LoadResource(ret);
-					break;
-				}
-				case (Resource::BONE):
-				{
-					if (ret = App->moduleAnimations->LoadBone(ID))
-						LoadResource(ret);
-					break;
-				}
-				case (Resource::PARTICLESYSTEM):
-				{
-					if (ret = App->moduleParticleSystems->LoadParticleSystemResource(ID))
-						LoadResource(ret);
-					break;
-				}
-				case (Resource::SHADER):
-				{
-					if (ret = App->moduleShaders->LoadShaderResource(ID))
-						LoadResource(ret);
-					break;
-				}
+				if (ret = App->moduleMeshes->LoadMeshResource(ID))
+					LoadResource(ret, metasIt->second);
+				break;
 			}
-
-			if (ret != nullptr)
+			case (Resource::TEXTURE):
 			{
-				ret->original_file = it->second.original_file;
-				ret->name = it->second.resource_name;
-				LOG("Resource load from library correctly");
+				if (ret = App->moduleMaterials->LoadTextureResource(ID))
+				{
+					ret->original_file = metasIt->second.original_file;
+					ret->name = metasIt->second.resource_name;
+					LoadResource(ret, metasIt->second);
+				}
+				break;
 			}
+			case (Resource::MATERIAL):
+			{
+				if (ret = App->moduleMaterials->LoadMaterialResource(ID))
+				{
+					if (((R_Material*)ret)->textureID != 0)
+					{
+						//TODO: move into import
+						R_Texture* rTex = (R_Texture*)GetResource(((R_Material*)ret)->textureID);
+						rTex->instances++;
+					}
+					LoadResource(ret, metasIt->second);
+				}
+
+				break;
+			}
+			case (Resource::PREFAB):
+			{
+				if (ret = App->moduleImport->LoadPrefabResource(ID))
+				{
+					if (ret && ((R_Prefab*)ret)->miniTextureID != 0)
+					{
+						//TODO: move into import
+						R_Texture* rTex = (R_Texture*)GetResource(((R_Prefab*)ret)->miniTextureID);
+						rTex->instances++;
+					}
+					LoadResource(ret, metasIt->second);
+				}
+				break;
+			}
+			case (Resource::ANIMATION):
+			{
+				if (ret = App->moduleAnimations->LoadAnimation(ID))
+					LoadResource(ret, metasIt->second);
+				break;
+			}
+			case (Resource::BONE):
+			{
+				if (ret = App->moduleAnimations->LoadBone(ID))
+					LoadResource(ret, metasIt->second);
+				break;
+			}
+			case (Resource::PARTICLESYSTEM):
+			{
+				if (ret = App->moduleParticleSystems->LoadParticleSystemResource(ID))
+					LoadResource(ret, metasIt->second);
+				break;
+			}
+			case (Resource::SHADER):
+			{
+				if (ret = App->moduleShaders->LoadShaderResource(ID))
+					LoadResource(ret, metasIt->second);
+				break;
+			}
+		}
+
+		if (ret != nullptr)
+		{
+			ret->original_file = metasIt->second.original_file;
+			ret->name = metasIt->second.resource_name;
+			LOG("Resource load from library correctly");
 		}
 	}
 	return ret;
 }
 
-Resource::Type M_Resources::GetTypeFromPath(const char* path)
+Resource::Type M_Resources::GetTypeFromPath(const char* path) const
 {
 	std::string ext = "";
 	App->fileSystem->SplitFilePath(path, nullptr, nullptr, &ext);
@@ -579,36 +523,15 @@ bool M_Resources::GetAllMetaFromType(Resource::Type type, std::vector<const Reso
 	return metas.size() > 0;
 }
 
-void M_Resources::LoadPrefab(const char* path)
+void M_Resources::LoadPrefab(uint64 ID)
 {
-	//By now we will asume everytime we want to load an fbx into the scene, it has already been imported
-	for (std::map<uint64, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++)
+	if (Resource* resource = GetResource(ID))
 	{
-		if (it->second->original_file == path && it->second->type == Resource::PREFAB)
-		{
-			App->scene->LoadGameObject(it->first);
-			it->second->instances++;
-			return;
-		}
-	}
-	for (std::map<uint64, ResourceMeta>::const_iterator it = existingResources.begin(); it != existingResources.end(); it++)
-	{
-		if (it->second.original_file == path && it->second.type == Resource::PREFAB)
-		{
-			App->scene->LoadGameObject(it->first);
-			R_Prefab* resource = new R_Prefab;
-			resource->ID = it->first;
-			resource->original_file = it->second.original_file;
-			resource->name = it->second.resource_name;
-			resource->resource_file = std::string("/Library/GameObjects/");
-			resource->resource_file.append(std::to_string(it->first));
-			resource->instances++;
-			AddResource(resource);
-			return;
-		}
+		App->scene->LoadGameObject(ID);
+		resource->instances++;
 	}
 
-	LOG("Could not find file '%s' loaded in resources", path);
+	LOG("Could not find file with ID <'%i'> loaded in resources", ID);
 }
 
 PathNode M_Resources::CollectImportedScenes()
@@ -677,7 +600,7 @@ ResourceMeta* M_Resources::FindResourceInLibrary(const char* original_file, cons
 	return nullptr;
 }
 
-ResourceMeta M_Resources::GetMetaInfo(Resource* resource)
+ResourceMeta M_Resources::GetMetaInfo(const Resource* resource)
 {
 	ResourceMeta ret;
 
@@ -704,7 +627,6 @@ bool M_Resources::LoadMetaInfo(const char* file)
 		meta.original_file = sourceFile;
 		meta.resource_name = config.GetString("Name");
 		meta.id = config.GetNumber("ID");
-		if (meta.id > nextID) nextID = meta.id + 1; //TODO: quick workaround to load highest ID in library
 		meta.type = static_cast<Resource::Type>((int)(config.GetNumber("Type")));
 		existingResources[meta.id] = meta;
 
@@ -872,6 +794,19 @@ uint64 M_Resources::GetIDFromMeta(const char* path)
 	return ret;
 }
 
+Resource::Type M_Resources::GetTypeFromMeta(const char* path)
+{
+	Resource::Type ret = Resource::Type::UNKNOWN;
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(path, &buffer);
+
+	if (size > 0)
+		ret = (Resource::Type)(int)Config(buffer).GetNumber("Type");
+
+	return ret;
+}
+
 void M_Resources::SaveChangedResources()
 {
 	for (std::map<uint64, Resource*>::iterator it = resources.begin(); it != resources.end(); it++)
@@ -893,12 +828,13 @@ void M_Resources::SaveChangedResources()
 
 void M_Resources::AddResource(Resource* resource)
 {
-	LoadResource(resource);
+	//TODO: this will break, setup like this just to compile
+	LoadResource(resource, GetMetaInfo(resource));
 	existingResources[resource->ID] = GetMetaInfo(resource);
 	SaveMetaInfo(resource);
 }
 
-void M_Resources::LoadResource(Resource* resource)
+void M_Resources::LoadResource(Resource* resource, const ResourceMeta& meta)
 {
 	if (resource == nullptr)
 	{

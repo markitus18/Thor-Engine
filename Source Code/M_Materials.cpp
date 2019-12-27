@@ -307,3 +307,68 @@ R_Texture* M_Materials::LoadTextureResource(unsigned long long ID)
 
 	return rTexture;
 }
+
+R_Texture* Importer::Materials::Import(const aiMaterial* mesh, R_Texture* resMesh)
+{
+	R_Texture* resTexture = nullptr;
+
+	std::string full_path("/Library/Textures/");
+	full_path.append(std::to_string(ID));
+
+	//Warning: cannot check if buffer is nullptr: could begin with /0
+	if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+	{
+		ilEnable(IL_FILE_OVERWRITE);
+
+		ILuint saveBufferSize;
+		ILubyte* saveBuffer;
+
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+		saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
+
+		if (saveBufferSize > 0)
+		{
+			saveBuffer = new ILubyte[saveBufferSize];
+			if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+			{
+				App->fileSystem->Save(full_path.c_str(), saveBuffer, saveBufferSize);
+				RELEASE_ARRAY(saveBuffer);
+
+				resTexture = new R_Texture;
+				resTexture->original_file = file;
+				resTexture->resource_file = full_path;
+				resTexture->ID = ID;
+				resTexture->buffer = ilutGLBindTexImage();
+				std::string file, extension;
+				App->fileSystem->SplitFilePath(resTexture->original_file.c_str(), nullptr, &file, &extension);
+				resTexture->name = file + (".") + extension;
+			}
+		}
+	}
+	else
+	{
+		LOG("[warning] error when importing texture %s -- %s", file, ilGetError());
+	}
+
+	return resTexture;
+
+}
+
+uint64 Importer::Materials::Save(const R_Material* mesh, char** buffer)
+{
+
+}
+
+R_Material* Importer::Materials::Load(const char* buffer, uint size)
+{
+	R_Texture* texture = new R_Texture();
+
+	ILuint ImageName;
+	ilGenImages(1, &ImageName);
+	ilBindImage(ImageName);
+
+	ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
+	texture->buffer = ilutGLBindTexImage();
+
+	ilDeleteImages(1, &ImageName);
+}

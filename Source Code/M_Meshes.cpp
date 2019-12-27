@@ -104,10 +104,8 @@ R_Mesh* M_Meshes::ImportMeshResource(const aiMesh* mesh, unsigned long long ID, 
 	return resMesh;
 }
 
-R_Mesh* Importer::Meshes::Import(const aiMesh* mesh)
+R_Mesh* Importer::Meshes::Import(const aiMesh* mesh, R_Mesh* resMesh)
 {
-	R_Mesh* resMesh = new R_Mesh;
-
 	//Loading mesh vertices data
 	resMesh->buffersSize[R_Mesh::b_vertices] = mesh->mNumVertices;
 	resMesh->vertices = new float[resMesh->buffersSize[R_Mesh::b_vertices] * 3];

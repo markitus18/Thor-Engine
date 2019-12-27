@@ -30,4 +30,23 @@ public:
 	R_Texture* LoadTextureResource(unsigned long long ID);
 };
 
+namespace Importer
+{
+	namespace Materials
+	{
+		//Processes aiMesh data into a ready-to-use R_Mesh to be saved later.
+		//Returns nullptr if any errors occured during the process.
+		R_Material* Import(const aiMaterial* mesh, R_Material* resMesh);
+
+		//Process R_Mesh data into a buffer ready to save
+		//Returns the size of the buffer file (0 if any errors)
+		//Warning: buffer memory needs to be released after the function call
+		uint64 Save(const R_Material* mesh, char** buffer);
+
+		//Process buffer data into a ready-to-use R_Mesh.
+		//Returns nullptr if any errors occured during the process.
+		R_Material* Load(const char* buffer, uint size);
+	}
+}
+
 #endif // __MODULE_MATERIALS_H__

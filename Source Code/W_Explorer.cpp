@@ -216,7 +216,7 @@ void W_Explorer::HandleNodeDoubleClick(const PathNode& node)
 
 		if (resource && resource->GetType() == Resource::PREFAB)
 		{
-			App->moduleResources->LoadPrefab(node.path.c_str());
+			App->moduleResources->LoadPrefab(id);
 		}
 	}
 }
@@ -233,29 +233,30 @@ uint W_Explorer::GetTextureFromNode(const PathNode& node, uint64* resource_id, s
 	else
 	{
 		std::string metaFile = node.path + (".meta");
-		resourceID = App->moduleResources->GetIDFromMeta(metaFile.c_str());
-		Resource* resource = App->moduleResources->GetResource(resourceID);
+		Resource::Type type = App->moduleResources->GetTypeFromMeta(metaFile.c_str());
 
 		if (resource_id) *resource_id = resourceID;
 
-		if (resource && resource->GetType() == Resource::TEXTURE)
+		switch (type)
 		{
-			if (dnd_event) dnd_event->assign("DND_TEXTURE");
-			return ((R_Texture*)resource)->buffer;
-		}
-		else if (resource && resource->GetType() == Resource::PREFAB)
-		{
-			//R_Prefab* prefab = (R_Prefab*)resource;
-			//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
-			//if (tex)
-			//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+		case(Resource::TEXTURE):
+			{
+				if (dnd_event) dnd_event->assign("DND_TEXTURE");
+				//return ((R_Texture*)resource)->buffer;
+				return fileBuffer;
+			}
+		case(Resource::PREFAB):
+			{
+					if (dnd_event) dnd_event->assign("DND_PREFAB");
+					//R_Prefab* prefab = (R_Prefab*)resource;
+					//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
+					//if (tex)
+					//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
 
-			//Not saving prefab screenshot by now
-			if (dnd_event) dnd_event->assign("DND_PREFAB");
-			return fileBuffer;
-		}
-		else //Default file image
-		{
+					//Not saving prefab screenshot by now
+					return fileBuffer;
+			}
+		default:
 			return fileBuffer;
 		}
 	}

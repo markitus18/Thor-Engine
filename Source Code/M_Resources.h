@@ -18,6 +18,8 @@ struct aiBone;
 class R_Mesh;
 class R_Texture;
 class R_Material;
+class R_Prefab;
+
 struct PathNode;
 
 struct ResourceMeta
@@ -51,9 +53,9 @@ public:
 	//Import a file existing in assets creating the resources
 	void ImportFileFromAssets(const char* path);
 	
-	uint64 ImportScene(const char* source_file);
-	uint64 ImportRMesh(const aiMesh* from, const char* source_file, const char* name);
-	uint64 ImportRTexture(const char* buffer, const char* path, uint size);
+	uint64 ImportScene(const char* buffer, uint size, R_Prefab* prefab);
+	uint64 ImportRMesh(const aiMesh* from, R_Mesh* mesh);
+	uint64 ImportRTexture(const char* buffer, uint size, R_Texture* texture);
 	//Same as ImportRTexture, but we need different functions
 	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
@@ -75,23 +77,24 @@ public:
 	//Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene
 	Resource* GetResource(uint64 ID);
-	Resource::Type GetTypeFromPath(const char* path);
+	Resource::Type GetTypeFromPath(const char* path) const;
 	bool GetAllMetaFromType(Resource::Type type, std::vector<const ResourceMeta*>& metas) const;
 
-	void LoadPrefab(const char* path);
+	void LoadPrefab(uint64 ID);
 
 	PathNode CollectImportedScenes();
 	Component::Type M_Resources::ResourceToComponentType(Resource::Type type);
 
 	//TMP: move into private? usage in P_Explorer.cpp
 	uint64 GetIDFromMeta(const char* path);
+	Resource::Type GetTypeFromMeta(const char* path);
 	inline uint64 GetNewID() { return random.Int(); } ;
 
 private:
 	void LoadResourcesData();
 	void LoadMetaFromFolder(PathNode node);
 
-	ResourceMeta	GetMetaInfo(Resource* resource);
+	ResourceMeta	GetMetaInfo(const Resource* resource);
 	ResourceMeta*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 
 	//.meta file generation
@@ -116,7 +119,7 @@ private:
 	//Adds a new resource (importion previous to this)
 	void AddResource(Resource* resource);
 	//Loads an existing resource. Loading is previous to this, this is just for data management
-	void LoadResource(Resource* resource);
+	void LoadResource(Resource* resource, const ResourceMeta& meta);
 	//Completely deletes a resource, including its file (not yet though)
 	//Return number of instances previous to deletion
 	uint DeleteResource(uint64 ID);
@@ -138,8 +141,6 @@ private:
 
 	//All resources imported
 	std::map<uint64, ResourceMeta> existingResources;
-
-	uint64 nextID = 1;
 
 	Timer updateAssets_timer;
 	Timer saveChangedResources_timer;

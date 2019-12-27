@@ -44,7 +44,7 @@ void W_Scene::Draw()
 
 				if (resource->GetType() == Resource::Type::PREFAB)
 				{
-					App->moduleResources->LoadPrefab(resource->GetOriginalFile());
+					App->moduleResources->LoadPrefab(resourceID);
 				}
 
 			}

@@ -100,7 +100,7 @@ void M_Resources::ImportFileFromExplorer(const char* path)
 	}
 }
 
-void M_Resources::ImportFileFromAssets(const char* path)
+Resource* M_Resources::ImportFileFromAssets(const char* path)
 {
 	Resource::Type type = GetTypeFromPath(path);
 	Resource* resource = CreateResourceBase(path, type);
@@ -132,6 +132,7 @@ void M_Resources::ImportFileFromAssets(const char* path)
 	}
 
 	AddResource(resource);
+	return resource;
 }
 
 uint64 M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)

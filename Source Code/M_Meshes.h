@@ -41,7 +41,7 @@ namespace Importer
 
 		//Process buffer data into a ready-to-use R_Mesh.
 		//Returns nullptr if any errors occured during the process.
-		R_Mesh* Load(const char* buffer);
+		void Load(const char* buffer, R_Mesh* mesh);
 	}
 }
 #endif

@@ -357,10 +357,9 @@ R_Mesh* M_Meshes::LoadMeshResource(u64 ID)
 	}
 }
 
-R_Mesh* Importer::Meshes::Load(const char* buffer)
+void Importer::Meshes::Load(const char* buffer, R_Mesh* mesh)
 {
 	const char* cursor = buffer;
-	R_Mesh* mesh = new R_Mesh();
 
 	uint bytes = sizeof(mesh->buffersSize);
 	memcpy(mesh->buffersSize, cursor, bytes);

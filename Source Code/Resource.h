@@ -54,13 +54,15 @@ public:
 	uint instances = 0;
 	bool needs_save = false;
 
+	//TODO: Set it to prived, moved to public for faster iteration
+	std::string name = "";
+
 protected:
 	unsigned long long ID = 0;
 	Type type = UNKNOWN;
 
 	std::string resource_file = "";
 	std::string original_file = "";
-	std::string name = "";
 
 	Resource* parent;
 };

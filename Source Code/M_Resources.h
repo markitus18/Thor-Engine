@@ -51,7 +51,7 @@ public:
 	void ImportFileFromExplorer(const char* path);
 
 	//Import a file existing in assets creating the resources
-	void ImportFileFromAssets(const char* path);
+	Resource* ImportFileFromAssets(const char* path);
 	
 	uint64 ImportScene(const char* buffer, uint size, R_Prefab* prefab);
 	uint64 ImportRMesh(const aiMesh* from, R_Mesh* mesh);

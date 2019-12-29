@@ -232,10 +232,11 @@ uint W_Explorer::GetTextureFromNode(const PathNode& node, uint64* resource_id, s
 	}
 	else
 	{
+		//TODO: this should be done in a more fancy way than opening the meta 2 times.
 		std::string metaFile = node.path + (".meta");
 		Resource::Type type = App->moduleResources->GetTypeFromMeta(metaFile.c_str());
 
-		if (resource_id) *resource_id = resourceID;
+		if (resource_id) *resource_id = App->moduleResources->GetIDFromMeta(metaFile.c_str());
 
 		switch (type)
 		{

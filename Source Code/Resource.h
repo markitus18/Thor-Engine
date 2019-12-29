@@ -30,6 +30,7 @@ public:
 		PREFAB,
 		PARTICLESYSTEM,
 		SHADER,
+		SCENE,
 		UNKNOWN,
 	};
 

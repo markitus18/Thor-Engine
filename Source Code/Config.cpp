@@ -99,7 +99,7 @@ bool Config::GetBool(const char* name, bool default) const
 	return default;
 }
 
-Config_Array Config::GetArray(const char* name)
+Config_Array Config::GetArray(const char* name) const
 {
 	if (json_object_has_value_of_type(node, name, JSONArray))
 		return Config_Array(json_object_get_array(node, name));

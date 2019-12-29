@@ -43,6 +43,7 @@ public:
 	
 	Resource* GetResource();
 	const Resource* GetResource() const;
+	inline uint64 GetResourceID() const { return resourceID; };
 	inline bool HasResource() const { return hasResource; };
 
 public:

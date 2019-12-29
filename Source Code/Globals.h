@@ -7,7 +7,7 @@
 #define LIBRARY_PATH "Library/"
 #define MESHES_PATH "Library/Meshes/"
 #define MATERIALS_PATH "Library/Materials/"
-#define TEXTURES_PATH "Library/Materials/"
+#define TEXTURES_PATH "Library/Textures/"
 #define GAMEOBJECTS_PATH "Library/GameOBjects/"
 #define ANIMATIONS_PATH "Library/Animations/"
 #define BONES_PATH "Library/Bones/"

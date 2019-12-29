@@ -27,6 +27,14 @@
 #include "M_Editor.h"
 #include "W_Explorer.h"
 
+//TODO: Can we include assimp only in meshes importer? Import Scene is using it now
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
+
+#pragma comment (lib, "Assimp/libx86/assimp.lib")
+
 #include <time.h>
 
 M_Resources::M_Resources(bool start_enabled) : Module("Resources", start_enabled)
@@ -42,6 +50,8 @@ M_Resources::~M_Resources()
 bool M_Resources::Init(Config& config)
 {
 	//ClearMetaData();
+	Importer::Scenes::Init();
+
 	return true;
 }
 
@@ -106,8 +116,21 @@ Resource* M_Resources::ImportFileFromAssets(const char* path)
 	Resource* resource = CreateResourceBase(path, type);
 
 	//TODO: Build resource name
-	if (ResourceMeta* meta = FindResourceInLibrary(path, name.c_str(), type))
+	//TODO: check override when re-importing
+	if (ResourceMeta* meta = FindResourceInLibrary(path, resource->name.c_str(), type))
 		resource->ID = meta->id;
+	/*
+	//Find if the resource already exists and delete it
+	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::MATERIAL);
+	if (meta != nullptr)
+	{
+		newID = meta->id;
+		instances = DeleteResource(newID);
+	}
+	else
+	{
+		newID = GetNewID();
+	}*/
 
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load(path, &buffer);
@@ -126,52 +149,74 @@ Resource* M_Resources::ImportFileFromAssets(const char* path)
 		}
 		case(Resource::SHADER):
 		{
-			ImportRShader(path);
+			ImportRShader(buffer, size, (R_Shader*)resource);
 			break;
 		}
 	}
+
+	RELEASE_ARRAY(buffer);
 
 	AddResource(resource);
 	return resource;
 }
 
-uint64 M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
+void M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
 {
 	const aiScene* scene = Importer::Scenes::ProcessAssimpScene(buffer, size);
 	GameObject* root = Importer::Scenes::Import(scene);
+	std::vector<uint64> meshes, materials;
+
+	for (uint i = 0; i < scene->mNumMeshes; ++i)
+	{
+		//TODO: building a temporal mesh name. Assimp meshes have no name so they have conflict when importing multiple meshes
+		std::string meshName = prefab->name.append("_mesh").append(std::to_string(i));
+		scene->mMeshes[i]->mName = meshName;
+		meshes.push_back(ImportRMesh(scene->mMeshes[i], prefab->original_file.c_str()));
+	}
+	for (uint i = 0; i < scene->mNumMaterials; ++i)
+	{
+		materials.push_back(ImportRMaterial(scene->mMaterials[i], prefab->original_file.c_str()));
+	}
+
+	//Link all loaded meshes and materials to the existing gameObjects
+	Importer::Scenes::LinkSceneResources(root, meshes, materials);
+
+	Config file;
+	Importer::Scenes::SaveScene(root, file);
 
 	char* saveBuffer = nullptr;
-	if (uint64 saveSize = Importer::Scenes::SaveScene(root, &saveBuffer))
-	{
+	if (uint saveSize = file.Serialize(&saveBuffer))
 		App->fileSystem->Save(prefab->resource_file.c_str(), saveBuffer, saveSize);
-	}
-	return prefab->ID;
 }
 
-uint64 M_Resources::ImportRMesh(const aiMesh* mesh, R_Mesh* resourceMesh)
+uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file)
 {
-	Importer::Meshes::Import(mesh, resourceMesh);
+	Resource* resource = CreateResourceBase(source_file, Resource::Type::MESH, mesh->mName.C_Str());
+
+	if (ResourceMeta* meta = FindResourceInLibrary(source_file, mesh->mName.C_Str(), Resource::Type::MESH))
+		resource->ID = meta->id;
+
+	Importer::Meshes::Import(mesh, (R_Mesh*)resource);
 
 	char* saveBuffer = nullptr;
-	if (uint64 saveSize = Importer::Meshes::Save(resourceMesh, &saveBuffer))
+	if (uint64 saveSize = Importer::Meshes::Save((R_Mesh*)resource, &saveBuffer))
 	{
-		App->fileSystem->Save(resourceMesh->resource_file.c_str(), saveBuffer, saveSize);
+		App->fileSystem->Save(resource->resource_file.c_str(), saveBuffer, saveSize);
 	}
 
-	return resourceMesh->ID;
+	AddResource(resource);
+	return resource->ID;
 }
 
-uint64 M_Resources::ImportRTexture(const char* buffer, uint size, R_Texture* texture)
+void M_Resources::ImportRTexture(const char* buffer, uint size, R_Texture* texture)
 {
 	//Importing resource
-	resource = App->moduleMaterials->ImportTextureResource(buffer, newID, source_file, size);
-	if (resource)
+	if (Importer::Textures::Import(buffer, size, texture))
 	{
-		resource->instances = instances;
-		AddResource(resource);
-		ret = resource->ID;
+		char* saveBuffer = nullptr;
+		if (uint saveSize = Importer::Textures::Save(texture, &saveBuffer))
+			App->fileSystem->Save(texture->resource_file.c_str(), saveBuffer, saveSize);
 	}
-	return ret;
 }
 
 uint64 M_Resources::ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY)
@@ -195,7 +240,7 @@ uint64 M_Resources::ImportPrefabImage(char* buffer, const char* source_file, uin
 	}
 
 	//Importing resource
-	resource = App->moduleMaterials->ImportPrefabImage(buffer, newID, source_file, sizeX, sizeY);
+	//resource = App->moduleMaterials->ImportPrefabImage(buffer, newID, source_file, sizeX, sizeY);
 	if (resource)
 	{
 		resource->instances = instances;
@@ -205,34 +250,25 @@ uint64 M_Resources::ImportPrefabImage(char* buffer, const char* source_file, uin
 	return ret;
 }
 
-uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name)
+uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_file)
 {
-	uint64 ret = 0;
-	uint64 newID = 0;
-	R_Material* resource = nullptr;
-	uint64 instances = 0;
+	aiString matName;
+	mat->Get(AI_MATKEY_NAME, matName);
+	Resource* resource = CreateResourceBase(source_file, Resource::Type::MATERIAL, matName.C_Str());
 
-	//Find if the resource already exists and delete it
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::MATERIAL);
-	if (meta != nullptr)
+	if (ResourceMeta* meta = FindResourceInLibrary(source_file, matName.C_Str(), Resource::Type::MATERIAL))
+		resource->ID = meta->id;
+
+	Importer::Materials::Import(mat, (R_Material*)resource);
+
+	char* saveBuffer = nullptr;
+	if (uint64 saveSize = Importer::Materials::Save((R_Material*)resource, &saveBuffer))
 	{
-		newID = meta->id;
-		instances = DeleteResource(newID);
-	}
-	else
-	{
-		newID = GetNewID();
+		App->fileSystem->Save(resource->resource_file.c_str(), saveBuffer, saveSize);
 	}
 
-	//Importing resource
-	resource = App->moduleMaterials->ImportMaterialResource(mat, newID, source_file);
-	if (resource)
-	{
-		resource->instances = instances;
-		AddResource(resource);
-		ret = resource->ID;
-	}
-	return ret;
+	AddResource(resource);
+	return resource->ID;
 }
 
 uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name)
@@ -300,40 +336,27 @@ uint64 M_Resources::ImportRParticleSystem(const char* assetsPath)
 	return 0;
 }
 
-uint64 M_Resources::ImportRShader(const char* assetsPath)
+void M_Resources::ImportRShader(const char* buffer, uint size, R_Shader* shader)
 {
-	uint ret = 0;
-	uint newID = 0;
-	R_Shader* resource = nullptr;
-	uint64 instances = 0;
+	Importer::Shaders::Import(buffer, shader);
 
-	//Find if the resource already exists and delete it
-	ResourceMeta* meta = FindResourceInLibrary(assetsPath, assetsPath, Resource::SHADER);
-	if (meta != nullptr)
+	//TODO: This will be done once binary shaders are working. By now we simply duplicate the file
+	/*
+	char* saveBuffer = nullptr;
+	if (uint64 saveSize = Importer::Shaders::Save((R_Shader*)shader, &saveBuffer))
 	{
-		newID = meta->id;
-		instances = DeleteResource(newID);
+		App->fileSystem->Save(shader->resource_file.c_str(), saveBuffer, saveSize);
 	}
-	else
-	{
-		newID = random.Int();
-	}
+	*/
 
-	//Importing resource
-	resource = App->moduleShaders->ImportShaderResource(assetsPath, newID);
-	if (resource)
-	{
-		resource->instances = instances;
-		AddResource(resource);
-		ret = resource->ID;
-	}
+	App->fileSystem->Save(shader->resource_file.c_str(), buffer, size);
 
-	return ret;
+	AddResource(shader);
 }
 
-Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type type)
+Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type type, const char* name, uint64 forceID)
 {
-	Resource* ret = nullptr;
+	Resource* resource = nullptr;
 	std::string resourcePath;
 
 	switch (type)
@@ -341,50 +364,57 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 		case Resource::FOLDER:
 			break;
 		case Resource::MESH:
-			ret = new R_Mesh();
-			ret->resource_file = MESHES_PATH;
+			resource = new R_Mesh();
+			resource->resource_file = MESHES_PATH;
 			break;
 		case Resource::TEXTURE:
-			ret = new R_Material();
-			ret->resource_file = TEXTURES_PATH;
+			resource = new R_Texture();
+			resource->resource_file = TEXTURES_PATH;
 			break;
 		case Resource::MATERIAL:
-			ret = new R_Material();
-			ret->resource_file = MATERIALS_PATH;
+			resource = new R_Material();
+			resource->resource_file = MATERIALS_PATH;
 			break;
 		case Resource::ANIMATION:
-			ret = new R_Animation();
-			ret->resource_file = ANIMATIONS_PATH;
+			resource = new R_Animation();
+			resource->resource_file = ANIMATIONS_PATH;
 			break;
 		case Resource::BONE:
-			ret = new R_Bone();
-			ret->resource_file = BONES_PATH;
+			resource = new R_Bone();
+			resource->resource_file = BONES_PATH;
 			break;
 		case Resource::PREFAB:
-			ret = new R_Prefab();
-			ret->resource_file = GAMEOBJECTS_PATH;
+			resource = new R_Prefab();
+			resource->resource_file = GAMEOBJECTS_PATH;
 			break;
 		case Resource::PARTICLESYSTEM:
-			ret = new R_ParticleSystem();
-			ret->resource_file = PARTICLES_PATH;
+			resource = new R_ParticleSystem();
+			resource->resource_file = PARTICLES_PATH;
 			break;
 		case Resource::SHADER:
-			ret = new R_Shader();
-			ret->resource_file = SHADERS_PATH;
+			resource = new R_Shader();
+			resource->resource_file = SHADERS_PATH;
 			break;
+		case Resource::SCENE:
+			resource = new Resource(Resource::SCENE);
 	}
 
-	if (ret == nullptr) return nullptr;
+	if (resource == nullptr) return nullptr;
 
-	//The name can be overriden later by the importer
-	std::string fileName;
-	App->fileSystem->SplitFilePath(assetsPath, nullptr, &ret->name);
+	if (name == nullptr)
+	{
+		std::string extension;
+		App->fileSystem->SplitFilePath(assetsPath, nullptr, &resource->name, &extension);
+		if (type == Resource::TEXTURE) resource->name.append(extension);
+	}
+	else
+		resource->name = name;
 
-	ret->ID = GetNewID();
-	ret->original_file = assetsPath;
-	ret->resource_file.append(std::to_string(ret->ID));
+	resource->ID = forceID ? forceID : GetNewID();
+	resource->original_file = assetsPath;
+	resource->resource_file.append(std::to_string(resource->ID));
 
-	return ret;
+	return resource;
 }
 
 Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)
@@ -405,98 +435,80 @@ Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type 
 	return ret;
 }
 
+Resource* M_Resources::LoadResourceBase(uint64 ID)
+{
+	Resource* resource = nullptr;
+	std::map<uint64, ResourceMeta>::iterator metasIt = existingResources.find(ID);
+	if (metasIt != existingResources.end())
+	{
+		ResourceMeta* metaInfo = &metasIt->second;
+		resource = CreateResourceBase(metaInfo->original_file.c_str(), metaInfo->type, metasIt->second.resource_name.c_str(), ID);
+	}
+	return resource;
+}
+
 Resource* M_Resources::GetResource(uint64 ID)
 {
-	Resource* ret = nullptr;
+	Resource* resource = nullptr;
 	//First find if the wanted resource is loaded
 	std::map<uint64, Resource*>::iterator resourcesIt = resources.find(ID);
 	if (resourcesIt != resources.end()) return resourcesIt->second;
 
-	//If resource is not loaded, search in library
-	std::map<uint64, ResourceMeta>::iterator metasIt = existingResources.find(ID);
-	if (metasIt != existingResources.end())
+	if (resource = LoadResourceBase(ID))
 	{
-		switch (metasIt->second.type)
+		char* buffer = nullptr;
+		uint size = App->fileSystem->Load(resource->resource_file.c_str(), &buffer);
+		if (size == 0)
+		{
+			RELEASE(resource);
+			return nullptr;
+		}
+
+		switch (resource->type)
 		{
 			case (Resource::MESH):
 			{
-				if (ret = App->moduleMeshes->LoadMeshResource(ID))
-					LoadResource(ret, metasIt->second);
+				Importer::Meshes::Load(buffer, (R_Mesh*)resource);
 				break;
 			}
 			case (Resource::TEXTURE):
 			{
-				if (ret = App->moduleMaterials->LoadTextureResource(ID))
-				{
-					ret->original_file = metasIt->second.original_file;
-					ret->name = metasIt->second.resource_name;
-					LoadResource(ret, metasIt->second);
-				}
+				Importer::Textures::Load(buffer, size, (R_Texture*)resource);
 				break;
 			}
 			case (Resource::MATERIAL):
 			{
-				if (ret = App->moduleMaterials->LoadMaterialResource(ID))
-				{
-					if (((R_Material*)ret)->textureID != 0)
-					{
-						//TODO: move into import
-						R_Texture* rTex = (R_Texture*)GetResource(((R_Material*)ret)->textureID);
-						rTex->instances++;
-					}
-					LoadResource(ret, metasIt->second);
-				}
-
+				Importer::Materials::Load(buffer, size, (R_Material*)resource);
 				break;
 			}
 			case (Resource::PREFAB):
 			{
-				if (ret = App->moduleImport->LoadPrefabResource(ID))
-				{
-					if (ret && ((R_Prefab*)ret)->miniTextureID != 0)
-					{
-						//TODO: move into import
-						R_Texture* rTex = (R_Texture*)GetResource(((R_Prefab*)ret)->miniTextureID);
-						rTex->instances++;
-					}
-					LoadResource(ret, metasIt->second);
-				}
 				break;
 			}
 			case (Resource::ANIMATION):
 			{
-				if (ret = App->moduleAnimations->LoadAnimation(ID))
-					LoadResource(ret, metasIt->second);
+				//resource = App->moduleAnimations->LoadAnimation(ID);
 				break;
 			}
 			case (Resource::BONE):
 			{
-				if (ret = App->moduleAnimations->LoadBone(ID))
-					LoadResource(ret, metasIt->second);
+				//resource = App->moduleAnimations->LoadBone(ID);
 				break;
 			}
 			case (Resource::PARTICLESYSTEM):
 			{
-				if (ret = App->moduleParticleSystems->LoadParticleSystemResource(ID))
-					LoadResource(ret, metasIt->second);
+				resource = App->moduleParticleSystems->LoadParticleSystemResource(ID);
 				break;
 			}
 			case (Resource::SHADER):
 			{
-				if (ret = App->moduleShaders->LoadShaderResource(ID))
-					LoadResource(ret, metasIt->second);
+				Importer::Shaders::Load(buffer, size, (R_Shader*)resource);
 				break;
 			}
 		}
-
-		if (ret != nullptr)
-		{
-			ret->original_file = metasIt->second.original_file;
-			ret->name = metasIt->second.resource_name;
-			LOG("Resource load from library correctly");
-		}
 	}
-	return ret;
+	if (resource) LoadResource(resource);
+	return resource;
 }
 
 Resource::Type M_Resources::GetTypeFromPath(const char* path) const
@@ -510,6 +522,12 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path) const
 		return Resource::TEXTURE;
 	if (ext == "shader")
 		return Resource::SHADER;
+	if (ext == "particles")
+		return Resource::PARTICLESYSTEM;
+	if (ext == "shader")
+		return Resource::SHADER;
+	if (ext == "scene")
+		return Resource::SCENE;
 	return Resource::UNKNOWN;
 }
 
@@ -528,11 +546,18 @@ void M_Resources::LoadPrefab(uint64 ID)
 {
 	if (Resource* resource = GetResource(ID))
 	{
-		App->scene->LoadGameObject(ID);
+		char* buffer = nullptr;
+		uint size = App->fileSystem->Load(resource->resource_file.c_str(), &buffer);
+		if (size > 0)
+		{
+			Config file(buffer);
+			App->scene->LoadGameObject(file);
+		}
+
 		resource->instances++;
 	}
 
-	LOG("Could not find file with ID <'%i'> loaded in resources", ID);
+	LOG("Could not find file with ID '%i' loaded in resources", ID);
 }
 
 PathNode M_Resources::CollectImportedScenes()
@@ -819,7 +844,12 @@ void M_Resources::SaveChangedResources()
 				//By now the only resource that can be modified is material
 				case(Resource::MATERIAL):
 				{
-					App->moduleMaterials->SaveMaterialResource((R_Material*)it->second);
+					char* buffer = nullptr;
+					if (uint size = Importer::Materials::Save((R_Material*)it->second, &buffer))
+					{
+						App->fileSystem->Save(it->second->resource_file.c_str(), buffer, size);
+						RELEASE(buffer);
+					}
 				}
 			}
 			it->second->needs_save = false;
@@ -830,12 +860,12 @@ void M_Resources::SaveChangedResources()
 void M_Resources::AddResource(Resource* resource)
 {
 	//TODO: this will break, setup like this just to compile
-	LoadResource(resource, GetMetaInfo(resource));
+	LoadResource(resource);
 	existingResources[resource->ID] = GetMetaInfo(resource);
 	SaveMetaInfo(resource);
 }
 
-void M_Resources::LoadResource(Resource* resource, const ResourceMeta& meta)
+void M_Resources::LoadResource(Resource* resource)
 {
 	if (resource == nullptr)
 	{

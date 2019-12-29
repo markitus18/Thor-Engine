@@ -17,7 +17,7 @@ public:
 	R_Shader();
 	~R_Shader();
 
-	int Save(char** buffer);
+	uint Save(char** buffer) const;
 	bool LoadFromText(const char* buffer);
 	bool LoadFromBinary(const char* buffer, int size);
 	bool Link();

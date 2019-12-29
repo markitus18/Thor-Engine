@@ -14,7 +14,7 @@ R_Shader::~R_Shader()
 
 }
 
-int R_Shader::Save(char** buffer)
+uint R_Shader::Save(char** buffer) const
 {
 	GLint formats = 0;
 	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &formats);

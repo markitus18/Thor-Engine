@@ -442,7 +442,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	R_Shader* shader = (R_Shader*)App->moduleResources->GetResource(mat->shaderID);
 	glUseProgram(shader->shaderProgram);
 
-	uint64 textureID = mat->textureID ? mat->textureID : 65; //TODO: Default texture is set manually from library ID
+	uint64 textureID = mat->textureID ? mat->textureID : 4706063; //TODO: Default texture is set manually from library ID
 
 	R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(textureID);
 	if (rTex && rTex->buffer != 0)

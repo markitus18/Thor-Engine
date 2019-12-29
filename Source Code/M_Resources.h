@@ -19,6 +19,7 @@ class R_Mesh;
 class R_Texture;
 class R_Material;
 class R_Prefab;
+class R_Shader;
 
 struct PathNode;
 
@@ -31,7 +32,7 @@ struct ResourceMeta
 
 	bool Compare(const char* file, const char* name, Resource::Type type)
 	{
-		return (original_file == file && resource_name == name && type == this->type);
+		return (original_file == file && (name ? resource_name == name : true) && type == this->type);
 	}
 
 };
@@ -53,12 +54,12 @@ public:
 	//Import a file existing in assets creating the resources
 	Resource* ImportFileFromAssets(const char* path);
 	
-	uint64 ImportScene(const char* buffer, uint size, R_Prefab* prefab);
-	uint64 ImportRMesh(const aiMesh* from, R_Mesh* mesh);
-	uint64 ImportRTexture(const char* buffer, uint size, R_Texture* texture);
+	void ImportScene(const char* buffer, uint size, R_Prefab* prefab);
+	uint64 ImportRMesh(const aiMesh* mesh, const char* source_file);
+	void ImportRTexture(const char* buffer, uint size, R_Texture* texture);
 	//Same as ImportRTexture, but we need different functions
 	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
-	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file, const char* name);
+	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file);
 	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name);
 	uint64 ImportRBone(const aiBone* bone, const char* source_file, const char* name, uint64 meshID);
 
@@ -66,13 +67,15 @@ public:
 	uint64 ImportRParticleSystem(const char* assetsPath);
 	
 	//Called when a shader is modified externally (due to copy-paste or commit update)
-	uint64 ImportRShader(const char* assetsPath);
+	void ImportRShader(const char* buffer, uint size, R_Shader* shader);
 	
 	//Generates the base data for a resource
-	Resource* CreateResourceBase(const char* assetsPath, Resource::Type type);
+	Resource* CreateResourceBase(const char* assetsPath, Resource::Type type, const char* name = nullptr, uint64 forceID = 0);
 
 	//Used for internal resources (external referring to fbx, textures,...)
 	Resource* CreateNewResource(const char* assetsPath, Resource::Type type);
+	
+	Resource* LoadResourceBase(uint64 ID);
 
 	//Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene
@@ -119,7 +122,7 @@ private:
 	//Adds a new resource (importion previous to this)
 	void AddResource(Resource* resource);
 	//Loads an existing resource. Loading is previous to this, this is just for data management
-	void LoadResource(Resource* resource, const ResourceMeta& meta);
+	void LoadResource(Resource* resource);
 	//Completely deletes a resource, including its file (not yet though)
 	//Return number of instances previous to deletion
 	uint DeleteResource(uint64 ID);

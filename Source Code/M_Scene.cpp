@@ -248,14 +248,7 @@ void M_Scene::LoadConfig(Config& config)
 
 void M_Scene::SaveScene(Config& node) const
 {
-	//Store all gameObjects in a vector
-	std::vector<GameObject*> gameObjects;
-	root->CollectChilds(gameObjects);
-
-	//Kinda dirty to erase root from list:
-	gameObjects.erase(gameObjects.begin());
-
-	App->moduleImport->SaveGameObjectConfig(node, gameObjects);
+	Importer::Scenes::SaveScene(root, node);
 }
 
 void M_Scene::LoadScene(Config& node, bool tmp)
@@ -265,7 +258,7 @@ void M_Scene::LoadScene(Config& node, bool tmp)
 	std::vector<GameObject*> roots;
 	std::vector<GameObject*> newGameObjects;
 
-	App->moduleImport->LoadGameObjectConfig(node, roots);
+	Importer::Scenes::LoadScene(node, roots);
 
 	for (uint i = 0; i < roots.size(); i++)
 	{
@@ -293,11 +286,15 @@ void M_Scene::LoadScene(const char* file)
 	App->LoadScene(file);
 }
 
-void M_Scene::LoadGameObject(uint64 ID)
+void M_Scene::LoadGameObject(const Config& config)
 {
-	GameObject* gameObject = App->moduleImport->LoadGameObject(ID);
-	if (gameObject != nullptr)
+	std::vector<GameObject*> roots;
+	Importer::Scenes::LoadScene(config, roots);
+
+	if (roots[0] != nullptr)
 	{
+		GameObject* gameObject = roots[0];
+
 		gameObject->parent = root;
 		root->childs.push_back(gameObject);
 

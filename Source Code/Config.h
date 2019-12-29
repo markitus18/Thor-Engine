@@ -52,7 +52,7 @@ public:
 	double GetNumber(const char* name, double default = 0) const;
 	std::string GetString(const char* name, const char* default = "") const;
 	bool GetBool(const char* name, bool default = true) const;
-	Config_Array GetArray(const char* name);
+	Config_Array GetArray(const char* name) const;
 	Config GetNode(const char* name) const;
 	//Endof Get attributes---------
 	

@@ -1,26 +1,27 @@
 #ifndef __M_SHADERS_H__
 #define __M_SHADERS_H__
 
-#include "Module.h"
+#include "Globals.h"
 
 class R_Shader;
 
-class M_Shaders : public Module
+namespace Importer
 {
-public:
-	M_Shaders(bool start_enabled = true);
-	~M_Shaders();
+	namespace Shaders
+	{
+		//Processes GLSL buffer data into a ready-to-use R_Shader to be saved later.
+		void Import(const char* buffer, R_Shader* resShader);
 
-	M_Shaders* CreateNewShader(const char* assetsPath, uint64 ID);
+		//Process R_Shader data into a buffer ready to save
+		//Returns the size of the buffer file (0 if any errors)
+		//Warning: buffer memory needs to be released after the function call
+		uint64 Save(const R_Shader* resShader, char** buffer);
 
-	//Saves both the Assets and the Library file, text and binary
-	bool SaveShaderResource(R_Shader* shader);
-
-	//Called when we get an external update from the particle system. 
-	//If it is modified within the engine, both assets and library file are updated, no need to re-import.
-	R_Shader* ImportShaderResource(const char* assetsPath, uint64 ID = 0);
-	R_Shader* LoadShaderResource(uint64 ID);
-};
+		//Process buffer data into a ready-to-use R_Mesh.
+		//Returns nullptr if any errors occured during the process.
+		void Load(const char* buffer, uint size, R_Shader* shader);
+	}
+}
 #endif // !
 
 

@@ -9,9 +9,6 @@
 #include "M_Camera3D.h"
 #include "M_Editor.h"
 #include "M_Resources.h"
-#include "M_Import.h"
-#include "M_Materials.h"
-#include "M_Meshes.h"
 #include "M_Animations.h"
 #include "M_ParticleSystems.h"
 #include "M_Shaders.h"
@@ -34,15 +31,8 @@ Application::Application()
 
 	moduleResources = new M_Resources();
 	moduleEditor = new M_Editor();
-	moduleImport = new M_Import();
-	moduleMaterials = new M_Materials();
-	moduleMeshes = new M_Meshes();
 	moduleAnimations = new M_Animations();
 	moduleParticleSystems = new M_ParticleSystems();
-	moduleShaders = new M_Shaders();
-	// The order of calls is very important!
-	// Modules will Init() Start() and Update in this order
-	// They will CleanUp() in reverse order
 
 	// Main Modules
 	AddModule(fileSystem);
@@ -59,9 +49,6 @@ Application::Application()
 	AddModule(renderer3D);
 
 	AddModule(moduleResources);
-	AddModule(moduleImport);
-	AddModule(moduleMaterials);
-	AddModule(moduleMeshes);
 	AddModule(moduleAnimations);
 
 	title = TITLE;

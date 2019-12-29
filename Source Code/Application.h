@@ -18,9 +18,6 @@ class M_Scene;
 class M_Renderer3D;
 class M_Camera3D;
 class M_Editor;
-class M_Import;
-class M_Materials;
-class M_Meshes;
 class M_Resources;
 class M_Animations;
 class M_ParticleSystems;
@@ -42,9 +39,6 @@ public:
 	M_Editor* moduleEditor = nullptr;
 
 	M_Resources* moduleResources = nullptr;
-	M_Import* moduleImport = nullptr;
-	M_Materials* moduleMaterials = nullptr;
-	M_Meshes* moduleMeshes = nullptr;
 	M_Animations* moduleAnimations = nullptr;
 	M_ParticleSystems* moduleParticleSystems = nullptr;
 	M_Shaders* moduleShaders = nullptr;

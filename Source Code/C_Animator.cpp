@@ -43,7 +43,7 @@ void C_Animator::Start()
 {
 	//TODO: hard-coding root bone for fast code iteration
 	rootBone = gameObject->childs[1]->childs[0];
-	gameObject->childs[0]->GetComponent<C_Mesh>()->rootBone = gameObject->childs[1]->childs[0];
+	gameObject->childs[0]->GetComponent<C_Mesh>()->rootBone = rootBone;
 
 	if (rootBone == nullptr) return;
 
@@ -176,6 +176,9 @@ void C_Animator::UpdateChannelsTransform(const R_Animation* settings, const R_An
 	for (boneIt = boneMapping.begin(); boneIt != boneMapping.end(); ++boneIt)
 	{
 		C_Transform* transform = boneIt->second->GetComponent<C_Transform>();
+
+		if (settings->channels.find(boneIt->first.c_str()) == settings->channels.end()) continue;
+
 		const Channel& channel = settings->channels.find(boneIt->first.c_str())->second;
 
 		float3 position = GetChannelPosition(channel, currentFrame, transform->GetPosition());
@@ -280,7 +283,7 @@ void C_Animator::UpdateMeshAnimation(GameObject* gameObject)
 	{
 		mesh->StartBoneDeformation();
 		mesh->DeformAnimMesh();
-		App->renderer3D->LoadBuffers(mesh->animMesh);
+		//App->renderer3D->LoadBuffers(mesh->animMesh);
 	}
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)

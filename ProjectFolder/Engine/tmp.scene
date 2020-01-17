@@ -3,20 +3,51 @@
     "Window": {},
     "Camera": {
         "Position": [
-            59.651863,
-            36.364418,
-            69.782204
+            27.534094,
+            20.040907,
+            67.303757
         ],
         "Reference": [
-            0.367060,
-            13.792435,
-            -8.412645
+            0.157485,
+            16.326450,
+            -9.264010
         ]
     },
     "Editor": {},
     "Input": {},
     "Scene": {
         "GameObjects": [
+            {
+                "UID": 0,
+                "ParentUID": 0,
+                "Name": "root",
+                "Active": true,
+                "Static": false,
+                "Selected": false,
+                "OpenInHierarchy": true,
+                "Translation": [
+                    0,
+                    0,
+                    0
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    }
+                ]
+            },
             {
                 "UID": 0,
                 "ParentUID": 0,
@@ -87,13 +118,13 @@
                 ]
             },
             {
-                "UID": 227234989,
+                "UID": 1130931954,
                 "ParentUID": 0,
                 "Name": "aniTest",
                 "Active": true,
                 "Static": false,
-                "Selected": true,
-                "OpenInHierarchy": false,
+                "Selected": false,
+                "OpenInHierarchy": true,
                 "Translation": [
                     0,
                     0,
@@ -121,7 +152,7 @@
                         "Current Animation": 0,
                         "Animations": [
                             {
-                                "ID": 937281762
+                                "ID": 1043252153
                             }
                         ],
                         "HasResource": true
@@ -129,8 +160,8 @@
                 ]
             },
             {
-                "UID": 1962625367,
-                "ParentUID": 227234989,
+                "UID": 1273135826,
+                "ParentUID": 1130931954,
                 "Name": "Object02",
                 "Active": true,
                 "Static": false,
@@ -149,8 +180,8 @@
                 ],
                 "Scale": [
                     2.540000,
-                    2.540001,
-                    2.540001
+                    2.540002,
+                    2.540002
                 ],
                 "Components": [
                     {
@@ -161,21 +192,21 @@
                         "ComponentType": 2,
                         "HasResource": true,
                         "Type": 1,
-                        "ID": 1082006012,
+                        "ID": 1153434767,
                         "ResourceName": "aniTest_mesh0"
                     },
                     {
                         "ComponentType": 3,
                         "HasResource": true,
                         "Type": 3,
-                        "ID": 909191986,
+                        "ID": 278417389,
                         "ResourceName": "lambert2"
                     }
                 ]
             },
             {
-                "UID": 1998668238,
-                "ParentUID": 227234989,
+                "UID": 1749295668,
+                "ParentUID": 1130931954,
                 "Name": "transform1",
                 "Active": true,
                 "Static": false,
@@ -205,8 +236,8 @@
                 ]
             },
             {
-                "UID": 931006786,
-                "ParentUID": 1998668238,
+                "UID": 1768596811,
+                "ParentUID": 1749295668,
                 "Name": "Bip001 Pelvis",
                 "Active": true,
                 "Static": false,
@@ -236,8 +267,8 @@
                 ]
             },
             {
-                "UID": 124530705,
-                "ParentUID": 931006786,
+                "UID": 1208710592,
+                "ParentUID": 1768596811,
                 "Name": "Bip001 Spine",
                 "Active": true,
                 "Static": false,
@@ -267,8 +298,8 @@
                 ]
             },
             {
-                "UID": 560729866,
-                "ParentUID": 124530705,
+                "UID": 345934290,
+                "ParentUID": 1208710592,
                 "Name": "Bip001 Spine1",
                 "Active": true,
                 "Static": false,
@@ -298,8 +329,8 @@
                 ]
             },
             {
-                "UID": 1616265620,
-                "ParentUID": 560729866,
+                "UID": 262102985,
+                "ParentUID": 345934290,
                 "Name": "Bip001 Neck",
                 "Active": true,
                 "Static": false,
@@ -329,8 +360,8 @@
                 ]
             },
             {
-                "UID": 33110867,
-                "ParentUID": 1616265620,
+                "UID": 703370126,
+                "ParentUID": 262102985,
                 "Name": "Bip001 L Clavicle",
                 "Active": true,
                 "Static": false,
@@ -348,8 +379,8 @@
                     0.116079
                 ],
                 "Scale": [
-                    0.999999,
-                    0.999999,
+                    0.999998,
+                    0.999998,
                     1.000000
                 ],
                 "Components": [
@@ -360,8 +391,8 @@
                 ]
             },
             {
-                "UID": 961718176,
-                "ParentUID": 33110867,
+                "UID": 261939705,
+                "ParentUID": 703370126,
                 "Name": "Bip001 L UpperArm",
                 "Active": true,
                 "Static": false,
@@ -391,8 +422,8 @@
                 ]
             },
             {
-                "UID": 1535985130,
-                "ParentUID": 961718176,
+                "UID": 73071481,
+                "ParentUID": 261939705,
                 "Name": "Bip001 L Forearm",
                 "Active": true,
                 "Static": false,
@@ -407,7 +438,7 @@
                     0,
                     0,
                     -0.327701,
-                    0.944781
+                    0.944782
                 ],
                 "Scale": [
                     1.000000,
@@ -422,8 +453,8 @@
                 ]
             },
             {
-                "UID": 725049718,
-                "ParentUID": 1535985130,
+                "UID": 2068302605,
+                "ParentUID": 73071481,
                 "Name": "Bip001 L Hand",
                 "Active": true,
                 "Static": false,
@@ -453,8 +484,8 @@
                 ]
             },
             {
-                "UID": 2083294143,
-                "ParentUID": 725049718,
+                "UID": 2074680414,
+                "ParentUID": 2068302605,
                 "Name": "Bip001 L Finger0",
                 "Active": true,
                 "Static": false,
@@ -484,8 +515,8 @@
                 ]
             },
             {
-                "UID": 2123495070,
-                "ParentUID": 2083294143,
+                "UID": 1575005874,
+                "ParentUID": 2074680414,
                 "Name": "Bip001 L Finger01",
                 "Active": true,
                 "Static": false,
@@ -515,8 +546,8 @@
                 ]
             },
             {
-                "UID": 633558049,
-                "ParentUID": 2123495070,
+                "UID": 821454287,
+                "ParentUID": 1575005874,
                 "Name": "Bip001 L Finger02",
                 "Active": true,
                 "Static": false,
@@ -546,8 +577,8 @@
                 ]
             },
             {
-                "UID": 1778303696,
-                "ParentUID": 725049718,
+                "UID": 831911970,
+                "ParentUID": 2068302605,
                 "Name": "Bip001 L Finger1",
                 "Active": true,
                 "Static": false,
@@ -577,8 +608,8 @@
                 ]
             },
             {
-                "UID": 554402372,
-                "ParentUID": 1778303696,
+                "UID": 909303780,
+                "ParentUID": 831911970,
                 "Name": "Bip001 L Finger11",
                 "Active": true,
                 "Static": false,
@@ -608,8 +639,8 @@
                 ]
             },
             {
-                "UID": 1323953481,
-                "ParentUID": 554402372,
+                "UID": 968037467,
+                "ParentUID": 909303780,
                 "Name": "Bip001 L Finger12",
                 "Active": true,
                 "Static": false,
@@ -639,8 +670,8 @@
                 ]
             },
             {
-                "UID": 672204167,
-                "ParentUID": 1616265620,
+                "UID": 1257196206,
+                "ParentUID": 262102985,
                 "Name": "Bip001 R Clavicle",
                 "Active": true,
                 "Static": false,
@@ -658,8 +689,8 @@
                     0.180019
                 ],
                 "Scale": [
-                    1.000001,
-                    1.000001,
+                    1.000002,
+                    1.000002,
                     1.000000
                 ],
                 "Components": [
@@ -670,8 +701,8 @@
                 ]
             },
             {
-                "UID": 1562675283,
-                "ParentUID": 672204167,
+                "UID": 118573500,
+                "ParentUID": 1257196206,
                 "Name": "Bip001 R UpperArm",
                 "Active": true,
                 "Static": false,
@@ -701,8 +732,8 @@
                 ]
             },
             {
-                "UID": 1346837076,
-                "ParentUID": 1562675283,
+                "UID": 278504432,
+                "ParentUID": 118573500,
                 "Name": "Bip001 R Forearm",
                 "Active": true,
                 "Static": false,
@@ -732,8 +763,8 @@
                 ]
             },
             {
-                "UID": 418105588,
-                "ParentUID": 1346837076,
+                "UID": 127211509,
+                "ParentUID": 278504432,
                 "Name": "Bip001 R Hand",
                 "Active": true,
                 "Static": false,
@@ -751,7 +782,7 @@
                     0.807803
                 ],
                 "Scale": [
-                    1.000000,
+                    1,
                     0.999999,
                     0.999999
                 ],
@@ -763,8 +794,8 @@
                 ]
             },
             {
-                "UID": 1935790710,
-                "ParentUID": 418105588,
+                "UID": 369907861,
+                "ParentUID": 127211509,
                 "Name": "Bip001 R Finger0",
                 "Active": true,
                 "Static": false,
@@ -794,8 +825,8 @@
                 ]
             },
             {
-                "UID": 2053786131,
-                "ParentUID": 1935790710,
+                "UID": 731295857,
+                "ParentUID": 369907861,
                 "Name": "Bip001 R Finger01",
                 "Active": true,
                 "Static": false,
@@ -825,8 +856,8 @@
                 ]
             },
             {
-                "UID": 740558150,
-                "ParentUID": 2053786131,
+                "UID": 1006557121,
+                "ParentUID": 731295857,
                 "Name": "Bip001 R Finger02",
                 "Active": true,
                 "Static": false,
@@ -856,8 +887,8 @@
                 ]
             },
             {
-                "UID": 1611563974,
-                "ParentUID": 418105588,
+                "UID": 826952237,
+                "ParentUID": 127211509,
                 "Name": "Bip001 R Finger1",
                 "Active": true,
                 "Static": false,
@@ -872,12 +903,12 @@
                     0.005108,
                     0.198577,
                     0.394997,
-                    0.896949
+                    0.896950
                 ],
                 "Scale": [
                     1.000000,
                     1.000000,
-                    1
+                    1.000000
                 ],
                 "Components": [
                     {
@@ -887,8 +918,8 @@
                 ]
             },
             {
-                "UID": 1264812692,
-                "ParentUID": 1611563974,
+                "UID": 1352599754,
+                "ParentUID": 826952237,
                 "Name": "Bip001 R Finger11",
                 "Active": true,
                 "Static": false,
@@ -918,8 +949,8 @@
                 ]
             },
             {
-                "UID": 2104968144,
-                "ParentUID": 1264812692,
+                "UID": 42068637,
+                "ParentUID": 1352599754,
                 "Name": "Bip001 R Finger12",
                 "Active": true,
                 "Static": false,
@@ -949,8 +980,8 @@
                 ]
             },
             {
-                "UID": 1408114850,
-                "ParentUID": 1616265620,
+                "UID": 1840365716,
+                "ParentUID": 262102985,
                 "Name": "Bip001 Head",
                 "Active": true,
                 "Static": false,
@@ -980,8 +1011,8 @@
                 ]
             },
             {
-                "UID": 1735486300,
-                "ParentUID": 1408114850,
+                "UID": 637199028,
+                "ParentUID": 1840365716,
                 "Name": "Bone001",
                 "Active": true,
                 "Static": false,
@@ -999,9 +1030,9 @@
                     0.015043
                 ],
                 "Scale": [
-                    1.000001,
+                    1.000002,
                     1.000000,
-                    1.000001
+                    1.000002
                 ],
                 "Components": [
                     {
@@ -1011,8 +1042,8 @@
                 ]
             },
             {
-                "UID": 271777492,
-                "ParentUID": 124530705,
+                "UID": 1863832309,
+                "ParentUID": 1208710592,
                 "Name": "Bip001 L Thigh",
                 "Active": true,
                 "Static": false,
@@ -1042,8 +1073,8 @@
                 ]
             },
             {
-                "UID": 2089840462,
-                "ParentUID": 271777492,
+                "UID": 169814914,
+                "ParentUID": 1863832309,
                 "Name": "Bip001 L Calf",
                 "Active": true,
                 "Static": false,
@@ -1073,8 +1104,8 @@
                 ]
             },
             {
-                "UID": 470753358,
-                "ParentUID": 2089840462,
+                "UID": 786650859,
+                "ParentUID": 169814914,
                 "Name": "Bip001 L Foot",
                 "Active": true,
                 "Static": false,
@@ -1104,8 +1135,8 @@
                 ]
             },
             {
-                "UID": 1571600451,
-                "ParentUID": 470753358,
+                "UID": 144004998,
+                "ParentUID": 786650859,
                 "Name": "Bip001 L Toe0",
                 "Active": true,
                 "Static": false,
@@ -1117,14 +1148,14 @@
                     0
                 ],
                 "Rotation": [
-                    0.000000,
+                    -0.000000,
                     0.000001,
                     0.707107,
                     0.707107
                 ],
                 "Scale": [
-                    0.999999,
-                    0.999999,
+                    1.000000,
+                    1.000000,
                     1
                 ],
                 "Components": [
@@ -1135,8 +1166,8 @@
                 ]
             },
             {
-                "UID": 2103184421,
-                "ParentUID": 124530705,
+                "UID": 1318301562,
+                "ParentUID": 1208710592,
                 "Name": "Bip001 R Thigh",
                 "Active": true,
                 "Static": false,
@@ -1154,9 +1185,9 @@
                     0.208391
                 ],
                 "Scale": [
-                    0.999999,
+                    0.999998,
                     1.000000,
-                    0.999999
+                    0.999998
                 ],
                 "Components": [
                     {
@@ -1166,8 +1197,8 @@
                 ]
             },
             {
-                "UID": 1777587393,
-                "ParentUID": 2103184421,
+                "UID": 169458869,
+                "ParentUID": 1318301562,
                 "Name": "Bip001 R Calf",
                 "Active": true,
                 "Static": false,
@@ -1197,8 +1228,8 @@
                 ]
             },
             {
-                "UID": 76795090,
-                "ParentUID": 1777587393,
+                "UID": 1768245678,
+                "ParentUID": 169458869,
                 "Name": "Bip001 R Foot",
                 "Active": true,
                 "Static": false,
@@ -1228,8 +1259,8 @@
                 ]
             },
             {
-                "UID": 1464163507,
-                "ParentUID": 76795090,
+                "UID": 384800116,
+                "ParentUID": 1768245678,
                 "Name": "Bip001 R Toe0",
                 "Active": true,
                 "Static": false,
@@ -1247,8 +1278,8 @@
                     0.707107
                 ],
                 "Scale": [
-                    0.999999,
-                    0.999999,
+                    1.000000,
+                    1.000000,
                     1
                 ],
                 "Components": [

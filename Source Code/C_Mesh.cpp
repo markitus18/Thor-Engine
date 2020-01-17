@@ -34,27 +34,39 @@ const AABB& C_Mesh::GetAABB() const
 
 void C_Mesh::StartBoneDeformation()
 {
+	bool newMesh = false; 
 	if (animMesh == nullptr)
 	{
+		newMesh = true;
 		animMesh = new R_Mesh();
 		R_Mesh* rMesh = (R_Mesh*)GetResource();
 		animMesh->buffersSize[R_Mesh::b_vertices] = rMesh->buffersSize[R_Mesh::b_vertices];
 		animMesh->buffersSize[R_Mesh::b_normals] = rMesh->buffersSize[R_Mesh::b_normals];
 		animMesh->buffersSize[R_Mesh::b_indices] = rMesh->buffersSize[R_Mesh::b_indices];
+		animMesh->buffersSize[R_Mesh::b_tex_coords] = rMesh->buffersSize[R_Mesh::b_tex_coords];
 
 		animMesh->vertices = new float[rMesh->buffersSize[R_Mesh::b_vertices] * 3];
 		animMesh->normals = new float[rMesh->buffersSize[R_Mesh::b_normals] * 3];
 		animMesh->indices = new uint [rMesh->buffersSize[R_Mesh::b_indices]];
+		animMesh->tex_coords = new float[rMesh->buffersSize[R_Mesh::b_tex_coords] * 2];
+
 		memcpy(animMesh->indices, rMesh->indices, rMesh->buffersSize[R_Mesh::b_indices] * sizeof(uint));
+		memcpy(animMesh->tex_coords, rMesh->tex_coords, rMesh->buffersSize[R_Mesh::b_tex_coords] * 2 * sizeof(float));
 	}
 
-	R_Mesh* rMesh = (R_Mesh*)GetResource();
-	memset(animMesh->vertices, 0, rMesh->buffersSize[R_Mesh::b_vertices] * sizeof(float) * 3);
+	memset(animMesh->vertices, 0, animMesh->buffersSize[R_Mesh::b_vertices] * sizeof(float) * 3);
 
-	if (rMesh->buffersSize[R_Mesh::b_normals] > 0)
+	if (animMesh->buffersSize[R_Mesh::b_normals] > 0)
 	{
-		memset(animMesh->normals, 0, rMesh->buffersSize[R_Mesh::b_normals] * sizeof(float) * 3);
+		memset(animMesh->normals, 0, animMesh->buffersSize[R_Mesh::b_normals] * sizeof(float) * 3);
 	}
+	if (animMesh->buffersSize[R_Mesh::b_tex_coords] > 0)
+	{
+		memset(animMesh->normals, 0, animMesh->buffersSize[R_Mesh::b_tex_coords] * sizeof(float) * 2);
+	}
+
+	if (newMesh)
+		animMesh->LoadSkinnedBuffers(true);
 }
 
 void C_Mesh::DeformAnimMesh()
@@ -81,8 +93,7 @@ void C_Mesh::DeformAnimMesh()
 		mat = mat * bone->GetComponent<C_Transform>()->GetGlobalTransform();
 		mat = gameObject->GetComponent<C_Transform>()->GetTransform().Inverted() * mat;
 
-		int boneID = rMesh->boneMapping[bone->name];
-		mat = mat * rMesh->boneOffsets[boneID];
+		mat = mat * rMesh->boneOffsets[it->second];
 		boneTransforms[it->second] = mat;
 	}
 
@@ -95,7 +106,7 @@ void C_Mesh::DeformAnimMesh()
 		for (uint b = 0; b < 4; ++b)
 		{
 			int boneID = rMesh->boneIDs[v * 4 + b];
-			int boneWeight = rMesh->boneWeights[v * 4 + b];
+			float boneWeight = rMesh->boneWeights[v * 4 + b];
 
 			if (boneID == -1) continue;
 				
@@ -116,6 +127,8 @@ void C_Mesh::DeformAnimMesh()
 			}
 		}
 	}
+
+	animMesh->LoadSkinnedBuffers();
 }
 
 void C_Mesh::GetBoneMapping(std::map<std::string, GameObject*>& boneMapping)

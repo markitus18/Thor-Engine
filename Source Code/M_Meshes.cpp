@@ -101,6 +101,7 @@ void Importer::Meshes::Private::ImportBones(const aiMesh* mesh, R_Mesh* rMesh)
 				{
 					rMesh->boneIDs[index * 4 + w] = boneIndex;
 					rMesh->boneWeights[index * 4 + w] = bone->mWeights[i].mWeight;
+					break;
 				}
 			}
 		}

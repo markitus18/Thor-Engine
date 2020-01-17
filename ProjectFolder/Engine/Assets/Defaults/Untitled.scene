@@ -1,0 +1,67 @@
+{
+    "FileSystem": {},
+    "Window": {},
+    "Camera": {
+        "Position": [
+            60,
+            35,
+            60
+        ],
+        "Reference": [
+            0,
+            0,
+            0
+        ]
+    },
+    "Editor": {},
+    "Input": {},
+    "Audio": {},
+    "Scene": {
+        "GameObjects": [
+            {
+                "UID": 1882991565,
+                "ParentUID": 0,
+                "Name": "Camera",
+                "Active": true,
+                "Static": false,
+                "Selected": true,
+                "OpenInHierarchy": false,
+                "Translation": [
+                    0,
+                    1,
+                    -10
+                ],
+                "Rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "Scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "Components": [
+                    {
+                        "ComponentType": 1,
+                        "HasResource": false
+                    },
+                    {
+                        "ComponentType": 4,
+                        "FOV": 57.295780,
+                        "NearPlane": 0.100000,
+                        "FarPlane": 1000,
+                        "HasResource": false
+                    }
+                ]
+            }
+        ]
+    },
+    "Renderer": {},
+    "Resources": {},
+    "Importer": {},
+    "Materials": {},
+    "Meshes": {},
+    "AnimationImporter": {}
+}

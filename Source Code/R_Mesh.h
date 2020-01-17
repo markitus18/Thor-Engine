@@ -38,6 +38,8 @@ public:
 	void CreateAABB();
 
 	void LoadOnMemory();
+	void LoadSkinnedBuffers(bool init = false);
+
 	void FreeMemory();
 
 public:

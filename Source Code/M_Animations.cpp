@@ -16,7 +16,14 @@ void Importer::Animations::Import(const aiAnimation* animation, R_Animation* rAn
 	//Import all channels data
 	for (uint i = 0; i < animation->mNumChannels; i++)
 	{
-		const char* nodeName = animation->mChannels[i]->mNodeName.C_Str();
+		std::string nodeName = animation->mChannels[i]->mNodeName.C_Str();
+
+		uint symbolPos = nodeName.find("_$AssimpFbx$_");
+		if (symbolPos != std::string::npos)
+		{
+			nodeName = nodeName.substr(0, symbolPos);
+		}
+
 		rAnimation->channels[nodeName] = Channel();
 		Private::ImportChannel(animation->mChannels[i], rAnimation->channels[nodeName]);
 	}

@@ -442,7 +442,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	R_Shader* shader = (R_Shader*)App->moduleResources->GetResource(mat->shaderID);
 	glUseProgram(shader->shaderProgram);
 
-	uint64 textureID = mat->textureID ? mat->textureID : 4706063; //TODO: Default texture is set manually from library ID
+	uint64 textureID = mat->textureID ? mat->textureID : 956802898; //TODO: Default texture is set manually from library ID
 
 	R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(textureID);
 	if (rTex && rTex->buffer != 0)
@@ -466,7 +466,10 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, App->camera->GetCamera()->GetOpenGLViewMatrix());
 	
 	//Binding vertex array object
-	glBindVertexArray(resMesh->VAO);
+	if (rMesh.mesh->animMesh == nullptr)
+		glBindVertexArray(resMesh->VAO);
+	else
+		glBindVertexArray(rMesh.mesh->animMesh->VAO);
 
 	glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
 

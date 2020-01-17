@@ -59,9 +59,6 @@ bool M_FileSystem::Init(Config& config)
 
 	SDL_free(write_path);
 
-	std::vector<std::string> filter;
-	filter.push_back(std::string("FBX"));
-
 	return ret;
 }
 

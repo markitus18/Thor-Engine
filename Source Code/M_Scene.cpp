@@ -445,13 +445,13 @@ GameObject* M_Scene::CreateCamera()
 void M_Scene::Play()
 {
 	Time::Start(60);
-	App->SaveScene("ProjectSettings/tmp.scene", true);
+	App->SaveScene("Engine/tmp.scene", true);
 }
 
 void M_Scene::Stop()
 {
 	Time::Stop();
-	App->LoadScene("ProjectSettings/tmp.scene");
+	App->LoadScene("Engine/tmp.scene");
 }
 
 void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)
@@ -510,7 +510,7 @@ void M_Scene::DeleteAllGameObjects()
 
 void M_Scene::CreateDefaultScene()
 {
-	App->LoadScene("ProjectSettings/Untitled.scene");
+	App->LoadScene("Engine/Assets/Defaults/Untitled.scene");
 }
 
 void M_Scene::DeleteToRemoveGameObjects()

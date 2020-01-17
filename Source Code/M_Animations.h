@@ -1,57 +1,40 @@
 #ifndef __M_ANIMATIONS_H__
 #define __M_ANIMATIONS_H__
 
-#include "Module.h"
-#include "R_Animation.h"
-
-#include <string>
+#include "Globals.h"
 #include <map>
 
+#include "MathGeoLib/src/Math/float3.h"
+#include "MathGeoLib/src/Math/Quat.h"
+
 class R_Animation;
-class R_Bone;
-class GameObject;
-struct aiScene;
+struct Channel;
+
 struct aiAnimation;
 struct aiNodeAnim;
-struct aiMesh;
-struct aiBone;
 
-class M_Animations : public Module
+
+namespace Importer
 {
-public:
-	M_Animations(bool start_enabled = true);
-	~M_Animations();
+	namespace Animations
+	{
+		void Import(const aiAnimation* animation, R_Animation* rAnimation);
+		uint64 Save(const R_Animation* rAnimation, char** buffer);
+		void Load(const char* buffer, R_Animation* rAnimation);
 
-	//Animation data management
-	uint64 ImportSceneAnimations(const aiScene* scene, GameObject* root, const char* source_file);
-	R_Animation* ImportAnimation(const aiAnimation* animation, uint64 ID, const char* source_file);
-	bool SaveAnimationResource(R_Animation* animation);
-	R_Animation* LoadAnimation(uint64 ID);
+		namespace Private
+		{
+			void ImportChannel(const aiNodeAnim* node, Channel& channel);
 
-	//Bone data management
-	void ImportSceneBones(const std::vector<const aiMesh*>& bonedMeshes, const std::vector<const GameObject*>& meshGameObjects, GameObject* root, const char* source_file);
-	R_Bone* ImportBone(const aiBone*, uint64 ID, const char* source_file, uint64 meshID);
-	bool SaveBoneResource(R_Bone* bone);
-	R_Bone* LoadBone(uint64 ID);
-	
-	//Save utils
-	uint CalcChannelSize(const Channel& channel) const;
+			uint CalcChannelSize(const Channel& channel);
+			void SaveChannel(const Channel& channel, char** cursor);
+			void SaveChannelKeys(const std::map<double, float3>&, char** cursor);
+			void SaveChannelKeys(const std::map<double, Quat>&, char** cursor);
 
-	void SaveChannelData(const Channel& channel, char** cursor);
-	void SaveKeys(const std::map<double, float3>&, char** cursor);
-	void SaveKeys(const std::map<double, Quat>&, char** cursor);
-
-	//Load utils
-	void LoadChannelData(Channel& channel, char** cursor);
-	void LoadKeys(std::map<double, float3>&, char** cursor, uint size);
-	void LoadKeys(std::map<double, Quat>&, char** cursor, uint size);
-
-	bool Init(Config& config);
-	bool CleanUp();
-
-private:
-	void CollectGameObjectNames(GameObject* gameObject, std::map<std::string, GameObject*>& map);
-	void LoadChannel(const aiNodeAnim* node, Channel& channel);
-};
-
+			void LoadChannel(Channel& channel, const char** cursor);
+			void LoadChannelKeys(std::map<double, float3>& map, const char** cursor, uint size);
+			void LoadChannelKeys(std::map<double, Quat>& map, const char** cursor, uint size);
+		}
+	}
+}
 #endif

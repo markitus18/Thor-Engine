@@ -15,7 +15,7 @@ public:
 	void InitDefaultSystem();
 	void AddDefaultEmitter();
 
-	void SaveAsset(Config& config);
+	void SaveAsset(Config& config) const;
 	void SaveResource(char* buffer);
 	void Load(Config& config);
 

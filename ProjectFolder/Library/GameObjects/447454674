@@ -1,0 +1,1799 @@
+{
+    "GameObjects": [
+        {
+            "UID": 1116026862,
+            "ParentUID": 0,
+            "Name": "RootNode",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 800327195,
+            "ParentUID": 1116026862,
+            "Name": "Sky001",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                18.153732,
+                0,
+                58.960911
+            ],
+            "Rotation": [
+                1,
+                0,
+                0,
+                0
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 968938033,
+            "ParentUID": 1116026862,
+            "Name": "Dummy001",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                -0.707107,
+                0,
+                0,
+                0.707107
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 1678475929,
+            "ParentUID": 968938033,
+            "Name": "City_building_004",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -41.475891,
+                21.014099,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 844075172,
+                    "ResourceName": "Street_environment_V01_mesh0"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 2135866796,
+                    "ResourceName": "06 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1850001404,
+            "ParentUID": 968938033,
+            "Name": "City_building_001",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                17.707165,
+                20.053276,
+                0.000000
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1615033304,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1710993251,
+                    "ResourceName": "Building_dnt"
+                }
+            ]
+        },
+        {
+            "UID": 1468535412,
+            "ParentUID": 968938033,
+            "Name": "City_building_007",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                16.010492,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 137384511,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 964388980,
+                    "ResourceName": "building_16"
+                }
+            ]
+        },
+        {
+            "UID": 1354968829,
+            "ParentUID": 968938033,
+            "Name": "City_building_008",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                40.979996,
+                18.270824,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 2102360240,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 2004550039,
+                    "ResourceName": "building_025"
+                }
+            ]
+        },
+        {
+            "UID": 1770682040,
+            "ParentUID": 968938033,
+            "Name": "Line002",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -2.159772,
+                1.853838,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1075571894,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 950536370,
+                    "ResourceName": "20 - Defaulta"
+                }
+            ]
+        },
+        {
+            "UID": 355550805,
+            "ParentUID": 968938033,
+            "Name": "Plane001",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -0.028603,
+                0.026032,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                0.996635,
+                0.970616,
+                0.996635
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1783544931,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 436549818,
+                    "ResourceName": "20 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1906079583,
+            "ParentUID": 968938033,
+            "Name": "City_building_010",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                25.154011,
+                -39.153721,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 1562165325,
+            "ParentUID": 1906079583,
+            "Name": "City_building_010_submesh",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 231856814,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1846306634,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 202789510,
+            "ParentUID": 1906079583,
+            "Name": "City_building_010_submesh(1)",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1616156642,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1846306634,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 850980332,
+            "ParentUID": 968938033,
+            "Name": "City_building_011",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                30.134541,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 137384511,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 964388980,
+                    "ResourceName": "building_16"
+                }
+            ]
+        },
+        {
+            "UID": 1322840736,
+            "ParentUID": 968938033,
+            "Name": "City_building_013",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -42.288055,
+                33.201576,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1035888117,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 400489173,
+                    "ResourceName": "3db _ building 06"
+                }
+            ]
+        },
+        {
+            "UID": 511195814,
+            "ParentUID": 968938033,
+            "Name": "City_building_014",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -19.439707,
+                32.061729,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                -0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 382204317,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 2135866796,
+                    "ResourceName": "06 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1864768410,
+            "ParentUID": 968938033,
+            "Name": "City_building_016",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                34.270424,
+                -41.972748,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                -0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 917593225,
+            "ParentUID": 1864768410,
+            "Name": "City_building_016_submesh",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 231856814,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1846306634,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 414386769,
+            "ParentUID": 1864768410,
+            "Name": "City_building_016_submesh(1)",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1616156642,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1846306634,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 725930751,
+            "ParentUID": 968938033,
+            "Name": "City_building_017",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                44.260082,
+                -39.153721,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 1144666873,
+            "ParentUID": 725930751,
+            "Name": "City_building_017_submesh",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 231856814,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1846306634,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1881708610,
+            "ParentUID": 725930751,
+            "Name": "City_building_017_submesh(1)",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                0,
+                0,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1616156642,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1846306634,
+                    "ResourceName": "orig_orig_orig_17 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1342735222,
+            "ParentUID": 968938033,
+            "Name": "City_building_022",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -20.831324,
+                -27.426489,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 2124367527,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10_mesh11"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1276298528,
+                    "ResourceName": "09 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 458253305,
+            "ParentUID": 968938033,
+            "Name": "City_building_023",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                42.130642,
+                37.493286,
+                -0.000002
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 137384511,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 964388980,
+                    "ResourceName": "building_16"
+                }
+            ]
+        },
+        {
+            "UID": 1036287573,
+            "ParentUID": 968938033,
+            "Name": "City_building_024",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -20.572771,
+                43.060829,
+                -0.069194
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 2102360240,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 2004550039,
+                    "ResourceName": "building_025"
+                }
+            ]
+        },
+        {
+            "UID": 516515221,
+            "ParentUID": 968938033,
+            "Name": "City_building_026",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                31.511889,
+                -16.446016,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1245344730,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10_mesh11_mesh12"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1276298528,
+                    "ResourceName": "09 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 692532226,
+            "ParentUID": 968938033,
+            "Name": "City_building_028",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                13.387990,
+                -33.755039,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 623276456,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 13084942,
+                    "ResourceName": "Material #0"
+                }
+            ]
+        },
+        {
+            "UID": 1630747549,
+            "ParentUID": 968938033,
+            "Name": "Object010",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -2.503353,
+                15.800846,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1788166999,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10_mesh11_mesh12_mesh13"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 511332058,
+                    "ResourceName": "21 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1109659333,
+            "ParentUID": 968938033,
+            "Name": "City_building_030",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -42.807240,
+                -41.835564,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 623276456,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 13084942,
+                    "ResourceName": "Material #0"
+                }
+            ]
+        },
+        {
+            "UID": 2015705615,
+            "ParentUID": 968938033,
+            "Name": "City_building_031",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -34.679482,
+                -41.835564,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 623276456,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 13084942,
+                    "ResourceName": "Material #0"
+                }
+            ]
+        },
+        {
+            "UID": 1679257759,
+            "ParentUID": 968938033,
+            "Name": "City_building_032",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -29.478403,
+                21.014099,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 844075172,
+                    "ResourceName": "Street_environment_V01_mesh0"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 2135866796,
+                    "ResourceName": "06 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 447213012,
+            "ParentUID": 968938033,
+            "Name": "City_building_033",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -32.361496,
+                42.370422,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 52653495,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10_mesh11_mesh12_mesh13_mesh14"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 400489173,
+                    "ResourceName": "3db _ building 06"
+                }
+            ]
+        },
+        {
+            "UID": 1199194246,
+            "ParentUID": 968938033,
+            "Name": "City_building_034",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                16.049517,
+                -16.696884,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 34389966,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10_mesh11_mesh12_mesh13_mesh14_mesh15"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1276298528,
+                    "ResourceName": "09 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1380856347,
+            "ParentUID": 968938033,
+            "Name": "City_building_035",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                13.387990,
+                -40.802517,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 623276456,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 13084942,
+                    "ResourceName": "Material #0"
+                }
+            ]
+        },
+        {
+            "UID": 199309238,
+            "ParentUID": 968938033,
+            "Name": "City_building_036",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -31.216331,
+                33.201576,
+                0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1035888117,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 400489173,
+                    "ResourceName": "3db _ building 06"
+                }
+            ]
+        },
+        {
+            "UID": 1216615531,
+            "ParentUID": 968938033,
+            "Name": "City_building_037",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -20.317694,
+                -16.163609,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                1,
+                0.000000
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1967040128,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10_mesh11_mesh12_mesh13_mesh14_mesh15_mesh16"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1276298528,
+                    "ResourceName": "09 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 939878777,
+            "ParentUID": 968938033,
+            "Name": "City_building_038",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -41.649002,
+                -16.495394,
+                0
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 121098651,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7_mesh8_mesh9_mesh10_mesh11_mesh12_mesh13_mesh14_mesh15_mesh16_mesh17"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1276298528,
+                    "ResourceName": "09 - Default"
+                }
+            ]
+        },
+        {
+            "UID": 1473609427,
+            "ParentUID": 968938033,
+            "Name": "City_building_039",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -42.807240,
+                -30.643888,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 623276456,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 13084942,
+                    "ResourceName": "Material #0"
+                }
+            ]
+        },
+        {
+            "UID": 278165389,
+            "ParentUID": 968938033,
+            "Name": "City_building_040",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -34.679482,
+                -30.643888,
+                -0.000001
+            ],
+            "Rotation": [
+                0,
+                0,
+                -0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 623276456,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1_mesh2_mesh3_mesh4_mesh5_mesh6_mesh7"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 13084942,
+                    "ResourceName": "Material #0"
+                }
+            ]
+        },
+        {
+            "UID": 145018923,
+            "ParentUID": 968938033,
+            "Name": "City_building_041",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                30.695278,
+                21.612646,
+                0.000000
+            ],
+            "Rotation": [
+                0,
+                0,
+                0.707107,
+                0.707107
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                },
+                {
+                    "ComponentType": 2,
+                    "HasResource": true,
+                    "Type": 1,
+                    "ID": 1615033304,
+                    "ResourceName": "Street_environment_V01_mesh0_mesh1"
+                },
+                {
+                    "ComponentType": 3,
+                    "HasResource": true,
+                    "Type": 3,
+                    "ID": 1710993251,
+                    "ResourceName": "Building_dnt"
+                }
+            ]
+        },
+        {
+            "UID": 1041813636,
+            "ParentUID": 1116026862,
+            "Name": "Camera001",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -78.312431,
+                45.251217,
+                -97.031113
+            ],
+            "Rotation": [
+                0.049340,
+                0.932287,
+                0.139331,
+                -0.330140
+            ],
+            "Scale": [
+                1.000000,
+                1.000000,
+                1.000000
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 846974531,
+            "ParentUID": 1116026862,
+            "Name": "Camera001.Target",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -28.132622,
+                20.873329,
+                -35.064213
+            ],
+            "Rotation": [
+                0.049340,
+                0.932287,
+                0.139331,
+                -0.330140
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 1607843425,
+            "ParentUID": 1116026862,
+            "Name": "Spot001",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                -66.721268,
+                141.934128,
+                0.000006
+            ],
+            "Rotation": [
+                0.690035,
+                0.154439,
+                0.690035,
+                -0.154439
+            ],
+            "Scale": [
+                1,
+                1.000000,
+                1.000000
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        },
+        {
+            "UID": 2081992050,
+            "ParentUID": 1116026862,
+            "Name": "Spot001.Target",
+            "Active": true,
+            "Static": false,
+            "Selected": false,
+            "OpenInHierarchy": false,
+            "Translation": [
+                28.890945,
+                -60.963882,
+                -0.000003
+            ],
+            "Rotation": [
+                0.000000,
+                0,
+                0,
+                1
+            ],
+            "Scale": [
+                1,
+                1,
+                1
+            ],
+            "Components": [
+                {
+                    "ComponentType": 1,
+                    "HasResource": false
+                }
+            ]
+        }
+    ]
+} 

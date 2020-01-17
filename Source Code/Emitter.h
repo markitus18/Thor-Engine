@@ -14,7 +14,7 @@ public:
 	//Loop through all modules, loop through particles, update them
 	void Update(float dt);
 
-	void SaveAsset(Config& config);
+	void SaveAsset(Config& config) const;
 	void SaveResource(char* buffer);
 
 	void Load(Config& config);

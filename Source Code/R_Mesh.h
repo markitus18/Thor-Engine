@@ -3,7 +3,19 @@
 
 #include "Resource.h"
 #include "Globals.h"
-#include "MathGeoLib\src\Geometry\AABB.h"
+
+#include <map>
+
+#include "MathGeoLib/src/Geometry/AABB.h"
+#include "MathGeoLib/src/Math/float4x4.h"
+
+struct Bone
+{
+	uint numWeights = 0;
+	uint* weightsIndex = nullptr;
+	float* weights = nullptr;
+	float4x4 offset = float4x4::identity;
+};
 
 class R_Mesh : public Resource
 {
@@ -15,6 +27,8 @@ public:
 		b_vertices,
 		b_normals,
 		b_tex_coords,
+		b_bone_IDs,
+		b_bone_weights,
 		max_buffer_type, //Warning: this needs to be the last element
 	};
 
@@ -37,10 +51,16 @@ public:
 	float*	normals = nullptr;
 	float*	tex_coords = nullptr;
 
+	//Buffer sizes of 4 * vertices, 4 spaces for each vertex
+	int* boneIDs = nullptr;
+	float* boneWeights = nullptr;
+
+	std::map<std::string, uint> boneMapping;
+	std::vector<float4x4> boneTransforms;
+	std::vector<float4x4> boneOffsets;
+
 	AABB aabb;
 };
-
-//hashet string
 
 
 #endif // !__R_MESH__

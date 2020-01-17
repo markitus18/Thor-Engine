@@ -9,8 +9,6 @@
 #include "M_Camera3D.h"
 #include "M_Editor.h"
 #include "M_Resources.h"
-#include "M_Animations.h"
-#include "M_ParticleSystems.h"
 #include "M_Shaders.h"
 
 #include "Config.h"
@@ -31,8 +29,6 @@ Application::Application()
 
 	moduleResources = new M_Resources();
 	moduleEditor = new M_Editor();
-	moduleAnimations = new M_Animations();
-	moduleParticleSystems = new M_ParticleSystems();
 
 	// Main Modules
 	AddModule(fileSystem);
@@ -49,7 +45,6 @@ Application::Application()
 	AddModule(renderer3D);
 
 	AddModule(moduleResources);
-	AddModule(moduleAnimations);
 
 	title = TITLE;
 	organization = ORGANIZATION;
@@ -69,11 +64,11 @@ bool Application::Init()
 
 	char* buffer = nullptr;
 
-	uint size = fileSystem->Load("ProjectSettings/Settings.JSON", &buffer);
+	uint size = fileSystem->Load("Engine/Settings.JSON", &buffer);
 
 	if (size <= 0)
 	{
-		uint defSize = fileSystem->Load("ProjectSettings/DefaultSettings.JSON", &buffer);
+		uint defSize = fileSystem->Load("Engine/DefaultSettings.JSON", &buffer);
 		if (defSize <= 0)
 		{
 			LOG("[error] failed to load project settings");
@@ -172,7 +167,7 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
-	SaveSettingsNow("ProjectSettings/Settings.JSON");
+	SaveSettingsNow("Engine/Settings.JSON");
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
 		ret = list_modules[i]->CleanUp();

@@ -10,8 +10,7 @@ class GameObject;
 class C_Transform;
 class C_Mesh;
 class C_Camera;
-class C_Animation;
-class C_Bone;
+class C_Animator;
 class C_Billboard;
 class C_ParticleSystem;
 
@@ -33,8 +32,7 @@ private:
 	void DrawMesh(GameObject* gameObject, C_Mesh* mesh);
 	void DrawMaterial(GameObject* gameObject, R_Material* material);
 	void DrawCamera(GameObject* gameObject, C_Camera* camera);
-	void DrawAnimation(GameObject* gameObject, C_Animation* animation);
-	void DrawBone(GameObject* gameObject, C_Bone* bone);
+	void DrawAnimator(GameObject* gameObject, C_Animator* animator);
 	void DrawBillboard(GameObject* gameObject, C_Billboard* billboard);
 	void DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* particleSystem);
 

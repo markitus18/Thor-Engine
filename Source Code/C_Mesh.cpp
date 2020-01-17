@@ -6,10 +6,8 @@
 #include "GameObject.h"
 
 #include "R_Mesh.h"
-#include "R_Bone.h"
 
 #include "C_Transform.h"
-#include "C_Bone.h"
 
 #include "OpenGL.h"
 
@@ -24,15 +22,6 @@ C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObjec
 C_Mesh::~C_Mesh()
 {
 
-}
-
-void C_Mesh::AddBone(C_Bone* bone)
-{
-	for (uint i = 0; i < bones.size(); i++)
-		if (bones[i] == bone)
-			return;
-
-	bones.push_back(bone);
 }
 
 const AABB& C_Mesh::GetAABB() const
@@ -74,34 +63,69 @@ void C_Mesh::DeformAnimMesh()
 	if (animMesh == nullptr)
 		StartBoneDeformation();
 
-	for (uint i = 0; i < bones.size(); i++)
+	R_Mesh* rMesh = (R_Mesh*)GetResource();
+		
+	std::map<std::string, GameObject*> boneMapping;
+	GetBoneMapping(boneMapping);
+
+	std::vector<float4x4> boneTransforms;
+	boneTransforms.resize(rMesh->boneOffsets.size());
+	std::map<std::string, uint>::iterator it;
+
+	for (it = rMesh->boneMapping.begin(); it != rMesh->boneMapping.end(); ++it)
 	{
-		R_Bone* rBone = (R_Bone*)bones[i]->GetResource();
-		R_Mesh* rMesh = (R_Mesh*)GetResource();
-		C_Bone* rootBone = bones[i]->GetRoot();
+		GameObject* bone = boneMapping[it->first];
 
-		float4x4 matrix = bones[i]->GetSystemTransform();
-		matrix = gameObject->GetComponent<C_Transform>()->GetTransform().Inverted() * matrix;
-		matrix = matrix * rBone->offset;
+		//TODO: Here we are just picking bone global transform, we need the bone transform matrix
+		float4x4 mat = rootBone->parent->parent->GetComponent<C_Transform>()->GetGlobalTransform().Inverted();
+		mat = mat * bone->GetComponent<C_Transform>()->GetGlobalTransform();
+		mat = gameObject->GetComponent<C_Transform>()->GetTransform().Inverted() * mat;
 
-		for (uint i = 0; i < rBone->numWeights; i++)
+		int boneID = rMesh->boneMapping[bone->name];
+		mat = mat * rMesh->boneOffsets[boneID];
+		boneTransforms[it->second] = mat;
+	}
+
+	//Iterate all mesh vertex
+	for (uint v = 0; v < rMesh->buffersSize[R_Mesh::b_vertices]; ++v)
+	{
+		float3 originalV(&rMesh->vertices[v * 3]);
+			
+		//Iterate all 4 bones for that vertex
+		for (uint b = 0; b < 4; ++b)
 		{
-			uint index = rBone->weightsIndex[i];
-			float3 originalV(&rMesh->vertices[index * 3]);
+			int boneID = rMesh->boneIDs[v * 4 + b];
+			int boneWeight = rMesh->boneWeights[v * 4 + b];
 
-			float3 toAdd = matrix.TransformPos(originalV);
+			if (boneID == -1) continue;
+				
+			//Transforming original mesh vertex with bone transformation matrix
+			float3 toAdd = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));
 
-			animMesh->vertices[index * 3] += toAdd.x  * rBone->weights[i];
-			animMesh->vertices[index * 3 + 1] += toAdd.y * rBone->weights[i];
-			animMesh->vertices[index * 3 + 2] += toAdd.z * rBone->weights[i];
+			animMesh->vertices[v * 3] += toAdd.x  * boneWeight;
+			animMesh->vertices[v * 3 + 1] += toAdd.y * boneWeight;
+			animMesh->vertices[v * 3 + 2] += toAdd.z * boneWeight;
 
 			if (rMesh->buffersSize[R_Mesh::b_normals] > 0)
 			{
-				toAdd = matrix.TransformPos(float3(&rMesh->normals[index * 3]));
-				animMesh->normals[index * 3] += toAdd.x * rBone->weights[i];
-				animMesh->normals[index * 3 + 1] += toAdd.y * rBone->weights[i];
-				animMesh->normals[index * 3 + 2] += toAdd.z * rBone->weights[i];
+				//Transforming original mesh normal with bone transformation matrix
+				toAdd = boneTransforms[boneID].TransformPos(float3(&rMesh->normals[v * 3]));
+				animMesh->normals[v * 3] += toAdd.x * boneWeight;
+				animMesh->normals[v * 3 + 1] += toAdd.y * boneWeight;
+				animMesh->normals[v * 3 + 2] += toAdd.z * boneWeight;
 			}
 		}
+	}
+}
+
+void C_Mesh::GetBoneMapping(std::map<std::string, GameObject*>& boneMapping)
+{
+	boneMapping.clear();
+	std::vector<GameObject*> gameObjects;
+	rootBone->CollectChilds(gameObjects);
+
+	for (uint i = 0; i < gameObjects.size(); ++i)
+	{
+		boneMapping[gameObjects[i]->name] = gameObjects[i];
 	}
 }

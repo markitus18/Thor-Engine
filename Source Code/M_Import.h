@@ -11,7 +11,7 @@ struct aiMaterial;
 
 class C_Mesh;
 class C_Material;
-class C_Animation;
+class C_Animator;
 class C_Camera;
 class C_Transform;
 class C_ParticleSystem;
@@ -34,14 +34,14 @@ namespace Importer
 		//Processes an already loaded FBX file and generates all the hierarchy and components setup
 		//Warning: meshes, materials and lights need to be linked later, this function only loads the hierarchy
 		//GameObjects that are meant to have a mesh, material or light, are added the component and given the id from the aiScene container.
-		GameObject* Import(const aiScene* scene);
+		GameObject* Import(const aiScene* scene, const char* name);
 
 		//Processes an aiNode structure and generates the GameObject hierarchy recursively.
 		//Warning: meshes, materials and lights need to be linked later, this function only loads the hierarchy
 		//GameObjects that are meant to have a mesh, material or light, are added the component and given the id from the aiScene container.
 		GameObject* CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent);
 
-		void LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials);
+		void LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, const std::vector<uint64>& animations);
 
 		//Process a GameObject data with its hierarchy into a buffer file saved as json
 		//Returns the size of the buffer file (0 if any errors)
@@ -63,7 +63,7 @@ namespace Importer
 		void SaveComponent(Config& config, const C_Camera* component);
 
 		//Process an Animation component data into a config file
-		void SaveComponent(Config& config, const C_Animation* component);
+		void SaveComponent(Config& config, const C_Animator* component);
 
 		//Process a Particle System component data into a config file
 		void SaveComponent(Config& config, const C_ParticleSystem* component);
@@ -76,7 +76,7 @@ namespace Importer
 
 		void LoadComponent(Config& config, C_Camera* camera);
 
-		void LoadComponent(Config& config, C_Animation* animation);
+		void LoadComponent(Config& config, C_Animator* animation);
 
 		void LoadComponent(Config& config, C_ParticleSystem* particleSystem);
 	}

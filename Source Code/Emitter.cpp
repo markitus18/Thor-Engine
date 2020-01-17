@@ -14,7 +14,7 @@ void Emitter::Update(float dt)
 
 }
 
-void Emitter::SaveAsset(Config& config)
+void Emitter::SaveAsset(Config& config) const
 {
 	config.SetString("Name", name.c_str());
 	config.SetNumber("Material ID", materialID);

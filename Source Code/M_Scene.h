@@ -11,7 +11,6 @@
 class GameObject;
 class Config;
 class Quadtree;
-class C_Animation;
 class C_Camera;
 
 class M_Scene : public Module

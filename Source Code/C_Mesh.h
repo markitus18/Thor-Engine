@@ -5,11 +5,10 @@
 #include "Component.h"
 #include "MathGeoLib\src\MathGeoLib.h"
 
-#include <vector>
-#include <list>
+#include <map>
+#include <string>
 
 class GameObject;
-class C_Bone;
 class R_Mesh;
 
 class C_Mesh : public Component
@@ -19,17 +18,17 @@ public:
 	C_Mesh(GameObject* new_GameObject);
 	~C_Mesh();
 
-	void AddBone(C_Bone* bone);
 	const AABB& GetAABB() const;
 	static inline Type GetType() { return Type::Mesh; };
 
 	void StartBoneDeformation();
 	void DeformAnimMesh();
 
-public:
-	std::vector<C_Bone*> bones;
-	R_Mesh* animMesh = nullptr;
+	void GetBoneMapping(std::map<std::string, GameObject*>& boneMapping);
 
+public:
+	R_Mesh* animMesh = nullptr;
+	GameObject* rootBone = nullptr;
 };
 
 #endif

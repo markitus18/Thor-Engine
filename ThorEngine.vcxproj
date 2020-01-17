@@ -87,9 +87,8 @@
     <ClInclude Include="Source Code\Color.h" />
     <ClInclude Include="Source Code\Component.h" />
     <ClInclude Include="Source Code\Config.h" />
-    <ClInclude Include="Source Code\C_Animation.h" />
+    <ClInclude Include="Source Code\C_Animator.h" />
     <ClInclude Include="Source Code\C_Billboard.h" />
-    <ClInclude Include="Source Code\C_Bone.h" />
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
@@ -106,7 +105,6 @@
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source Code\External Libraries\ImGui\imstb_truetype.h" />
-    <ClInclude Include="Source Code\Importer.h" />
     <ClInclude Include="Source Code\M_ParticleSystems.h" />
     <ClInclude Include="Source Code\M_Shaders.h" />
     <ClInclude Include="Source Code\Particle.h" />
@@ -214,7 +212,6 @@
     <ClInclude Include="Source Code\Quadtree.h" />
     <ClInclude Include="Source Code\Resource.h" />
     <ClInclude Include="Source Code\R_Animation.h" />
-    <ClInclude Include="Source Code\R_Bone.h" />
     <ClInclude Include="Source Code\R_Material.h" />
     <ClInclude Include="Source Code\R_Mesh.h" />
     <ClInclude Include="Source Code\R_Prefab.h" />
@@ -239,9 +236,8 @@
     <ClCompile Include="Source Code\Color.cpp" />
     <ClCompile Include="Source Code\Component.cpp" />
     <ClCompile Include="Source Code\Config.cpp" />
-    <ClCompile Include="Source Code\C_Animation.cpp" />
+    <ClCompile Include="Source Code\C_Animator.cpp" />
     <ClCompile Include="Source Code\C_Billboard.cpp" />
-    <ClCompile Include="Source Code\C_Bone.cpp" />
     <ClCompile Include="Source Code\C_Camera.cpp" />
     <ClCompile Include="Source Code\C_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
@@ -324,7 +320,6 @@
     <ClCompile Include="Source Code\Quadtree.cpp" />
     <ClCompile Include="Source Code\Resource.cpp" />
     <ClCompile Include="Source Code\R_Animation.cpp" />
-    <ClCompile Include="Source Code\R_Bone.cpp" />
     <ClCompile Include="Source Code\R_Folder.cpp" />
     <ClCompile Include="Source Code\R_Material.cpp" />
     <ClCompile Include="Source Code\R_Mesh.cpp" />

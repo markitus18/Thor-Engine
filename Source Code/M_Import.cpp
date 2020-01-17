@@ -9,13 +9,14 @@
 #include "C_Mesh.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
-#include "C_Animation.h"
+#include "C_Animator.h"
 #include "C_ParticleSystem.h"
 
 #include "Resource.h"
 #include "R_Mesh.h"
 #include "R_Material.h"
 #include "R_Prefab.h"
+#include "R_Animation.h"
 
 #include "Config.h"
 
@@ -113,8 +114,8 @@ void Importer::Scenes::SaveComponent(Config& config, const Component* component)
 		case(Component::Camera):
 			SaveComponent(config, (C_Camera*)component);
 			break;
-		case(Component::Animation):
-			SaveComponent(config, (C_Animation*)component);
+		case(Component::Animator):
+			SaveComponent(config, (C_Animator*)component);
 			break;
 	}
 
@@ -127,19 +128,16 @@ void Importer::Scenes::SaveComponent(Config& config, const C_Camera* camera)
 	config.SetNumber("FarPlane", camera->frustum.FarPlaneDistance());
 }
 
-void Importer::Scenes::SaveComponent(Config& config, const C_Animation* animation)
+void Importer::Scenes::SaveComponent(Config& config, const C_Animator* animator)
 {
-	config.SetBool("Playing", animation->playing);
+	config.SetBool("Playing", animator->playing);
+	config.SetNumber("Current Animation", animator->current_animation);
+
 	Config_Array array = config.SetArray("Animations");
-	for (uint i = 0; i < animation->animations.size(); i++)
+	for (uint i = 0; i < animator->animations.size(); i++)
 	{
 		Config node = array.AddNode();
-		node.SetString("Name", animation->animations[i].name.c_str());
-		node.SetBool("Loopable", animation->animations[i].loopable);
-		node.SetNumber("StartFrame", animation->animations[i].start_frame);
-		node.SetNumber("EndFrame", animation->animations[i].end_frame);
-		node.SetNumber("TicksPerSecond", animation->animations[i].ticksPerSecond);
-		node.SetBool("CurrentAnimation", animation->animations[i].current);
+		node.SetNumber("ID", animator->animations[i]);
 	}
 }
 
@@ -198,9 +196,9 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 					component->SetResource(comp.GetNumber("ID"));
 				}
 				//TODO: kinda dirty
-				if (component->GetType() == Component::Animation)
+				if (component->GetType() == Component::Animator)
 				{
-					C_Animation* anim = (C_Animation*)component;
+					C_Animator* anim = (C_Animator*)component;
 					if (anim->animations.size() == 0)
 						anim->AddAnimation();
 				}
@@ -223,9 +221,9 @@ void Importer::Scenes::LoadComponent(Config& config, Component* component)
 		LoadComponent(config, (C_Camera*)component);
 		break;
 	}
-	case(Component::Animation):
+	case(Component::Animator):
 	{
-		LoadComponent(config, (C_Animation*)component);
+		LoadComponent(config, (C_Animator*)component);
 		break;
 	}
 	}
@@ -239,20 +237,18 @@ void Importer::Scenes::LoadComponent(Config& config, C_Camera* camera)
 
 }
 
-void Importer::Scenes::LoadComponent(Config& config, C_Animation* animation)
+void Importer::Scenes::LoadComponent(Config& config, C_Animator* animator)
 {
-	animation->playing = config.GetBool("Playing");
+	animator->playing = config.GetBool("Playing");
 	Config_Array array = config.GetArray("Animations");
 	for (uint i = 0; i < array.GetSize(); i++)
 	{
 		Config node = array.GetNode(i);
-		animation->AddAnimation(node.GetString("Name").c_str(), node.GetNumber("StartFrame"), node.GetNumber("EndFrame"), node.GetNumber("TicksPerSecond"));
-		animation->animations[i].loopable = node.GetBool("Loopable", false);
-		animation->animations[i].current = node.GetBool("CurrentAnimation");
-		if (animation->animations[i].current == true)
-			animation->SetAnimation(i);
+		animator->AddAnimation(node.GetNumber("ID"));
 	}
 
+	uint currentAnimation = config.GetNumber("Current Animation");
+	animator->SetAnimation(currentAnimation);
 }
 
 void Importer::Scenes::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
@@ -268,9 +264,11 @@ const aiScene* Importer::Scenes::ProcessAssimpScene(const char* buffer, uint siz
 	return aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 }
 
-GameObject* Importer::Scenes::Import(const aiScene* scene)
+GameObject* Importer::Scenes::Import(const aiScene* scene, const char* name)
 {
-	return CreateGameObjectFromNode(scene, scene->mRootNode, nullptr);
+	GameObject* root = CreateGameObjectFromNode(scene, scene->mRootNode, nullptr);
+	root->name = name;
+	return root;
 }
 
 GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent)
@@ -310,10 +308,11 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 		}
 	} while (dummyFound == true);
 
-	//TODO: Set first GameObject name (RootNode by now)
-
 	GameObject* gameObject = new GameObject(parent, node_name.c_str(), pos, scale, rot);
 	gameObject->uid = randomID.Int();
+
+	if (parent == nullptr && scene->HasAnimations())
+		gameObject->CreateComponent(Component::Animator);
 
 	// Loading node meshes ----------------------------------------
 	for (uint i = 0; i < node->mNumMeshes; i++)
@@ -347,7 +346,7 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 	return gameObject;
 }
 
-void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
+void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, const std::vector<uint64>& animations)
 {
 	//Link loaded mesh resource
 	if (C_Mesh* mesh = gameObject->GetComponent<C_Mesh>())
@@ -360,9 +359,19 @@ void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vec
 		mat->SetResource(materials[mat->GetResourceID()]);
 	}
 
+	//Link loaded animations to animator
+	if (C_Animator* animator = gameObject->GetComponent<C_Animator>())
+	{
+		for (uint i = 0; i < animations.size(); ++i)
+			animator->AddAnimation(animations[i]);
+
+		//TODO: Dirty method for setting root bone just by now
+		animator->rootBone = gameObject->childs[1]->childs[0];
+	}
+
 	//Iterate all gameObject's children recursively
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
-		LinkSceneResources(gameObject->childs[i], meshes, materials);
+		LinkSceneResources(gameObject->childs[i], meshes, materials, animations);
 	}
 }

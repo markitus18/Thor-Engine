@@ -15,7 +15,6 @@
 #include "R_Material.h"
 #include "R_Prefab.h"
 #include "R_Animation.h"
-#include "R_Bone.h"
 #include "R_ParticleSystem.h"
 #include "R_Shader.h"
 
@@ -115,22 +114,12 @@ Resource* M_Resources::ImportFileFromAssets(const char* path)
 	Resource::Type type = GetTypeFromPath(path);
 	Resource* resource = CreateResourceBase(path, type);
 
-	//TODO: Build resource name
-	//TODO: check override when re-importing
+	//Checking for an already existing resource. In that case, re-import.
 	if (ResourceMeta* meta = FindResourceInLibrary(path, resource->name.c_str(), type))
+	{
 		resource->ID = meta->id;
-	/*
-	//Find if the resource already exists and delete it
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::MATERIAL);
-	if (meta != nullptr)
-	{
-		newID = meta->id;
-		instances = DeleteResource(newID);
-	}
-	else
-	{
-		newID = GetNewID();
-	}*/
+		resource->instances = DeleteResource(resource->ID);
+	}	
 
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load(path, &buffer);
@@ -152,6 +141,11 @@ Resource* M_Resources::ImportFileFromAssets(const char* path)
 			ImportRShader(buffer, size, (R_Shader*)resource);
 			break;
 		}
+		case(Resource::PARTICLESYSTEM):
+		{
+			ImportRParticleSystem(buffer, size, (R_ParticleSystem*)resource);
+			break;
+		}
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -163,8 +157,8 @@ Resource* M_Resources::ImportFileFromAssets(const char* path)
 void M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
 {
 	const aiScene* scene = Importer::Scenes::ProcessAssimpScene(buffer, size);
-	GameObject* root = Importer::Scenes::Import(scene);
-	std::vector<uint64> meshes, materials;
+	GameObject* root = Importer::Scenes::Import(scene, prefab->name.c_str());
+	std::vector<uint64> meshes, materials, animations;
 
 	for (uint i = 0; i < scene->mNumMeshes; ++i)
 	{
@@ -172,14 +166,21 @@ void M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
 		std::string meshName = prefab->name.append("_mesh").append(std::to_string(i));
 		scene->mMeshes[i]->mName = meshName;
 		meshes.push_back(ImportRMesh(scene->mMeshes[i], prefab->original_file.c_str()));
+
+		//If the mesh has bones, import bone data into an animator resource..?
 	}
 	for (uint i = 0; i < scene->mNumMaterials; ++i)
 	{
 		materials.push_back(ImportRMaterial(scene->mMaterials[i], prefab->original_file.c_str()));
 	}
 
+	for (uint i = 0; i < scene->mNumAnimations; ++i)
+	{
+		animations.push_back(ImportRAnimation(scene->mAnimations[i], prefab->original_file.c_str()));
+	}
+
 	//Link all loaded meshes and materials to the existing gameObjects
-	Importer::Scenes::LinkSceneResources(root, meshes, materials);
+	Importer::Scenes::LinkSceneResources(root, meshes, materials, animations);
 
 	Config file;
 	Importer::Scenes::SaveScene(root, file);
@@ -271,69 +272,36 @@ uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_fi
 	return resource->ID;
 }
 
-uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name)
+uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source_file)
 {
-	uint64 ret = 0;
-	uint64 newID = 0;
-	R_Animation* resource = nullptr;
-	uint64 instances = 0;
+	Resource* resource = CreateResourceBase(source_file, Resource::Type::ANIMATION, anim->mName.C_Str());
 
-	//Find if the resource already exists and delete it
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::ANIMATION);
-	if (meta != nullptr)
-	{
-		newID = meta->id;
-		instances = DeleteResource(newID);
-	}
-	else
-	{
-		newID = GetNewID();
-	}
+	if (ResourceMeta* meta = FindResourceInLibrary(source_file, anim->mName.C_Str(), Resource::Type::ANIMATION))
+		resource->ID = meta->id;
 
-	//Importing resource
-	resource = App->moduleAnimations->ImportAnimation(anim, newID, source_file);
-	if (resource)
+	Importer::Animations::Import(anim, (R_Animation*)resource);
+
+	char* saveBuffer = nullptr;
+	if (uint64 saveSize = Importer::Animations::Save((R_Animation*)resource, &saveBuffer))
 	{
-		resource->instances = instances;
-		AddResource(resource);
-		ret = resource->ID;
+		App->fileSystem->Save(resource->resource_file.c_str(), saveBuffer, saveSize);
 	}
-	return ret;
+	AddResource(resource);
+	return resource->ID;
 }
 
-uint64 M_Resources::ImportRBone(const aiBone* bone, const char* source_file, const char* name, uint64 meshID)
+void M_Resources::ImportRParticleSystem(const char* buffer, uint size, R_ParticleSystem* particleSystem)
 {
-	uint64 ret = 0;
-	uint64 newID = 0;
-	R_Bone* resource = nullptr;
-	uint64 instances = 0;
+	Importer::Particles::Import(buffer, size, particleSystem);
 
-	//Find if the resource already exists and delete it
-	ResourceMeta* meta = FindResourceInLibrary(source_file, name, Resource::BONE);
-	if (meta != nullptr)
+	char* saveBuffer = nullptr;
+	if (uint64 saveSize = Importer::Particles::Save((R_ParticleSystem*)particleSystem, &saveBuffer))
 	{
-		newID = meta->id;
-		instances = DeleteResource(newID);
-	}
-	else
-	{
-		newID = random.Int();
+		App->fileSystem->Save(particleSystem->resource_file.c_str(), saveBuffer, saveSize);
 	}
 
-	//Importing resource
-	resource = App->moduleAnimations->ImportBone(bone, newID, source_file, meshID);
-	if (resource)
-	{
-		resource->instances = instances;
-		AddResource(resource);
-		ret = resource->ID;
-	}
-	return ret;
-}
-
-uint64 M_Resources::ImportRParticleSystem(const char* assetsPath)
-{
-	return 0;
+	RELEASE_ARRAY(saveBuffer);
+	AddResource(particleSystem);
 }
 
 void M_Resources::ImportRShader(const char* buffer, uint size, R_Shader* shader)
@@ -379,10 +347,6 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 			resource = new R_Animation();
 			resource->resource_file = ANIMATIONS_PATH;
 			break;
-		case Resource::BONE:
-			resource = new R_Bone();
-			resource->resource_file = BONES_PATH;
-			break;
 		case Resource::PREFAB:
 			resource = new R_Prefab();
 			resource->resource_file = GAMEOBJECTS_PATH;
@@ -398,7 +362,7 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 		case Resource::SCENE:
 			resource = new Resource(Resource::SCENE);
 	}
-
+	
 	if (resource == nullptr) return nullptr;
 
 	if (name == nullptr)
@@ -417,22 +381,25 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 	return resource;
 }
 
-Resource* M_Resources::CreateNewResource(const char* assetsPath, Resource::Type type)
+Resource* M_Resources::CreateNewCopyResource(const char* directory, const char* defaultPath, Resource::Type type)
 {
-	Resource* ret = nullptr;
-	switch (type)
-	{
-		case(Resource::Type::PARTICLESYSTEM):
-		{	
-			ret = App->moduleParticleSystems->CreateNewParticleSystem(assetsPath, random.Int());
+	Resource* resource = nullptr;
 
-		}
+	//First we get the resource name and generate a unique one
+	std::string path, name, extension;
+	App->fileSystem->SplitFilePath(defaultPath, &path, &name, &extension);
+	
+	name = App->fileSystem->GetUniqueName(directory, name.c_str());
+	std::string dstPath = std::string(directory).append(name);
+
+	//Duplicate the file in assets, import it as usual
+	std::string finalPath;
+	if (App->fileSystem->DuplicateFile(defaultPath, directory, finalPath))
+	{
+		resource = ImportFileFromAssets(finalPath.c_str());
 	}
 
-	if (ret != nullptr)
-		AddResource(ret);
-
-	return ret;
+	return resource;
 }
 
 Resource* M_Resources::LoadResourceBase(uint64 ID)
@@ -487,17 +454,12 @@ Resource* M_Resources::GetResource(uint64 ID)
 			}
 			case (Resource::ANIMATION):
 			{
-				//resource = App->moduleAnimations->LoadAnimation(ID);
-				break;
-			}
-			case (Resource::BONE):
-			{
-				//resource = App->moduleAnimations->LoadBone(ID);
+				Importer::Animations::Load(buffer, (R_Animation*)resource);
 				break;
 			}
 			case (Resource::PARTICLESYSTEM):
 			{
-				resource = App->moduleParticleSystems->LoadParticleSystemResource(ID);
+				Importer::Particles::Load(buffer, size, (R_ParticleSystem*)resource);
 				break;
 			}
 			case (Resource::SHADER):
@@ -576,8 +538,7 @@ Component::Type M_Resources::ResourceToComponentType(Resource::Type type)
 	{
 	case Resource::MESH: return Component::Mesh;
 	case Resource::MATERIAL: return Component::Material;
-	case Resource::ANIMATION: return Component::Animation;
-	case Resource::BONE: return Component::Bone;
+	case Resource::ANIMATION: return Component::Animator;
 	default: return Component::None;
 	}
 }

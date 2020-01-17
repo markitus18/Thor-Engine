@@ -124,7 +124,7 @@ bool M_Editor::Start()
 {
 	//TODO: load in another module (use icons as a resource)
 	char* buffer = nullptr;
-	uint size = App->fileSystem->Load("ProjectSettings/Icons/FolderIcon.png", &buffer);
+	uint size = App->fileSystem->Load("Engine/Assets/Icons/FolderIcon.png", &buffer);
 	if (size > 0)
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
@@ -134,7 +134,7 @@ bool M_Editor::Start()
 		RELEASE_ARRAY(buffer);
 	}
 
-	size = App->fileSystem->Load("ProjectSettings/Icons/FileIcon.png", &buffer);
+	size = App->fileSystem->Load("Engine/Assets/Icons/FileIcon.png", &buffer);
 	if (size > 0)
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
@@ -144,7 +144,7 @@ bool M_Editor::Start()
 		RELEASE_ARRAY(buffer);
 	}
 
-	size = App->fileSystem->Load("ProjectSettings/Icons/SelectedIcon.png", &buffer);
+	size = App->fileSystem->Load("Engine/Assets/Icons/SelectedIcon.png", &buffer);
 	if (size > 0)
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
@@ -154,7 +154,7 @@ bool M_Editor::Start()
 		RELEASE_ARRAY(buffer);
 	}
 
-	size = App->fileSystem->Load("ProjectSettings/Icons/ThorIcon.png", &buffer);
+	size = App->fileSystem->Load("Engine/Assets/Icons/ThorIcon.png", &buffer);
 	if (size > 0)
 	{
 		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))

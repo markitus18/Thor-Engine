@@ -19,8 +19,7 @@ public:
 		Mesh,
 		Material,
 		Camera,
-		Animation,
-		Bone,
+		Animator,
 		Billboard,
 		ParticleSystem,
 		Unknown

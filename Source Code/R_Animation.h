@@ -3,6 +3,7 @@
 
 #include "Resource.h"
 #include "MathGeoLib\src\MathGeoLib.h"
+
 #include <map>
 
 struct Channel
@@ -14,16 +15,16 @@ struct Channel
 	std::map<double, float3> scaleKeys;
 
 	bool HasPosKey() const;
-	std::map<double, float3>::iterator GetPrevPosKey(double currentKey, uint,	uint);
-	std::map<double, float3>::iterator GetNextPosKey(double currentKey, uint, uint);
+	std::map<double, float3>::const_iterator GetPrevPosKey(double currentKey) const;
+	std::map<double, float3>::const_iterator GetNextPosKey(double currentKey) const;
 
 	bool HasRotKey() const;
-	std::map<double, Quat>::iterator GetPrevRotKey(double currentKey, uint, uint);
-	std::map<double, Quat>::iterator GetNextRotKey(double currentKey, uint, uint);
+	std::map<double, Quat>::const_iterator GetPrevRotKey(double currentKey) const;
+	std::map<double, Quat>::const_iterator GetNextRotKey(double currentKey) const;
 
 	bool HasScaleKey() const;
-	std::map<double, float3>::iterator GetPrevScaleKey(double currentKey, uint, uint);
-	std::map<double, float3>::iterator GetNextScaleKey(double currentKey, uint, uint);
+	std::map<double, float3>::const_iterator GetPrevScaleKey(double currentKey) const;
+	std::map<double, float3>::const_iterator GetNextScaleKey(double currentKey) const;
 };
 
 class R_Animation : public Resource
@@ -36,9 +37,8 @@ public:
 	float duration;
 	float ticksPerSecond;
 	bool loopable = true;
-	uint numChannels;
 
-	Channel* channels;
+	std::map<std::string, Channel> channels;
 };
 
 #endif

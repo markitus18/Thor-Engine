@@ -25,6 +25,16 @@ namespace Importer
 		//Process buffer data into a ready-to-use R_Mesh.
 		//Returns nullptr if any errors occured during the process.
 		void Load(const char* buffer, R_Mesh* mesh);
+
+
+		namespace Private
+		{
+			void ImportBones(const aiMesh* mesh, R_Mesh* rMesh);
+
+			void SaveBones(const R_Mesh* rMesh, char** cursor);
+
+			void LoadBones(const char** cursor, R_Mesh* rMesh);
+		}
 	}
 }
 #endif

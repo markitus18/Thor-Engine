@@ -17,8 +17,7 @@
 #include "C_Mesh.h"
 #include "C_Transform.h" //TODO: why wasnt it necessary?
 #include "C_Material.h"
-#include "C_Bone.h"
-#include "C_Animation.h"
+#include "C_Animator.h"
 #include "C_Camera.h"
 #include "C_Billboard.h"
 #include "C_ParticleSystem.h"
@@ -92,11 +91,8 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	C_Camera* camera = gameObject->GetComponent<C_Camera>();
 	DrawCamera(gameObject, camera);
 
-	C_Animation* animation = gameObject->GetComponent<C_Animation>();
-	DrawAnimation(gameObject, animation);
-
-	C_Bone* bone = gameObject->GetComponent<C_Bone>();
-	DrawBone(gameObject, bone);
+	C_Animator* animator = gameObject->GetComponent<C_Animator>();
+	DrawAnimator(gameObject, animator);
 
 	C_Billboard* billboard = gameObject->GetComponent<C_Billboard>();
 	DrawBillboard(gameObject, billboard);
@@ -131,7 +127,7 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 		}
 		if (ImGui::MenuItem("Animation"))
 		{
-			gameObject->CreateComponent(Component::Type::Animation);
+			gameObject->CreateComponent(Component::Type::Animator);
 			ImGui::CloseCurrentPopup();
 		}
 		if (ImGui::MenuItem("Billboard"))
@@ -264,17 +260,6 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 			DrawMaterial(gameObject, rMat);
 		}
 	}
-
-	if (mesh->bones.size() > 0)
-	{
-		if (ImGui::CollapsingHeader("Bones", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			for (uint i = 0; i < mesh->bones.size(); i++)
-			{
-				ImGui::Text("Bone: %s", mesh->bones[i]->GetResource()->GetName());
-			}
-		}
-	}
 }
 
 void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
@@ -370,88 +355,29 @@ void W_Inspector::DrawCamera(GameObject* gameObject, C_Camera* camera)
 	}
 }
 
-void W_Inspector::DrawAnimation(GameObject* gameObject, C_Animation* animation)
+void W_Inspector::DrawAnimator(GameObject* gameObject, C_Animator* animator)
 {
-	if (animation == nullptr) return;
+	if (animator == nullptr) return;
 
-	if (ImGui::CollapsingHeader("Animation", ImGuiTreeNodeFlags_DefaultOpen))
+	//TODO: Animations should be displayed in a new window now, which would be a timeline
+
+	if (ImGui::CollapsingHeader("Animator", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
 
-		R_Animation* rAnimation = (R_Animation*)animation->GetResource();
-		if (ImGui::Checkbox("Playing", &animation->playing))
-		{
-			animation->SetAnimation(animation->current_animation);
-		}
-
-		ImGui::Text("Animations size: %i", animation->animations.size());
+		ImGui::Text("Animations");
 		ImGui::Separator();
-		ImGui::Separator();
-		for (uint i = 0; i < animation->animations.size(); i++)
+
+		for (uint i = 0; i < animator->animations.size(); ++i)
 		{
-			ImGui::Text(animation->animations[i].name.c_str());
-			ImGui::Separator();
-
-			std::string loop_label = std::string("Loop##") + std::string(std::to_string(i));
-			ImGui::Checkbox(loop_label.c_str(), &animation->animations[i].loopable);
-
-			bool isCurrent = animation->animations[i].current;
-			std::string current_label = std::string("CurrentAnimation##") + std::string(std::to_string(i));
-
-			if (ImGui::Checkbox(current_label.c_str(), &isCurrent))
-			{
-				if (isCurrent == true)
-				{
-					animation->SetAnimation(i, 2.0f);
-				}
-			}
-
-			int start_frame = animation->animations[i].start_frame;
-			std::string startF_label = std::string("Start Frame##") + std::string(std::to_string(i));
-			if (ImGui::InputInt(startF_label.c_str(), &start_frame))
-			{
-				if (start_frame >= 0)
-					animation->animations[i].start_frame = start_frame;
-			}
-
-			int end_frame = animation->animations[i].end_frame;
-			std::string endF_label = std::string("End Frame##") + std::string(std::to_string(i));
-			if (ImGui::InputInt(endF_label.c_str(), &end_frame))
-			{
-				if (end_frame >= 0 && end_frame != animation->animations[i].end_frame)
-				{
-					//TODO: restart animation?
-					animation->animations[i].end_frame = end_frame;
-				}
-			}
-
-			float ticksPerSecond = animation->animations[i].ticksPerSecond;
-			std::string speed_label = std::string("Speed##") + std::string(std::to_string(i));
-			if (ImGui::InputFloat(speed_label.c_str(), &ticksPerSecond))
-			{
-				if (ticksPerSecond >= 0)
-					animation->animations[i].ticksPerSecond = ticksPerSecond;
-			}
-			ImGui::Separator();
-			ImGui::Separator();
+			R_Animation* animation = (R_Animation*)App->moduleResources->GetResource(animator->animations[i]);
+			ImGui::Text(animation ? animation->name.c_str() : "Empty Animation");
 		}
 
 		if (ImGui::Button("Add Animation"))
 		{
-			animation->AddAnimation();
+			animator->AddAnimation();
 		}
-
-		ImGui::Unindent();
-	}
-}
-
-void W_Inspector::DrawBone(GameObject* gameObject, C_Bone* bone)
-{
-	if (bone == nullptr) return;
-
-	if (ImGui::CollapsingHeader("Bone", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::Indent();
 
 		ImGui::Unindent();
 	}
@@ -498,7 +424,8 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 		{
 			if (ImGui::MenuItem("Create New"))
 			{
-				if (Resource* resource = App->moduleResources->CreateNewResource(editor->w_explorer->GetCurrentNode().path.c_str(), Resource::Type::PARTICLESYSTEM))
+				const char* dir = editor->w_explorer->GetCurrentNode().path.c_str();
+				if (Resource* resource = App->moduleResources->CreateNewCopyResource(dir, "Engine/Assets/Defaults/New Particle System.particles", Resource::Type::PARTICLESYSTEM))
 				{
 					particleSystem->SetResource(resource->GetID());
 				}

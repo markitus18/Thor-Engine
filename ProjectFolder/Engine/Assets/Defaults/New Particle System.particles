@@ -1,0 +1,64 @@
+{
+    "Emitters": [
+        {
+            "Name": "Particle Emitter",
+            "Material ID": 2130760876,
+            "Max Particle Count": 100,
+            "Modules": [
+                {
+                    "Type": 1,
+                    "Origin": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Alignment": 2
+                },
+                {
+                    "Type": 2,
+                    "Spawn Ratio": 0.100000
+                },
+                {
+                    "Type": 8,
+                    "Initial Lifetime 1": 3,
+                    "Initial Lifetime 2": 3
+                },
+                {
+                    "Type": 9,
+                    "Initial Velocity 1": [
+                        1,
+                        1,
+                        1,
+                        2
+                    ],
+                    "Initial Velocity 2": [
+                        -1,
+                        1,
+                        -1,
+                        2
+                    ]
+                },
+                {
+                    "Type": 6,
+                    "Initial Size 1": 1,
+                    "Initial Size 2": 1
+                },
+                {
+                    "Type": 7,
+                    "Initial Color 1": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Initial Color 2": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        }
+    ]
+} 

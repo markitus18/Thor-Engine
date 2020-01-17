@@ -12,8 +12,6 @@
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
-using namespace std;
-
 M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 {
 	// needs to be created before Init so other modules can use it
@@ -118,14 +116,14 @@ const char * M_FileSystem::GetWriteDir() const
 	return PHYSFS_getWriteDir();
 }
 
-void M_FileSystem::DiscoverFiles(const char* directory, vector<string> & file_list, vector<string> & dir_list) const
+void M_FileSystem::DiscoverFiles(const char* directory, std::vector<std::string> & file_list, std::vector<std::string> & dir_list) const
 {
 	char **rc = PHYSFS_enumerateFiles(directory);
 	char **i;
 
 	for (i = rc; *i != nullptr; i++)
 	{
-		string str = string(directory) + string("/") + string(*i);
+		std::string str = std::string(directory) + std::string("/") + std::string(*i);
 		if (IsDirectory(str.c_str()))
 			dir_list.push_back(*i);
 		else
@@ -137,13 +135,13 @@ void M_FileSystem::DiscoverFiles(const char* directory, vector<string> & file_li
 
 void M_FileSystem::GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& file_list) const
 {
-	vector<string> files;
-	vector<string> dirs;
+	std::vector<std::string> files;
+	std::vector<std::string> dirs;
 	DiscoverFiles(directory, files, dirs);
 
 	for (uint i = 0; i < files.size(); i++)
 	{
-		string ext;
+		std::string ext;
 		SplitFilePath(files[i].c_str(), nullptr, nullptr, &ext);
 
 		if (ext == extension)
@@ -161,7 +159,7 @@ PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::strin
 		if (root.localPath == "")
 			root.localPath = directory;
 
-		std::vector<string> file_list, dir_list;
+		std::vector<std::string> file_list, dir_list;
 		DiscoverFiles(directory, file_list, dir_list);	
 		
 		//Adding all child directories
@@ -260,7 +258,7 @@ void M_FileSystem::SplitFilePath(const char * full_path, std::string * path, std
 {
 	if (full_path != nullptr)
 	{
-		string full(full_path);
+		std::string full(full_path);
 		size_t pos_separator = full.find_last_of("\\/");
 		size_t pos_dot = full.find_last_of(".");
 
@@ -292,7 +290,7 @@ void M_FileSystem::SplitFilePath(const char * full_path, std::string * path, std
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const
 {
-	string full_path(path);
+	std::string full_path(path);
 	full_path += file;
 	return Load(full_path.c_str(), buffer);
 }
@@ -360,10 +358,17 @@ bool M_FileSystem::DuplicateFile(const char* file, const char* dstFolder, std::s
 	relativePath = relativePath.append(dstFolder).append("/") + fileStr.append(".") + extensionStr;
 	std::string finalPath = std::string(*PHYSFS_getSearchPath()).append("/") + relativePath;
 
+	return DuplicateFile(file, finalPath.c_str());
+
+}
+
+bool M_FileSystem::DuplicateFile(const char* srcFile, const char* dstFile)
+{
+	//TODO: Compare performance to calling Load(srcFile) and then Save(dstFile)
 	std::ifstream src;
-	src.open(file, std::ios::binary);
+	src.open(srcFile, std::ios::binary);
 	bool srcOpen = src.is_open();
-	std::ofstream  dst(finalPath.c_str(), std::ios::binary);
+	std::ofstream  dst(dstFile, std::ios::binary);
 	bool dstOpen = dst.is_open();
 
 	dst << src.rdbuf();
@@ -447,4 +452,39 @@ bool M_FileSystem::Remove(const char * file)
 uint64 M_FileSystem::GetLastModTime(const char* filename)
 {
 	return PHYSFS_getLastModTime(filename);
+}
+
+std::string M_FileSystem::GetUniqueName(const char* path, const char* name) const
+{
+	//TODO: modify to distinguix files and dirs?
+	std::vector<std::string> files, dirs;
+	DiscoverFiles(path, files, dirs);
+
+	std::string finalName(name);
+	bool unique = false;
+
+	for (uint i = 0; i < 50 && unique == false; ++i)
+	{
+		unique = true;
+
+		//Build the compare name (name_i)
+		if (i > 0)
+		{
+			finalName = std::string(name).append("_");
+			if (i < 10)
+				finalName.append("0");
+			finalName.append(std::to_string(i));
+		}
+
+		//Iterate through all the files to find a matching name
+		for (uint f = 0; f < files.size(); ++f)
+		{
+			if (finalName == files[f])
+			{
+				unique = false;
+				break;
+			}
+		}
+	}
+	return finalName;
 }

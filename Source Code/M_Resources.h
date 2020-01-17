@@ -20,6 +20,7 @@ class R_Texture;
 class R_Material;
 class R_Prefab;
 class R_Shader;
+class R_ParticleSystem;
 
 struct PathNode;
 
@@ -60,11 +61,10 @@ public:
 	//Same as ImportRTexture, but we need different functions
 	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file);
-	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file, const char* name);
-	uint64 ImportRBone(const aiBone* bone, const char* source_file, const char* name, uint64 meshID);
+	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file);
 
 	//Called when a particle system is modified externally (due to copy-paste or commit update)
-	uint64 ImportRParticleSystem(const char* assetsPath);
+	void ImportRParticleSystem(const char* buffer, uint size, R_ParticleSystem* rParticles);
 	
 	//Called when a shader is modified externally (due to copy-paste or commit update)
 	void ImportRShader(const char* buffer, uint size, R_Shader* shader);
@@ -73,7 +73,7 @@ public:
 	Resource* CreateResourceBase(const char* assetsPath, Resource::Type type, const char* name = nullptr, uint64 forceID = 0);
 
 	//Used for internal resources (external referring to fbx, textures,...)
-	Resource* CreateNewResource(const char* assetsPath, Resource::Type type);
+	Resource* CreateNewCopyResource(const char* directory, const char* defaultPath, Resource::Type type);
 	
 	Resource* LoadResourceBase(uint64 ID);
 

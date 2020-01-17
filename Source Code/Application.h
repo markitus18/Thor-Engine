@@ -19,8 +19,6 @@ class M_Renderer3D;
 class M_Camera3D;
 class M_Editor;
 class M_Resources;
-class M_Animations;
-class M_ParticleSystems;
 class M_Shaders;
 
 class GameObject;
@@ -39,8 +37,6 @@ public:
 	M_Editor* moduleEditor = nullptr;
 
 	M_Resources* moduleResources = nullptr;
-	M_Animations* moduleAnimations = nullptr;
-	M_ParticleSystems* moduleParticleSystems = nullptr;
 	M_Shaders* moduleShaders = nullptr;
 
 private:

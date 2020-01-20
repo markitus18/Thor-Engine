@@ -41,7 +41,7 @@ namespace Importer
 		//GameObjects that are meant to have a mesh, material or light, are added the component and given the id from the aiScene container.
 		GameObject* CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent);
 
-		void LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, const std::vector<uint64>& animations);
+		void LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, uint64 animator);
 
 		//Process a GameObject data with its hierarchy into a buffer file saved as json
 		//Returns the size of the buffer file (0 if any errors)

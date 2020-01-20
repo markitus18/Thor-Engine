@@ -132,13 +132,6 @@ void Importer::Scenes::SaveComponent(Config& config, const C_Animator* animator)
 {
 	config.SetBool("Playing", animator->playing);
 	config.SetNumber("Current Animation", animator->current_animation);
-
-	Config_Array array = config.SetArray("Animations");
-	for (uint i = 0; i < animator->animations.size(); i++)
-	{
-		Config node = array.AddNode();
-		node.SetNumber("ID", animator->animations[i]);
-	}
 }
 
 //TODO: Do we need to fill this function ??
@@ -190,19 +183,11 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 
 			if (Component* component = gameObject->CreateComponent(type))
 			{
-				LoadComponent(comp, component);
 				if (comp.GetBool("HasResource") == true)
 				{
 					component->SetResource(comp.GetNumber("ID"));
 				}
-				//TODO: kinda dirty
-				if (component->GetType() == Component::Animator)
-				{
-					C_Animator* anim = (C_Animator*)component;
-					if (anim->animations.size() == 0)
-						anim->AddAnimation();
-				}
-
+				LoadComponent(comp, component);
 			}
 
 		}
@@ -234,19 +219,11 @@ void Importer::Scenes::LoadComponent(Config& config, C_Camera* camera)
 	camera->SetFOV(config.GetNumber("FOV"));
 	camera->SetNearPlane(config.GetNumber("NearPlane"));
 	camera->SetFarPlane(config.GetNumber("FarPlane"));
-
 }
 
 void Importer::Scenes::LoadComponent(Config& config, C_Animator* animator)
 {
 	animator->playing = config.GetBool("Playing");
-	Config_Array array = config.GetArray("Animations");
-	for (uint i = 0; i < array.GetSize(); i++)
-	{
-		Config node = array.GetNode(i);
-		animator->AddAnimation(node.GetNumber("ID"));
-	}
-
 	uint currentAnimation = config.GetNumber("Current Animation");
 	animator->SetAnimation(currentAnimation);
 }
@@ -346,7 +323,7 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 	return gameObject;
 }
 
-void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, const std::vector<uint64>& animations)
+void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, uint64 rAnimator)
 {
 	//Link loaded mesh resource
 	if (C_Mesh* mesh = gameObject->GetComponent<C_Mesh>())
@@ -362,16 +339,12 @@ void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vec
 	//Link loaded animations to animator
 	if (C_Animator* animator = gameObject->GetComponent<C_Animator>())
 	{
-		for (uint i = 0; i < animations.size(); ++i)
-			animator->AddAnimation(animations[i]);
-
-		//TODO: Dirty method for setting root bone just by now
-		animator->rootBone = gameObject->childs[1]->childs[0];
+		animator->SetResource(rAnimator);
 	}
 
 	//Iterate all gameObject's children recursively
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
-		LinkSceneResources(gameObject->childs[i], meshes, materials, animations);
+		LinkSceneResources(gameObject->childs[i], meshes, materials, rAnimator);
 	}
 }

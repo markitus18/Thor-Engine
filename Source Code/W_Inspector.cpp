@@ -25,6 +25,7 @@
 #include "R_Material.h"
 #include "R_Texture.h"
 #include "R_Animation.h"
+#include "R_AnimatorController.h"
 #include "R_ParticleSystem.h"
 
 W_Inspector::W_Inspector(M_Editor* editor) : DWindow(editor, "Inspector")
@@ -368,15 +369,16 @@ void W_Inspector::DrawAnimator(GameObject* gameObject, C_Animator* animator)
 		ImGui::Text("Animations");
 		ImGui::Separator();
 
-		for (uint i = 0; i < animator->animations.size(); ++i)
+		R_AnimatorController* rAnimator = (R_AnimatorController*)animator->GetResource();
+		for (uint i = 0; i < rAnimator->animations.size(); ++i)
 		{
-			R_Animation* animation = (R_Animation*)App->moduleResources->GetResource(animator->animations[i]);
+			R_Animation* animation = (R_Animation*)App->moduleResources->GetResource(rAnimator->animations[i]);
 			ImGui::Text(animation ? animation->name.c_str() : "Empty Animation");
 		}
 
 		if (ImGui::Button("Add Animation"))
 		{
-			animator->AddAnimation();
+			rAnimator->AddAnimation();
 		}
 
 		ImGui::Unindent();

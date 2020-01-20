@@ -21,12 +21,10 @@ public:
 	void Start();
 	void Update(float dt);
 
-	//Animation configuration management
-	void AddAnimation();
-	void AddAnimation(uint64 animationID);
-
-	void SetAnimation(uint index, float blendTime = 0.0f);
 	void SetAnimation(const char* name, float blendTime = 0.0f);
+	void SetAnimation(uint index, float blendTime = 0.0f);
+
+	R_Animation* GetAnimation(uint index);
 
 	static inline Type GetType() { return Type::Animator; };
 
@@ -42,7 +40,6 @@ private:
 
 public:
 	GameObject* rootBone = nullptr;
-	std::vector<uint64> animations;
 	std::map<std::string, GameObject*> boneMapping;
 
 	//Used for blending

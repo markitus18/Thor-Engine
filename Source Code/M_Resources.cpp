@@ -15,6 +15,7 @@
 #include "R_Material.h"
 #include "R_Prefab.h"
 #include "R_Animation.h"
+#include "R_AnimatorController.h"
 #include "R_ParticleSystem.h"
 #include "R_Shader.h"
 
@@ -174,13 +175,20 @@ void M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
 		materials.push_back(ImportRMaterial(scene->mMaterials[i], prefab->original_file.c_str()));
 	}
 
+	R_AnimatorController* rAnimator = nullptr;
 	for (uint i = 0; i < scene->mNumAnimations; ++i)
 	{
-		animations.push_back(ImportRAnimation(scene->mAnimations[i], prefab->original_file.c_str()));
+		if (rAnimator == nullptr)
+		{
+			std::string directory;
+			App->fileSystem->SplitFilePath(prefab->original_file.c_str(), &directory);
+			rAnimator = (R_AnimatorController*)CreateNewCopyResource(directory.c_str(), "Engine/Assets/Defaults/New Animator Controller.animator", Resource::Type::ANIMATOR_CONTROLLER);
+		}
+		rAnimator->AddAnimation(ImportRAnimation(scene->mAnimations[i], prefab->original_file.c_str()));
 	}
 
 	//Link all loaded meshes and materials to the existing gameObjects
-	Importer::Scenes::LinkSceneResources(root, meshes, materials, animations);
+	Importer::Scenes::LinkSceneResources(root, meshes, materials, rAnimator ? rAnimator->GetID() : 0);
 
 	Config file;
 	Importer::Scenes::SaveScene(root, file);
@@ -327,6 +335,8 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 	Resource* resource = nullptr;
 	std::string resourcePath;
 
+	static_assert(static_cast<int>(Resource::UNKNOWN) == 10, "Code Needs Update");
+
 	switch (type)
 	{
 		case Resource::FOLDER:
@@ -345,6 +355,10 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 			break;
 		case Resource::ANIMATION:
 			resource = new R_Animation();
+			resource->resource_file = ANIMATIONS_PATH;
+			break;
+		case Resource::ANIMATOR_CONTROLLER:
+			resource = new R_AnimatorController();
 			resource->resource_file = ANIMATIONS_PATH;
 			break;
 		case Resource::PREFAB:
@@ -478,6 +492,8 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path) const
 	std::string ext = "";
 	App->fileSystem->SplitFilePath(path, nullptr, nullptr, &ext);
 
+	static_assert(static_cast<int>(Resource::UNKNOWN) == 10, "Code Needs Update");
+
 	if (ext == "FBX" || ext == "fbx")
 		return Resource::PREFAB;
 	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
@@ -490,6 +506,8 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path) const
 		return Resource::SHADER;
 	if (ext == "scene")
 		return Resource::SCENE;
+	if (ext == "animator")
+		return Resource::ANIMATOR_CONTROLLER;
 	return Resource::UNKNOWN;
 }
 

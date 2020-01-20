@@ -7,6 +7,7 @@
 
 #include "GameObject.h"
 
+#include "R_AnimatorController.h"
 #include "R_Animation.h"
 
 #include "C_Transform.h"
@@ -69,8 +70,8 @@ void C_Animator::Update(float dt)
 			if (started == false)
 				Start();
 
-			R_Animation* prevAnimation = (R_Animation*)App->moduleResources->GetResource(animations[previous_animation]);
-			R_Animation* currentAnimation = (R_Animation*)App->moduleResources->GetResource(animations[current_animation]);
+			R_Animation* prevAnimation = GetAnimation(previous_animation);
+			R_Animation* currentAnimation = GetAnimation(current_animation);
 
 			//Updating animation blend
 			float blendRatio = 0.0f;
@@ -119,21 +120,28 @@ void C_Animator::Update(float dt)
 	}
 }
 
-void C_Animator::AddAnimation()
+void C_Animator::SetAnimation(const char* name, float blendTime)
 {
-	animations.push_back(0);
-}
-
-void C_Animator::AddAnimation(uint64 animationID)
-{
-	animations.push_back(animationID);
+	R_AnimatorController* rAnimator = (R_AnimatorController*)GetResource();
+	for (uint i = 0; i < rAnimator->animations.size(); ++i)
+	{
+		R_Animation* animation = (R_Animation*)App->moduleResources->GetResource(rAnimator->animations[i]);
+		if (animation && animation->name == name)
+		{
+			SetAnimation(i, blendTime);
+			break;
+		}
+	}
 }
 
 void C_Animator::SetAnimation(uint index, float blendTime)
 {
-	if (index < animations.size())
+	R_Animation* newAnimation = GetAnimation(index);
+	R_Animation* currentAnimation = GetAnimation(current_animation);
+
+	if (newAnimation)
 	{
-		if (current_animation < animations.size() && index != current_animation)
+		if (currentAnimation && index != current_animation)
 		{
 			if (blendTime > 0 && playing == true)
 			{
@@ -149,16 +157,12 @@ void C_Animator::SetAnimation(uint index, float blendTime)
 	}
 }
 
-void C_Animator::SetAnimation(const char* name, float blendTime)
+R_Animation* C_Animator::GetAnimation(uint index)
 {
-	for (uint i = 0; i < animations.size(); ++i)
+	R_AnimatorController* rAnimator = (R_AnimatorController*)GetResource();
+	if (index < rAnimator->animations.size())
 	{
-		R_Animation* animation = (R_Animation*)App->moduleResources->GetResource(animations[i]);
-		if (animation && animation->name == name)
-		{
-			SetAnimation(i, blendTime);
-			break;
-		}
+		return (R_Animation*)App->moduleResources->GetResource(rAnimator->animations[index]);
 	}
 }
 

@@ -139,7 +139,7 @@ void W_Explorer::DrawSelectedFolderContent()
 			ImGui::SetCursorPosY(vec.y + line * (imageSize + imageSpacingY));
 
 			float textSize = ImGui::GetTextLineHeight();
-			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize +  24.0f), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
 		}
 
 		if (ImGui::IsItemClicked())
@@ -194,10 +194,10 @@ std::string W_Explorer::GetTextAdjusted(const char* text)
 	uint textSizeX = ImGui::CalcTextSize(text, text_end, false, 0).x;
 	uint dotsSizeX = ImGui::CalcTextSize("...", nullptr, false, 0).x;
 
-	if (textSizeX > imageSize - dotsSizeX)
+	if (textSizeX > imageSize + 15.0f)
 	{
 		uint charSize = textSizeX / textLenght;
-		uint newLenght = ((imageSize - dotsSizeX) / charSize) - 1;
+		uint newLenght = ((imageSize + 15.0f - dotsSizeX) / charSize) - 1;
 		newText = newText.substr(0, newLenght);
 		newText.append("...");
 	}

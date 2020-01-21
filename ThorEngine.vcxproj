@@ -109,6 +109,7 @@
     <ClInclude Include="Source Code\M_Shaders.h" />
     <ClInclude Include="Source Code\Particle.h" />
     <ClInclude Include="Source Code\ParticleModule.h" />
+    <ClInclude Include="Source Code\R_AnimatorController.h" />
     <ClInclude Include="Source Code\R_Folder.h" />
     <ClInclude Include="Source Code\R_ParticleSystem.h" />
     <ClInclude Include="Source Code\R_Shader.h" />
@@ -320,6 +321,7 @@
     <ClCompile Include="Source Code\Quadtree.cpp" />
     <ClCompile Include="Source Code\Resource.cpp" />
     <ClCompile Include="Source Code\R_Animation.cpp" />
+    <ClCompile Include="Source Code\R_AnimatorController.cpp" />
     <ClCompile Include="Source Code\R_Folder.cpp" />
     <ClCompile Include="Source Code\R_Material.cpp" />
     <ClCompile Include="Source Code\R_Mesh.cpp" />

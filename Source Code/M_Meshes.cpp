@@ -68,7 +68,7 @@ R_Mesh* Importer::Meshes::Import(const aiMesh* mesh, R_Mesh* resMesh)
 
 void Importer::Meshes::Private::ImportBones(const aiMesh* mesh, R_Mesh* rMesh)
 {
-	rMesh->boneTransforms.reserve(mesh->mNumBones);
+	rMesh->boneTransforms.resize(mesh->mNumBones);
 	rMesh->buffersSize[R_Mesh::b_bone_IDs] = rMesh->buffersSize[R_Mesh::b_bone_weights] = mesh->mNumVertices * 4;
 
 	rMesh->boneIDs = new int[rMesh->buffersSize[R_Mesh::b_bone_IDs]];
@@ -120,6 +120,13 @@ uint64 Importer::Meshes::Save(const R_Mesh* mesh, char** buffer)
 			 + sizeof(float) * mesh->buffersSize[R_Mesh::b_normals] * 3 + (sizeof(float) * mesh->buffersSize[R_Mesh::b_tex_coords] * 2) 
 		     + sizeof (int) * mesh->buffersSize[R_Mesh::b_bone_IDs] + sizeof(float) * mesh->buffersSize[R_Mesh::b_bone_weights]
 			 + sizeof(float) * 16 * mesh->boneOffsets.size() + sizeof(char) * 30 * mesh->boneMapping.size();
+
+	std::map<std::string, uint>::const_iterator it;
+	for (it = mesh->boneMapping.begin(); it != mesh->boneMapping.end(); ++it)
+	{
+		size += sizeof(uint);
+		size += sizeof(char) * it->first.size();
+	}
 
 	// Allocate buffer size
 	*buffer = new char[size];
@@ -207,11 +214,14 @@ void Importer::Meshes::Private::SaveBones(const R_Mesh* rMesh, char** cursor)
 		{
 			if (it->second == ID)
 			{
-				std::string str;
-				str.reserve(30);
-				str.append(it->first);
-				uint size = str.size();
-				memcpy(*cursor, str.c_str(), size);
+				bytes = sizeof(uint);
+				uint stringSize = it->first.size();
+				memcpy(*cursor, &stringSize, bytes);
+				*cursor += bytes;
+
+				bytes = sizeof(char) * stringSize;
+				memcpy(*cursor, it->first.c_str(), bytes);
+				*cursor += bytes;
 			}
 		}
 	}
@@ -230,7 +240,8 @@ void Importer::Meshes::Load(const char* buffer, R_Mesh* mesh)
 	memcpy(&bonesSize, cursor, bytes);
 	cursor += bytes;
 	
-	mesh->boneTransforms.reserve(bonesSize);
+	mesh->boneTransforms.resize(bonesSize);
+	mesh->boneOffsets.resize(bonesSize);
 
 	//Code breaks here due to huge ranges value
 	bytes = sizeof(uint) * mesh->buffersSize[R_Mesh::b_indices];
@@ -285,7 +296,7 @@ void Importer::Meshes::Private::LoadBones(const char** cursor, R_Mesh* rMesh)
 	}
 
 	float matrix[16];
-	for (uint i = 0; i < rMesh->boneTransforms.size(); ++i)
+	for (uint i = 0; i < rMesh->boneOffsets.size(); ++i)
 	{
 		bytes = sizeof(float) * 16;
 		memcpy(matrix, *cursor, bytes);
@@ -293,15 +304,22 @@ void Importer::Meshes::Private::LoadBones(const char** cursor, R_Mesh* rMesh)
 
 		float4x4 offset;
 		offset.Set(matrix);
+		rMesh->boneOffsets[i] = offset;
 	}
 
 	char name[30];
 	for (uint i = 0; i < rMesh->boneTransforms.size(); ++i)
 	{
-		bytes = 30;
+		bytes = sizeof(uint);
+		uint stringSize = 0;
+		memcpy(&stringSize, *cursor, bytes);
+		*cursor += bytes;
+
+		bytes = sizeof(char) * stringSize;
 		memcpy(name, *cursor, bytes);
 		*cursor += bytes;
 
+		name[stringSize] = '\0';
 		std::string str(name);
 		rMesh->boneMapping[str.c_str()] = i;
 	}

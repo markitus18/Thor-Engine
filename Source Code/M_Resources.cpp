@@ -147,6 +147,11 @@ Resource* M_Resources::ImportFileFromAssets(const char* path)
 			ImportRParticleSystem(buffer, size, (R_ParticleSystem*)resource);
 			break;
 		}
+		case(Resource::ANIMATOR_CONTROLLER):
+		{
+			ImportRAnimatorController(buffer, size, (R_AnimatorController*)resource);
+			break;
+		}
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -186,6 +191,8 @@ void M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
 		}
 		rAnimator->AddAnimation(ImportRAnimation(scene->mAnimations[i], prefab->original_file.c_str()));
 	}
+	if (rAnimator)
+		SaveResource(rAnimator);
 
 	//Link all loaded meshes and materials to the existing gameObjects
 	Importer::Scenes::LinkSceneResources(root, meshes, materials, rAnimator ? rAnimator->GetID() : 0);
@@ -207,12 +214,7 @@ uint64 M_Resources::ImportRMesh(const aiMesh* mesh, const char* source_file)
 
 	Importer::Meshes::Import(mesh, (R_Mesh*)resource);
 
-	char* saveBuffer = nullptr;
-	if (uint64 saveSize = Importer::Meshes::Save((R_Mesh*)resource, &saveBuffer))
-	{
-		App->fileSystem->Save(resource->resource_file.c_str(), saveBuffer, saveSize);
-	}
-
+	SaveResource(resource);
 	AddResource(resource);
 	return resource->ID;
 }
@@ -222,9 +224,7 @@ void M_Resources::ImportRTexture(const char* buffer, uint size, R_Texture* textu
 	//Importing resource
 	if (Importer::Textures::Import(buffer, size, texture))
 	{
-		char* saveBuffer = nullptr;
-		if (uint saveSize = Importer::Textures::Save(texture, &saveBuffer))
-			App->fileSystem->Save(texture->resource_file.c_str(), saveBuffer, saveSize);
+		SaveResource(texture);
 	}
 }
 
@@ -263,37 +263,37 @@ uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_fi
 {
 	aiString matName;
 	mat->Get(AI_MATKEY_NAME, matName);
-	Resource* resource = CreateResourceBase(source_file, Resource::Type::MATERIAL, matName.C_Str());
 
-	if (ResourceMeta* meta = FindResourceInLibrary(source_file, matName.C_Str(), Resource::Type::MATERIAL))
+	std::string directory;
+	App->fileSystem->SplitFilePath(source_file, &directory);
+	directory.append(matName.C_Str()).append(".mat");
+
+	Resource* resource = CreateResourceBase(directory.c_str(), Resource::Type::MATERIAL, matName.C_Str());
+
+	if (ResourceMeta* meta = FindResourceInLibrary(directory.c_str(), matName.C_Str(), Resource::Type::MATERIAL))
 		resource->ID = meta->id;
 
 	Importer::Materials::Import(mat, (R_Material*)resource);
 
-	char* saveBuffer = nullptr;
-	if (uint64 saveSize = Importer::Materials::Save((R_Material*)resource, &saveBuffer))
-	{
-		App->fileSystem->Save(resource->resource_file.c_str(), saveBuffer, saveSize);
-	}
-
+	SaveResource(resource);
 	AddResource(resource);
 	return resource->ID;
 }
 
 uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source_file)
 {
-	Resource* resource = CreateResourceBase(source_file, Resource::Type::ANIMATION, anim->mName.C_Str());
+	std::string directory;
+	App->fileSystem->SplitFilePath(source_file, &directory);
+	directory.append(anim->mName.C_Str()).append(".anim");
 
-	if (ResourceMeta* meta = FindResourceInLibrary(source_file, anim->mName.C_Str(), Resource::Type::ANIMATION))
+	Resource* resource = CreateResourceBase(directory.c_str(), Resource::Type::ANIMATION, anim->mName.C_Str());
+
+	if (ResourceMeta* meta = FindResourceInLibrary(directory.c_str(), anim->mName.C_Str(), Resource::Type::ANIMATION))
 		resource->ID = meta->id;
 
 	Importer::Animations::Import(anim, (R_Animation*)resource);
 
-	char* saveBuffer = nullptr;
-	if (uint64 saveSize = Importer::Animations::Save((R_Animation*)resource, &saveBuffer))
-	{
-		App->fileSystem->Save(resource->resource_file.c_str(), saveBuffer, saveSize);
-	}
+	SaveResource(resource);
 	AddResource(resource);
 	return resource->ID;
 }
@@ -301,15 +301,13 @@ uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source
 void M_Resources::ImportRParticleSystem(const char* buffer, uint size, R_ParticleSystem* particleSystem)
 {
 	Importer::Particles::Import(buffer, size, particleSystem);
+	SaveResource(particleSystem);
+}
 
-	char* saveBuffer = nullptr;
-	if (uint64 saveSize = Importer::Particles::Save((R_ParticleSystem*)particleSystem, &saveBuffer))
-	{
-		App->fileSystem->Save(particleSystem->resource_file.c_str(), saveBuffer, saveSize);
-	}
-
-	RELEASE_ARRAY(saveBuffer);
-	AddResource(particleSystem);
+void M_Resources::ImportRAnimatorController(const char* buffer, uint size, R_AnimatorController* rAnimator)
+{
+	Importer::Animations::Load(buffer, rAnimator);
+	SaveResource(rAnimator);
 }
 
 void M_Resources::ImportRShader(const char* buffer, uint size, R_Shader* shader)
@@ -326,8 +324,6 @@ void M_Resources::ImportRShader(const char* buffer, uint size, R_Shader* shader)
 	*/
 
 	App->fileSystem->Save(shader->resource_file.c_str(), buffer, size);
-
-	AddResource(shader);
 }
 
 Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type type, const char* name, uint64 forceID)
@@ -447,41 +443,16 @@ Resource* M_Resources::GetResource(uint64 ID)
 
 		switch (resource->type)
 		{
-			case (Resource::MESH):
-			{
-				Importer::Meshes::Load(buffer, (R_Mesh*)resource);
-				break;
-			}
-			case (Resource::TEXTURE):
-			{
-				Importer::Textures::Load(buffer, size, (R_Texture*)resource);
-				break;
-			}
-			case (Resource::MATERIAL):
-			{
-				Importer::Materials::Load(buffer, size, (R_Material*)resource);
-				break;
-			}
-			case (Resource::PREFAB):
-			{
-				break;
-			}
-			case (Resource::ANIMATION):
-			{
-				Importer::Animations::Load(buffer, (R_Animation*)resource);
-				break;
-			}
-			case (Resource::PARTICLESYSTEM):
-			{
-				Importer::Particles::Load(buffer, size, (R_ParticleSystem*)resource);
-				break;
-			}
-			case (Resource::SHADER):
-			{
-				Importer::Shaders::Load(buffer, size, (R_Shader*)resource);
-				break;
-			}
+			case (Resource::MESH):					{ Importer::Meshes::Load(buffer, (R_Mesh*)resource); break; }
+			case (Resource::TEXTURE):				{ Importer::Textures::Load(buffer, size, (R_Texture*)resource); break; }
+			case (Resource::MATERIAL):				{ Importer::Materials::Load(buffer, size, (R_Material*)resource); break; }
+			case (Resource::PREFAB):				{ break; }
+			case (Resource::ANIMATION):				{ Importer::Animations::Load(buffer, (R_Animation*)resource); break; }
+			case (Resource::ANIMATOR_CONTROLLER):	{ Importer::Animations::Load(buffer, (R_AnimatorController*)resource); break; }
+			case (Resource::PARTICLESYSTEM):		{ Importer::Particles::Load(buffer, size, (R_ParticleSystem*)resource); break; }
+			case (Resource::SHADER):				{ Importer::Shaders::Load(buffer, size, (R_Shader*)resource); break; }
 		}
+		RELEASE_ARRAY(buffer);
 	}
 	if (resource) LoadResource(resource);
 	return resource;
@@ -827,7 +798,7 @@ void M_Resources::SaveChangedResources()
 					if (uint size = Importer::Materials::Save((R_Material*)it->second, &buffer))
 					{
 						App->fileSystem->Save(it->second->resource_file.c_str(), buffer, size);
-						RELEASE(buffer);
+						RELEASE_ARRAY(buffer);
 					}
 				}
 			}
@@ -897,7 +868,7 @@ uint M_Resources::DeleteResource(uint64 ID)
 		RELEASE(resources[ID]);
 		resources.erase(ID);
 	}
-
+	
 	std::string resourcePath = "";
 	switch (type)
 	{
@@ -963,4 +934,42 @@ void M_Resources::UnLoadResource(uint64 ID)
 		resources.erase(it);
 		RELEASE(resource);
 	}
+}
+
+void M_Resources::SaveResource(Resource* resource)
+{
+	char* buffer = nullptr;
+	uint size = 0;
+
+	switch (resource->GetType())
+	{
+		case(Resource::FOLDER): break;
+		case(Resource::MESH):					{ size = Importer::Meshes::Save((R_Mesh*)resource, &buffer); break; }
+		case(Resource::TEXTURE):				{ size = Importer::Textures::Save((R_Texture*)resource, &buffer); break; }
+		case(Resource::MATERIAL):				{ size = Importer::Materials::Save((R_Material*)resource, &buffer); break; }
+		case(Resource::ANIMATION):				{ size = Importer::Animations::Save((R_Animation*)resource, &buffer); break;	}
+		case(Resource::ANIMATOR_CONTROLLER):	{ size = Importer::Animations::Save((R_AnimatorController*)resource, &buffer);	break; }
+		case(Resource::PREFAB):					{ /*size = Importer::Scenes::Save((R_AnimatorController*)resource, &buffer);*/ break; }
+		case(Resource::PARTICLESYSTEM):			{ size = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); break; }
+		case(Resource::SHADER):					{ size = Importer::Shaders::Save((R_Shader*)resource, &buffer); break; }
+		case(Resource::SCENE):					{ /*size = Importer::Scenes::SaveScene((R_AnimatorController*)resource, &buffer);*/ break; }
+	}
+
+	if (size > 0)
+	{
+		App->fileSystem->Save(resource->resource_file.c_str(), buffer, size);
+
+		if (IsModifiableResource(resource))
+		{
+			App->fileSystem->Save(resource->original_file.c_str(), buffer, size);
+		}
+		RELEASE_ARRAY(buffer);
+	}
+}
+
+bool M_Resources::IsModifiableResource(const Resource* resource) const
+{
+	Resource::Type type = resource->GetType();
+	return (type == Resource::MATERIAL || type == Resource::ANIMATION || type == Resource::ANIMATOR_CONTROLLER ||
+			type == Resource::PARTICLESYSTEM || type == Resource::SHADER);
 }

@@ -16,7 +16,7 @@ public:
 	~R_Material();
 
 public:
-	uint64 shaderID = 1396239910; // TODO: change into a default shader
+	uint64 shaderID = 364844536; // TODO: change into a default shader
 	uint64 textureID = 0;
 	Color color;
 };

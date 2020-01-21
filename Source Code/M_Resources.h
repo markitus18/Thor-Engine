@@ -21,6 +21,7 @@ class R_Material;
 class R_Prefab;
 class R_Shader;
 class R_ParticleSystem;
+class R_AnimatorController;
 
 struct PathNode;
 
@@ -66,6 +67,9 @@ public:
 	//Called when a particle system is modified externally (due to copy-paste or commit update)
 	void ImportRParticleSystem(const char* buffer, uint size, R_ParticleSystem* rParticles);
 	
+	//Called when a particle system is modified externally (due to copy-paste or commit update)
+	void ImportRAnimatorController(const char* buffer, uint size, R_AnimatorController* rAnimator);
+
 	//Called when a shader is modified externally (due to copy-paste or commit update)
 	void ImportRShader(const char* buffer, uint size, R_Shader* shader);
 	
@@ -128,6 +132,11 @@ private:
 	uint DeleteResource(uint64 ID);
 	//Removes a resource from memory
 	void UnLoadResource(uint64 ID);
+
+	void SaveResource(Resource* resource);
+
+	//Returns if this resource can be modified in Assets file and thus has to be overitten there too
+	bool IsModifiableResource(const Resource* resource) const;
 
 public:
 	//Just for quick info display

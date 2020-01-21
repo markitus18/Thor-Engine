@@ -1,10 +1,11 @@
 #include "M_Animations.h"
 
-//#include "R_Mesh.h"
 #include "R_Animation.h"
+#include "R_AnimatorController.h"
 
 #include "C_Mesh.h"
 
+#include "Config.h"
 #include "Assimp/include/scene.h"
 
 void Importer::Animations::Import(const aiAnimation* animation, R_Animation* rAnimation)
@@ -31,8 +32,9 @@ void Importer::Animations::Import(const aiAnimation* animation, R_Animation* rAn
 
 uint64 Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 {
-	//Animation source file (size and string), animation name(size and string), duration, ticks per sec, ranges, numChannels, channels
+	//Animation duration, ticks per sec, numChannels, channels
 	uint size = sizeof(float) + sizeof(float) + sizeof(uint);
+	//Adding the size of each channel
 	std::map<std::string, Channel>::const_iterator it;
 	for (it = rAnimation->channels.begin(); it != rAnimation->channels.end(); ++it)
 		size += Private::CalcChannelSize(it->second);
@@ -58,6 +60,30 @@ uint64 Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 		Private::SaveChannel(it->second, &cursor);
 
 	return size;
+}
+
+uint64 Importer::Animations::Save(const R_AnimatorController* rAnimator, char** buffer)
+{
+	Config file;
+	Config_Array animationsNode = file.SetArray("Animations");
+
+	for (uint i = 0; i < rAnimator->animations.size(); ++i)
+	{
+		animationsNode.AddNumber(rAnimator->animations[i]);
+	}
+
+	return file.Serialize( buffer);
+}
+
+void Importer::Animations::Load(const char* buffer, R_AnimatorController* rAnimator)
+{
+	Config file(buffer);
+	Config_Array animationsNode = file.GetArray("Animations");
+
+	for (uint i = 0; i < animationsNode.GetSize(); ++i)
+	{
+		rAnimator->AddAnimation(animationsNode.GetNumber(i));
+	}
 }
 
 void Importer::Animations::Load(const char* buffer, R_Animation* rAnimation)

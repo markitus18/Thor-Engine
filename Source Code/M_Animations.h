@@ -8,6 +8,8 @@
 #include "MathGeoLib/src/Math/Quat.h"
 
 class R_Animation;
+class R_AnimatorController;
+
 struct Channel;
 
 struct aiAnimation;
@@ -21,6 +23,9 @@ namespace Importer
 		void Import(const aiAnimation* animation, R_Animation* rAnimation);
 		uint64 Save(const R_Animation* rAnimation, char** buffer);
 		void Load(const char* buffer, R_Animation* rAnimation);
+
+		uint64 Save(const R_AnimatorController* rAnimator, char** buffer);
+		void Load(const char* buffer, R_AnimatorController* rAnimator);
 
 		namespace Private
 		{

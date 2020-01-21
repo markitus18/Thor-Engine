@@ -458,6 +458,13 @@ Resource* M_Resources::GetResource(uint64 ID)
 	return resource;
 }
 
+uint64 M_Resources::GetResourceID(const char* original_path) const
+{
+	std::string metaFile = original_path;
+	metaFile.append(".meta");
+	return GetIDFromMeta(metaFile.c_str());
+}
+
 Resource::Type M_Resources::GetTypeFromPath(const char* path) const
 {
 	std::string ext = "";
@@ -477,6 +484,8 @@ Resource::Type M_Resources::GetTypeFromPath(const char* path) const
 		return Resource::SHADER;
 	if (ext == "scene")
 		return Resource::SCENE;
+	if (ext == "anim")
+		return Resource::ANIMATION;
 	if (ext == "animator")
 		return Resource::ANIMATOR_CONTROLLER;
 	return Resource::UNKNOWN;
@@ -540,10 +549,13 @@ void M_Resources::LoadResourcesData()
 	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_ext);
 	LoadMetaFromFolder(assets);
 
+	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", &filter_ext);
+	LoadMetaFromFolder(engineAssets);
+
 	//TODO: check what this bunch of code does
 	//Just to save mini-tex images
- 	PathNode tex = App->fileSystem->GetAllFiles("Library/Textures", &filter_ext);
-	LoadMetaFromFolder(tex);
+ 	//PathNode tex = App->fileSystem->GetAllFiles("Library/Textures", &filter_ext);
+	//LoadMetaFromFolder(tex);
 }
 
 void M_Resources::LoadMetaFromFolder(PathNode node)
@@ -561,7 +573,6 @@ void M_Resources::LoadMetaFromFolder(PathNode node)
 			LoadMetaFromFolder(node.children[i]);
 		}
 	}
-
 }
 
 ResourceMeta* M_Resources::FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type)
@@ -682,6 +693,9 @@ void M_Resources::UpdateAssetsImport()
 	ignore_extensions.push_back("meta");
 	PathNode assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_extensions);
 	UpdateAssetsFolder(assets);
+
+	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", nullptr, &ignore_extensions);
+	UpdateAssetsFolder(engineAssets);
 }
 
 void M_Resources::UpdateAssetsFolder(const PathNode& node)
@@ -721,6 +735,9 @@ void M_Resources::ClearMetaData()
 	filter_extensions.push_back("meta");
 	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_extensions, nullptr);
 	RemoveMetaFromFolder(assets);
+
+	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", &filter_extensions, nullptr);
+	RemoveMetaFromFolder(engineAssets);
 }
 
 void M_Resources::RemoveMetaFromFolder(PathNode node)
@@ -757,7 +774,7 @@ bool M_Resources::IsFileModified(const char* path)
 	return false;
 }
 
-uint64 M_Resources::GetIDFromMeta(const char* path)
+uint64 M_Resources::GetIDFromMeta(const char* path) const
 {
 	uint64 ret = 0;
 

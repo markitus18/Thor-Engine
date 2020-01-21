@@ -84,6 +84,8 @@ public:
 	//Getting a resource by ID
 	//Resource PREFAB creates a new GameObject in the scene
 	Resource* GetResource(uint64 ID);
+	uint64 GetResourceID(const char* original_path) const;
+
 	Resource::Type GetTypeFromPath(const char* path) const;
 	bool GetAllMetaFromType(Resource::Type type, std::vector<const ResourceMeta*>& metas) const;
 
@@ -93,7 +95,7 @@ public:
 	Component::Type M_Resources::ResourceToComponentType(Resource::Type type);
 
 	//TMP: move into private? usage in P_Explorer.cpp
-	uint64 GetIDFromMeta(const char* path);
+	uint64 GetIDFromMeta(const char* path) const;
 	Resource::Type GetTypeFromMeta(const char* path);
 	inline uint64 GetNewID() { return random.Int(); } ;
 

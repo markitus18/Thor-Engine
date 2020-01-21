@@ -240,13 +240,12 @@ uint W_Explorer::GetTextureFromNode(const PathNode& node, uint64* resource_id, s
 
 		switch (type)
 		{
-		case(Resource::TEXTURE):
+			case(Resource::TEXTURE):
 			{
-				if (dnd_event) dnd_event->assign("DND_TEXTURE");
-				//return ((R_Texture*)resource)->buffer;
-				return fileBuffer;
+				//if (dnd_event) dnd_event->assign("DND_TEXTURE");
+				return ((R_Texture*)App->moduleResources->GetResource(*resource_id))->buffer;
 			}
-		case(Resource::PREFAB):
+			case(Resource::PREFAB):
 			{
 					if (dnd_event) dnd_event->assign("DND_PREFAB");
 					//R_Prefab* prefab = (R_Prefab*)resource;
@@ -255,10 +254,30 @@ uint W_Explorer::GetTextureFromNode(const PathNode& node, uint64* resource_id, s
 					//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
 
 					//Not saving prefab screenshot by now
-					return fileBuffer;
+					return prefabBuffer;
 			}
-		default:
-			return fileBuffer;
+			case(Resource::SCENE):
+			{
+				return sceneBuffer;
+			}
+			case(Resource::SHADER):
+			{
+				return shaderBuffer;
+			}
+			case(Resource::MATERIAL):
+			{
+				return materialBuffer;
+			}
+			case(Resource::ANIMATION):
+			{
+				return animationBuffer;
+			}
+			case(Resource::ANIMATOR_CONTROLLER):
+			{
+				return animatorBuffer;
+			}
+			default:
+				return fileBuffer;
 		}
 	}
 }

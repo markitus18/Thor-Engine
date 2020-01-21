@@ -164,6 +164,56 @@ bool M_Editor::Start()
 		RELEASE_ARRAY(buffer);
 	}
 
+	size = App->fileSystem->Load("Engine/Assets/Icons/SceneIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			w_explorer->prefabBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+	
+	size = App->fileSystem->Load("Engine/Assets/Icons/ShaderIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			w_explorer->shaderBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+	
+	size = App->fileSystem->Load("Engine/Assets/Icons/MaterialIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			w_explorer->materialBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+	
+	size = App->fileSystem->Load("Engine/Assets/Icons/AnimationIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			w_explorer->animationBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+
+	size = App->fileSystem->Load("Engine/Assets/Icons/AnimatorIcon.png", &buffer);
+	if (size > 0)
+	{
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			w_explorer->animatorBuffer = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+	}
+	
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 	return true;
 }

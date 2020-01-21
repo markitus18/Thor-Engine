@@ -175,6 +175,10 @@ bool M_Renderer3D::Init(Config& config)
 // PreUpdate: clear buffer
 update_status M_Renderer3D::PreUpdate(float dt)
 {
+	//TODO: Move to avoid checking every frame
+	if (defaultTextureID == 0)
+		defaultTextureID = App->moduleResources->GetResourceID("Engine/Assets/Defaults/Default Texture.png");
+
 	if (camera->update_projection)
 	{
 		UpdateProjectionMatrix();
@@ -442,7 +446,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	R_Shader* shader = (R_Shader*)App->moduleResources->GetResource(mat->shaderID);
 	glUseProgram(shader->shaderProgram);
 
-	uint64 textureID = mat->textureID ? mat->textureID : 1941638666; //TODO: Default texture is set manually from library ID
+	uint64 textureID = mat->textureID ? mat->textureID : defaultTextureID; //TODO: Default texture is set manually from library ID
 
 	R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(textureID);
 	if (rTex && rTex->buffer != 0)

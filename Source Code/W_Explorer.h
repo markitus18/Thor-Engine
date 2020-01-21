@@ -35,6 +35,11 @@ public:
 	uint fileBuffer = 0;
 	uint selectedBuffer = 0;
 	uint sceneBuffer = 0;
+	uint prefabBuffer = 0;
+	uint shaderBuffer = 0;
+	uint materialBuffer = 0;
+	uint animationBuffer = 0;
+	uint animatorBuffer = 0;
 
 	uint imageSize = 64;
 	uint columnsNumber = 0;

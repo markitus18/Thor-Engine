@@ -49,6 +49,7 @@ public:
 public:
 	uint instances = 0;
 	bool needs_save = false;
+	bool isInternal = false;
 
 	//TODO: Set it to prived, moved to public for faster iteration
 	std::string name = "";

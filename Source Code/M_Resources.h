@@ -37,6 +37,9 @@ struct ResourceMeta
 		return (original_file == file && (name ? resource_name == name : true) && type == this->type);
 	}
 
+	ResourceMeta() {}; //Looks like we need default constructor for maps
+	ResourceMeta(Resource::Type type, const char* file, const char* name, uint64 id) : type(type), original_file(file), resource_name(name), id(id) {};
+
 };
 
 class M_Resources : public Module
@@ -91,7 +94,6 @@ public:
 
 	void LoadPrefab(uint64 ID);
 
-	PathNode CollectImportedScenes();
 	Component::Type M_Resources::ResourceToComponentType(Resource::Type type);
 
 	//TMP: move into private? usage in P_Explorer.cpp
@@ -103,14 +105,14 @@ private:
 	void LoadResourcesData();
 	void LoadMetaFromFolder(PathNode node);
 
-	ResourceMeta	GetMetaInfo(const Resource* resource);
+	ResourceMeta	GetMetaInfo(const Resource* resource) const;
 	ResourceMeta*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 
 	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
 
 	bool LoadMetaInfo(const char* file);
-	bool LoadSceneMeta(const char* file, const char* source_file);
+	ResourceMeta GetMetaFromNode(const char* file, const Config& node) const;
 
 	//Search through all assets and imports / re-imports
 	void UpdateAssetsImport();

@@ -3,6 +3,8 @@
 
 #include "Resource.h"
 
+#include <vector>
+
 class R_Prefab : public Resource
 {
 public:
@@ -10,6 +12,7 @@ public:
 	~R_Prefab();
 
 	uint64 miniTextureID = 0;
+	std::vector<uint64> containingResources;
 };
 
 #endif __R_PREFAB_H__

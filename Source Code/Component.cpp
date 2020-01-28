@@ -41,8 +41,9 @@ void Component::SetResource(Resource* resource)
 
 void Component::SetResource(unsigned long long id, bool load)
 {
-	if (Resource* oldResource = GetResource())
-		oldResource->instances--;
+	if (load)
+		if (Resource* oldResource = GetResource())
+			oldResource->instances--;
 
 	resourceID = id;
 	if (load)

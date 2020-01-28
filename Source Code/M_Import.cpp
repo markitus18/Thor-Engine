@@ -1,6 +1,8 @@
 #include "M_Import.h"
 
-//#include "Globals.h"
+//TODO: Temporal app include. Workaround until scene owns resources
+#include "Application.h"
+#include "M_Resources.h"
 
 #include "GameObject.h"
 
@@ -13,10 +15,6 @@
 #include "C_ParticleSystem.h"
 
 #include "Resource.h"
-#include "R_Mesh.h"
-#include "R_Material.h"
-#include "R_Prefab.h"
-#include "R_Animation.h"
 
 #include "Config.h"
 
@@ -97,13 +95,14 @@ void Importer::Scenes::SaveComponentBase(Config& config, const Component* compon
 	config.SetBool("HasResource", component->HasResource());
 	if (component->HasResource())
 	{
+		//TODO: Temporal app include. Workaround until scene owns resources
+		//TODO: Get meta from ID, save type and name..?
+
+		//TODO: this should be avoided, forces resource load into memory
 		const Resource* resource = component->GetResource();
-		if (resource != nullptr)
-		{
-			config.SetNumber("Type", static_cast<int>(resource->GetType()));
-			config.SetNumber("ID", resource->GetID());
-			config.SetString("ResourceName", resource->GetName());
-		}
+		config.SetNumber("ID", component->GetResourceID());
+		config.SetNumber("Type", resource->GetType());
+		config.SetString("ResourceName", resource->GetName());
 	}
 }
 
@@ -118,7 +117,6 @@ void Importer::Scenes::SaveComponent(Config& config, const Component* component)
 			SaveComponent(config, (C_Animator*)component);
 			break;
 	}
-
 }
 
 void Importer::Scenes::SaveComponent(Config& config, const C_Camera* camera)
@@ -309,10 +307,10 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 		}
 
 		C_Mesh* cMesh = (C_Mesh*)child->CreateComponent(Component::Mesh);
-		cMesh->SetResource(node->mMeshes[i]);
+		cMesh->SetResource(node->mMeshes[i], false);
 
 		C_Material* cMaterial = (C_Material*)child->CreateComponent(Component::Material);
-		cMaterial->SetResource(newMesh->mMaterialIndex);
+		cMaterial->SetResource(newMesh->mMaterialIndex, false);
 	}
 
 	// Load all children from the current node
@@ -323,28 +321,22 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 	return gameObject;
 }
 
-void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, uint64 rAnimator)
+void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
 {
 	//Link loaded mesh resource
 	if (C_Mesh* mesh = gameObject->GetComponent<C_Mesh>())
 	{
-		mesh->SetResource(meshes[mesh->GetResourceID()]);
+		mesh->SetResource(meshes[mesh->GetResourceID()], false);
 	}
 	//Link loaded mat resource
 	if (C_Material* mat = gameObject->GetComponent<C_Material>())
 	{
-		mat->SetResource(materials[mat->GetResourceID()]);
-	}
-
-	//Link loaded animations to animator
-	if (C_Animator* animator = gameObject->GetComponent<C_Animator>())
-	{
-		animator->SetResource(rAnimator);
+		mat->SetResource(materials[mat->GetResourceID()], false);
 	}
 
 	//Iterate all gameObject's children recursively
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
-		LinkSceneResources(gameObject->childs[i], meshes, materials, rAnimator);
+		LinkSceneResources(gameObject->childs[i], meshes, materials);
 	}
 }

@@ -169,33 +169,27 @@ void M_Resources::ImportScene(const char* buffer, uint size, R_Prefab* prefab)
 	for (uint i = 0; i < scene->mNumMeshes; ++i)
 	{
 		//TODO: building a temporal mesh name. Assimp meshes have no name so they have conflict when importing multiple meshes
-		std::string meshName = prefab->name.append("_mesh").append(std::to_string(i));
+		//Unity loads a mesh per each node, and assign the node's name to it
+		std::string meshName = prefab->name;
+		meshName.append("_mesh").append(std::to_string(i));
 		scene->mMeshes[i]->mName = meshName;
 		meshes.push_back(ImportRMesh(scene->mMeshes[i], prefab->original_file.c_str()));
-
-		//If the mesh has bones, import bone data into an animator resource..?
+		prefab->containingResources.push_back(meshes.back());
 	}
 	for (uint i = 0; i < scene->mNumMaterials; ++i)
 	{
 		materials.push_back(ImportRMaterial(scene->mMaterials[i], prefab->original_file.c_str()));
+		prefab->containingResources.push_back(materials.back());
 	}
 
-	R_AnimatorController* rAnimator = nullptr;
 	for (uint i = 0; i < scene->mNumAnimations; ++i)
 	{
-		if (rAnimator == nullptr)
-		{
-			std::string directory;
-			App->fileSystem->SplitFilePath(prefab->original_file.c_str(), &directory);
-			rAnimator = (R_AnimatorController*)CreateNewCopyResource(directory.c_str(), "Engine/Assets/Defaults/New Animator Controller.animator", Resource::Type::ANIMATOR_CONTROLLER);
-		}
-		rAnimator->AddAnimation(ImportRAnimation(scene->mAnimations[i], prefab->original_file.c_str()));
+		animations.push_back(ImportRAnimation(scene->mAnimations[i], prefab->original_file.c_str()));
+		prefab->containingResources.push_back(animations.back());
 	}
-	if (rAnimator)
-		SaveResource(rAnimator);
 
 	//Link all loaded meshes and materials to the existing gameObjects
-	Importer::Scenes::LinkSceneResources(root, meshes, materials, rAnimator ? rAnimator->GetID() : 0);
+	Importer::Scenes::LinkSceneResources(root, meshes, materials);
 
 	Config file;
 	Importer::Scenes::SaveScene(root, file);
@@ -264,13 +258,10 @@ uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_fi
 	aiString matName;
 	mat->Get(AI_MATKEY_NAME, matName);
 
-	std::string directory;
-	App->fileSystem->SplitFilePath(source_file, &directory);
-	directory.append(matName.C_Str()).append(".mat");
+	Resource* resource = CreateResourceBase(source_file, Resource::Type::MATERIAL, matName.C_Str());
+	resource->isInternal = true;
 
-	Resource* resource = CreateResourceBase(directory.c_str(), Resource::Type::MATERIAL, matName.C_Str());
-
-	if (ResourceMeta* meta = FindResourceInLibrary(directory.c_str(), matName.C_Str(), Resource::Type::MATERIAL))
+	if (ResourceMeta* meta = FindResourceInLibrary(source_file, matName.C_Str(), Resource::Type::MATERIAL))
 		resource->ID = meta->id;
 
 	Importer::Materials::Import(mat, (R_Material*)resource);
@@ -282,13 +273,10 @@ uint64 M_Resources::ImportRMaterial(const aiMaterial* mat, const char* source_fi
 
 uint64 M_Resources::ImportRAnimation(const aiAnimation* anim, const char* source_file)
 {
-	std::string directory;
-	App->fileSystem->SplitFilePath(source_file, &directory);
-	directory.append(anim->mName.C_Str()).append(".anim");
+	Resource* resource = CreateResourceBase(source_file, Resource::Type::ANIMATION, anim->mName.C_Str());
+	resource->isInternal = true;
 
-	Resource* resource = CreateResourceBase(directory.c_str(), Resource::Type::ANIMATION, anim->mName.C_Str());
-
-	if (ResourceMeta* meta = FindResourceInLibrary(directory.c_str(), anim->mName.C_Str(), Resource::Type::ANIMATION))
+	if (ResourceMeta* meta = FindResourceInLibrary(source_file, anim->mName.C_Str(), Resource::Type::ANIMATION))
 		resource->ID = meta->id;
 
 	Importer::Animations::Import(anim, (R_Animation*)resource);
@@ -418,7 +406,7 @@ Resource* M_Resources::LoadResourceBase(uint64 ID)
 	std::map<uint64, ResourceMeta>::iterator metasIt = existingResources.find(ID);
 	if (metasIt != existingResources.end())
 	{
-		ResourceMeta* metaInfo = &metasIt->second;
+ 		ResourceMeta* metaInfo = &metasIt->second;
 		resource = CreateResourceBase(metaInfo->original_file.c_str(), metaInfo->type, metasIt->second.resource_name.c_str(), ID);
 	}
 	return resource;
@@ -520,16 +508,6 @@ void M_Resources::LoadPrefab(uint64 ID)
 	LOG("Could not find file with ID '%i' loaded in resources", ID);
 }
 
-PathNode M_Resources::CollectImportedScenes()
-{
-	std::vector<std::string> filter_ext;
-	filter_ext.push_back("FBX");
-	filter_ext.push_back("fbx");
-
-	return App->fileSystem->GetAllFiles("Assets", &filter_ext);
-}
-
-
 Component::Type M_Resources::ResourceToComponentType(Resource::Type type)
 {
 	switch (type)
@@ -546,16 +524,11 @@ void M_Resources::LoadResourcesData()
 	std::vector<std::string> filter_ext;
 	filter_ext.push_back("meta");
 
-	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_ext);
-	LoadMetaFromFolder(assets);
-
 	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", &filter_ext);
 	LoadMetaFromFolder(engineAssets);
 
-	//TODO: check what this bunch of code does
-	//Just to save mini-tex images
- 	//PathNode tex = App->fileSystem->GetAllFiles("Library/Textures", &filter_ext);
-	//LoadMetaFromFolder(tex);
+	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_ext);
+	LoadMetaFromFolder(assets);
 }
 
 void M_Resources::LoadMetaFromFolder(PathNode node)
@@ -587,80 +560,46 @@ ResourceMeta* M_Resources::FindResourceInLibrary(const char* original_file, cons
 	return nullptr;
 }
 
-ResourceMeta M_Resources::GetMetaInfo(const Resource* resource)
+ResourceMeta M_Resources::GetMetaInfo(const Resource* resource) const
 {
-	ResourceMeta ret;
-
-	ret.original_file = resource->original_file;
-	ret.resource_name = resource->name;
-	ret.type = resource->type;
-	ret.id = resource->ID;
-
-	return ret;
+	return ResourceMeta(resource->GetType(), resource->original_file.c_str(), resource->name.c_str(), resource->GetID());
 }
 
 bool M_Resources::LoadMetaInfo(const char* file)
 {
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load(file, &buffer);
-	ResourceMeta meta;
+
 	if (size > 0)
 	{
 		Config config(buffer);
 
 		std::string sourceFile = file;
 		sourceFile = std::string(file).substr(0, sourceFile.size() - 5);
-
-		meta.original_file = sourceFile;
-		meta.resource_name = config.GetString("Name");
-		meta.id = config.GetNumber("ID");
-		meta.type = static_cast<Resource::Type>((int)(config.GetNumber("Type")));
+		
+		ResourceMeta meta = GetMetaFromNode(sourceFile.c_str(), config);
 		existingResources[meta.id] = meta;
-
+		
 		if (meta.type == Resource::PREFAB)
 		{
-			std::string resFile = "/Library/GameObjects/";
-			resFile.append(std::to_string(meta.id));
-
-			LoadSceneMeta(resFile.c_str(), sourceFile.c_str());
+			Config_Array containingResources = config.GetArray("Containing Resources");
+			for (uint i = 0; i < containingResources.GetSize(); ++i)
+			{
+				ResourceMeta containedMeta = GetMetaFromNode(file, containingResources.GetNode(i));
+				existingResources[containedMeta.id] = containedMeta;
+			}
+				
 		}
-
-		delete buffer;
+		
+		RELEASE_ARRAY(buffer);
 		return true;
 	}
 	return false;
 }
 
-bool M_Resources::LoadSceneMeta(const char* file, const char* source_file)
+ResourceMeta M_Resources::GetMetaFromNode(const char* file, const Config& node) const
 {
-	char* buffer = nullptr;
-	uint size = App->fileSystem->Load(file, &buffer);
-	if (size > 0)
-	{
-		Config config(buffer);
-		Config_Array GameObjects = config.GetArray("GameObjects");
-
-		for (uint i = 0; i < GameObjects.GetSize(); i++)
-		{
-			Config_Array components = GameObjects.GetNode(i).GetArray("Components");
-
-			for (uint i = 0; i < components.GetSize(); i++)
-			{
-				Config resource = components.GetNode(i);
-				if (resource.GetBool("HasResource"))
-				{
-					ResourceMeta meta;
-					meta.id = resource.GetNumber("ID");
-					meta.type = static_cast<Resource::Type>((int)resource.GetNumber("Type"));
-					meta.resource_name = resource.GetString("ResourceName");
-					meta.original_file = source_file;
-					existingResources[meta.id] = meta;
-				}
-			}
-		}
-		return true;
-	}
-	return false;
+	return ResourceMeta(static_cast<Resource::Type>((int)(node.GetNumber("Type"))), file, node.GetString("Name").c_str(), node.GetNumber("ID"));
 }
 
 //Save .meta file in assets
@@ -676,13 +615,31 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	uint64 modDate = App->fileSystem->GetLastModTime(resource->original_file.c_str());
 	config.SetNumber("Date", modDate);
 
+	//TODO: Probably a bit dirty to add it here with generic meta files... check later
+	if (resource->GetType() == Resource::PREFAB)
+	{
+		R_Prefab* prefab = (R_Prefab*)resource;
+		Config_Array containingResources = config.SetArray("Containing Resources");
+
+		for (uint i = 0; i < prefab->containingResources.size(); ++i)
+		{
+			if (Resource* res = GetResource(prefab->containingResources[i]))
+			{
+				Config resNode = containingResources.AddNode();
+				resNode.SetNumber("ID", res->GetID());
+				resNode.SetString("Name", res->GetName());
+				resNode.SetNumber("Type", res->GetType());
+			}
+		}
+	}
+
 	char* buffer = nullptr;
 	uint size = config.Serialize(&buffer);
 	if (size > 0)
 	{
 		std::string path = resource->original_file + ".meta";
 		App->fileSystem->Save(path.c_str(), buffer, size);
-		delete buffer;
+		RELEASE_ARRAY(buffer);
 	}
 }
 
@@ -691,11 +648,12 @@ void M_Resources::UpdateAssetsImport()
 	//Getting all files in assets
 	std::vector<std::string> ignore_extensions;
 	ignore_extensions.push_back("meta");
-	PathNode assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_extensions);
-	UpdateAssetsFolder(assets);
 
 	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", nullptr, &ignore_extensions);
 	UpdateAssetsFolder(engineAssets);
+
+	PathNode assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_extensions);
+	UpdateAssetsFolder(assets);
 }
 
 void M_Resources::UpdateAssetsFolder(const PathNode& node)
@@ -733,11 +691,12 @@ void M_Resources::ClearMetaData()
 	//Getting all .meta in assets
 	std::vector<std::string> filter_extensions;
 	filter_extensions.push_back("meta");
-	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_extensions, nullptr);
-	RemoveMetaFromFolder(assets);
 
 	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", &filter_extensions, nullptr);
 	RemoveMetaFromFolder(engineAssets);
+
+	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_extensions, nullptr);
+	RemoveMetaFromFolder(assets);
 }
 
 void M_Resources::RemoveMetaFromFolder(PathNode node)
@@ -826,10 +785,11 @@ void M_Resources::SaveChangedResources()
 
 void M_Resources::AddResource(Resource* resource)
 {
-	//TODO: this will break, setup like this just to compile
 	LoadResource(resource);
 	existingResources[resource->ID] = GetMetaInfo(resource);
-	SaveMetaInfo(resource);
+
+	if (resource->isInternal == false)
+		SaveMetaInfo(resource);
 }
 
 void M_Resources::LoadResource(Resource* resource)
@@ -986,7 +946,5 @@ void M_Resources::SaveResource(Resource* resource)
 
 bool M_Resources::IsModifiableResource(const Resource* resource) const
 {
-	Resource::Type type = resource->GetType();
-	return (type == Resource::MATERIAL || type == Resource::ANIMATION || type == Resource::ANIMATOR_CONTROLLER ||
-			type == Resource::PARTICLESYSTEM || type == Resource::SHADER);
+	return resource->isInternal == false;
 }

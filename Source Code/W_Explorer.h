@@ -7,6 +7,8 @@
 #include "Vec2.h"
 #include "Timer.h"
 
+class R_Prefab;
+
 class W_Explorer : public DWindow
 {
 public:
@@ -22,6 +24,7 @@ private:
 	void DrawFolderNode(const PathNode& node);
 	void DrawNodeImage(const PathNode& node);
 	void DrawSelectedFolderContent();
+	void DrawResourceItem();
 
 	void UpdateTree();
 	std::string GetTextAdjusted(const char* text);
@@ -47,6 +50,7 @@ public:
 	uint imageSpacingY = 50;
 	uint textOffset = 6;
 	uint topMarginOffset = 10;
+	uint nodeButtonOffset = 30;
 
 private:
 	PathNode assets;
@@ -61,6 +65,8 @@ private:
 	Timer updateTimer;
 
 	Vec2 windowSize;
+
+	R_Prefab*  openPrefab = nullptr;
 };
 
 #endif

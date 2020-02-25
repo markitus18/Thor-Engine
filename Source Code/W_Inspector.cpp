@@ -22,6 +22,7 @@
 #include "C_Billboard.h"
 #include "C_ParticleSystem.h"
 
+#include "R_Mesh.h"
 #include "R_Material.h"
 #include "R_Texture.h"
 #include "R_Animation.h"
@@ -233,25 +234,47 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 	if (mesh == nullptr) return;
 
 	R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
-	if (rMesh != nullptr)
+
+	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+		ImGui::Indent();
+
+		ImGui::Text("Mesh"); ImGui::SameLine();
+		
+		if (ImGui::Button(rMesh ? rMesh->name.c_str() : "", ImVec2(ImGui::GetWindowSize().x - ImGui::GetCursorPosX(), 0)));
 		{
-			ImGui::Indent();
-
-			ImGui::Text("Materials");
-			ImGui::Separator();
-			ImGui::Text("Size: %i", materials.size());
-			for (uint i = 0; i < materials.size(); i++)
-			{
-				R_Material* rMat = (R_Material*)materials[i]->GetResource();
-				ImGui::Text("Element %i: %s", i, rMat->GetName());
-			}
-
-			ImGui::Unindent();
+			//TODO: Open window with meshes list
 		}
-	}
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_MESH"))
+			{
+				if (payload->DataSize == sizeof(uint64))
+				{
+					uint64 resourceID = *(const uint64*)payload->Data;
+					Resource* resource = App->moduleResources->GetResource(resourceID);
 
+					if (resource->GetType() == Resource::Type::MESH)
+					{
+						mesh->SetResource(resource);
+					}
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Materials");
+		ImGui::Separator();
+		ImGui::Text("Size: %i", materials.size());
+		for (uint i = 0; i < materials.size(); i++)
+		{
+			R_Material* rMat = (R_Material*)materials[i]->GetResource();
+			ImGui::Text("Element %i: %s", i, rMat->GetName());
+		}
+
+		ImGui::Unindent();
+	}
 
 	if (materials.size() > 0)
 	{
@@ -427,9 +450,9 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 			if (ImGui::MenuItem("Create New"))
 			{
 				const char* dir = editor->w_explorer->GetCurrentNode().path.c_str();
-				if (Resource* resource = App->moduleResources->CreateNewCopyResource(dir, "Engine/Assets/Defaults/New Particle System.particles", Resource::Type::PARTICLESYSTEM))
+				if (uint64 resourceID = App->moduleResources->CreateNewCopyResource(dir, "Engine/Assets/Defaults/New Particle System.particles", Resource::Type::PARTICLESYSTEM))
 				{
-					particleSystem->SetResource(resource->GetID());
+					particleSystem->SetResource(resourceID);
 				}
 			}
 			

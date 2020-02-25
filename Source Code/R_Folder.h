@@ -10,10 +10,8 @@ public:
 	R_Folder();
 	~R_Folder();
 
-	std::vector<TreeNode*> GetChilds() const;
-
 private:
-	std::vector<Resource*> childs;
+	std::vector<uint64> containingResources;
 };
 
 #endif __R_BONE_H__

@@ -54,23 +54,27 @@ public:
 	bool CleanUp();
 
 	//Import a file from outside the project folder
+	//The file will be duplicated in the current active folder in the asset explorer
 	void ImportFileFromExplorer(const char* path);
 
-	//Import a file existing in assets creating the resources
-	Resource* ImportFileFromAssets(const char* path);
+	//Import a folder existing in assets
+	uint64 ImportFolderFromAssets(const char* path);
+
+	//Import a file existing in assets and create its resources
+	uint64 ImportFileFromAssets(const char* path);
 	
 	void ImportScene(const char* buffer, uint size, R_Prefab* prefab);
 	uint64 ImportRMesh(const aiMesh* mesh, const char* source_file);
-	void ImportRTexture(const char* buffer, uint size, R_Texture* texture);
-	//Same as ImportRTexture, but we need different functions
-	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file);
 	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file);
+	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
+
+	void ImportRTexture(const char* buffer, uint size, R_Texture* texture);
 
 	//Called when a particle system is modified externally (due to copy-paste or commit update)
 	void ImportRParticleSystem(const char* buffer, uint size, R_ParticleSystem* rParticles);
 	
-	//Called when a particle system is modified externally (due to copy-paste or commit update)
+	//Called when an animator controller is modified externally (due to copy-paste or commit update)
 	void ImportRAnimatorController(const char* buffer, uint size, R_AnimatorController* rAnimator);
 
 	//Called when a shader is modified externally (due to copy-paste or commit update)
@@ -80,12 +84,10 @@ public:
 	Resource* CreateResourceBase(const char* assetsPath, Resource::Type type, const char* name = nullptr, uint64 forceID = 0);
 
 	//Used for internal resources (external referring to fbx, textures,...)
-	Resource* CreateNewCopyResource(const char* directory, const char* defaultPath, Resource::Type type);
+	uint64 CreateNewCopyResource(const char* directory, const char* defaultPath, Resource::Type type);
 	
 	Resource* LoadResourceBase(uint64 ID);
 
-	//Getting a resource by ID
-	//Resource PREFAB creates a new GameObject in the scene
 	Resource* GetResource(uint64 ID);
 	uint64 GetResourceID(const char* original_path) const;
 
@@ -127,10 +129,6 @@ private:
 
 	void SaveChangedResources();
 
-	//Adds a new resource (importion previous to this)
-	void AddResource(Resource* resource);
-	//Loads an existing resource. Loading is previous to this, this is just for data management
-	void LoadResource(Resource* resource);
 	//Completely deletes a resource, including its file (not yet though)
 	//Return number of instances previous to deletion
 	uint DeleteResource(uint64 ID);
@@ -143,17 +141,11 @@ private:
 	bool IsModifiableResource(const Resource* resource) const;
 
 public:
-	//Just for quick info display
-	std::map<uint64, Resource*> meshes;
-	std::map<uint64, Resource*> materials;
-	std::map<uint64, Resource*> textures;
-	std::map<uint64, Resource*> scenes;
-	std::map<uint64, Resource*> animations;
-	//TODO: is this really used anywhere?
+	//Resources loaded in memory
+	//TODO: Move to private, accessing in W_Resources to display memory
+	std::map<uint64, Resource*> resources;
 
 private:
-	//Resources loaded in memory
-	std::map<uint64, Resource*> resources;
 
 	//All resources imported
 	std::map<uint64, ResourceMeta> existingResources;

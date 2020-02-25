@@ -21,10 +21,12 @@ void W_Resources::Draw()
 {
 	ImGui::Text("Resources loaded in memory");
 
-	if (ImGui::CollapsingHeader("Scenes"))
+	if (ImGui::CollapsingHeader("Models"))
 	{
-		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->scenes.begin(); it != App->moduleResources->scenes.end(); it++)
+		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->resources.begin(); it != App->moduleResources->resources.end(); it++)
 		{
+			if (it->second->GetType() != Resource::PREFAB) continue;
+
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
 			{
@@ -35,8 +37,10 @@ void W_Resources::Draw()
 
 	if (ImGui::CollapsingHeader("Meshes"))
 	{
-		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->meshes.begin(); it != App->moduleResources->meshes.end(); it++)
+		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->resources.begin(); it != App->moduleResources->resources.end(); it++)
 		{
+			if (it->second->GetType() != Resource::MESH) continue;
+			
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
 			{
@@ -47,8 +51,10 @@ void W_Resources::Draw()
 
 	if (ImGui::CollapsingHeader("Materials"))
 	{
-		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->materials.begin(); it != App->moduleResources->materials.end(); it++)
+		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->resources.begin(); it != App->moduleResources->resources.end(); it++)
 		{
+			if (it->second->GetType() != Resource::MATERIAL) continue;
+
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
 			{
@@ -59,8 +65,10 @@ void W_Resources::Draw()
 
 	if (ImGui::CollapsingHeader("Textures"))
 	{
-		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->textures.begin(); it != App->moduleResources->textures.end(); it++)
+		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->resources.begin(); it != App->moduleResources->resources.end(); it++)
 		{
+			if (it->second->GetType() != Resource::TEXTURE) continue;
+
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
 			{
@@ -71,8 +79,10 @@ void W_Resources::Draw()
 
 	if (ImGui::CollapsingHeader("Animations"))
 	{
-		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->animations.begin(); it != App->moduleResources->animations.end(); it++)
+		for (std::map<uint64, Resource*>::iterator it = App->moduleResources->resources.begin(); it != App->moduleResources->resources.end(); it++)
 		{
+			if (it->second->GetType() != Resource::ANIMATION) continue;
+
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
 			{

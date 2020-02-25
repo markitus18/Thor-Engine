@@ -12,6 +12,7 @@
 #include "M_Editor.h"
 
 #include "R_Texture.h"
+#include "R_Prefab.h"
 
 #include "Dock.h"
 
@@ -86,7 +87,6 @@ void W_Explorer::DrawFolderNode(const PathNode& node)
 
 void W_Explorer::DrawNodeImage(const PathNode& node)
 {
-
 	uint64 resourceID = 0;
 	std::string dnd_event("NONE");
 	uint textureID = GetTextureFromNode(node, &resourceID, &dnd_event);
@@ -108,6 +108,7 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 }
 
+//TODO: function needs some cleaning. Pathnodes force GetResource constantly which means can't free resource memory properly
 void W_Explorer::DrawSelectedFolderContent()
 {
 	nextCurrent.path = "";
@@ -122,17 +123,25 @@ void W_Explorer::DrawSelectedFolderContent()
 
 	ImVec2 vec = ImGui::GetCursorPos();
 
-	uint line = 0;
+	uint line, column = 0;
+	uint totalItems = currentNode.children.size();
+	if (openPrefab) totalItems += openPrefab->containingResources.size();
 
-	for (uint i = 0; i < currentNode.children.size(); i++)
+	for (uint i = 0; i < totalItems; i++)
 	{
 		ImGui::PushID(i);
 
-		ImGui::SetCursorPosX(vec.x + (i - (line * columnsNumber)) * (imageSize + imageSpacingX) + imageSpacingX);
-		ImGui::SetCursorPosY(vec.y + line * (imageSize + imageSpacingY) + topMarginOffset);
+		line = i / columnsNumber;
+		column = i - (line * columnsNumber);
+
+		ImVec2 imagePos(vec.x + column * (imageSize + imageSpacingX) + imageSpacingX,
+						vec.y + line * (imageSize + imageSpacingY) + topMarginOffset);
+
+		ImGui::SetCursorPos(imagePos);
 
 		DrawNodeImage(currentNode.children[i]);
 
+		//Draw selection image
 		if (explorerSelected == currentNode.children[i])
 		{
 			ImGui::SetCursorPosX(vec.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX - 10.0f);
@@ -142,6 +151,7 @@ void W_Explorer::DrawSelectedFolderContent()
 			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
 		}
 
+		//If clicked, select resource to display in inspector
 		if (ImGui::IsItemClicked())
 		{
 			explorerSelected = currentNode.children[i];
@@ -158,14 +168,33 @@ void W_Explorer::DrawSelectedFolderContent()
 			HandleNodeDoubleClick(currentNode.children[i]);
 		}
 
-		ImGui::SetCursorPosX(vec.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX);
-		ImGui::SetCursorPosY(vec.y + line * (imageSize + imageSpacingY) + imageSize + textOffset + topMarginOffset);
+		ImVec2 textPos(vec.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX,
+					   vec.y + line * (imageSize + imageSpacingY) + imageSize + textOffset + topMarginOffset);
+		ImGui::SetCursorPos(textPos);
 
 		std::string textAdjusted = GetTextAdjusted(currentNode.children[i].localPath.c_str());
 		ImGui::Text(textAdjusted.c_str());
 
-		if ((i + 1) % columnsNumber == 0)
-			line++;
+		//Drawing node Button (if it's a prefab)
+		std::string metaFile = currentNode.children[i].path + (".meta");
+		Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetIDFromMeta(metaFile.c_str()));
+		if (resource && resource->GetType() == Resource::PREFAB)
+		{
+			R_Prefab* prefabNode = (R_Prefab*)resource;
+
+			ImGui::SetCursorPos(imagePos + ImVec2(imageSize / 2 + nodeButtonOffset, imageSize / 2 - ImGui::GetFrameHeight() / 2));
+			ImGui::ArrowButton("ArrowButton?", prefabNode == openPrefab ? ImGuiDir_Left : ImGuiDir_Right);
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
+			{
+				openPrefab = openPrefab == prefabNode ? nullptr : prefabNode;
+			}
+
+			if (prefabNode == openPrefab)
+			{
+				
+			}
+		}
+
 
 		ImGui::PopID();
 	}
@@ -242,7 +271,7 @@ uint W_Explorer::GetTextureFromNode(const PathNode& node, uint64* resource_id, s
 		{
 			case(Resource::TEXTURE):
 			{
-				//if (dnd_event) dnd_event->assign("DND_TEXTURE");
+				if (dnd_event) dnd_event->assign("DND_TEXTURE");
 				return ((R_Texture*)App->moduleResources->GetResource(*resource_id))->buffer;
 			}
 			case(Resource::PREFAB):

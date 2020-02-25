@@ -97,9 +97,9 @@ void Importer::Materials::Import(const aiMaterial* material, R_Material* rMateri
 
 	if (texture_file != "" && texture_file != ("."))
 	{
-		if (Resource* texture = App->moduleResources->ImportFileFromAssets(texture_path.c_str()))
+		if (uint64 textureID = App->moduleResources->ImportFileFromAssets(texture_path.c_str()))
 		{
-			rMaterial->textureID = texture->GetID();
+			rMaterial->textureID = textureID;
 		}
 	}
 

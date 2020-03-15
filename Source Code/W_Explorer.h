@@ -7,7 +7,11 @@
 #include "Vec2.h"
 #include "Timer.h"
 
+class Resource;
 class R_Prefab;
+class R_Folder;
+
+struct ImVec2;
 
 class W_Explorer : public DWindow
 {
@@ -18,19 +22,20 @@ public:
 	void Draw();
 	void OnResize();
 
-	const PathNode& GetCurrentNode() const { return currentNode; };
+	const Resource* GetCurrentFolder() const { return (Resource*)currentFolder; };
 
 private:
 	void DrawFolderNode(const PathNode& node);
-	void DrawNodeImage(const PathNode& node);
+
 	void DrawSelectedFolderContent();
-	void DrawResourceItem();
+	void DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 windowCursorPos);
+	void DrawResourceImage(const Resource* resource);
 
 	void UpdateTree();
-	std::string GetTextAdjusted(const char* text);
+	std::string GetTextAdjusted(const char* text) const;
 
-	void HandleNodeDoubleClick(const PathNode& node);
-	uint GetTextureFromNode(const PathNode& node, uint64* resource_id = nullptr, std::string* dnd_event = nullptr);
+	void HandleResourceDoubleClick(const Resource* resource);
+	uint GetTextureFromResource(const Resource* resource, std::string* dnd_event = nullptr);
 
 public:
 	bool explorerActive = true;
@@ -54,9 +59,9 @@ public:
 
 private:
 	PathNode assets;
-	PathNode currentNode;
-	PathNode nextCurrent;
-	PathNode explorerSelected;
+	R_Folder* currentFolder = nullptr;
+	R_Folder* nextCurrentFolder = nullptr;
+	Resource* selectedResource = nullptr;
 
 	Vec2 explorerPosition;
 	Vec2 explorerSize;

@@ -14,13 +14,13 @@ struct PathNode
 
 	std::vector<PathNode> children;
 
-	bool leaf = true;
-	bool file = true;
+	bool isLeaf = true;
+	bool isFile = true;
 
 	bool IsLastFolder() const
 	{
 		for (uint i = 0; i < children.size(); i++)
-			if (children[i].file == false)
+			if (children[i].isFile == false)
 				return false;
 		return true;
 	}

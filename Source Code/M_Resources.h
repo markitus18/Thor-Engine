@@ -118,7 +118,7 @@ private:
 
 	//Search through all assets and imports / re-imports
 	void UpdateAssetsImport();
-	void UpdateAssetsFolder(const PathNode& node);
+	uint64 UpdateAssetsFolder(const PathNode& node, bool ignoreResource = false);
 
 	//Remove all .meta files in assets TODO: fix fileSystem removing error
 	void ClearMetaData();

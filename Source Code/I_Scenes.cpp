@@ -1,4 +1,4 @@
-#include "M_Import.h"
+#include "I_Scenes.h"
 
 //TODO: Temporal app include. Workaround until scene owns resources
 #include "Application.h"
@@ -15,6 +15,7 @@
 #include "C_ParticleSystem.h"
 
 #include "Resource.h"
+#include "R_Prefab.h"
 
 #include "Config.h"
 
@@ -51,11 +52,11 @@ void Importer::Scenes::SaveScene(const GameObject* root, Config& file)
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		SaveGameObject(goArray.AddNode(), gameObjects[i]);
+		Private::SaveGameObject(goArray.AddNode(), gameObjects[i]);
 	}
 }
 
-void Importer::Scenes::SaveGameObject(Config& config, const GameObject* gameObject)
+void Importer::Scenes::Private::SaveGameObject(Config& config, const GameObject* gameObject)
 {
 	config.SetNumber("UID", gameObject->uid);
 
@@ -87,17 +88,14 @@ void Importer::Scenes::SaveGameObject(Config& config, const GameObject* gameObje
 	}
 }
 
-void Importer::Scenes::SaveComponentBase(Config& config, const Component* component)
+void Importer::Scenes::Private::SaveComponentBase(Config& config, const Component* component)
 {
 	config.SetNumber("ComponentType", (int)component->GetType());
-	SaveComponent(config, component);
+	Private::SaveComponent(config, component);
 
 	config.SetBool("HasResource", component->HasResource());
 	if (component->HasResource())
 	{
-		//TODO: Temporal app include. Workaround until scene owns resources
-		//TODO: Get meta from ID, save type and name..?
-
 		//TODO: this should be avoided, forces resource load into memory
 		const Resource* resource = component->GetResource();
 		config.SetNumber("ID", component->GetResourceID());
@@ -106,34 +104,34 @@ void Importer::Scenes::SaveComponentBase(Config& config, const Component* compon
 	}
 }
 
-void Importer::Scenes::SaveComponent(Config& config, const Component* component)
+void Importer::Scenes::Private::SaveComponent(Config& config, const Component* component)
 {
 	switch (component->GetType())
 	{
 		case(Component::Camera):
-			SaveComponent(config, (C_Camera*)component);
+			Private::SaveComponent(config, (C_Camera*)component);
 			break;
 		case(Component::Animator):
-			SaveComponent(config, (C_Animator*)component);
+			Private::SaveComponent(config, (C_Animator*)component);
 			break;
 	}
 }
 
-void Importer::Scenes::SaveComponent(Config& config, const C_Camera* camera)
+void Importer::Scenes::Private::SaveComponent(Config& config, const C_Camera* camera)
 {
 	config.SetNumber("FOV", camera->frustum.VerticalFov() * RADTODEG);
 	config.SetNumber("NearPlane", camera->frustum.NearPlaneDistance());
 	config.SetNumber("FarPlane", camera->frustum.FarPlaneDistance());
 }
 
-void Importer::Scenes::SaveComponent(Config& config, const C_Animator* animator)
+void Importer::Scenes::Private::SaveComponent(Config& config, const C_Animator* animator)
 {
 	config.SetBool("Playing", animator->playing);
 	config.SetNumber("Current Animation", animator->current_animation);
 }
 
 //TODO: Do we need to fill this function ??
-void Importer::Scenes::SaveComponent(Config& config, const C_ParticleSystem* component)
+void Importer::Scenes::Private::SaveComponent(Config& config, const C_ParticleSystem* component)
 {
 
 }
@@ -185,7 +183,7 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 				{
 					component->SetResource(comp.GetNumber("ID"));
 				}
-				LoadComponent(comp, component);
+				Private::LoadComponent(comp, component);
 			}
 
 		}
@@ -195,38 +193,63 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 	}
 }
 
-void Importer::Scenes::LoadComponent(Config& config, Component* component)
+void Importer::Scenes::SaveContainedResources(R_Prefab* prefab, Config& file)
+{
+	//TODO: The function is accesing App, which should not be done in an importer
+	Config_Array containingResources = file.SetArray("Containing Resources");
+	for (uint i = 0; i < prefab->containingResources.size(); ++i)
+	{
+		if (Resource* res = App->moduleResources->GetResource(prefab->containingResources[i]))
+		{
+			Config resNode = containingResources.AddNode();
+			resNode.SetNumber("ID", res->GetID());
+			resNode.SetString("Name", res->GetName());
+			resNode.SetNumber("Type", res->GetType());
+		}
+	}
+}
+
+void Importer::Scenes::LoadContainedResources(const Config& file, R_Prefab* prefab)
+{
+	Config_Array containingResources = file.GetArray("Containing Resources");
+	for (uint i = 0; i < containingResources.GetSize(); ++i)
+	{
+		prefab->containingResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
+	}
+}
+
+void Importer::Scenes::Private::LoadComponent(Config& config, Component* component)
 {
 	switch (component->GetType())
 	{
 	case(Component::Camera):
 	{
-		LoadComponent(config, (C_Camera*)component);
+		Private::LoadComponent(config, (C_Camera*)component);
 		break;
 	}
 	case(Component::Animator):
 	{
-		LoadComponent(config, (C_Animator*)component);
+		Private::LoadComponent(config, (C_Animator*)component);
 		break;
 	}
 	}
 }
 
-void Importer::Scenes::LoadComponent(Config& config, C_Camera* camera)
+void Importer::Scenes::Private::LoadComponent(Config& config, C_Camera* camera)
 {
 	camera->SetFOV(config.GetNumber("FOV"));
 	camera->SetNearPlane(config.GetNumber("NearPlane"));
 	camera->SetFarPlane(config.GetNumber("FarPlane"));
 }
 
-void Importer::Scenes::LoadComponent(Config& config, C_Animator* animator)
+void Importer::Scenes::Private::LoadComponent(Config& config, C_Animator* animator)
 {
 	animator->playing = config.GetBool("Playing");
 	uint currentAnimation = config.GetNumber("Current Animation");
 	animator->SetAnimation(currentAnimation);
 }
 
-void Importer::Scenes::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
+void Importer::Scenes::Private::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
 {
 
 }

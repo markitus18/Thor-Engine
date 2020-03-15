@@ -449,7 +449,7 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 		{
 			if (ImGui::MenuItem("Create New"))
 			{
-				const char* dir = editor->w_explorer->GetCurrentNode().path.c_str();
+				const char* dir = editor->w_explorer->GetCurrentFolder()->GetOriginalFile();
 				if (uint64 resourceID = App->moduleResources->CreateNewCopyResource(dir, "Engine/Assets/Defaults/New Particle System.particles", Resource::Type::PARTICLESYSTEM))
 				{
 					particleSystem->SetResource(resourceID);

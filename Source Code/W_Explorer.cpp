@@ -11,8 +11,10 @@
 #include "M_FileSystem.h"
 #include "M_Editor.h"
 
+#include "Resource.h"
 #include "R_Texture.h"
 #include "R_Prefab.h"
+#include "R_Folder.h"
 
 #include "Dock.h"
 
@@ -21,7 +23,7 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 {
 	updateTimer.Start();
 	UpdateTree();
-	currentNode = assets;
+
 	allowScrollbar = false;
 }
 
@@ -62,17 +64,20 @@ void W_Explorer::DrawFolderNode(const PathNode& node)
 		nodeFlags |= ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 
-	if (currentNode == node)
+	if (currentFolder && node.path == currentFolder->GetOriginalFile())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
 
 	//If node folder has something inside
-	if (node.file == false)
+	if (node.isFile == false)
 	{
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
-			currentNode = node;
+		{
+			Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceID(node.path.c_str()));
+			currentFolder = (R_Folder*)resource;
+		}
 		if (open && !node.IsLastFolder())
 		{
 			for (uint i = 0; i < node.children.size(); i++)
@@ -82,14 +87,13 @@ void W_Explorer::DrawFolderNode(const PathNode& node)
 			ImGui::TreePop();
 		}
 	}
-
 }
 
-void W_Explorer::DrawNodeImage(const PathNode& node)
+void W_Explorer::DrawResourceImage(const Resource* resource)
 {
-	uint64 resourceID = 0;
+	uint64 resourceID = resource->GetID();
 	std::string dnd_event("NONE");
-	uint textureID = GetTextureFromNode(node, &resourceID, &dnd_event);
+	uint textureID = GetTextureFromResource(resource, &dnd_event);
 
 	ImGui::Image((ImTextureID)textureID, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 
@@ -98,7 +102,7 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 		if (dnd_event != "NONE")
 		{
 			ImGui::SetDragDropPayload(dnd_event.c_str(), &resourceID, sizeof(uint64));
-			ImGui::Text(node.localPath.c_str());
+			ImGui::Text(resource->name.c_str());
 			ImGui::SetCursorPos(ImGui::GetCursorPos() - ImVec2(0.0f, 20.0f));
 			ImGui::Image((ImTextureID)textureID, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
@@ -111,100 +115,105 @@ void W_Explorer::DrawNodeImage(const PathNode& node)
 //TODO: function needs some cleaning. Pathnodes force GetResource constantly which means can't free resource memory properly
 void W_Explorer::DrawSelectedFolderContent()
 {
-	nextCurrent.path = "";
+	if (currentFolder == nullptr)
+	{
+		Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceID("Assets"));
+		currentFolder = (R_Folder*)resource;
+	}
+
+	nextCurrentFolder = nullptr;
 
 	ImGui::BeginChild("ExplorerFolder", ImVec2(0.0f, 0.0f), false, ImGuiWindowFlags_NoScrollbar);
 
-	ImGui::Text(currentNode.path.c_str());
+	ImGui::Text(currentFolder->GetOriginalFile());
 	ImGui::Separator();
 
 	ImGui::BeginChild("ImagesChild");
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(50, 30));
 
-	ImVec2 vec = ImGui::GetCursorPos();
+	ImVec2 windowCursorPosition = ImGui::GetCursorPos();
+	uint itemIndex = 0;
 
-	uint line, column = 0;
-	uint totalItems = currentNode.children.size();
-	if (openPrefab) totalItems += openPrefab->containingResources.size();
-
-	for (uint i = 0; i < totalItems; i++)
+	for (uint i = 0; i < currentFolder->containingResources.size(); ++i)
 	{
-		ImGui::PushID(i);
-
-		line = i / columnsNumber;
-		column = i - (line * columnsNumber);
-
-		ImVec2 imagePos(vec.x + column * (imageSize + imageSpacingX) + imageSpacingX,
-						vec.y + line * (imageSize + imageSpacingY) + topMarginOffset);
-
-		ImGui::SetCursorPos(imagePos);
-
-		DrawNodeImage(currentNode.children[i]);
-
-		//Draw selection image
-		if (explorerSelected == currentNode.children[i])
-		{
-			ImGui::SetCursorPosX(vec.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX - 10.0f);
-			ImGui::SetCursorPosY(vec.y + line * (imageSize + imageSpacingY));
-
-			float textSize = ImGui::GetTextLineHeight();
-			ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
-		}
-
-		//If clicked, select resource to display in inspector
-		if (ImGui::IsItemClicked())
-		{
-			explorerSelected = currentNode.children[i];
-
-			//TODO: quick workaround to select resources
-			App->moduleEditor->selectedResources.clear();
-			std::string metaFile = explorerSelected.path + (".meta");
-			uint64 resourceID = App->moduleResources->GetIDFromMeta(metaFile.c_str());
-			if (Resource* resource = App->moduleResources->GetResource(resourceID))
-				App->moduleEditor->selectedResources.push_back(resource);
-		}
-		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) 
-		{
-			HandleNodeDoubleClick(currentNode.children[i]);
-		}
-
-		ImVec2 textPos(vec.x + (i - line * columnsNumber) * (imageSize + imageSpacingX) + imageSpacingX,
-					   vec.y + line * (imageSize + imageSpacingY) + imageSize + textOffset + topMarginOffset);
-		ImGui::SetCursorPos(textPos);
-
-		std::string textAdjusted = GetTextAdjusted(currentNode.children[i].localPath.c_str());
-		ImGui::Text(textAdjusted.c_str());
-
-		//Drawing node Button (if it's a prefab)
-		std::string metaFile = currentNode.children[i].path + (".meta");
-		Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetIDFromMeta(metaFile.c_str()));
-		if (resource && resource->GetType() == Resource::PREFAB)
-		{
-			R_Prefab* prefabNode = (R_Prefab*)resource;
-
-			ImGui::SetCursorPos(imagePos + ImVec2(imageSize / 2 + nodeButtonOffset, imageSize / 2 - ImGui::GetFrameHeight() / 2));
-			ImGui::ArrowButton("ArrowButton?", prefabNode == openPrefab ? ImGuiDir_Left : ImGuiDir_Right);
-			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
-			{
-				openPrefab = openPrefab == prefabNode ? nullptr : prefabNode;
-			}
-
-			if (prefabNode == openPrefab)
-			{
-				
-			}
-		}
-
-
-		ImGui::PopID();
+		Resource* res = App->moduleResources->GetResource(currentFolder->containingResources[i]);
+		DrawResourceItem(res, itemIndex, windowCursorPosition);
+		itemIndex++;
 	}
+
 	ImGui::PopStyleVar();
 	ImGui::EndChild();
 
-	if (nextCurrent.path != "")
-		currentNode = nextCurrent;
+	if (nextCurrentFolder != nullptr)
+		currentFolder = nextCurrentFolder;
 
 	ImGui::EndChild();
+}
+
+void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 windowCursorPos)
+{
+	uint row = itemIndex / columnsNumber;
+	uint column = itemIndex - (row * columnsNumber);
+
+	ImVec2 drawPos(windowCursorPos.x + column * (imageSize + imageSpacingX) + imageSpacingX,
+		windowCursorPos.y + row * (imageSize + imageSpacingY) + topMarginOffset);
+
+	ImGui::PushID(row * column);
+	ImGui::SetCursorPos(drawPos);
+
+	DrawResourceImage(resource);
+
+	//Draw selection image
+	if (selectedResource == resource)
+	{
+		ImGui::SetCursorPos(drawPos - ImVec2(topMarginOffset, topMarginOffset));
+		float textSize = ImGui::GetTextLineHeight();
+		ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
+	}
+
+	//If clicked, select resource to display in inspector
+	if (ImGui::IsItemClicked())
+	{
+		selectedResource = resource;
+
+		//TODO: quick workaround to select resources
+		App->moduleEditor->selectedResources.clear();
+		App->moduleEditor->selectedResources.push_back(resource);
+	}
+	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+	{
+		HandleResourceDoubleClick(resource);
+	}
+
+	ImVec2 textPos = drawPos + ImVec2(0.0f, imageSize + textOffset);
+	ImGui::SetCursorPos(textPos);
+	ImGui::Text(GetTextAdjusted(resource->GetName()).c_str());
+
+	//Drawing node Button (if it's a prefab)
+	if (resource->GetType() == Resource::PREFAB)
+	{
+		R_Prefab* prefabNode = (R_Prefab*)resource;
+
+		ImGui::SetCursorPos(drawPos + ImVec2(imageSize / 2 + nodeButtonOffset, imageSize / 2 - ImGui::GetFrameHeight() / 2));
+		ImGui::ArrowButton("ArrowButton?", prefabNode == openPrefab ? ImGuiDir_Left : ImGuiDir_Right);
+		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
+		{
+			openPrefab = openPrefab == prefabNode ? nullptr : prefabNode;
+		}
+
+		if (prefabNode == openPrefab)
+		{
+			//Draw the resources contained in the prefab
+			for (uint i = 0; i < prefabNode->containingResources.size(); ++i)
+			{
+				itemIndex++;
+				Resource* containedResource = App->moduleResources->GetResource(prefabNode->containingResources[i]);
+				DrawResourceItem(containedResource, itemIndex, windowCursorPos);
+			}
+		}
+	}
+
+	ImGui::PopID();
 }
 
 void W_Explorer::UpdateTree()
@@ -214,7 +223,7 @@ void W_Explorer::UpdateTree()
 	assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
 }
 
-std::string W_Explorer::GetTextAdjusted(const char* text)
+std::string W_Explorer::GetTextAdjusted(const char* text) const
 {
 	std::string newText = text;
 	uint textLenght = newText.size();
@@ -233,80 +242,71 @@ std::string W_Explorer::GetTextAdjusted(const char* text)
 	return newText;
 }
 
-void W_Explorer::HandleNodeDoubleClick(const PathNode& node)
+void W_Explorer::HandleResourceDoubleClick(const Resource* resource)
 {
-	if (node.file == false)
-		nextCurrent = node;
+	if (resource->GetType() == Resource::FOLDER)
+		nextCurrentFolder = (R_Folder*)resource;
 	else
 	{
-		std::string metaFile = node.path + (".meta");
-		uint64 id = App->moduleResources->GetIDFromMeta(metaFile.c_str());
-		Resource* resource = App->moduleResources->GetResource(id);
-
-		if (resource && resource->GetType() == Resource::PREFAB)
+		if (resource->GetType() == Resource::PREFAB)
 		{
-			App->moduleResources->LoadPrefab(id);
+			App->moduleResources->LoadPrefab(resource->GetID());
 		}
 	}
 }
 
-uint W_Explorer::GetTextureFromNode(const PathNode& node, uint64* resource_id, std::string* dnd_event)
+uint W_Explorer::GetTextureFromResource(const Resource* resource, std::string* dnd_event)
 {
-	uint64 resourceID = 0;
-
-	if (node.file == false)
+	switch (resource->GetType())
 	{
-		if (dnd_event) dnd_event->assign("DND_FOLDER");
-		return folderBuffer;
-	}
-	else
-	{
-		//TODO: this should be done in a more fancy way than opening the meta 2 times.
-		std::string metaFile = node.path + (".meta");
-		Resource::Type type = App->moduleResources->GetTypeFromMeta(metaFile.c_str());
-
-		if (resource_id) *resource_id = App->moduleResources->GetIDFromMeta(metaFile.c_str());
-
-		switch (type)
+		case(Resource::FOLDER):
 		{
-			case(Resource::TEXTURE):
-			{
-				if (dnd_event) dnd_event->assign("DND_TEXTURE");
-				return ((R_Texture*)App->moduleResources->GetResource(*resource_id))->buffer;
-			}
-			case(Resource::PREFAB):
-			{
-					if (dnd_event) dnd_event->assign("DND_PREFAB");
-					//R_Prefab* prefab = (R_Prefab*)resource;
-					//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
-					//if (tex)
-					//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
-
-					//Not saving prefab screenshot by now
-					return prefabBuffer;
-			}
-			case(Resource::SCENE):
-			{
-				return sceneBuffer;
-			}
-			case(Resource::SHADER):
-			{
-				return shaderBuffer;
-			}
-			case(Resource::MATERIAL):
-			{
-				return materialBuffer;
-			}
-			case(Resource::ANIMATION):
-			{
-				return animationBuffer;
-			}
-			case(Resource::ANIMATOR_CONTROLLER):
-			{
-				return animatorBuffer;
-			}
-			default:
-				return fileBuffer;
+			if (dnd_event) dnd_event->assign("DND_FOLDER");
+			return folderBuffer;
 		}
+		case (Resource::MESH):
+		{
+			if (dnd_event) dnd_event->assign("DND_MESH");
+			return fileBuffer;
+		}
+		case(Resource::TEXTURE):
+		{
+			if (dnd_event) dnd_event->assign("DND_TEXTURE");
+			return ((R_Texture*)resource)->buffer;
+		}
+		case(Resource::PREFAB):
+		{
+				if (dnd_event) dnd_event->assign("DND_PREFAB");
+				//R_Prefab* prefab = (R_Prefab*)resource;
+				//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
+				//if (tex)
+				//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
+
+				//Not saving prefab screenshot by now
+				return prefabBuffer;
+		}
+		case(Resource::SCENE):
+		{
+			return sceneBuffer;
+		}
+		case(Resource::SHADER):
+		{
+			return shaderBuffer;
+		}
+		case(Resource::MATERIAL):
+		{
+			if (dnd_event) dnd_event->assign("DND_MATERIAL");
+			return materialBuffer;
+		}
+		case(Resource::ANIMATION):
+		{
+			return animationBuffer;
+		}
+		case(Resource::ANIMATOR_CONTROLLER):
+		{
+			return animatorBuffer;
+		}
+		default:
+			return fileBuffer;
 	}
 }

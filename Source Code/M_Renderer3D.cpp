@@ -8,7 +8,7 @@
 #include "M_Camera3D.h"
 #include "M_Window.h"
 #include "M_Resources.h"
-#include "M_Materials.h"
+#include "I_Materials.h"
 #include "M_Input.h"
 #include "M_Editor.h"
 

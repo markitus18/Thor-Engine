@@ -26,14 +26,15 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 	AddPath("."); //Adding ProjectFolder (working directory)
 	AddPath("Assets");
 
-	CreateDir("Library");
-	CreateDir("Library/Meshes");
-	CreateDir("Library/Materials");
-	CreateDir("Library/Textures");
-	CreateDir("Library/GameObjects");
-	CreateDir("Library/Animations");
-	CreateDir("Library/ParticleSystems");
-	CreateDir("Library/Shaders");
+	CreateDir(LIBRARY_PATH);
+	CreateDir(FOLDERS_PATH);
+	CreateDir(MESHES_PATH);
+	CreateDir(TEXTURES_PATH);
+	CreateDir(MATERIALS_PATH);
+	CreateDir(GAMEOBJECTS_PATH);
+	CreateDir(ANIMATIONS_PATH);
+	CreateDir(PARTICLES_PATH);
+	CreateDir(SHADERS_PATH);
 
 }
 
@@ -185,8 +186,8 @@ PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::strin
 				root.children.push_back(GetAllFiles(str.c_str(), filter_ext, ignore_ext));
 			}
 		}
-		root.file = HasExtension(root.path.c_str());
-		root.leaf = root.children.empty() == true;
+		root.isFile = HasExtension(root.path.c_str());
+		root.isLeaf = root.children.empty() == true;
 	}
 	return root;
 }

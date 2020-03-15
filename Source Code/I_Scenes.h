@@ -48,37 +48,46 @@ namespace Importer
 		//Warning: buffer memory needs to be released after the function call
 		void SaveScene(const GameObject* root, Config& file);
 
-		//Process a GameObject data with its hierarchy into a config file
-		//This function will be called recursively for every child in <gameObject>
-		void SaveGameObject(Config& config, const GameObject* gameObject);
-
-		//Process a Component base data into a config file
-		//This function will call specific functions for each component type
-		void SaveComponentBase(Config& config, const Component* component);
-
-		//Select the specific component class to be saved and calls its according function
-		void SaveComponent(Config& config, const Component* component);
-
-		//Process a Camera component data into a config file
-		void SaveComponent(Config& config, const C_Camera* component);
-
-		//Process an Animation component data into a config file
-		void SaveComponent(Config& config, const C_Animator* component);
-
-		//Process a Particle System component data into a config file
-		void SaveComponent(Config& config, const C_ParticleSystem* component);
-
 		//Process an json scene buffer and loads all the GameObject hierarchy
 		void LoadScene(const Config& file, std::vector<GameObject*>& roots);
 
-		//Loads the base for all components and calls the specific component load function
-		void LoadComponent(Config& config, Component* component);
+		//Saves the contained resources in a prefab into a Config file
+		void SaveContainedResources(R_Prefab* prefab, Config& file);
 
-		void LoadComponent(Config& config, C_Camera* camera);
+		//Loads the contained resources from a prefab meta file into the prefab resources
+		void LoadContainedResources(const Config& file, R_Prefab* prefab);
 
-		void LoadComponent(Config& config, C_Animator* animation);
+		namespace Private
+		{
+			//Process a GameObject data with its hierarchy into a config file
+			//This function will be called recursively for every child in <gameObject>
+			void SaveGameObject(Config& config, const GameObject* gameObject);
 
-		void LoadComponent(Config& config, C_ParticleSystem* particleSystem);
+			//Process a Component base data into a config file
+			//This function will call specific functions for each component type
+			void SaveComponentBase(Config& config, const Component* component);
+
+			//Select the specific component class to be saved and calls its according function
+			void SaveComponent(Config& config, const Component* component);
+
+			//Process a Camera component data into a config file
+			void SaveComponent(Config& config, const C_Camera* component);
+
+			//Process an Animation component data into a config file
+			void SaveComponent(Config& config, const C_Animator* component);
+
+			//Process a Particle System component data into a config file
+			void SaveComponent(Config& config, const C_ParticleSystem* component);
+
+			//Loads the base for all components and calls the specific component load function
+			void LoadComponent(Config& config, Component* component);
+
+			void LoadComponent(Config& config, C_Camera* camera);
+
+			void LoadComponent(Config& config, C_Animator* animation);
+
+			void LoadComponent(Config& config, C_ParticleSystem* particleSystem);
+		}
 	}
 }
 

@@ -211,23 +211,11 @@
     <ClCompile Include="Source Code\R_Prefab.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\M_Materials.cpp">
-      <Filter>Source Code\Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\M_Meshes.cpp">
-      <Filter>Source Code\Importers</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\M_Resources.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\M_Import.cpp">
-      <Filter>Source Code\Importers</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\R_Animation.cpp">
       <Filter>Source Code\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\M_Animations.cpp">
-      <Filter>Source Code\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Folder.cpp">
       <Filter>Source Code\Resources</Filter>
@@ -310,14 +298,8 @@
     <ClCompile Include="Source Code\EmitterInstance.cpp">
       <Filter>Source Code\GameObjects\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\M_ParticleSystems.cpp">
-      <Filter>Source Code\Importers</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\W_ParticleEditor.cpp">
       <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\M_Shaders.cpp">
-      <Filter>Source Code\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\R_Shader.cpp">
       <Filter>Source Code\Resources</Filter>
@@ -327,6 +309,27 @@
     </ClCompile>
     <ClCompile Include="Source Code\R_AnimatorController.cpp">
       <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\I_Animations.cpp">
+      <Filter>Source Code\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\I_Materials.cpp">
+      <Filter>Source Code\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\I_Meshes.cpp">
+      <Filter>Source Code\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\I_ParticleSystems.cpp">
+      <Filter>Source Code\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\I_Shaders.cpp">
+      <Filter>Source Code\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\I_Scenes.cpp">
+      <Filter>Source Code\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\I_Folders.cpp">
+      <Filter>Source Code\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -648,26 +651,14 @@
     <ClInclude Include="Source Code\R_Prefab.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\M_Materials.h">
-      <Filter>Source Code\Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Meshes.h">
-      <Filter>Source Code\Importers</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\M_Resources.h">
       <Filter>Source Code\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Import.h">
-      <Filter>Source Code\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\PathNode.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Animation.h">
       <Filter>Source Code\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Animations.h">
-      <Filter>Source Code\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\TreeNode.h">
       <Filter>Source Code\Editor</Filter>
@@ -757,14 +748,8 @@
     <ClInclude Include="Source Code\EmitterInstance.h">
       <Filter>Source Code\GameObjects\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\M_ParticleSystems.h">
-      <Filter>Source Code\Importers</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\W_ParticleEditor.h">
       <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\M_Shaders.h">
-      <Filter>Source Code\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\R_Shader.h">
       <Filter>Source Code\Resources</Filter>
@@ -774,6 +759,27 @@
     </ClInclude>
     <ClInclude Include="Source Code\R_AnimatorController.h">
       <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\I_Animations.h">
+      <Filter>Source Code\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\I_Materials.h">
+      <Filter>Source Code\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\I_Meshes.h">
+      <Filter>Source Code\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\I_ParticleSystems.h">
+      <Filter>Source Code\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\I_Shaders.h">
+      <Filter>Source Code\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\I_Scenes.h">
+      <Filter>Source Code\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\I_Folders.h">
+      <Filter>Source Code\Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

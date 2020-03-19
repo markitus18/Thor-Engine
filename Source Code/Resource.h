@@ -10,7 +10,7 @@ class Resource : public TreeNode
 
 //Huh... can it be done differently?
 friend class M_Resources;
-friend struct ResourceMeta;
+friend struct ResourceInfo;
 friend class M_ParticleSystems;
 
 public:

@@ -43,17 +43,21 @@ void Importer::Scenes::Init()
 	ilutRenderer(ILUT_OPENGL);
 }
 
-void Importer::Scenes::SaveScene(const GameObject* root, Config& file)
+uint64 Importer::Scenes::SaveScene(const R_Prefab* prefab, char** buffer)
 {
+	Config file;
 	Config_Array goArray = file.SetArray("GameObjects");
 	
 	std::vector<const GameObject*> gameObjects;
-	root->CollectChilds(gameObjects);
+	prefab->root->CollectChilds(gameObjects);
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		Private::SaveGameObject(goArray.AddNode(), gameObjects[i]);
 	}
+
+	uint size = file.Serialize(buffer);
+	return size;
 }
 
 void Importer::Scenes::Private::SaveGameObject(Config& config, const GameObject* gameObject)

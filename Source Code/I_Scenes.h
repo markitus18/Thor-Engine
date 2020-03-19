@@ -46,7 +46,7 @@ namespace Importer
 		//Process a GameObject data with its hierarchy into a buffer file saved as json
 		//Returns the size of the buffer file (0 if any errors)
 		//Warning: buffer memory needs to be released after the function call
-		void SaveScene(const GameObject* root, Config& file);
+		uint64 SaveScene(const R_Prefab* prefab, char** buffer);
 
 		//Process an json scene buffer and loads all the GameObject hierarchy
 		void LoadScene(const Config& file, std::vector<GameObject*>& roots);

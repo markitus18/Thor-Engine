@@ -20,7 +20,6 @@ void main()
 	TexCoord = texCoord;
 	ourColor = baseColor;
 }
-
 #endif
 
 //---------------------------------------------------------------------------
@@ -38,5 +37,4 @@ void main()
 {
 	color = texture(ourTexture, TexCoord) * ourColor;
 }
-
 #endif

@@ -16,8 +16,5 @@ uint64 Importer::Shaders::Save(const R_Shader* resShader, char** buffer)
 
 void Importer::Shaders::Load(const char* buffer, uint size, R_Shader* shader)
 {
-	shader->LoadFromText(buffer);
-	//Once we get binary shader working it should be loaded through a binary file
-	//shader->LoadFromBinary(buffer, size);
-	shader->Link();
+	shader->LoadFromBinary(buffer, size);
 }

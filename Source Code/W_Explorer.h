@@ -7,7 +7,10 @@
 #include "Vec2.h"
 #include "Timer.h"
 
+#include <map>
+
 class Resource;
+
 class R_Prefab;
 class R_Folder;
 
@@ -25,7 +28,7 @@ public:
 	const Resource* GetCurrentFolder() const { return (Resource*)currentFolder; };
 
 private:
-	void DrawFolderNode(const PathNode& node);
+	void DrawFolderNode(PathNode& pathNode);
 
 	void DrawSelectedFolderContent();
 	void DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 windowCursorPos);
@@ -39,16 +42,9 @@ private:
 
 public:
 	bool explorerActive = true;
-	uint folderBuffer = 0;
-	uint fileBuffer = 0;
-	uint selectedBuffer = 0;
-	uint sceneBuffer = 0;
-	uint prefabBuffer = 0;
-	uint shaderBuffer = 0;
-	uint materialBuffer = 0;
-	uint animationBuffer = 0;
-	uint animatorBuffer = 0;
-
+	std::map<uint, uint> resourceIcons;
+	uint selectedResourceImage = 0;
+	
 	uint imageSize = 64;
 	uint columnsNumber = 0;
 	uint imageSpacingX = 50;
@@ -59,6 +55,10 @@ public:
 
 private:
 	PathNode assets;
+
+	R_Folder* assetsFolder = nullptr;
+	R_Folder* engineAssetsFolder = nullptr;
+
 	R_Folder* currentFolder = nullptr;
 	R_Folder* nextCurrentFolder = nullptr;
 	Resource* selectedResource = nullptr;

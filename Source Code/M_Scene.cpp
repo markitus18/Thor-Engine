@@ -18,6 +18,7 @@
 
 #include "GameObject.h"
 
+#include "R_Prefab.h"
 #include "R_Mesh.h"
 
 #include "C_Mesh.h"
@@ -248,7 +249,16 @@ void M_Scene::LoadConfig(Config& config)
 
 void M_Scene::SaveScene(Config& node) const
 {
-	Importer::Scenes::SaveScene(root, node);
+	//This is a a workaround. SaveScene returns a serialized buffer.
+	//We use that buffer to generate a new Config node and assign it to the original one
+	R_Prefab prefab;
+	prefab.root = root;
+
+	char* buffer = nullptr;
+	Importer::Scenes::SaveScene(&prefab, &buffer);
+
+	Config sceneNode(buffer);
+	node = sceneNode;
 }
 
 void M_Scene::LoadScene(Config& node, bool tmp)
@@ -294,7 +304,7 @@ void M_Scene::LoadGameObject(const Config& config)
 	if (roots[0] != nullptr)
 	{
 		GameObject* gameObject = roots[0];
-
+		//TODO: can we just call SetParent() ?
 		gameObject->parent = root;
 		root->childs.push_back(gameObject);
 

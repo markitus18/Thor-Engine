@@ -25,6 +25,12 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 	UpdateTree();
 
 	allowScrollbar = false;
+
+	Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Assets").id);
+	currentFolder = assetsFolder = (R_Folder*)resource;
+
+	resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Engine/Assets").id);
+	engineAssetsFolder = (R_Folder*)resource;
 }
 
 void W_Explorer::Draw()
@@ -39,6 +45,7 @@ void W_Explorer::Draw()
 
 	ImGui::BeginChild("ExplorerTree", ImVec2(windowSize.x * 0.2f, windowSize.y));
 	DrawFolderNode(assets);
+
 	ImGui::EndChild();
 
 	ImGui::SameLine();
@@ -55,7 +62,7 @@ void W_Explorer::OnResize()
 	windowSize = parent->size - Vec2(0.0f, 25.0f);
 }
 
-void W_Explorer::DrawFolderNode(const PathNode& node)
+void W_Explorer::DrawFolderNode(PathNode& node)
 {
 	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 	if (node.IsLastFolder() == true)
@@ -75,7 +82,7 @@ void W_Explorer::DrawFolderNode(const PathNode& node)
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceID(node.path.c_str()));
+			Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo(node.path.c_str()).id);
 			currentFolder = (R_Folder*)resource;
 		}
 		if (open && !node.IsLastFolder())
@@ -115,12 +122,6 @@ void W_Explorer::DrawResourceImage(const Resource* resource)
 //TODO: function needs some cleaning. Pathnodes force GetResource constantly which means can't free resource memory properly
 void W_Explorer::DrawSelectedFolderContent()
 {
-	if (currentFolder == nullptr)
-	{
-		Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceID("Assets"));
-		currentFolder = (R_Folder*)resource;
-	}
-
 	nextCurrentFolder = nullptr;
 
 	ImGui::BeginChild("ExplorerFolder", ImVec2(0.0f, 0.0f), false, ImGuiWindowFlags_NoScrollbar);
@@ -168,7 +169,8 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 	{
 		ImGui::SetCursorPos(drawPos - ImVec2(topMarginOffset, topMarginOffset));
 		float textSize = ImGui::GetTextLineHeight();
-		ImGui::Image((ImTextureID)selectedBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
+		uint texBuffer = ((R_Texture*)App->moduleResources->GetResource(selectedResourceImage))->buffer;
+		ImGui::Image((ImTextureID)texBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
 	}
 
 	//If clicked, select resource to display in inspector
@@ -257,56 +259,17 @@ void W_Explorer::HandleResourceDoubleClick(const Resource* resource)
 
 uint W_Explorer::GetTextureFromResource(const Resource* resource, std::string* dnd_event)
 {
-	switch (resource->GetType())
+	uint64 textureBuffer = 0;
+	if (resource->GetType() == Resource::TEXTURE)
 	{
-		case(Resource::FOLDER):
-		{
-			if (dnd_event) dnd_event->assign("DND_FOLDER");
-			return folderBuffer;
-		}
-		case (Resource::MESH):
-		{
-			if (dnd_event) dnd_event->assign("DND_MESH");
-			return fileBuffer;
-		}
-		case(Resource::TEXTURE):
-		{
-			if (dnd_event) dnd_event->assign("DND_TEXTURE");
-			return ((R_Texture*)resource)->buffer;
-		}
-		case(Resource::PREFAB):
-		{
-				if (dnd_event) dnd_event->assign("DND_PREFAB");
-				//R_Prefab* prefab = (R_Prefab*)resource;
-				//R_Texture* tex = (R_Texture*)App->moduleResources->GetResource(prefab->miniTextureID);
-				//if (tex)
-				//	ImGui::Image((ImTextureID)tex->buffer, ImVec2(imageSize, imageSize));
-
-				//Not saving prefab screenshot by now
-				return prefabBuffer;
-		}
-		case(Resource::SCENE):
-		{
-			return sceneBuffer;
-		}
-		case(Resource::SHADER):
-		{
-			return shaderBuffer;
-		}
-		case(Resource::MATERIAL):
-		{
-			if (dnd_event) dnd_event->assign("DND_MATERIAL");
-			return materialBuffer;
-		}
-		case(Resource::ANIMATION):
-		{
-			return animationBuffer;
-		}
-		case(Resource::ANIMATOR_CONTROLLER):
-		{
-			return animatorBuffer;
-		}
-		default:
-			return fileBuffer;
+		textureBuffer = ((R_Texture*)resource)->buffer;
 	}
+	else
+	{
+		R_Texture* texture = (R_Texture*)App->moduleResources->GetResource(resourceIcons[resource->GetType()]);
+		textureBuffer = texture->buffer;
+	}
+	dnd_event->assign("DND_RESOURCE_").append(std::to_string((int)resource->GetType()));
+
+	return textureBuffer;
 }

@@ -10,7 +10,6 @@
 class P_Buttons;
 
 class Config;
-struct PathNode;
 class GameObject;
 class Resource;
 class TreeNode;
@@ -37,6 +36,7 @@ public:
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
+	void CreateWindows();
 	void Draw();
 
 	void Log(const char* input);
@@ -78,7 +78,6 @@ public:
 
 private:
 	void DrawPanels();
-	void DisplayScenesWindows(const PathNode& folder);
 	//void DisplayFolderTree();
 
 	void ShowAboutWindow();

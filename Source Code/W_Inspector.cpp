@@ -247,7 +247,7 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 		}
 		if (ImGui::BeginDragDropTarget())
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_MESH"))
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_1"))
 			{
 				if (payload->DataSize == sizeof(uint64))
 				{
@@ -304,7 +304,7 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 
 				if (ImGui::BeginDragDropTarget())
 				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_TEXTURE"))
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_2"))
 					{
 						if (payload->DataSize == sizeof(uint64))
 						{
@@ -456,15 +456,15 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 				}
 			}
 			
-			std::vector<const ResourceMeta*> resourceMetas;
-			if (App->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, resourceMetas))
+			std::vector<const ResourceInfo*> ResourceInfos;
+			if (App->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, ResourceInfos))
 			{
 				ImGui::Separator();
-				for (uint i = 0; i < resourceMetas.size(); ++i)
+				for (uint i = 0; i < ResourceInfos.size(); ++i)
 				{
-					if (ImGui::MenuItem(resourceMetas[i]->resource_name.c_str()))
+					if (ImGui::MenuItem(ResourceInfos[i]->name.c_str()))
 					{
-						particleSystem->SetResource(resourceMetas[i]->id);
+						particleSystem->SetResource(ResourceInfos[i]->id);
 					}
 				}
 			}

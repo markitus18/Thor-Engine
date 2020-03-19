@@ -28,6 +28,8 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void CreateLibraryDirectories();
+
 	// Utility functions
 	bool AddPath(const char* path_or_zip);
 	bool Exists(const char* file) const;

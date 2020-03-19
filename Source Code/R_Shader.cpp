@@ -7,6 +7,7 @@
 R_Shader::R_Shader() : Resource(Resource::SHADER)
 {
 	memset(shaderObjects, 0, (int)Object_Type::Unknown - 1);
+	isInternal = true;
 }
 
 R_Shader::~R_Shader()
@@ -20,7 +21,7 @@ uint R_Shader::Save(char** buffer) const
 	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &formats);
 	if (formats < 1) return 0;
 
-	int totalLenght = 0, binaryLenght;
+	int totalLenght = 0, binaryLenght = 0;
 	glGetProgramiv(shaderProgram, GL_PROGRAM_BINARY_LENGTH, &binaryLenght);
 
 	if (binaryLenght > 0)
@@ -32,13 +33,14 @@ uint R_Shader::Save(char** buffer) const
 		char* binaryBuffer = new char[binaryLenght];
 
 		GLenum format;
-		glGetProgramBinary(shaderProgram, binaryLenght, nullptr, &format, binaryBuffer);
+		GLsizei writtenLength = 0;
+		glGetProgramBinary(shaderProgram, binaryLenght, &writtenLength, &format, binaryBuffer);
 
 		char* cursor = *buffer;
 		memcpy(cursor, &format, sizeof(unsigned int));
 		cursor += sizeof(unsigned int);
 
-		memcpy(cursor, &binaryBuffer, binaryLenght);
+		memcpy(cursor, binaryBuffer, binaryLenght);
 
 		RELEASE_ARRAY(binaryBuffer);
 	}
@@ -60,8 +62,8 @@ bool R_Shader::LoadFromText(const char* buffer)
 			if (int GLmacro = GetShaderMacro((Object_Type)i))
 			{
 				//Compile the shader, type and define are ready
-				std::string define = "#version 330 core\n"; //TODO: temporal to make it work
-				define += std::string("#define ") + macroStr + "\n";
+				std::string define("#version 330 core\r\n");
+				define += std::string("#define ") + macroStr + "\r\n";
 
 				std::string shaderObjectFile = define + file;
 
@@ -97,7 +99,7 @@ bool R_Shader::LoadFromBinary(const char* buffer, int size)
 	cursor += sizeof(unsigned int);
 
 	shaderProgram = glCreateProgram();
-	glProgramBinary(shaderProgram, format, cursor, size - sizeof(unsigned int));
+	glProgramBinary(shaderProgram, 36385, cursor, size - sizeof(unsigned int));
 
 	GLint status;
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);

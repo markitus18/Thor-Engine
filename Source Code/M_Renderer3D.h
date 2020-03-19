@@ -69,6 +69,7 @@ public:
 	~M_Renderer3D();
 
 	bool Init(Config& config);
+	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();

@@ -35,7 +35,7 @@ void W_Scene::Draw()
 
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_PREFAB"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_6"))
 		{
 			if (payload->DataSize == sizeof(uint64))
 			{

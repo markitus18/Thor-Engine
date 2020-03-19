@@ -3,7 +3,7 @@
 
 R_Texture::R_Texture() : Resource(Resource::TEXTURE)
 {
-
+	isInternal = true;
 }
 
 R_Texture::~R_Texture()

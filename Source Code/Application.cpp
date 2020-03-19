@@ -33,18 +33,15 @@ Application::Application()
 	// Main Modules
 	AddModule(fileSystem);
 	AddModule(window);
-	AddModule(camera);
-
-	AddModule(moduleEditor);
-
 	AddModule(input);
 
+	AddModule(camera);
 	AddModule(scene);
 
+	AddModule(moduleResources);
 
 	AddModule(renderer3D);
-
-	AddModule(moduleResources);
+	AddModule(moduleEditor);
 
 	title = TITLE;
 	organization = ORGANIZATION;

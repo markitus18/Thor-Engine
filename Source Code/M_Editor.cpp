@@ -71,6 +71,47 @@ bool M_Editor::Init(Config& config)
 	int screen_width = GetSystemMetrics(SM_CXSCREEN);
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
 
+	//TODO: not sure if this should be done here too, but it's kinda valid
+	LoadConfig(config);
+
+	return true;
+}
+
+bool M_Editor::Start()
+{
+	CreateWindows();
+
+	w_explorer->resourceIcons[Resource::Type::FOLDER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FolderIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::MESH] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FileIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::TEXTURE] = 0;
+	w_explorer->resourceIcons[Resource::Type::MATERIAL] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::ANIMATION] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::PREFAB] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::PARTICLESYSTEM] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::SHADER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::SCENE] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").id;
+	w_explorer->selectedResourceImage = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SelectedIcon.png").id;
+
+	return true;
+}
+
+update_status M_Editor::PreUpdate(float dt)
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	using_keyboard = io.WantCaptureKeyboard;
+	using_mouse = io.WantCaptureMouse;
+	
+	return UPDATE_CONTINUE;
+}
+
+void M_Editor::CreateWindows()
+{
 	//Initializing all panels
 	buttons = new P_Buttons();
 
@@ -93,7 +134,7 @@ bool M_Editor::Init(Config& config)
 	w_inspector = new W_Inspector(this);
 	windows.push_back(w_inspector);
 	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(w_inspector);
-	
+
 	w_particles = new W_ParticleEditor(this);
 	windows.push_back(w_particles);
 	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(w_particles);
@@ -113,123 +154,8 @@ bool M_Editor::Init(Config& config)
 	w_econfig = new W_EngineConfig(this);
 	windows.push_back(w_econfig);
 	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(w_econfig);
-	
-	//TODO: not sure if this should be done here too, but it's kinda valid
-	LoadConfig(config);
 
-	return true;
-}
 
-bool M_Editor::Start()
-{
-	//TODO: load in another module (use icons as a resource)
-	char* buffer = nullptr;
-	uint size = App->fileSystem->Load("Engine/Assets/Icons/FolderIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->folderBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-
-	size = App->fileSystem->Load("Engine/Assets/Icons/FileIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->fileBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-
-	size = App->fileSystem->Load("Engine/Assets/Icons/SelectedIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->selectedBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-
-	size = App->fileSystem->Load("Engine/Assets/Icons/ThorIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->sceneBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-
-	size = App->fileSystem->Load("Engine/Assets/Icons/SceneIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->prefabBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-	
-	size = App->fileSystem->Load("Engine/Assets/Icons/ShaderIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->shaderBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-	
-	size = App->fileSystem->Load("Engine/Assets/Icons/MaterialIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->materialBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-	
-	size = App->fileSystem->Load("Engine/Assets/Icons/AnimationIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->animationBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-
-	size = App->fileSystem->Load("Engine/Assets/Icons/AnimatorIcon.png", &buffer);
-	if (size > 0)
-	{
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			w_explorer->animatorBuffer = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
-	}
-	
-	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
-	return true;
-}
-
-update_status M_Editor::PreUpdate(float dt)
-{
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
-
-	ImGuiIO& io = ImGui::GetIO();
-
-	using_keyboard = io.WantCaptureKeyboard;
-	using_mouse = io.WantCaptureMouse;
-	
-	return UPDATE_CONTINUE;
 }
 
 void M_Editor::Draw()

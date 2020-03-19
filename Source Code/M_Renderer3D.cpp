@@ -172,13 +172,15 @@ bool M_Renderer3D::Init(Config& config)
 	return ret;
 }
 
+bool M_Renderer3D::Start()
+{
+	defaultTextureID = App->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Texture.png").id;
+	return true;
+}
+
 // PreUpdate: clear buffer
 update_status M_Renderer3D::PreUpdate(float dt)
 {
-	//TODO: Move to avoid checking every frame
-	if (defaultTextureID == 0)
-		defaultTextureID = App->moduleResources->GetResourceID("Engine/Assets/Defaults/Default Texture.png");
-
 	if (camera->update_projection)
 	{
 		UpdateProjectionMatrix();

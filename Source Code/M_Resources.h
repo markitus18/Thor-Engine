@@ -25,21 +25,25 @@ class R_AnimatorController;
 
 struct PathNode;
 
-struct ResourceMeta
+struct ResourceInfo
 {
 	Resource::Type type = Resource::UNKNOWN;
-	std::string original_file = "";
-	std::string resource_name = "";
+	std::string file = "";
+	std::string name = "";
 	uint64 id = 0;
+
+	ResourceInfo() {}; //Looks like we need default constructor for maps
+	ResourceInfo(Resource::Type type, const char* file, const char* name, uint64 id) : type(type), file(file), name(name), id(id) {};
 
 	bool Compare(const char* file, const char* name, Resource::Type type)
 	{
-		return (original_file == file && (name ? resource_name == name : true) && type == this->type);
+		return (this->file == file && (name ? this->name == name : true) && type == this->type);
 	}
 
-	ResourceMeta() {}; //Looks like we need default constructor for maps
-	ResourceMeta(Resource::Type type, const char* file, const char* name, uint64 id) : type(type), original_file(file), resource_name(name), id(id) {};
-
+	void Assign(Resource::Type type, const char* file, const char* name, uint64 id)
+	{
+		this->type = type; this->file = file; this->name = name; this->id = id;
+	}
 };
 
 class M_Resources : public Module
@@ -57,71 +61,59 @@ public:
 	//The file will be duplicated in the current active folder in the asset explorer
 	void ImportFileFromExplorer(const char* path);
 
-	//Import a folder existing in assets
+	//Import a folder existing in assets and create it as a resource
 	uint64 ImportFolderFromAssets(const char* path);
 
 	//Import a file existing in assets and create its resources
 	uint64 ImportFileFromAssets(const char* path);
-	
+
+	//Import a resource existing in a prefab (3D scene) file
+	uint64 ImportResourceFromScene(const char* file, const void* data, const char* name, Resource::Type type);
+
 	void ImportScene(const char* buffer, uint size, R_Prefab* prefab);
-	uint64 ImportRMesh(const aiMesh* mesh, const char* source_file);
-	uint64 ImportRMaterial(const aiMaterial* mat, const char* source_file);
-	uint64 ImportRAnimation(const aiAnimation* anim, const char* source_file);
 	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 
-	void ImportRTexture(const char* buffer, uint size, R_Texture* texture);
-
-	//Called when a particle system is modified externally (due to copy-paste or commit update)
-	void ImportRParticleSystem(const char* buffer, uint size, R_ParticleSystem* rParticles);
-	
-	//Called when an animator controller is modified externally (due to copy-paste or commit update)
-	void ImportRAnimatorController(const char* buffer, uint size, R_AnimatorController* rAnimator);
-
-	//Called when a shader is modified externally (due to copy-paste or commit update)
-	void ImportRShader(const char* buffer, uint size, R_Shader* shader);
-	
 	//Generates the base data for a resource
 	Resource* CreateResourceBase(const char* assetsPath, Resource::Type type, const char* name = nullptr, uint64 forceID = 0);
 
 	//Used for internal resources (external referring to fbx, textures,...)
 	uint64 CreateNewCopyResource(const char* directory, const char* defaultPath, Resource::Type type);
 	
+	//Finds the ID in the resource library and creates the resource base of that type
 	Resource* LoadResourceBase(uint64 ID);
 
-	Resource* GetResource(uint64 ID);
-	uint64 GetResourceID(const char* original_path) const;
+	const ResourceInfo& GetResourceInfo(const char* path) const;
 
-	Resource::Type GetTypeFromPath(const char* path) const;
-	bool GetAllMetaFromType(Resource::Type type, std::vector<const ResourceMeta*>& metas) const;
+	Resource* GetResource(uint64 ID);
+
+	Resource::Type GetTypeFromPathExtension(const char* path) const;
+	bool GetAllMetaFromType(Resource::Type type, std::vector<const ResourceInfo*>& metas) const;
 
 	void LoadPrefab(uint64 ID);
 
-	Component::Type M_Resources::ResourceToComponentType(Resource::Type type);
-
-	//TMP: move into private? usage in P_Explorer.cpp
-	uint64 GetIDFromMeta(const char* path) const;
-	Resource::Type GetTypeFromMeta(const char* path);
-	inline uint64 GetNewID() { return random.Int(); } ;
+	inline uint64 GetNewID() { return random.Int(); }
 
 private:
 	void LoadResourcesData();
 	void LoadMetaFromFolder(PathNode node);
 
-	ResourceMeta	GetMetaInfo(const Resource* resource) const;
-	ResourceMeta*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
+	ResourceInfo	GetMetaInfo(const Resource* resource) const;
+	ResourceInfo*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 
 	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
 
-	bool LoadMetaInfo(const char* file);
-	ResourceMeta GetMetaFromNode(const char* file, const Config& node) const;
+	void LoadResourceInfo(const char* file);
+	ResourceInfo GetMetaFromNode(const char* file, const Config& node) const;
 
 	//Search through all assets and imports / re-imports
 	void UpdateAssetsImport();
 	uint64 UpdateAssetsFolder(const PathNode& node, bool ignoreResource = false);
 
-	//Remove all .meta files in assets TODO: fix fileSystem removing error
+	//Remove all .meta files in assets
+	//TODO: fix fileSystem removing error
 	void ClearMetaData();
+
 	//Remove all .meta files in a folder
 	void RemoveMetaFromFolder(PathNode node);
 
@@ -148,7 +140,7 @@ public:
 private:
 
 	//All resources imported
-	std::map<uint64, ResourceMeta> existingResources;
+	std::map<uint64, ResourceInfo> existingResources;
 
 	Timer updateAssets_timer;
 	Timer saveChangedResources_timer;

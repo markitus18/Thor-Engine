@@ -6,7 +6,8 @@
 
 R_Material::R_Material() : Resource(Resource::MATERIAL)
 {
-	shaderID = App->moduleResources->GetResourceID("Engine/Assets/Defaults/Default Shader.shader");
+	shaderID = App->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Shader.shader").id;
+	isInternal = true;
 }
 
 R_Material::~R_Material()

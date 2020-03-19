@@ -25,17 +25,7 @@ M_FileSystem::M_FileSystem(bool start_enabled) : Module("FileSystem", true)
 
 	AddPath("."); //Adding ProjectFolder (working directory)
 	AddPath("Assets");
-
-	CreateDir(LIBRARY_PATH);
-	CreateDir(FOLDERS_PATH);
-	CreateDir(MESHES_PATH);
-	CreateDir(TEXTURES_PATH);
-	CreateDir(MATERIALS_PATH);
-	CreateDir(GAMEOBJECTS_PATH);
-	CreateDir(ANIMATIONS_PATH);
-	CreateDir(PARTICLES_PATH);
-	CreateDir(SHADERS_PATH);
-
+	CreateLibraryDirectories();
 }
 
 // Destructor
@@ -68,6 +58,20 @@ bool M_FileSystem::CleanUp()
 	//LOG("Freeing File System subsystem");
 
 	return true;
+}
+
+void M_FileSystem::CreateLibraryDirectories()
+{
+	CreateDir(LIBRARY_PATH);
+	CreateDir(FOLDERS_PATH);
+	CreateDir(MESHES_PATH);
+	CreateDir(TEXTURES_PATH);
+	CreateDir(MATERIALS_PATH);
+	CreateDir(GAMEOBJECTS_PATH);
+	CreateDir(ANIMATIONS_PATH);
+	CreateDir(PARTICLES_PATH);
+	CreateDir(SHADERS_PATH);
+
 }
 
 // Add a new zip file or folder
@@ -434,13 +438,23 @@ bool M_FileSystem::Remove(const char * file)
 
 	if (file != nullptr)
 	{
+		//If it is a directory, we need to recursively remove all the files inside
+		if (IsDirectory(file))
+		{
+			std::vector<std::string> containedFiles, containedDirs;
+			PathNode rootDirectory = GetAllFiles(file);
+			
+			for (uint i = 0; i < rootDirectory.children.size(); ++i)
+				Remove(rootDirectory.children[i].path.c_str());
+		}
+		
 		if (PHYSFS_delete(file) != 0)
 		{
 			LOG("File deleted: [%s]", file);
 			ret = true;
 		}
 		else
-			LOG("File System error while trying to delete [%s]: ", file, PHYSFS_getLastError());
+			LOG("File System error while trying to delete [%s]: %s", file, PHYSFS_getLastError());
 	}
 
 	return ret;

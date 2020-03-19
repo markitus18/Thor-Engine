@@ -2,7 +2,7 @@
 
 R_AnimatorController::R_AnimatorController() : Resource(Resource::ANIMATOR_CONTROLLER)
 {
-
+	
 }
 
 R_AnimatorController::~R_AnimatorController()

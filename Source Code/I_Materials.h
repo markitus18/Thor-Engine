@@ -12,6 +12,9 @@ namespace Importer
 {
 	namespace Materials
 	{
+		//Creates an empty mesh resource using default constructor
+		R_Material* Create();
+
 		//Processes aiMaterial data into a ready-to-use R_Material to be saved later.
 		//Returns nullptr if any errors occured during the process.
 		void Import(const aiMaterial* material, R_Material* rMaterial);
@@ -28,6 +31,12 @@ namespace Importer
 
 	namespace Textures
 	{
+		//Initializes the library used to handle texture image importing
+		void Init();
+
+		//Creates an empty texture resource using default constructor
+		R_Texture* Create();
+
 		//Processes buffer data into a ready-to-use R_Texture to be saved later.
 		//Returns nullptr if any errors occured during the process.
 		bool Import(const char* buffer, uint size, R_Texture* rTexture);

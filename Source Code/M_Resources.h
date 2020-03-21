@@ -3,26 +3,13 @@
 
 #include "Module.h"
 #include "Resource.h"
-#include "Component.h"
 #include "Timer.h"
 #include "MathGeoLib\src\Algorithm\Random\LCG.h"
 
 #include <map>
 #include <vector>
 
-struct aiMesh;
-struct aiMaterial;
-struct aiAnimation;
-struct aiBone;
-
-class R_Mesh;
-class R_Texture;
-class R_Material;
 class R_Prefab;
-class R_Shader;
-class R_ParticleSystem;
-class R_AnimatorController;
-
 struct PathNode;
 
 struct ResourceInfo
@@ -30,19 +17,14 @@ struct ResourceInfo
 	Resource::Type type = Resource::UNKNOWN;
 	std::string file = "";
 	std::string name = "";
-	uint64 id = 0;
+	uint64 ID = 0;
 
 	ResourceInfo() {}; //Looks like we need default constructor for maps
-	ResourceInfo(Resource::Type type, const char* file, const char* name, uint64 id) : type(type), file(file), name(name), id(id) {};
+	ResourceInfo(Resource::Type type, const char* file, const char* name, uint64 id) : type(type), file(file), name(name), ID(id) {};
 
-	bool Compare(const char* file, const char* name, Resource::Type type)
+	bool Compare(const char* file, const char* name, Resource::Type type) const
 	{
-		return (this->file == file && (name ? this->name == name : true) && type == this->type);
-	}
-
-	void Assign(Resource::Type type, const char* file, const char* name, uint64 id)
-	{
-		this->type = type; this->file = file; this->name = name; this->id = id;
+		return (this->file == file && (name ? this->name == name : true) && (type != Resource::Type::UNKNOWN ? type == this->type : true));
 	}
 };
 
@@ -59,59 +41,57 @@ public:
 
 	//Import a file from outside the project folder
 	//The file will be duplicated in the current active folder in the asset explorer
-	void ImportFileFromExplorer(const char* path);
-
-	//Import a folder existing in assets and create it as a resource
-	uint64 ImportFolderFromAssets(const char* path);
+	void ImportFileFromExplorer(const char* path, const char* dstDir);
 
 	//Import a file existing in assets and create its resources
 	uint64 ImportFileFromAssets(const char* path);
 
+	//Import a folder existing in assets and create it as a resource
+	uint64 ImportFolderFromAssets(const char* path);
+	
+	//Import a 3D scene file
+	void ImportModel(const char* buffer, uint size, Resource* model);
+
 	//Import a resource existing in a prefab (3D scene) file
 	uint64 ImportResourceFromScene(const char* file, const void* data, const char* name, Resource::Type type);
 
-	void ImportScene(const char* buffer, uint size, R_Prefab* prefab);
-	uint64 ImportPrefabImage(char* buffer, const char* source_file, uint sizeX, uint sizeY);
+	uint64 ImportModelThumbnail(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 
 	//Generates the base data for a resource
 	Resource* CreateResourceBase(const char* assetsPath, Resource::Type type, const char* name = nullptr, uint64 forceID = 0);
 
 	//Used for internal resources (external referring to fbx, textures,...)
-	uint64 CreateNewCopyResource(const char* directory, const char* defaultPath, Resource::Type type);
+	uint64 CreateNewCopyResource(const char* srcFile, const char* dstDir);
 	
 	//Finds the ID in the resource library and creates the resource base of that type
 	Resource* LoadResourceBase(uint64 ID);
 
-	const ResourceInfo& GetResourceInfo(const char* path) const;
+	const ResourceInfo& GetResourceInfo(const char* path, const char* name = nullptr, Resource::Type type = Resource::UNKNOWN) const;
 
 	Resource* GetResource(uint64 ID);
 
-	Resource::Type GetTypeFromPathExtension(const char* path) const;
+	Resource::Type GetTypeFromFileExtension(const char* path) const;
 	bool GetAllMetaFromType(Resource::Type type, std::vector<const ResourceInfo*>& metas) const;
 
-	void LoadPrefab(uint64 ID);
+	void LoadModel(uint64 ID);
 
 	inline uint64 GetNewID() { return random.Int(); }
 
 private:
-	void LoadResourcesData();
-	void LoadMetaFromFolder(PathNode node);
+	void LoadResourceLibrary();
+	void LoadLibraryFromFolder(PathNode node);
+	void LoadResourceInfo(const char* file);
 
 	ResourceInfo	GetMetaInfo(const Resource* resource) const;
-	ResourceInfo*	FindResourceInLibrary(const char* original_file, const char* name, Resource::Type type);
 
 	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
-
-	void LoadResourceInfo(const char* file);
-	ResourceInfo GetMetaFromNode(const char* file, const Config& node) const;
 
 	//Search through all assets and imports / re-imports
 	void UpdateAssetsImport();
 	uint64 UpdateAssetsFolder(const PathNode& node, bool ignoreResource = false);
 
 	//Remove all .meta files in assets
-	//TODO: fix fileSystem removing error
 	void ClearMetaData();
 
 	//Remove all .meta files in a folder
@@ -140,11 +120,11 @@ public:
 private:
 
 	//All resources imported
-	std::map<uint64, ResourceInfo> existingResources;
+	std::map<uint64, ResourceInfo> resourceLibrary;
 
 	Timer updateAssets_timer;
 	Timer saveChangedResources_timer;
 	LCG random;
 };
 
-#endif
+#endif //!__M_RESOURCES_H__

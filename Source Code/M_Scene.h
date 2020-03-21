@@ -33,7 +33,7 @@ public:
 
 	void SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds);
 
-	//Scene and prefab save / load ------------------------------------------------
+	//Scene and model save / load ------------------------------------------------
 	void SaveConfig(Config& config) const;
 	void LoadConfig(Config& config);
 
@@ -42,7 +42,7 @@ public:
 	void LoadScene(const char* file); //Calls application and prepares to load
 
 	void LoadGameObject(const Config& file); //Calls module import to load a Game Object file
-	//Endof Scene and prefab save / load ------------------------------------------
+	//Endof Scene and model save / load ------------------------------------------
 
 	//GameObject management -------------------------------------------------------
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);

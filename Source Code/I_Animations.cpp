@@ -8,6 +8,11 @@
 #include "Config.h"
 #include "Assimp/include/scene.h"
 
+R_Animation* Importer::Animations::Create()
+{
+	return new R_Animation();
+}
+
 void Importer::Animations::Import(const aiAnimation* animation, R_Animation* rAnimation)
 {
 	//Import general animation data
@@ -62,7 +67,12 @@ uint64 Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 	return size;
 }
 
-uint64 Importer::Animations::Save(const R_AnimatorController* rAnimator, char** buffer)
+R_AnimatorController* Importer::Animators::Create()
+{
+	return new R_AnimatorController();
+}
+
+uint64 Importer::Animators::Save(const R_AnimatorController* rAnimator, char** buffer)
 {
 	Config file;
 	Config_Array animationsNode = file.SetArray("Animations");
@@ -75,7 +85,7 @@ uint64 Importer::Animations::Save(const R_AnimatorController* rAnimator, char** 
 	return file.Serialize( buffer);
 }
 
-void Importer::Animations::Load(const char* buffer, R_AnimatorController* rAnimator)
+void Importer::Animators::Load(const char* buffer, R_AnimatorController* rAnimator)
 {
 	Config file(buffer);
 	Config_Array animationsNode = file.GetArray("Animations");

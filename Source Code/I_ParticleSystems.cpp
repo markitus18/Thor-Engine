@@ -1,12 +1,12 @@
 #include "I_ParticleSystems.h"
 
-#include "Application.h"
+#include "R_ParticleSystem.h"
 #include "Config.h"
 
-#include "M_FileSystem.h"
-
-#include "R_ParticleSystem.h"
-
+R_ParticleSystem* Importer::Particles::Create()
+{
+	return new R_ParticleSystem();
+}
 
 void Importer::Particles::Import(const char* buffer, uint size, R_ParticleSystem* rParticles)
 {

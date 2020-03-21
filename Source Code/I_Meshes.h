@@ -12,10 +12,13 @@ struct aiMesh;
 namespace Importer
 {
 	namespace Meshes
-	{
+	{		
+		//Creates an empty material resource using default constructor
+		R_Mesh* Create();
+		
 		//Processes aiMesh data into a ready-to-use R_Mesh to be saved later.
 		//Returns nullptr if any errors occured during the process.
-		R_Mesh* Import(const aiMesh* mesh, R_Mesh* resMesh);
+		void Import(const aiMesh* mesh, R_Mesh* resMesh);
 
 		//Process R_Mesh data into a buffer ready to save
 		//Returns the size of the buffer file (0 if any errors)

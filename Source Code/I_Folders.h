@@ -9,6 +9,8 @@ namespace Importer
 {
 	namespace Folders
 	{
+		R_Folder* Create();
+
 		uint64 Save(const R_Folder* rFolder, char** buffer);
 		void Load(const char* buffer, R_Folder* rAnimation);
 	}

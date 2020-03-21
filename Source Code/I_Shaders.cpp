@@ -2,6 +2,11 @@
 
 #include "R_Shader.h"
 
+R_Shader* Importer::Shaders::Create()
+{
+	return new R_Shader();
+}
+
 void Importer::Shaders::Import(const char* buffer, R_Shader* resShader)
 {
 	//TODO: in this case importing happens in the shader resource, should we adapt it to other resources?

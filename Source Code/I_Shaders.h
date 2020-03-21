@@ -9,6 +9,9 @@ namespace Importer
 {
 	namespace Shaders
 	{
+		//Creates an empty shader resource using default constructor
+		R_Shader* Create();
+
 		//Processes GLSL buffer data into a ready-to-use R_Shader to be saved later.
 		void Import(const char* buffer, R_Shader* resShader);
 

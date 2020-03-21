@@ -5,8 +5,6 @@
 #include "Color.h"
 #include "Globals.h"
 
-#include <string>
-
 class R_Texture;
 
 class R_Material : public Resource

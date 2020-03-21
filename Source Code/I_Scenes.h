@@ -15,7 +15,7 @@ class C_Animator;
 class C_Camera;
 class C_Transform;
 class C_ParticleSystem;
-class R_Prefab;
+class R_Model;
 class Component;
 class GameObject;
 
@@ -25,7 +25,8 @@ namespace Importer
 {
 	namespace Scenes
 	{
-		void Init();
+		//Creates an empty model resource using default constructor
+		R_Model* Create();
 
 		//Processes an already loaded FBX file and loads it into an assimp scene structure
 		//Warning: (TODO) do we need to release aiScene data later? (aiReleaseImport is not specificed in Assimp)
@@ -34,31 +35,33 @@ namespace Importer
 		//Processes an already loaded FBX file and generates all the hierarchy and components setup
 		//Warning: meshes, materials and lights need to be linked later, this function only loads the hierarchy
 		//GameObjects that are meant to have a mesh, material or light, are added the component and given the id from the aiScene container.
-		GameObject* Import(const aiScene* scene, const char* name);
+		void Import(const aiScene* scene, R_Model* model);
 
 		//Processes an aiNode structure and generates the GameObject hierarchy recursively.
 		//Warning: meshes, materials and lights need to be linked later, this function only loads the hierarchy
 		//GameObjects that are meant to have a mesh, material or light, are added the component and given the id from the aiScene container.
 		GameObject* CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent);
 
-		void LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials);
+		void LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials);
 
 		//Process a GameObject data with its hierarchy into a buffer file saved as json
 		//Returns the size of the buffer file (0 if any errors)
 		//Warning: buffer memory needs to be released after the function call
-		uint64 SaveScene(const R_Prefab* prefab, char** buffer);
+		uint64 SaveScene(const R_Model* model, char** buffer);
 
 		//Process an json scene buffer and loads all the GameObject hierarchy
 		void LoadScene(const Config& file, std::vector<GameObject*>& roots);
 
-		//Saves the contained resources in a prefab into a Config file
-		void SaveContainedResources(R_Prefab* prefab, Config& file);
+		//Saves the contained resources in a model into a Config file
+		void SaveContainedResources(R_Model* nodel, Config& file);
 
-		//Loads the contained resources from a prefab meta file into the prefab resources
-		void LoadContainedResources(const Config& file, R_Prefab* prefab);
+		//Loads the contained resources from a model meta file into the prefab resources
+		void LoadContainedResources(const Config& file, R_Model* model);
 
 		namespace Private
 		{
+			void LinkGameObjectResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials);
+
 			//Process a GameObject data with its hierarchy into a config file
 			//This function will be called recursively for every child in <gameObject>
 			void SaveGameObject(Config& config, const GameObject* gameObject);

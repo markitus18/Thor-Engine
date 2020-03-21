@@ -15,41 +15,29 @@
 #include "C_ParticleSystem.h"
 
 #include "Resource.h"
-#include "R_Prefab.h"
+#include "R_Model.h"
 
 #include "Config.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
-
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
-
-#include "Devil\include\ilu.h"
-#include "Devil\include\ilut.h"
-
-#pragma comment( lib, "Devil/libx86/DevIL.lib" )
-#pragma comment( lib, "Devil/libx86/ILU.lib" )
-#pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
 #include "MathGeoLib\src\MathGeoLib.h"
 
-void Importer::Scenes::Init()
+R_Model* Importer::Scenes::Create()
 {
-	ilInit();
-	iluInit();
-	ilutInit();
-	ilutRenderer(ILUT_OPENGL);
+	return new R_Model();
 }
 
-uint64 Importer::Scenes::SaveScene(const R_Prefab* prefab, char** buffer)
+uint64 Importer::Scenes::SaveScene(const R_Model* model, char** buffer)
 {
 	Config file;
 	Config_Array goArray = file.SetArray("GameObjects");
 	
 	std::vector<const GameObject*> gameObjects;
-	prefab->root->CollectChilds(gameObjects);
+	model->root->CollectChilds(gameObjects);
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
@@ -197,13 +185,13 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 	}
 }
 
-void Importer::Scenes::SaveContainedResources(R_Prefab* prefab, Config& file)
+void Importer::Scenes::SaveContainedResources(R_Model* model, Config& file)
 {
 	//TODO: The function is accesing App, which should not be done in an importer
 	Config_Array containingResources = file.SetArray("Containing Resources");
-	for (uint i = 0; i < prefab->containingResources.size(); ++i)
+	for (uint i = 0; i < model->containedResources.size(); ++i)
 	{
-		if (Resource* res = App->moduleResources->GetResource(prefab->containingResources[i]))
+		if (Resource* res = App->moduleResources->GetResource(model->containedResources[i]))
 		{
 			Config resNode = containingResources.AddNode();
 			resNode.SetNumber("ID", res->GetID());
@@ -213,12 +201,12 @@ void Importer::Scenes::SaveContainedResources(R_Prefab* prefab, Config& file)
 	}
 }
 
-void Importer::Scenes::LoadContainedResources(const Config& file, R_Prefab* prefab)
+void Importer::Scenes::LoadContainedResources(const Config& file, R_Model* model)
 {
 	Config_Array containingResources = file.GetArray("Containing Resources");
 	for (uint i = 0; i < containingResources.GetSize(); ++i)
 	{
-		prefab->containingResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
+		model->containedResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
 	}
 }
 
@@ -266,11 +254,12 @@ const aiScene* Importer::Scenes::ProcessAssimpScene(const char* buffer, uint siz
 	return aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 }
 
-GameObject* Importer::Scenes::Import(const aiScene* scene, const char* name)
+void Importer::Scenes::Import(const aiScene* scene, R_Model* model)
 {
-	GameObject* root = CreateGameObjectFromNode(scene, scene->mRootNode, nullptr);
-	root->name = name;
-	return root;
+
+
+	model->root = CreateGameObjectFromNode(scene, scene->mRootNode, nullptr);
+	model->root->name = model->name;
 }
 
 GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent)
@@ -317,21 +306,10 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 		gameObject->CreateComponent(Component::Animator);
 
 	// Loading node meshes ----------------------------------------
-	for (uint i = 0; i < node->mNumMeshes; i++)
+	for (uint i = 0; i < node->mNumMeshes && i < 1; i++)
 	{
 		const aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
 		GameObject* child = gameObject;
-
-		if (node->mNumMeshes > 1)
-		{
-			node_name = newMesh->mName.C_Str();
-			if (node_name == "")
-				node_name = gameObject->name + "_submesh";
-			if (i > 0)
-				node_name.append("(" + std::to_string(i) + ")");
-			child = new GameObject(gameObject, node_name.c_str());
-			child->uid = randomID.Int();
-		}
 
 		C_Mesh* cMesh = (C_Mesh*)child->CreateComponent(Component::Mesh);
 		cMesh->SetResource(node->mMeshes[i], false);
@@ -348,7 +326,12 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 	return gameObject;
 }
 
-void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
+void Importer::Scenes::LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
+{
+	Private::LinkGameObjectResources(model->root, meshes, materials);
+}
+
+void Importer::Scenes::Private::LinkGameObjectResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
 {
 	//Link loaded mesh resource
 	if (C_Mesh* mesh = gameObject->GetComponent<C_Mesh>())
@@ -364,6 +347,6 @@ void Importer::Scenes::LinkSceneResources(GameObject* gameObject, const std::vec
 	//Iterate all gameObject's children recursively
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
-		LinkSceneResources(gameObject->childs[i], meshes, materials);
+		LinkGameObjectResources(gameObject->childs[i], meshes, materials);
 	}
 }

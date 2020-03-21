@@ -81,17 +81,17 @@ bool M_Editor::Start()
 {
 	CreateWindows();
 
-	w_explorer->resourceIcons[Resource::Type::FOLDER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FolderIcon.png").id;
-	w_explorer->resourceIcons[Resource::Type::MESH] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FileIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::FOLDER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FolderIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::MESH] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FileIcon.png").ID;
 	w_explorer->resourceIcons[Resource::Type::TEXTURE] = 0;
-	w_explorer->resourceIcons[Resource::Type::MATERIAL] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").id;
-	w_explorer->resourceIcons[Resource::Type::ANIMATION] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").id;
-	w_explorer->resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").id;
-	w_explorer->resourceIcons[Resource::Type::PREFAB] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").id;
-	w_explorer->resourceIcons[Resource::Type::PARTICLESYSTEM] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").id;
-	w_explorer->resourceIcons[Resource::Type::SHADER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").id;
-	w_explorer->resourceIcons[Resource::Type::SCENE] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").id;
-	w_explorer->selectedResourceImage = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SelectedIcon.png").id;
+	w_explorer->resourceIcons[Resource::Type::MATERIAL] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::ANIMATION] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::MODEL] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::PARTICLESYSTEM] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::SHADER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::SCENE] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").ID;
+	w_explorer->selectedResourceImage = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SelectedIcon.png").ID;
 
 	return true;
 }

@@ -208,9 +208,6 @@
     <ClCompile Include="Source Code\Time.cpp">
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\R_Prefab.cpp">
-      <Filter>Source Code\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\M_Resources.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -330,6 +327,9 @@
     </ClCompile>
     <ClCompile Include="Source Code\I_Folders.cpp">
       <Filter>Source Code\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\R_Model.cpp">
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -648,9 +648,6 @@
     <ClInclude Include="Source Code\Time.h">
       <Filter>Source Code\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\R_Prefab.h">
-      <Filter>Source Code\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\M_Resources.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
@@ -780,6 +777,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\I_Folders.h">
       <Filter>Source Code\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Model.h">
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

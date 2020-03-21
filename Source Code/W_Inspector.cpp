@@ -450,7 +450,7 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 			if (ImGui::MenuItem("Create New"))
 			{
 				const char* dir = editor->w_explorer->GetCurrentFolder()->GetOriginalFile();
-				if (uint64 resourceID = App->moduleResources->CreateNewCopyResource(dir, "Engine/Assets/Defaults/New Particle System.particles", Resource::Type::PARTICLESYSTEM))
+				if (uint64 resourceID = App->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", dir))
 				{
 					particleSystem->SetResource(resourceID);
 				}
@@ -464,7 +464,7 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 				{
 					if (ImGui::MenuItem(ResourceInfos[i]->name.c_str()))
 					{
-						particleSystem->SetResource(ResourceInfos[i]->id);
+						particleSystem->SetResource(ResourceInfos[i]->ID);
 					}
 				}
 			}

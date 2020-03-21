@@ -111,7 +111,7 @@ public:
 	void OnRemoveGameObject(GameObject* gameObject);
 
 	uint SaveImage(const char* pathr);
-	uint SavePrefabImage(GameObject* gameObject);
+	uint SaveModelThumbnail(GameObject* gameObject);
 
 	//Rendering Settings ---------------------------
 	void SetDepthBufferEnabled(bool enabled);

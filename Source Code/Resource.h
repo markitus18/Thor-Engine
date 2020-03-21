@@ -2,6 +2,8 @@
 #define __RESOURCE_H__
 
 #include <string>
+#include <vector>
+
 #include "Globals.h"
 #include "TreeNode.h"
 
@@ -22,7 +24,7 @@ public:
 		MATERIAL,
 		ANIMATION,
 		ANIMATOR_CONTROLLER,
-		PREFAB,
+		MODEL,
 		PARTICLESYSTEM,
 		SHADER,
 		SCENE,
@@ -43,6 +45,8 @@ public:
 	bool IsNodeActive() const { return true; };
 	bool DrawTreeNode() const;
 
+	virtual inline void AddContainedResource(uint64 ID) { containedResources.push_back(ID); };
+
 	virtual void LoadOnMemory() {};
 	virtual void FreeMemory() {};
 
@@ -53,6 +57,7 @@ public:
 
 	//TODO: Set it to prived, moved to public for faster iteration
 	std::string name = "";
+	std::vector<uint64> containedResources;
 
 protected:
 	unsigned long long ID = 0;
@@ -61,6 +66,7 @@ protected:
 	std::string resource_file = "";
 	std::string original_file = "";
 
+	//TODO: UID that should point to containing folder
 	Resource* parent;
 };
 

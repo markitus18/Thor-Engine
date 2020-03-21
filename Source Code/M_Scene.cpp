@@ -1,32 +1,28 @@
-#include "Globals.h"
+#include "M_Scene.h"
+
 #include "Application.h"
+#include "Globals.h"
 #include "Intersections.h"
 #include "Config.h"
 #include "Quadtree.h"
 #include "Time.h"
 
-#include "M_Scene.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "I_Scenes.h"
 #include "M_Editor.h"
 #include "M_Renderer3D.h"
 #include "M_FileSystem.h"
-#include "I_Meshes.h"
-#include "I_Materials.h"
 #include "M_Resources.h"
 
 #include "GameObject.h"
 
-#include "R_Prefab.h"
+#include "R_Model.h"
 #include "R_Mesh.h"
 
 #include "C_Mesh.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
-
-#include <gl/GL.h>
-#include <gl/GLU.h>
 
 #include <windows.h>
 #include <shobjidl.h> 
@@ -251,11 +247,11 @@ void M_Scene::SaveScene(Config& node) const
 {
 	//This is a a workaround. SaveScene returns a serialized buffer.
 	//We use that buffer to generate a new Config node and assign it to the original one
-	R_Prefab prefab;
-	prefab.root = root;
+	R_Model model;
+	model.root = root;
 
 	char* buffer = nullptr;
-	Importer::Scenes::SaveScene(&prefab, &buffer);
+	Importer::Scenes::SaveScene(&model, &buffer);
 
 	Config sceneNode(buffer);
 	node = sceneNode;

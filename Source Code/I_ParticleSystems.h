@@ -9,6 +9,9 @@ namespace Importer
 {
 	namespace Particles
 	{
+		//Creates an empty particle system resource using default constructor
+		R_ParticleSystem* Create();
+
 		//Processes a particle system buffer data into a R_ParticleSystem ready to use
 		void Import(const char* buffer, uint size, R_ParticleSystem* rParticles);
 

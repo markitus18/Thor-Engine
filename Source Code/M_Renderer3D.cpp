@@ -174,7 +174,7 @@ bool M_Renderer3D::Init(Config& config)
 
 bool M_Renderer3D::Start()
 {
-	defaultTextureID = App->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Texture.png").id;
+	defaultTextureID = App->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Texture.png").ID;
 	return true;
 }
 
@@ -223,7 +223,7 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 	
 	SDL_UnlockSurface(surface);
 
-	uint64 ret = App->moduleResources->ImportPrefabImage(pixels, source_file, surface->w, surface->h);
+	uint64 ret = App->moduleResources->ImportModelThumbnail(pixels, source_file, surface->w, surface->h);
 	/*
 	//Generating IL Texture
 	ILuint img;
@@ -242,7 +242,7 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 
 }
 
-uint M_Renderer3D::SavePrefabImage(GameObject* gameObject)
+uint M_Renderer3D::SaveModelThumbnail(GameObject* gameObject)
 {
 	C_Camera* previous_camera = camera;
 	SetActiveCamera(screenshotCamera);
@@ -253,7 +253,7 @@ uint M_Renderer3D::SavePrefabImage(GameObject* gameObject)
 
 	SetActiveCamera(previous_camera);
 
-	std::string path = "/Library/PrefabImages/";
+	std::string path = "/Library/Thumbnails/";
 	path.append(gameObject->name).append(".dds");
 	uint ID = SaveImage(path.c_str());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -368,7 +368,7 @@ void M_Renderer3D::SetCullingCamera(C_Camera* camera)
 void M_Renderer3D::DrawAllScene()
 {
 	glUseProgram(0);
-	//TODO: Move this into a mesh "prefab" or a renderer method
+	//TODO: Move this into a mesh "model" or a renderer method
 	//Both draw and input handling
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);

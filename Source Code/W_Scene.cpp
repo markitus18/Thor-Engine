@@ -42,9 +42,9 @@ void W_Scene::Draw()
 				uint64 resourceID = *(const uint64*)payload->Data;
 				Resource* resource = App->moduleResources->GetResource(resourceID);
 
-				if (resource->GetType() == Resource::Type::PREFAB)
+				if (resource->GetType() == Resource::Type::MODEL)
 				{
-					App->moduleResources->LoadPrefab(resourceID);
+					App->moduleResources->LoadModel(resourceID);
 				}
 
 			}

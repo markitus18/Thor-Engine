@@ -13,7 +13,7 @@
 
 #include "Resource.h"
 #include "R_Texture.h"
-#include "R_Prefab.h"
+#include "R_Model.h"
 #include "R_Folder.h"
 
 #include "Dock.h"
@@ -26,10 +26,10 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 
 	allowScrollbar = false;
 
-	Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Assets").id);
+	Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Assets").ID);
 	currentFolder = assetsFolder = (R_Folder*)resource;
 
-	resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Engine/Assets").id);
+	resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Engine/Assets").ID);
 	engineAssetsFolder = (R_Folder*)resource;
 }
 
@@ -82,7 +82,7 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo(node.path.c_str()).id);
+			Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo(node.path.c_str()).ID);
 			currentFolder = (R_Folder*)resource;
 		}
 		if (open && !node.IsLastFolder())
@@ -135,9 +135,9 @@ void W_Explorer::DrawSelectedFolderContent()
 	ImVec2 windowCursorPosition = ImGui::GetCursorPos();
 	uint itemIndex = 0;
 
-	for (uint i = 0; i < currentFolder->containingResources.size(); ++i)
+	for (uint i = 0; i < currentFolder->containedResources.size(); ++i)
 	{
-		Resource* res = App->moduleResources->GetResource(currentFolder->containingResources[i]);
+		Resource* res = App->moduleResources->GetResource(currentFolder->containedResources[i]);
 		DrawResourceItem(res, itemIndex, windowCursorPosition);
 		itemIndex++;
 	}
@@ -191,25 +191,25 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 	ImGui::SetCursorPos(textPos);
 	ImGui::Text(GetTextAdjusted(resource->GetName()).c_str());
 
-	//Drawing node Button (if it's a prefab)
-	if (resource->GetType() == Resource::PREFAB)
+	//Drawing node Button (if it's a model)
+	if (resource->GetType() == Resource::MODEL)
 	{
-		R_Prefab* prefabNode = (R_Prefab*)resource;
+		R_Model* modelNode = (R_Model*)resource;
 
 		ImGui::SetCursorPos(drawPos + ImVec2(imageSize / 2 + nodeButtonOffset, imageSize / 2 - ImGui::GetFrameHeight() / 2));
-		ImGui::ArrowButton("ArrowButton?", prefabNode == openPrefab ? ImGuiDir_Left : ImGuiDir_Right);
+		ImGui::ArrowButton("ArrowButton?", modelNode == openModel ? ImGuiDir_Left : ImGuiDir_Right);
 		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 		{
-			openPrefab = openPrefab == prefabNode ? nullptr : prefabNode;
+			openModel = (openModel == modelNode ? nullptr : modelNode);
 		}
 
-		if (prefabNode == openPrefab)
+		if (modelNode == openModel)
 		{
 			//Draw the resources contained in the prefab
-			for (uint i = 0; i < prefabNode->containingResources.size(); ++i)
+			for (uint i = 0; i < modelNode->containedResources.size(); ++i)
 			{
 				itemIndex++;
-				Resource* containedResource = App->moduleResources->GetResource(prefabNode->containingResources[i]);
+				Resource* containedResource = App->moduleResources->GetResource(modelNode->containedResources[i]);
 				DrawResourceItem(containedResource, itemIndex, windowCursorPos);
 			}
 		}
@@ -250,9 +250,9 @@ void W_Explorer::HandleResourceDoubleClick(const Resource* resource)
 		nextCurrentFolder = (R_Folder*)resource;
 	else
 	{
-		if (resource->GetType() == Resource::PREFAB)
+		if (resource->GetType() == Resource::MODEL)
 		{
-			App->moduleResources->LoadPrefab(resource->GetID());
+			App->moduleResources->LoadModel(resource->GetID());
 		}
 	}
 }

@@ -1,13 +1,17 @@
 #include "I_Meshes.h"
 
-#include "C_Mesh.h"
 #include "R_Mesh.h"
 
-#include "Assimp/include/scene.h"
+#include "Assimp/include/mesh.h"
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-R_Mesh* Importer::Meshes::Import(const aiMesh* mesh, R_Mesh* resMesh)
+R_Mesh* Importer::Meshes::Create()
+{
+	return new R_Mesh();
+}
+
+void Importer::Meshes::Import(const aiMesh* mesh, R_Mesh* resMesh)
 {
 	//Loading mesh vertices data
 	resMesh->buffersSize[R_Mesh::b_vertices] = mesh->mNumVertices;
@@ -63,7 +67,6 @@ R_Mesh* Importer::Meshes::Import(const aiMesh* mesh, R_Mesh* resMesh)
 
 	}
 	resMesh->CreateAABB();
-	return resMesh;
 }
 
 void Importer::Meshes::Private::ImportBones(const aiMesh* mesh, R_Mesh* rMesh)

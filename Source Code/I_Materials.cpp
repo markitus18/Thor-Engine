@@ -3,25 +3,19 @@
 #include "Application.h"
 #include "M_FileSystem.h"
 
-#include "C_Material.h"
-#include "Color.h"
 #include "R_Texture.h"
 #include "R_Material.h"
 #include "M_Resources.h"
 
-#include "Assimp/include/cimport.h"
-#include "Assimp/include/scene.h"
-#include "Assimp/include/postprocess.h"
-#include "Assimp/include/cfileio.h"
-
-#pragma comment (lib, "Assimp/libx86/assimp.lib")
-
-#include "Devil\include\ilu.h"
-#include "Devil\include\ilut.h"
+#include "Assimp/include/material.h"
+#include "Assimp/include/texture.h"
 
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
+#include "Devil\include\ilu.h"
 #pragma comment( lib, "Devil/libx86/ILU.lib" )
+#include "Devil\include\ilut.h"
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
+
 
 /*
 R_Texture* M_Materials::ImportPrefabImage(char* buffer, uint64 ID, const char* source_file, uint sizeX, uint sizeY)
@@ -71,6 +65,11 @@ R_Texture* M_Materials::ImportPrefabImage(char* buffer, uint64 ID, const char* s
 	return resTexture;
 }
 */
+
+R_Material* Importer::Materials::Create()
+{
+	return new R_Material();
+}
 
 //TODO: Find texture in hard drive, duplicate it and import it next to the scene
 void Importer::Materials::Import(const aiMaterial* material, R_Material* rMaterial)
@@ -181,6 +180,19 @@ void Importer::Materials::Load(const char* buffer, uint size, R_Material* rMater
 	cursor += bytes;
 
 	rMaterial->color = Color(color[0], color[1], color[2], color[3]);
+}
+
+void Importer::Textures::Init()
+{
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+}
+
+R_Texture* Importer::Textures::Create()
+{
+	return new R_Texture();
 }
 
 bool Importer::Textures::Import(const char* buffer, uint size, R_Texture* rTexture)

@@ -20,12 +20,11 @@ namespace Importer
 {
 	namespace Animations
 	{
+		R_Animation* Create();
+
 		void Import(const aiAnimation* animation, R_Animation* rAnimation);
 		uint64 Save(const R_Animation* rAnimation, char** buffer);
 		void Load(const char* buffer, R_Animation* rAnimation);
-
-		uint64 Save(const R_AnimatorController* rAnimator, char** buffer);
-		void Load(const char* buffer, R_AnimatorController* rAnimator);
 
 		namespace Private
 		{
@@ -40,6 +39,14 @@ namespace Importer
 			void LoadChannelKeys(std::map<double, float3>& map, const char** cursor, uint size);
 			void LoadChannelKeys(std::map<double, Quat>& map, const char** cursor, uint size);
 		}
+	}
+
+	namespace Animators
+	{
+		R_AnimatorController* Create();
+
+		uint64 Save(const R_AnimatorController* rAnimator, char** buffer);
+		void Load(const char* buffer, R_AnimatorController* rAnimator);
 	}
 }
 #endif

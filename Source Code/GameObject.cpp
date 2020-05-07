@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "OpenGL.h"
 #include "Globals.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_Renderer3D.h"
 
 #include "C_Transform.h"
@@ -72,19 +72,19 @@ void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSel
 		C_Mesh* mesh = GetComponent<C_Mesh>();
 		if (mesh)
 		{
-			App->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected(), flipped_normals);
+			Engine->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected(), flipped_normals);
 		}
 
 		const C_Camera* camera = GetComponent<C_Camera>();
 		if (camera)
 		{
-			App->renderer3D->AddFrustum(camera->frustum, Blue);
+			Engine->renderer3D->AddFrustum(camera->frustum, Blue);
 		}
 
 		if (drawBox || ( drawBoxSelected && (selected || IsParentSelected())))
 		{
-			App->renderer3D->AddAABB(aabb, Green);
-			App->renderer3D->AddOBB(obb, Yellow);
+			Engine->renderer3D->AddAABB(aabb, Green);
+			Engine->renderer3D->AddOBB(obb, Yellow);
 		}
 
 		const C_Animator* animatior = GetComponent<C_Animator>();

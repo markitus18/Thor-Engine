@@ -16,19 +16,19 @@ public:
 	M_Window(bool start_enabled = true);
 
 	// Destructor
-	virtual ~M_Window();
+	~M_Window();
 
-	bool Init(Config& config);
-	bool CleanUp();
+	bool Init(Config& config) override;
+	bool CleanUp() override;
 
 	void SetTitle(const char* title);
 
 public:
 	//The window we'll be rendering to
-	SDL_Window* window;
+	SDL_Window* window = nullptr;
 
 	//The surface contained by the window
-	SDL_Surface* screen_surface;
+	SDL_Surface* screen_surface = nullptr;
 
 	//The size of the window
 	Vec2 windowSize;

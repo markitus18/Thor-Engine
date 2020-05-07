@@ -1,7 +1,7 @@
 #include "I_Scenes.h"
 
 //TODO: Temporal app include. Workaround until scene owns resources
-#include "Application.h"
+#include "Engine.h"
 #include "M_Resources.h"
 
 #include "GameObject.h"
@@ -15,7 +15,7 @@
 #include "C_ParticleSystem.h"
 
 #include "Resource.h"
-#include "R_Model.h"
+#include "R_Prefab.h"
 
 #include "Config.h"
 
@@ -26,18 +26,18 @@
 
 #include "MathGeoLib\src\MathGeoLib.h"
 
-R_Model* Importer::Scenes::Create()
+R_Prefab* Importer::Scenes::Create()
 {
-	return new R_Model();
+	return new R_Prefab();
 }
 
-uint64 Importer::Scenes::SaveScene(const R_Model* model, char** buffer)
+uint64 Importer::Scenes::SaveScene(const R_Prefab* prefab, char** buffer)
 {
 	Config file;
 	Config_Array goArray = file.SetArray("GameObjects");
 	
 	std::vector<const GameObject*> gameObjects;
-	model->root->CollectChilds(gameObjects);
+	prefab->root->CollectChilds(gameObjects);
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
@@ -158,7 +158,7 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 		gameObject->isStatic = gameObject_node.GetBool("Static");
 		
 		//if (gameObject_node.GetBool("Selected", false))
-		//	App->moduleEditor->AddSelect(gameObject);
+		//	Engine->moduleEditor->AddSelect(gameObject);
 
 		gameObject->beenSelected = gameObject->hierarchyOpen = gameObject_node.GetBool("OpenInHierarchy", false);
 
@@ -185,13 +185,13 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 	}
 }
 
-void Importer::Scenes::SaveContainedResources(R_Model* model, Config& file)
+void Importer::Scenes::SaveContainedResources(R_Prefab* prefab, Config& file)
 {
 	//TODO: The function is accesing App, which should not be done in an importer
 	Config_Array containingResources = file.SetArray("Containing Resources");
-	for (uint i = 0; i < model->containedResources.size(); ++i)
+	for (uint i = 0; i < prefab->containedResources.size(); ++i)
 	{
-		if (Resource* res = App->moduleResources->GetResource(model->containedResources[i]))
+		if (Resource* res = Engine->moduleResources->GetResource(prefab->containedResources[i]))
 		{
 			Config resNode = containingResources.AddNode();
 			resNode.SetNumber("ID", res->GetID());
@@ -201,12 +201,12 @@ void Importer::Scenes::SaveContainedResources(R_Model* model, Config& file)
 	}
 }
 
-void Importer::Scenes::LoadContainedResources(const Config& file, R_Model* model)
+void Importer::Scenes::LoadContainedResources(const Config& file, R_Prefab* prefab)
 {
 	Config_Array containingResources = file.GetArray("Containing Resources");
 	for (uint i = 0; i < containingResources.GetSize(); ++i)
 	{
-		model->containedResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
+		prefab->containedResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
 	}
 }
 
@@ -254,15 +254,13 @@ const aiScene* Importer::Scenes::ProcessAssimpScene(const char* buffer, uint siz
 	return aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 }
 
-void Importer::Scenes::Import(const aiScene* scene, R_Model* model)
+void Importer::Scenes::Import(const aiScene* scene, R_Prefab* prefab)
 {
-
-
-	model->root = CreateGameObjectFromNode(scene, scene->mRootNode, nullptr);
-	model->root->name = model->name;
+	prefab->root = ImportGameObjectData(scene, scene->mRootNode, nullptr);
+	prefab->root->name = prefab->name;
 }
 
-GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, const aiNode* node, GameObject* parent)
+GameObject* Importer::Scenes::ImportGameObjectData(const aiScene* scene, const aiNode* node, GameObject* parent)
 {
 	aiVector3D		translation;
 	aiVector3D		scaling;
@@ -321,14 +319,14 @@ GameObject* Importer::Scenes::CreateGameObjectFromNode(const aiScene* scene, con
 	// Load all children from the current node
 	for (uint i = 0; i < node->mNumChildren; i++)
 	{
-		CreateGameObjectFromNode(scene, node->mChildren[i], gameObject);
+		ImportGameObjectData(scene, node->mChildren[i], gameObject);
 	}
 	return gameObject;
 }
 
-void Importer::Scenes::LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
+void Importer::Scenes::LinkModelResources(R_Prefab* prefab, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
 {
-	Private::LinkGameObjectResources(model->root, meshes, materials);
+	Private::LinkGameObjectResources(prefab->root, meshes, materials);
 }
 
 void Importer::Scenes::Private::LinkGameObjectResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)

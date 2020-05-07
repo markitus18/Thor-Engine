@@ -29,6 +29,25 @@ struct PathNode
 	{
 		return path == node.path;
 	}
+
+	void RemoveFoldersMetas()
+	{
+		for (uint f = 0; f < children.size(); ++f)
+		{
+			//If the current node is a folder, remove its meta file (if any)
+			//and recursively search through the folder content
+			if (!children[f].isFile)
+			{
+				for (uint m = 0; m < children.size(); ++m)
+				{
+					if (children[m].path == children[f].path + ".meta")
+						children.erase(children.begin() + m);
+				}
+				children[f].RemoveFoldersMetas();
+			}
+		}
+	}
+
 };
 
 #endif

@@ -1,5 +1,5 @@
 #include "Globals.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_Input.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
@@ -104,7 +104,7 @@ update_status M_Input::PreUpdate(float dt)
 
 	while(SDL_PollEvent(&event) != 0)
 	{
-		App->moduleEditor->GetEvent(&event);
+		Engine->moduleEditor->GetEvent(&event);
 
 		switch(event.type)
 		{
@@ -123,10 +123,10 @@ update_status M_Input::PreUpdate(float dt)
 				//TODO: work with ImGui mouse control
 				if (infiniteHorizontal)
 				{
-					if (mouse_x > App->window->windowSize.x - 10)
+					if (mouse_x > Engine->window->windowSize.x - 10)
 					{
 						int last_x = mouse_x;
-						App->input->SetMouseX(10);
+						Engine->input->SetMouseX(10);
 						last_mouse_swap = mouse_x - last_x;
 						ResetImGuiDrag();
 
@@ -134,7 +134,7 @@ update_status M_Input::PreUpdate(float dt)
 					else if (mouse_x < 10) 
 					{
 						int last_x = mouse_x;
-						App->input->SetMouseX(App->window->windowSize.x - 10);
+						Engine->input->SetMouseX(Engine->window->windowSize.x - 10);
 						last_mouse_swap = mouse_x - last_x;
 						ResetImGuiDrag();
 					}
@@ -155,9 +155,9 @@ update_status M_Input::PreUpdate(float dt)
 			{
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 				{
-					App->window->windowSize = Vec2(event.window.data1, event.window.data2);
-					App->renderer3D->OnResize();
-					App->moduleEditor->OnResize(event.window.data1, event.window.data2);
+					Engine->window->windowSize = Vec2(event.window.data1, event.window.data2);
+					Engine->renderer3D->OnResize();
+					Engine->moduleEditor->OnResize(event.window.data1, event.window.data2);
 				}
 				break;
 			}
@@ -167,7 +167,7 @@ update_status M_Input::PreUpdate(float dt)
 				LOG("[error] Dropped file: %s", event.drop.file);
 				LOG("[warning] Dropped file: %s", event.drop.file);
 				
-				App->moduleResources->ImportFileFromExplorer(event.drop.file, App->moduleEditor->w_explorer->GetCurrentFolder()->GetOriginalFile());
+				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, Engine->moduleEditor->w_explorer->GetCurrentFolder()->GetOriginalFile());
 
 				SDL_free(event.drop.file);
 				break;
@@ -193,13 +193,13 @@ bool M_Input::CleanUp()
 
 void M_Input::SetMouseX(int x)
 {
-	SDL_WarpMouseInWindow(App->window->window, x, mouse_y);
+	SDL_WarpMouseInWindow(Engine->window->window, x, mouse_y);
 	mouse_x = x;
 }
 
 void M_Input::SetMouseY(int y)
 {
-	SDL_WarpMouseInWindow(App->window->window, mouse_x, y);
+	SDL_WarpMouseInWindow(Engine->window->window, mouse_x, y);
 	mouse_y = y;
 }
 

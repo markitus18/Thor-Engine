@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "Application.h"
+#include "Engine.h"
 #include "Globals.h"
 
 #include "SDL/include/SDL.h"
@@ -18,7 +18,7 @@ enum main_states
 	MAIN_EXIT
 };
 
-Application* App = nullptr;
+TEngine* Engine = nullptr;
 
 int main(int argc, char ** argv)
 {
@@ -35,14 +35,14 @@ int main(int argc, char ** argv)
 		case MAIN_CREATION:
 
 			LOG("-------------- Application Creation --------------");
-			App = new Application();
+			Engine = new TEngine();
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
 			LOG("-------------- Application Init --------------");
-			if (App->Init() == false)
+			if (Engine->Init() == false)
 			{
 				LOG("Application Init exits with ERROR");
 				state = MAIN_EXIT;
@@ -58,7 +58,7 @@ int main(int argc, char ** argv)
 		case MAIN_UPDATE:
 		{
 			BROFILER_FRAME("Engine Frame")
-			int update_return = App->Update();
+			int update_return = Engine->Update();
 
 			if (update_return == UPDATE_ERROR)
 			{
@@ -74,7 +74,7 @@ int main(int argc, char ** argv)
 		case MAIN_FINISH:
 
 			LOG("-------------- Application CleanUp --------------");
-			if (App->CleanUp() == false)
+			if (Engine->CleanUp() == false)
 			{
 				LOG("Application CleanUp exits with ERROR");
 			}
@@ -88,8 +88,8 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	delete App;
-	App = NULL;
+	delete Engine;
+	Engine = nullptr;
 	LOG("Exiting game '%s'...\n", TITLE);
 	return main_return;
 }

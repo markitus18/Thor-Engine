@@ -1,6 +1,6 @@
 #include "Component.h"
 #include "Resource.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_Resources.h"
 #include "Config.h"
 
@@ -12,7 +12,7 @@ Component::~Component()
 {
 	if (resourceID != 0)
 	{
-		App->moduleResources->GetResource(resourceID)->instances--;
+		Engine->moduleResources->GetResource(resourceID)->instances--;
 	}
 }
 
@@ -56,10 +56,10 @@ void Component::SetResource(unsigned long long id, bool load)
 
 Resource* Component::GetResource()
 {
-	return App->moduleResources->GetResource(resourceID);
+	return Engine->moduleResources->GetResource(resourceID);
 }
 
 const Resource* Component::GetResource() const
 {
-	return App->moduleResources->GetResource(resourceID);
+	return Engine->moduleResources->GetResource(resourceID);
 }

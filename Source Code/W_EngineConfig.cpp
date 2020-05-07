@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Editor.h"
@@ -34,10 +34,10 @@ void W_EngineConfig::Draw()
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		char appName[100];
-		strcpy_s(appName, 100, App->GetTitleName());
+		strcpy_s(appName, 100, Engine->GetTitleName());
 
 		if (ImGui::InputText("Project Name", appName, 100, ImGuiInputTextFlags_EnterReturnsTrue))
-			App->SetTitleName(appName);
+			Engine->SetTitleName(appName);
 
 		ImGui::PlotHistogram("FPS", FPS_data, IM_ARRAYSIZE(FPS_data), 0, NULL, 0.0f, 120.0f, ImVec2(0, 80));
 		ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, NULL, 0.0f, 40.0f, ImVec2(0, 80));
@@ -45,33 +45,33 @@ void W_EngineConfig::Draw()
 
 	if (ImGui::CollapsingHeader("Renderer"))
 	{
-		bool enabled = App->renderer3D->depthEnabled;
+		bool enabled = Engine->renderer3D->depthEnabled;
 		if (ImGui::Checkbox("Depth Buffer", &enabled))
 		{
-			App->renderer3D->SetDepthBufferEnabled(enabled);
+			Engine->renderer3D->SetDepthBufferEnabled(enabled);
 		}
 	}
 
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		float3 camera_pos = App->camera->GetPosition();
+		float3 camera_pos = Engine->camera->GetPosition();
 		if (ImGui::DragFloat3("Position", (float*)&camera_pos))
 		{
-			App->camera->SetPosition(camera_pos);
+			Engine->camera->SetPosition(camera_pos);
 		}
 
-		float3 camera_ref = App->camera->GetReference();
+		float3 camera_ref = Engine->camera->GetReference();
 		if (ImGui::DragFloat3("Reference", (float*)&camera_ref))
 		{
-			App->camera->Look(camera_ref);
+			Engine->camera->Look(camera_ref);
 		}
 	}
 
 	if (ImGui::CollapsingHeader("Input"))
 	{
-		ImGui::Text("Mouse position: %i, %i", App->input->GetMouseX(), App->input->GetMouseY());
-		ImGui::Text("Mouse motion: %i, %i", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-		ImGui::Text("Mouse wheel: %i", App->input->GetMouseZ());
+		ImGui::Text("Mouse position: %i, %i", Engine->input->GetMouseX(), Engine->input->GetMouseY());
+		ImGui::Text("Mouse motion: %i, %i", Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
+		ImGui::Text("Mouse wheel: %i", Engine->input->GetMouseZ());
 	}
 
 	if (ImGui::CollapsingHeader("Editor: Selection"))
@@ -79,7 +79,7 @@ void W_EngineConfig::Draw()
 		ImGui::Text("Selected GameObjects");
 		ImGui::Separator();
 		std::vector<TreeNode*>::iterator it;
-		for (it = App->moduleEditor->selectedGameObjects.begin(); it != App->moduleEditor->selectedGameObjects.end(); ++it)
+		for (it = Engine->moduleEditor->selectedGameObjects.begin(); it != Engine->moduleEditor->selectedGameObjects.end(); ++it)
 		{
 			ImGui::Text((*it)->GetName());
 		}
@@ -87,7 +87,7 @@ void W_EngineConfig::Draw()
 		ImGui::Separator();
 		ImGui::Text("To select GameObjects");
 		ImGui::Separator();
-		for (it = App->moduleEditor->toSelectGOs.begin(); it != App->moduleEditor->toSelectGOs.end(); ++it)
+		for (it = Engine->moduleEditor->toSelectGOs.begin(); it != Engine->moduleEditor->toSelectGOs.end(); ++it)
 		{
 			ImGui::Text((*it)->GetName());
 		}
@@ -95,7 +95,7 @@ void W_EngineConfig::Draw()
 		ImGui::Separator();
 		ImGui::Text("To drag GameObjects");
 		ImGui::Separator();
-		for (it = App->moduleEditor->toDragGOs.begin(); it != App->moduleEditor->toDragGOs.end(); ++it)
+		for (it = Engine->moduleEditor->toDragGOs.begin(); it != Engine->moduleEditor->toDragGOs.end(); ++it)
 		{
 			ImGui::Text((*it)->GetName());
 		}
@@ -103,7 +103,7 @@ void W_EngineConfig::Draw()
 		ImGui::Separator();
 		ImGui::Text("To unselect GameObjects");
 		ImGui::Separator();
-		for (it = App->moduleEditor->toUnselectGOs.begin(); it != App->moduleEditor->toUnselectGOs.end(); ++it)
+		for (it = Engine->moduleEditor->toUnselectGOs.begin(); it != Engine->moduleEditor->toUnselectGOs.end(); ++it)
 		{
 			ImGui::Text((*it)->GetName());
 		}
@@ -111,8 +111,8 @@ void W_EngineConfig::Draw()
 
 	if (ImGui::CollapsingHeader("Editor - Scene"))
 	{
-		ImGui::Text("Image corner: %i, %i", (int)App->moduleEditor->w_scene->cornerPos.x, (int)App->moduleEditor->w_scene->cornerPos.y);
-		ImGui::Text("Image size: %i, %i", (int)App->moduleEditor->w_scene->img_size.x, (int)App->moduleEditor->w_scene->img_size.y);
+		ImGui::Text("Image corner: %i, %i", (int)Engine->moduleEditor->w_scene->cornerPos.x, (int)Engine->moduleEditor->w_scene->cornerPos.y);
+		ImGui::Text("Image size: %i, %i", (int)Engine->moduleEditor->w_scene->img_size.x, (int)Engine->moduleEditor->w_scene->img_size.y);
 	}
 }
 

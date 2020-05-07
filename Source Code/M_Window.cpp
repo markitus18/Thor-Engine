@@ -1,5 +1,5 @@
 #include "Globals.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_Window.h"
 #include "SDL\include\SDL_video.h"
 #include "M_FileSystem.h"
@@ -72,7 +72,7 @@ bool M_Window::Init(Config& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(App->GetTitleName(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, flags);
+		window = SDL_CreateWindow(Engine->GetTitleName(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, flags);
 
 		if(window == nullptr)
 		{

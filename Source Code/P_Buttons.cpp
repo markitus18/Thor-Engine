@@ -1,5 +1,5 @@
 #include "P_Buttons.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_Editor.h"
 
 P_Buttons::P_Buttons()
@@ -21,8 +21,8 @@ void P_Buttons::Draw(ImGuiWindowFlags default_flags)
 	bool open = true;
 	if (ImGui::Begin("Wire window", &open, flags))
 	{
-		ImGui::Checkbox("Shaded", &App->moduleEditor->shaded);
-		ImGui::Checkbox("Wireframe", &App->moduleEditor->wireframe);
+		ImGui::Checkbox("Shaded", &Engine->moduleEditor->shaded);
+		ImGui::Checkbox("Wireframe", &Engine->moduleEditor->wireframe);
 
 		ImGui::End();
 	}

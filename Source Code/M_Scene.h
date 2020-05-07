@@ -19,11 +19,11 @@ public:
 	M_Scene(bool start_enabled = true);
 	~M_Scene();
 
-	bool Init(Config& config);
-	bool Start();
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
-	bool CleanUp();
+	bool Init(Config& config) override;
+	bool Start() override;
+	update_status Update(float dt) override;
+	update_status PostUpdate(float dt) override;
+	bool CleanUp() override;
 
 	GameObject* GetRoot();
 	const GameObject* GetRoot() const;
@@ -33,16 +33,16 @@ public:
 
 	void SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds);
 
-	//Scene and model save / load ------------------------------------------------
-	void SaveConfig(Config& config) const;
-	void LoadConfig(Config& config);
+	//Scene and prefab save / load ------------------------------------------------
+	void SaveConfig(Config& config) const override;
+	void LoadConfig(Config& config) override;
 
-	void SaveScene(Config& node) const;
-	void LoadScene(Config& node, bool tmp = false); //Load itself
+	void SaveScene(Config& node) const override;
+	void LoadScene(Config& node, bool tmp = false) override; //Load itself
 	void LoadScene(const char* file); //Calls application and prepares to load
 
 	void LoadGameObject(const Config& file); //Calls module import to load a Game Object file
-	//Endof Scene and model save / load ------------------------------------------
+	//Endof Scene and prefab save / load ------------------------------------------
 
 	//GameObject management -------------------------------------------------------
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);

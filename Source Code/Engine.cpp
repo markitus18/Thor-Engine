@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Engine.h"
 
 #include "Module.h"
 #include "M_FileSystem.h"
@@ -16,7 +16,7 @@
 #include "parson/parson.h"
 #include "Brofiler/Brofiler.h"
 
-Application::Application()
+TEngine::TEngine()
 {
 	fileSystem = new M_FileSystem();
 	window = new M_Window();
@@ -47,7 +47,7 @@ Application::Application()
 	organization = ORGANIZATION;
 }
 
-Application::~Application()
+TEngine::~TEngine()
 {
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
@@ -55,7 +55,7 @@ Application::~Application()
 	}
 }
 
-bool Application::Init()
+bool TEngine::Init()
 {
 	bool ret = true;
 
@@ -78,7 +78,7 @@ bool Application::Init()
 	// Call Init() in all modules
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		if (list_modules[i]->IsEnabled())
+		if (list_modules[i]->IsActive())
 			ret = list_modules[i]->Init(node.GetNode(list_modules[i]->name.c_str()));
 	}
 
@@ -86,7 +86,7 @@ bool Application::Init()
 	LOG("-------------- Application Start --------------");
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
-		if (list_modules[i]->IsEnabled())
+		if (list_modules[i]->IsActive())
 			ret = list_modules[i]->Start();
 	}
 	
@@ -102,7 +102,7 @@ bool Application::Init()
 }
 
 // ---------------------------------------------
-void Application::PrepareUpdate()
+void TEngine::PrepareUpdate()
 {
 	dt = frameTimer.ReadSec();
 	frameTimer.Start();
@@ -110,7 +110,7 @@ void Application::PrepareUpdate()
 }
 
 // ---------------------------------------------
-void Application::FinishUpdate()
+void TEngine::FinishUpdate()
 {
 	Time::Update();
 	float frame_ms = frameTimer.Read();
@@ -127,7 +127,7 @@ void Application::FinishUpdate()
 		frame_count = 0;
 	}
 
-	App->moduleEditor->UpdateFPSData(last_FPS, frameTimer.Read());
+	Engine->moduleEditor->UpdateFPSData(last_FPS, frameTimer.Read());
 
 	if (save_scene)
 		SaveSceneNow();
@@ -136,7 +136,7 @@ void Application::FinishUpdate()
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
-update_status Application::Update()
+update_status TEngine::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
@@ -161,7 +161,7 @@ update_status Application::Update()
 	return ret;
 }
 
-bool Application::CleanUp()
+bool TEngine::CleanUp()
 {
 	bool ret = true;
 	SaveSettingsNow("Engine/Settings.JSON");
@@ -173,32 +173,32 @@ bool Application::CleanUp()
 	return ret;
 }
 
-void Application::RequestBrowser(char* path)
+void TEngine::RequestBrowser(char* path)
 {
 	ShellExecuteA(0, "Open", path, 0, "", 3);
 }
 
 
-void Application::Log(const char* input)
+void TEngine::Log(const char* input)
 {
 	moduleEditor->Log(input);
 }
 
-const char* Application::GetTitleName() const
+const char* TEngine::GetTitleName() const
 {
 	return title.c_str();
 }
 
-const char* Application::GetOrganizationName() const
+const char* TEngine::GetOrganizationName() const
 {
 	return organization.c_str();
 }
 
-void Application::UpdateSceneName()
+void TEngine::UpdateSceneName()
 {
 	std::string windowTitle = title;
 	std::string sceneName = "", sceneExtension = "";
-	App->fileSystem->SplitFilePath(scene->current_scene.c_str(), nullptr, &sceneName, &sceneExtension);
+	Engine->fileSystem->SplitFilePath(scene->current_scene.c_str(), nullptr, &sceneName, &sceneExtension);
 	windowTitle.append(" - ").append(sceneName);
 	if (sceneExtension != "")
 	{
@@ -207,18 +207,18 @@ void Application::UpdateSceneName()
 	window->SetTitle(windowTitle.c_str());
 }
 
-void Application::SetTitleName(const char* new_name)
+void TEngine::SetTitleName(const char* new_name)
 {
 	title = new_name;
 	UpdateSceneName();
 }
 
-void Application::OpenSceneWindow()
+void TEngine::OpenSceneWindow()
 {
 
 }
 
-void Application::SaveScene(const char* scene, bool tmp)
+void TEngine::SaveScene(const char* scene, bool tmp)
 {
 	scene_to_save = tmp ? "" : "Assets/";
 	scene_to_save += scene;
@@ -226,13 +226,13 @@ void Application::SaveScene(const char* scene, bool tmp)
 	save_scene = true;
 }
 
-void Application::LoadScene(const char* scene)
+void TEngine::LoadScene(const char* scene)
 {
 	scene_to_load = scene;
 	load_scene = true;
 }
 
-void Application::OnRemoveGameObject(GameObject* gameObject)
+void TEngine::OnRemoveGameObject(GameObject* gameObject)
 {
 	for (uint i = 0; i < list_modules.size(); i++)
 	{
@@ -240,12 +240,12 @@ void Application::OnRemoveGameObject(GameObject* gameObject)
 	}
 }
 
-void Application::AddModule(Module* mod)
+void TEngine::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
 }
 
-void Application::SaveSettingsNow(const char* full_path)
+void TEngine::SaveSettingsNow(const char* full_path)
 {
 	LOG("Saving Config State");
 
@@ -264,7 +264,7 @@ void Application::SaveSettingsNow(const char* full_path)
 	RELEASE_ARRAY(buffer);
 }
 
-void Application::LoadSettingsNow(const char* full_path)
+void TEngine::LoadSettingsNow(const char* full_path)
 {
 	char* buffer = nullptr;
 	uint size = fileSystem->Load(full_path, &buffer);
@@ -283,7 +283,7 @@ void Application::LoadSettingsNow(const char* full_path)
 	}
 }
 
-void Application::SaveSceneNow()
+void TEngine::SaveSceneNow()
 {
 	Config config;
 
@@ -315,13 +315,13 @@ void Application::SaveSceneNow()
 	save_scene = false;
 }
 
-void Application::LoadSceneNow()
+void TEngine::LoadSceneNow()
 {
 	char* buffer = nullptr;
 
-	if (App->fileSystem->Exists(scene_to_load.c_str()))
+	if (Engine->fileSystem->Exists(scene_to_load.c_str()))
 	{
-		uint size = App->fileSystem->Load(scene_to_load.c_str(), &buffer);
+		uint size = Engine->fileSystem->Load(scene_to_load.c_str(), &buffer);
 
 		if (size > 0)
 		{

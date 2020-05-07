@@ -1,5 +1,5 @@
 #include "M_Resources.h"
-#include "Application.h"
+#include "Engine.h"
 
 //Importers
 #include "I_Meshes.h"
@@ -32,7 +32,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -40,7 +40,7 @@ bool M_Resources::Init(Config& config)
 
 bool M_Resources::Start()
 {
-	LoadResourceLibrary();
+	LoadResourcesLibrary();
 	UpdateAssetsImport();
 	updateAssets_timer.Start();
 	saveChangedResources_timer.Stop();
@@ -85,17 +85,17 @@ bool M_Resources::CleanUp()
 
 void M_Resources::ImportFileFromExplorer(const char* path, const char* dstDir)
 {
-	std::string normalizedPath = App->fileSystem->NormalizePath(path);
+	std::string normalizedPath = Engine->fileSystem->NormalizePath(path);
 	std::string finalPath;
-	if (App->fileSystem->DuplicateFile(normalizedPath.c_str(), dstDir, finalPath))
+	if (Engine->fileSystem->DuplicateFile(normalizedPath.c_str(), dstDir, finalPath))
 	{
 		ImportFileFromAssets(finalPath.c_str());
 	}
 }
 
-uint64 M_Resources::ImportFolderFromAssets(const char* path)
+uint64 M_Resources::ImportFolderFromAssets(const char* path, uint64 forceID)
 {
-	Resource* resource = CreateResourceBase(path, Resource::FOLDER);
+	Resource* resource = CreateResourceBase(path, Resource::FOLDER, nullptr, forceID);
 	const ResourceInfo& resInfo = GetResourceInfo(path, resource->name.c_str(), Resource::FOLDER);
 	if (resInfo.ID != 0)
 	{
@@ -123,18 +123,17 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 	}	
 
 	char* buffer = nullptr;
-	if (uint size = App->fileSystem->Load(path, &buffer))
+	if (uint size = Engine->fileSystem->Load(path, &buffer))
 	{
 		switch (type)
 		{
 			case (Resource::TEXTURE):				Importer::Textures::Import(buffer, size, (R_Texture*)resource); break;
-			case (Resource::MODEL):					ImportModel(buffer, size, resource); break;
+			case (Resource::PREFAB):				ImportModel(buffer, size, resource); break;
 			case (Resource::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break;
 			case (Resource::PARTICLESYSTEM):		Importer::Particles::Import(buffer, size, (R_ParticleSystem*)resource); break;
 			case (Resource::ANIMATOR_CONTROLLER):	Importer::Animators::Load(buffer, (R_AnimatorController*)resource); break;
 		}
-		//TODO: Change ImportRTexture functions for a call to the importer, and add SaveResource(resource) at the end. Remove all specific import functions
-		//		Prefabs work a little different
+
 		SaveResource(resource);
 		resourceID = resource->ID;
 		resourceLibrary[resourceID] = GetMetaInfo(resource);
@@ -175,39 +174,39 @@ uint64 M_Resources::ImportResourceFromScene(const char* file, const void* data, 
 	return resourceID;
 }
 
-void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
+void M_Resources::ImportModel(const char* buffer, uint size, Resource* prefab)
 {
 	const aiScene* scene = Importer::Scenes::ProcessAssimpScene(buffer, size);
-	Importer::Scenes::Import(scene, (R_Model*)model);
+	Importer::Scenes::Import(scene, (R_Prefab*)prefab);
 	std::vector<uint64> meshes, materials, animations;
 
 	for (uint i = 0; i < scene->mNumMeshes; ++i)
 	{
 		//TODO: building a temporal mesh name. Assimp meshes have no name so they have conflict when importing multiple meshes
 		//Unity loads a mesh per each node, and assign the node's name to it
-		std::string meshName = model->name;
+		std::string meshName = prefab->name;
 		meshName.append("_mesh").append(std::to_string(i));
 		scene->mMeshes[i]->mName = meshName;
-		meshes.push_back(ImportResourceFromScene(model->original_file.c_str(), scene->mMeshes[i], meshName.c_str(), Resource::Type::MESH));
-		model->AddContainedResource(meshes.back());
+		meshes.push_back(ImportResourceFromScene(prefab->original_file.c_str(), scene->mMeshes[i], meshName.c_str(), Resource::Type::MESH));
+		prefab->AddContainedResource(meshes.back());
 	}
 	for (uint i = 0; i < scene->mNumMaterials; ++i)
 	{
 		aiString matName;
 		scene->mMaterials[i]->Get(AI_MATKEY_NAME, matName);
-		materials.push_back(ImportResourceFromScene(model->original_file.c_str(), scene->mMaterials[i], matName.C_Str(), Resource::Type::MATERIAL));
-		model->AddContainedResource(materials.back());
+		materials.push_back(ImportResourceFromScene(prefab->original_file.c_str(), scene->mMaterials[i], matName.C_Str(), Resource::Type::MATERIAL));
+		prefab->AddContainedResource(materials.back());
 	}
 
 	for (uint i = 0; i < scene->mNumAnimations; ++i)
 	{
 		aiAnimation* anim = scene->mAnimations[i];
-		animations.push_back(ImportResourceFromScene(model->original_file.c_str(), anim, anim->mName.C_Str(), Resource::Type::ANIMATION));
-		model->AddContainedResource(animations.back());
+		animations.push_back(ImportResourceFromScene(prefab->original_file.c_str(), anim, anim->mName.C_Str(), Resource::Type::ANIMATION));
+		prefab->AddContainedResource(animations.back());
 	}
 
 	//Link all loaded meshes and materials to the existing gameObjects
-	Importer::Scenes::LinkModelResources((R_Model*)model, meshes, materials);
+	Importer::Scenes::LinkModelResources((R_Prefab*)prefab, meshes, materials);
 }
 
 uint64 M_Resources::ImportModelThumbnail(char* buffer, const char* source_file, uint sizeX, uint sizeY)
@@ -230,7 +229,7 @@ uint64 M_Resources::ImportModelThumbnail(char* buffer, const char* source_file, 
 	}
 
 	//Importing resource
-	//resource = App->moduleMaterials->ImportModelImage(buffer, newID, source_file, sizeX, sizeY);
+	//resource = Engine->moduleMaterials->ImportModelImage(buffer, newID, source_file, sizeX, sizeY);
 	if (resource)
 	{
 		resource->instances = instances;
@@ -275,7 +274,7 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 			resource = (Resource*)Importer::Animators::Create();
 			resource->resource_file = ANIMATIONS_PATH;
 			break;
-		case Resource::MODEL:
+		case Resource::PREFAB:
 			resource = (Resource*)Importer::Scenes::Create();
 			resource->resource_file = GAMEOBJECTS_PATH;
 			break;
@@ -296,7 +295,7 @@ Resource* M_Resources::CreateResourceBase(const char* assetsPath, Resource::Type
 	if (name == nullptr)
 	{
 		std::string extension;
-		App->fileSystem->SplitFilePath(assetsPath, nullptr, &resource->name, &extension);
+		Engine->fileSystem->SplitFilePath(assetsPath, nullptr, &resource->name, &extension);
 		if (type == Resource::TEXTURE) resource->name.append(".").append(extension);
 	}
 	else
@@ -315,14 +314,14 @@ uint64 M_Resources::CreateNewCopyResource(const char* srcFile, const char* dstDi
 
 	//First we get the resource name and generate a unique one
 	std::string path, name, extension;
-	App->fileSystem->SplitFilePath(srcFile, &path, &name, &extension);
+	Engine->fileSystem->SplitFilePath(srcFile, &path, &name, &extension);
 	
-	name = App->fileSystem->GetUniqueName(dstDir, name.c_str());
+	name = Engine->fileSystem->GetUniqueName(dstDir, name.c_str());
 	std::string dstPath = std::string(dstDir).append(name);
 
 	//Duplicate the file in assets, import it as usual
 	std::string finalPath;
-	if (App->fileSystem->DuplicateFile(srcFile, dstDir, finalPath))
+	if (Engine->fileSystem->DuplicateFile(srcFile, dstDir, finalPath))
 	{
 		resourceID = ImportFileFromAssets(finalPath.c_str());
 	}
@@ -369,7 +368,7 @@ Resource* M_Resources::GetResource(uint64 ID)
 	if (resource = LoadResourceBase(ID))
 	{
 		char* buffer = nullptr;
-		uint size = App->fileSystem->Load(resource->resource_file.c_str(), &buffer);
+		uint size = Engine->fileSystem->Load(resource->resource_file.c_str(), &buffer);
 		if (size == 0)
 		{
 			RELEASE(resource);
@@ -382,14 +381,14 @@ Resource* M_Resources::GetResource(uint64 ID)
 			case (Resource::MESH):					{ Importer::Meshes::Load(buffer, (R_Mesh*)resource); break; }
 			case (Resource::TEXTURE):				{ Importer::Textures::Load(buffer, size, (R_Texture*)resource); break; }
 			case (Resource::MATERIAL):				{ Importer::Materials::Load(buffer, size, (R_Material*)resource); break; }
-			case (Resource::MODEL):					{ /*Importer::Scenes::LoadScene();*/ }
+			case (Resource::PREFAB):				{ /*Importer::Scenes::LoadScene();*/ }
 			{
 				char* metaBuffer = nullptr;
 				std::string metaPath = resource->original_file + std::string(".meta");
-				if (uint size = App->fileSystem->Load(metaPath.c_str(), &metaBuffer))
+				if (uint size = Engine->fileSystem->Load(metaPath.c_str(), &metaBuffer))
 				{
 					Config metaFile(metaBuffer);
-					Importer::Scenes::LoadContainedResources(metaFile, (R_Model*)resource);
+					Importer::Scenes::LoadContainedResources(metaFile, (R_Prefab*)resource);
 					RELEASE_ARRAY(metaBuffer);
 				}
 				break;
@@ -410,12 +409,12 @@ Resource* M_Resources::GetResource(uint64 ID)
 Resource::Type M_Resources::GetTypeFromFileExtension(const char* path) const
 {
 	std::string ext = "";
-	App->fileSystem->SplitFilePath(path, nullptr, nullptr, &ext);
+	Engine->fileSystem->SplitFilePath(path, nullptr, nullptr, &ext);
 
 	static_assert(static_cast<int>(Resource::UNKNOWN) == 10, "Code Needs Update");
 
 	if (ext == "FBX" || ext == "fbx")
-		return Resource::MODEL;
+		return Resource::PREFAB;
 	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
 		return Resource::TEXTURE;
 	if (ext == "shader")
@@ -449,71 +448,109 @@ void M_Resources::LoadModel(uint64 ID)
 	if (Resource* resource = GetResource(ID))
 	{
 		char* buffer = nullptr;
-		uint size = App->fileSystem->Load(resource->resource_file.c_str(), &buffer);
+		uint size = Engine->fileSystem->Load(resource->resource_file.c_str(), &buffer);
 		if (size > 0)
 		{
 			Config file(buffer);
-			App->scene->LoadGameObject(file);
+			Engine->scene->LoadGameObject(file);
 		}
 
 		resource->instances++;
 	}
 }
 
-void M_Resources::LoadResourceLibrary()
+void M_Resources::LoadResourcesLibrary()
 {
 	std::vector<std::string> filter_ext;
 	filter_ext.push_back("meta");
 
-	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", &filter_ext);
-	LoadLibraryFromFolder(engineAssets);
+	PathNode engineAssets = Engine->fileSystem->GetAllFiles("Engine/Assets", &filter_ext);
+	engineAssets.RemoveFoldersMetas();
+	LoadResourceInfoFromFolder(engineAssets);
 
-	PathNode assets = App->fileSystem->GetAllFiles("Assets", &filter_ext);
-	LoadLibraryFromFolder(assets);
+	PathNode assets = Engine->fileSystem->GetAllFiles("Assets", &filter_ext);
+	assets.RemoveFoldersMetas();
+	LoadResourceInfoFromFolder(assets);
 }
 
-void M_Resources::LoadLibraryFromFolder(PathNode node)
+uint64 M_Resources::LoadResourceInfoFromFolder(PathNode node)
 {
+	uint64 resourceID = 0;
 	if (node.isFile)
 	{
-		LoadResourceInfo(node.path.c_str());
+		resourceID = LoadResourceInfo(node.path.c_str());
 	}
-
-	//If node folder has something inside
-	else if (!node.isLeaf)
+	else
 	{
-		for (uint i = 0; i < node.children.size(); i++)
+		resourceID = LoadFolderInfo(node.path.c_str());
+		//If node folder has something inside
+		if (!node.isLeaf)
 		{
-			LoadLibraryFromFolder(node.children[i]);
+			Resource* folder = GetResource(resourceID);
+			folder->containedResources.clear(); //We can clear the contained resources from the folder
+												//as they will be added now
+			for (uint i = 0; i < node.children.size(); i++)
+			{
+				if (uint64 containedResourceID = LoadResourceInfoFromFolder(node.children[i]))
+					folder->AddContainedResource(containedResourceID);
+			}
 		}
 	}
+
+	return resourceID;
 }
 
-void M_Resources::LoadResourceInfo(const char* path)
+uint64 M_Resources::LoadResourceInfo(const char* metaFilePath)
 {
 	char* buffer = nullptr;
-	std::string metaPath = std::string(path).append(".meta");
-	uint size = App->fileSystem->Load(metaPath.c_str(), &buffer);
+
+	uint size = Engine->fileSystem->Load(metaFilePath, &buffer);
+	uint64 resourceID = 0;
 
 	if (size > 0)
 	{
 		Config metaFile(buffer);
 		RELEASE_ARRAY(buffer);
 
-		ResourceInfo resourceInfo((Resource::Type)(int)metaFile.GetNumber("Type"), path, metaFile.GetString("Name").c_str(), metaFile.GetNumber("ID"));
+		std::string fileName = std::string(metaFilePath);
+		fileName = fileName.substr(0, fileName.size() - 5);
 
-		//If the resource is a model, add all recources contained in it
-		if (resourceInfo.type == Resource::MODEL)
+		ResourceInfo resourceInfo((Resource::Type)(int)metaFile.GetNumber("Type"), fileName.c_str(), metaFile.GetString("Name").c_str(), metaFile.GetNumber("ID"));
+		resourceID = resourceInfo.ID;
+
+		//Add all contained resources saved in the meta file
+		Config_Array containingResources = metaFile.GetArray("Containing Resources");
+		for (uint i = 0; i < containingResources.GetSize(); ++i)
 		{
-			Config_Array containingResources = Config(buffer).GetArray("Containing Resources");
-			for (uint i = 0; i < containingResources.GetSize(); ++i)
-			{
-				Config fileNode = containingResources.GetNode(i);
-				ResourceInfo containedInfo((Resource::Type)(int)(fileNode.GetNumber("Type")), path, fileNode.GetString("Name").c_str(), fileNode.GetNumber("ID"));
-				resourceLibrary[containedInfo.ID] = containedInfo;
-			}
+			Config fileNode = containingResources.GetNode(i);
+			ResourceInfo containedInfo((Resource::Type)(int)(fileNode.GetNumber("Type")), fileName.c_str(), fileNode.GetString("Name").c_str(), fileNode.GetNumber("ID"));
+			resourceLibrary[containedInfo.ID] = containedInfo;
+		}
+		resourceLibrary[resourceID] = resourceInfo;
+	}
+	return resourceID;
+}
+
+uint64 M_Resources::LoadFolderInfo(const char* file)
+{
+	uint64 folderID = 0;
+	std::string metaPath = std::string(file) + ".meta";
+
+	if (Engine->fileSystem->Exists(metaPath.c_str()))
+	{
+		char* buffer = nullptr;
+		uint size = Engine->fileSystem->Load(metaPath.c_str(), &buffer);
+		if (size > 0)
+		{
+			Config metaFile(buffer);
+			RELEASE_ARRAY(buffer);
+
+			folderID = metaFile.GetNumber("ID");
 		}
 	}
+
+	folderID = ImportFolderFromAssets(file, folderID);
+	return folderID;
 }
 
 ResourceInfo M_Resources::GetMetaInfo(const Resource* resource) const
@@ -531,14 +568,14 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	config.SetNumber("Type", static_cast<int>(resource->GetType()));
 
 	//Getting file modification date
-	uint64 modDate = App->fileSystem->GetLastModTime(resource->original_file.c_str());
+	uint64 modDate = Engine->fileSystem->GetLastModTime(resource->original_file.c_str());
 	config.SetNumber("Date", modDate);
 
 	//TODO: Probably a bit dirty to add it here with generic meta files... check later
-	if (resource->GetType() == Resource::MODEL)
+	if (resource->GetType() == Resource::PREFAB)
 	{
-		R_Model* model = (R_Model*)resource;
-		Importer::Scenes::SaveContainedResources(model, config);
+		R_Prefab* prefab = (R_Prefab*)resource;
+		Importer::Scenes::SaveContainedResources(prefab, config);
 	}
 
 	char* buffer = nullptr;
@@ -546,7 +583,7 @@ void M_Resources::SaveMetaInfo(const Resource* resource)
 	if (size > 0)
 	{
 		std::string path = resource->original_file + ".meta";
-		App->fileSystem->Save(path.c_str(), buffer, size);
+		Engine->fileSystem->Save(path.c_str(), buffer, size);
 		RELEASE_ARRAY(buffer);
 	}
 }
@@ -557,20 +594,20 @@ void M_Resources::UpdateAssetsImport()
 	std::vector<std::string> ignore_extensions;
 	ignore_extensions.push_back("meta");
 
-	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine/Assets", nullptr, &ignore_extensions);
+	PathNode engineAssets = Engine->fileSystem->GetAllFiles("Engine/Assets", nullptr, &ignore_extensions);
 	UpdateAssetsFolder(engineAssets);
 
-	PathNode assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_extensions);
+	PathNode assets = Engine->fileSystem->GetAllFiles("Assets", nullptr, &ignore_extensions);
 	UpdateAssetsFolder(assets);
 }
 
 uint64 M_Resources::UpdateAssetsFolder(const PathNode& node, bool ignoreResource)
 {
-	//If node is a file
+	//ResourceID is only returned if the resource is imported as new
 	uint64 resourceID = 0;
 	if (node.isFile)
 	{
-		if (!App->fileSystem->Exists(std::string(node.path + ".meta").c_str()))
+		if (!Engine->fileSystem->Exists(std::string(node.path + ".meta").c_str()))
 		{
 			return ImportFileFromAssets(node.path.c_str());
 		}
@@ -581,8 +618,9 @@ uint64 M_Resources::UpdateAssetsFolder(const PathNode& node, bool ignoreResource
 				//TODO: Force ID when re-importing a modified asset
 				LOG("File modified: %s", node.path.c_str());
 				//uint64 id = GetResourceInfo(node.path.c_str()).id;
-				resourceID = ImportFileFromAssets(node.path.c_str());// , id);
+				ImportFileFromAssets(node.path.c_str());// , id);
 			}
+			return 0;
 		} 
 	}
 
@@ -592,7 +630,7 @@ uint64 M_Resources::UpdateAssetsFolder(const PathNode& node, bool ignoreResource
 
 	if (true) //TODO: ignoreResource
 	{
-		if (!App->fileSystem->Exists(std::string(node.path + ".meta").c_str()))
+		if (!Engine->fileSystem->Exists(std::string(node.path + ".meta").c_str()))
 		{
 			resourceID = ImportFolderFromAssets(node.path.c_str());
 			folder = GetResource(resourceID);
@@ -600,8 +638,8 @@ uint64 M_Resources::UpdateAssetsFolder(const PathNode& node, bool ignoreResource
 		}
 		else
 		{
-			resourceID = GetResourceInfo(node.path.c_str()).ID;
-			folder = GetResource(resourceID);
+			uint64 existingID = GetResourceInfo(node.path.c_str()).ID;
+			folder = GetResource(existingID);
 		}
 	}
 
@@ -630,23 +668,23 @@ void M_Resources::ClearMetaData()
 	std::vector<std::string> filter_extensions;
 	filter_extensions.push_back("meta");
 
-	PathNode engineAssets = App->fileSystem->GetAllFiles("Engine", &filter_extensions, nullptr);
+	PathNode engineAssets = Engine->fileSystem->GetAllFiles("Engine", &filter_extensions, nullptr);
 	RemoveMetaFromFolder(engineAssets);
 	
-	PathNode projectFolder = App->fileSystem->GetAllFiles("Assets", &filter_extensions, nullptr);
+	PathNode projectFolder = Engine->fileSystem->GetAllFiles("Assets", &filter_extensions, nullptr);
 	RemoveMetaFromFolder(projectFolder);
 
-	if (App->fileSystem->Exists("Assets.meta"))
-		App->fileSystem->Remove("Assets.meta");
-	App->fileSystem->Remove("Library/");
-	App->fileSystem->CreateLibraryDirectories();
+	if (Engine->fileSystem->Exists("Assets.meta"))
+		Engine->fileSystem->Remove("Assets.meta");
+	Engine->fileSystem->Remove("Library/");
+	Engine->fileSystem->CreateLibraryDirectories();
 }
 
 void M_Resources::RemoveMetaFromFolder(PathNode node)
 {
 	if (node.isFile == true)
 	{
-		App->fileSystem->Remove(node.path.c_str());
+		Engine->fileSystem->Remove(node.path.c_str());
 	}
 
 	//If node folder has something inside
@@ -665,11 +703,11 @@ bool M_Resources::IsFileModified(const char* path)
 	meta_file.append(".meta");
 
 	char* buffer = nullptr;
-	uint size = App->fileSystem->Load(meta_file.c_str(), &buffer);
+	uint size = Engine->fileSystem->Load(meta_file.c_str(), &buffer);
 
 	if (size > 0)
 	{
-		uint64 fileMod = App->fileSystem->GetLastModTime(path);
+		uint64 fileMod = Engine->fileSystem->GetLastModTime(path);
 		uint64 configDate = Config(buffer).GetNumber("Date");
 		return fileMod != configDate;
 	}
@@ -690,7 +728,7 @@ void M_Resources::SaveChangedResources()
 					char* buffer = nullptr;
 					if (uint size = Importer::Materials::Save((R_Material*)it->second, &buffer))
 					{
-						App->fileSystem->Save(it->second->resource_file.c_str(), buffer, size);
+						Engine->fileSystem->Save(it->second->resource_file.c_str(), buffer, size);
 						RELEASE_ARRAY(buffer);
 					}
 				}
@@ -733,14 +771,14 @@ uint M_Resources::DeleteResource(uint64 ID)
 			resourcePath.append("/Library/Textures/");
 			break;
 		}
-		case(Resource::MODEL):
+		case(Resource::PREFAB):
 		{
 			resourcePath.append("/Library/GameObjects/");
 			break;
 		}
 	}
 	resourcePath.append(std::to_string(ID));
-	App->fileSystem->Remove(resourcePath.c_str());
+	Engine->fileSystem->Remove(resourcePath.c_str());
 
 	resourceLibrary.erase(ID);
 	return instances;
@@ -773,19 +811,19 @@ void M_Resources::SaveResource(Resource* resource)
 		case(Resource::MATERIAL):				{ size = Importer::Materials::Save((R_Material*)resource, &buffer); break; }
 		case(Resource::ANIMATION):				{ size = Importer::Animations::Save((R_Animation*)resource, &buffer); break;	}
 		case(Resource::ANIMATOR_CONTROLLER):	{ size = Importer::Animators::Save((R_AnimatorController*)resource, &buffer);	break; }
-		case(Resource::MODEL):					{ size = Importer::Scenes::SaveScene((R_Model*)resource, &buffer); break; }
+		case(Resource::PREFAB):					{ size = Importer::Scenes::SaveScene((R_Prefab*)resource, &buffer); break; }
 		case(Resource::PARTICLESYSTEM):			{ size = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); break; }
 		case(Resource::SHADER):					{ size = Importer::Shaders::Save((R_Shader*)resource, &buffer); break; }
-		case(Resource::SCENE):					{ /*size = Importer::Scenes::SaveScene((R_Model*)resource, &buffer);*/ break; }
+		case(Resource::SCENE):					{ /*size = Importer::Scenes::SaveScene((R_Prefab*)resource, &buffer);*/ break; }
 	}
 
 	if (size > 0)
 	{
-		App->fileSystem->Save(resource->resource_file.c_str(), buffer, size);
+		Engine->fileSystem->Save(resource->resource_file.c_str(), buffer, size);
 
 		if (IsModifiableResource(resource))
 		{
-			App->fileSystem->Save(resource->original_file.c_str(), buffer, size);
+			Engine->fileSystem->Save(resource->original_file.c_str(), buffer, size);
 		}
 		RELEASE_ARRAY(buffer);
 	}

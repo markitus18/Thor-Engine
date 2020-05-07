@@ -1,6 +1,6 @@
 #include "C_Animator.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_Renderer3D.h"
 
 #include "M_Resources.h"
@@ -35,7 +35,7 @@ void C_Animator::DrawLinkedBones() const
 		float3 pos = transform->GetGlobalPosition();
 		AABB* box = new AABB();
 		box->SetFromCenterAndSize(pos, float3(1, 1, 1));
-		App->renderer3D->AddAABB(*box, Pink);
+		Engine->renderer3D->AddAABB(*box, Pink);
 	}
 	*/
 }
@@ -125,7 +125,7 @@ void C_Animator::SetAnimation(const char* name, float blendTime)
 	R_AnimatorController* rAnimator = (R_AnimatorController*)GetResource();
 	for (uint i = 0; i < rAnimator->animations.size(); ++i)
 	{
-		R_Animation* animation = (R_Animation*)App->moduleResources->GetResource(rAnimator->animations[i]);
+		R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
 		if (animation && animation->name == name)
 		{
 			SetAnimation(i, blendTime);
@@ -162,7 +162,7 @@ R_Animation* C_Animator::GetAnimation(uint index)
 	R_AnimatorController* rAnimator = (R_AnimatorController*)GetResource();
 	if (index < rAnimator->animations.size())
 	{
-		return (R_Animation*)App->moduleResources->GetResource(rAnimator->animations[index]);
+		return (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[index]);
 	}
 }
 
@@ -287,7 +287,7 @@ void C_Animator::UpdateMeshAnimation(GameObject* gameObject)
 	{
 		mesh->StartBoneDeformation();
 		mesh->DeformAnimMesh();
-		//App->renderer3D->LoadBuffers(mesh->animMesh);
+		//Engine->renderer3D->LoadBuffers(mesh->animMesh);
 	}
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)

@@ -10,42 +10,32 @@ class GameObject;
 class Module
 {
 private :
-	bool enabled;
+	bool active;
 
 public:
 	std::string name;
 
 	Module(const char* name, bool start_enabled = true) : name(name)
 	{
-		enabled = start_enabled;
+		active = start_enabled;
 	}
 
 	virtual ~Module()
 	{}
 
-	bool IsEnabled() const
+	bool IsActive() const
 	{
-		return enabled;
+		return active;
 	}
 
-	void Enable()
+	bool SetActive(bool active)
 	{
-		if (enabled == false)
+		if (this->active != active)
 		{
-			enabled = true;
-			Start();
+			this->active = active;
+			return active ? Start() : CleanUp();
 		}
-	}
-
-	bool Disable()
-	{
-		bool ret = true;
-		if (enabled == true)
-		{
-			enabled = false;
-			ret = CleanUp();
-		}
-		return ret;
+		return false;
 	}
 
 	virtual bool Init(Config& config) 

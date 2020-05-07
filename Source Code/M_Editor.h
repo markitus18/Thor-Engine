@@ -31,10 +31,10 @@ public:
 	M_Editor(bool start_enabled = true);
 	~M_Editor();
 
-	bool Init(Config& config);
-	bool Start();
-	update_status PreUpdate(float dt);
-	bool CleanUp();
+	bool Init(Config& config) override;
+	bool Start() override;
+	update_status PreUpdate(float dt) override;
+	bool CleanUp() override;
 
 	void CreateWindows();
 	void Draw();
@@ -68,10 +68,10 @@ public:
 	void FinishDrag(bool drag, bool SelectDrag);
 	//Endof Selection------------------------------------
 
-	void SaveConfig(Config& config) const;
-	void LoadConfig(Config& config);
+	void SaveConfig(Config& config) const override;
+	void LoadConfig(Config& config) override;
 
-	void LoadScene(Config& root, bool tmp = false);
+	void LoadScene(Config& root, bool tmp = false) override;
 	void ResetScene();
 
 	void OnRemoveGameObject(GameObject* gameObject) override;

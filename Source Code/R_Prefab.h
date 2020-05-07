@@ -8,7 +8,7 @@
 
 class GameObject;
 
-struct Node
+struct ModelNode
 {
 	std::string name;
 	uint ID;
@@ -19,16 +19,16 @@ struct Node
 	uint materialID;
 };
 
-class R_Model : public Resource
+class R_Prefab : public Resource
 {
 public:
-	R_Model();
-	~R_Model();
+	R_Prefab();
+	~R_Prefab();
 
 	GameObject* root = nullptr; //By now, just to compile. Should be erased with new structure
 
 	uint64 thumbnailID = 0;
-	std::vector<Node> nodes;
+	std::vector<ModelNode> nodes;
 	std::vector<uint> animationIDs;
 };
 

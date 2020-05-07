@@ -23,7 +23,7 @@ class M_Shaders;
 
 class GameObject;
 
-class Application
+class TEngine
 {
 public:
 	M_FileSystem* fileSystem;
@@ -66,8 +66,8 @@ private:
 
 public:
 
-	Application();
-	~Application();
+	TEngine();
+	~TEngine();
 
 
 	bool Init();
@@ -102,6 +102,6 @@ private:
 	void LoadSceneNow();
 };
 
-extern Application* App;
+extern TEngine* Engine;
 
 #endif //__APPLICATION_H__

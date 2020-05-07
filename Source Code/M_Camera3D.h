@@ -14,9 +14,9 @@ public:
 	M_Camera3D(bool start_enabled = true);
 	~M_Camera3D();
 
-	bool Init(Config& config);
-	bool Start();
-	update_status Update(float dt);
+	bool Init(Config& config) override;
+	bool Start() override;
+	update_status Update(float dt) override;
 	bool CleanUp() override;
 
 	float3 GetPosition() const;
@@ -31,8 +31,8 @@ public:
 
 	C_Camera* GetCamera() const;
 
-	void SaveScene(Config& root) const;
-	void LoadScene(Config& root, bool tmp = false);
+	void SaveScene(Config& root) const override;
+	void LoadScene(Config& root, bool tmp = false) override;
 
 	void OnClick(const Vec2& mousePos);
 	void Move_Mouse(float motion_x, float motion_y);

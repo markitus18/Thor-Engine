@@ -1,6 +1,6 @@
 #include "I_Materials.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_FileSystem.h"
 
 #include "R_Texture.h"
@@ -46,7 +46,7 @@ R_Texture* M_Materials::ImportPrefabImage(char* buffer, uint64 ID, const char* s
 		saveBuffer = new ILubyte[saveBufferSize];
 		if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
 		{
-			App->fileSystem->Save(full_path.c_str(), saveBuffer, saveBufferSize);
+			Engine->fileSystem->Save(full_path.c_str(), saveBuffer, saveBufferSize);
 			RELEASE_ARRAY(saveBuffer);
 
 			resTexture = new R_Texture;
@@ -55,7 +55,7 @@ R_Texture* M_Materials::ImportPrefabImage(char* buffer, uint64 ID, const char* s
 			resTexture->ID = ID;
 			resTexture->buffer = ilutGLBindTexImage();
 			std::string file, extension;
-			App->fileSystem->SplitFilePath(resTexture->original_file.c_str(), nullptr, &file, &extension);
+			Engine->fileSystem->SplitFilePath(resTexture->original_file.c_str(), nullptr, &file, &extension);
 			resTexture->name = file + (".") + extension;
 		}
 	}
@@ -83,7 +83,7 @@ void Importer::Materials::Import(const aiMaterial* material, R_Material* rMateri
 	{
 		aiString aiStr;
 		aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &aiStr);
-		App->fileSystem->SplitFilePath(aiStr.C_Str(), nullptr, &texture_fileName, &texture_extension);
+		Engine->fileSystem->SplitFilePath(aiStr.C_Str(), nullptr, &texture_fileName, &texture_extension);
 	}
 
 	//TODO: Dirty pathing done here
@@ -96,7 +96,7 @@ void Importer::Materials::Import(const aiMaterial* material, R_Material* rMateri
 
 	if (texture_file != "" && texture_file != ("."))
 	{
-		if (uint64 textureID = App->moduleResources->ImportFileFromAssets(texture_path.c_str()))
+		if (uint64 textureID = Engine->moduleResources->ImportFileFromAssets(texture_path.c_str()))
 		{
 			rMaterial->textureID = textureID;
 		}

@@ -5,7 +5,7 @@
 #include "ImGui\imgui_internal.h"
 
 #include "DWindow.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_Editor.h"
 
 Dock::Dock(const char* name, Vec2 size): size(size), name(name)
@@ -49,7 +49,7 @@ void Dock::Draw()
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDown(0))
 			{
-				App->moduleEditor->focusedDock = this;
+				Engine->moduleEditor->focusedDock = this;
 			}
 
 			tabSpacing = Vec2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y);

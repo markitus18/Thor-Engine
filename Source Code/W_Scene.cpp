@@ -5,7 +5,7 @@
 
 #include "Dock.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -29,9 +29,9 @@ void W_Scene::Draw()
 {
 	ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
 	img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
-	img_corner.y = App->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
+	img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
 
-	ImGui::Image((ImTextureID)App->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)Engine->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -40,11 +40,11 @@ void W_Scene::Draw()
 			if (payload->DataSize == sizeof(uint64))
 			{
 				uint64 resourceID = *(const uint64*)payload->Data;
-				Resource* resource = App->moduleResources->GetResource(resourceID);
+				Resource* resource = Engine->moduleResources->GetResource(resourceID);
 
-				if (resource->GetType() == Resource::Type::MODEL)
+				if (resource->GetType() == Resource::Type::PREFAB)
 				{
-					App->moduleResources->LoadModel(resourceID);
+					Engine->moduleResources->LoadModel(resourceID);
 				}
 
 			}
@@ -64,7 +64,7 @@ void W_Scene::OnResize()
 	win_size = Vec2(parent->size.x, parent->size.y) - Vec2(17, 25 + 10); //TODO: should be using tab spacing (25) but at the beggining it has not been calculated
 
 	//Calculating the image size according to the window size.
-	img_size = App->window->windowSize;// -Vec2(0.0f, 25.0f); //Removing the tab area
+	img_size = Engine->window->windowSize;// -Vec2(0.0f, 25.0f); //Removing the tab area
 	if (img_size.x > win_size.x)
 	{
 		img_size /= (img_size.x / win_size.x);
@@ -81,14 +81,14 @@ void W_Scene::OnResize()
 Vec2 W_Scene::ScreenToWorld(Vec2 p) const
 {
 	Vec2 ret = p - img_corner;
-	ret = ret / img_size * App->window->windowSize;
+	ret = ret / img_size * Engine->window->windowSize;
 	return ret;
 }
 
 //Converts a 2D point in the real scene to a 2D point in the scene image
 Vec2 W_Scene::WorldToScreen(Vec2 p) const
 {
-	Vec2 ret = p / App->window->windowSize * img_size;
+	Vec2 ret = p / Engine->window->windowSize * img_size;
 	ret += img_corner;
 	return ret;
 }
@@ -98,66 +98,66 @@ void W_Scene::HandleInput()
 {
 	if (ImGui::IsItemHovered())
 	{
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 		{
-			Vec2 mousePos = ScreenToWorld(Vec2(App->input->GetMouseX(), App->window->windowSize.y - App->input->GetMouseY()));
-			App->camera->OnClick(mousePos);
+			Vec2 mousePos = ScreenToWorld(Vec2(Engine->input->GetMouseX(), Engine->window->windowSize.y - Engine->input->GetMouseY()));
+			Engine->camera->OnClick(mousePos);
 		}
-		draggingOrbit = App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT;
-		draggingPan = App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT;
+		draggingOrbit = Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT;
+		draggingPan = Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT;
 
-		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
+		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
+		Vec2 mouseMotion_screen = mouseMotion / img_size * Engine->window->windowSize;
 
-		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
+		Engine->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
 	}
 	if (draggingOrbit)
 	{
-		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
+		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
+		Vec2 mouseMotion_screen = mouseMotion / img_size * Engine->window->windowSize;
 
-		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
-		App->camera->Orbit(-mouseMotion_screen.x, -mouseMotion_screen.y);
-		App->input->InfiniteHorizontal();
+		Engine->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
+		Engine->camera->Orbit(-mouseMotion_screen.x, -mouseMotion_screen.y);
+		Engine->input->InfiniteHorizontal();
 
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE) draggingOrbit = false;
+		if (Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE) draggingOrbit = false;
 	}
 	if (draggingPan)
 	{
-		Vec2 mouseMotion = Vec2(App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / img_size * App->window->windowSize;
+		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
+		Vec2 mouseMotion_screen = mouseMotion / img_size * Engine->window->windowSize;
 
-		App->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
-		App->camera->Pan(mouseMotion_screen.x, mouseMotion_screen.y);
-		App->input->InfiniteHorizontal();
+		Engine->camera->Move_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
+		Engine->camera->Pan(mouseMotion_screen.x, mouseMotion_screen.y);
+		Engine->input->InfiniteHorizontal();
 
-		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE) draggingPan = false;
+		if (Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE) draggingPan = false;
 	}
 
 	if (editor->UsingKeyboard() == false)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+		if (Engine->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 			gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
-		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+		if (Engine->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
 			gizmoOperation = ImGuizmo::OPERATION::ROTATE;
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		if (Engine->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 			gizmoOperation = ImGuizmo::OPERATION::SCALE;
 	}
 }
 
 void W_Scene::HandleGizmoUsage()
 {
-	if (App->moduleEditor->selectedGameObjects.size() <= 0) return;
+	if (Engine->moduleEditor->selectedGameObjects.size() <= 0) return;
 
-	GameObject* gameObject = (GameObject*)App->moduleEditor->selectedGameObjects[0];
+	GameObject* gameObject = (GameObject*)Engine->moduleEditor->selectedGameObjects[0];
 
-	float4x4 viewMatrix = App->camera->GetCamera()->frustum.ViewMatrix();
+	float4x4 viewMatrix = Engine->camera->GetCamera()->frustum.ViewMatrix();
 	viewMatrix.Transpose();
-	float4x4 projectionMatrix = App->camera->GetCamera()->frustum.ProjectionMatrix().Transposed();
+	float4x4 projectionMatrix = Engine->camera->GetCamera()->frustum.ProjectionMatrix().Transposed();
 	float4x4 modelProjection = gameObject->GetComponent<C_Transform>()->GetGlobalTransform().Transposed();
 
 	ImGuizmo::SetDrawlist();
-	cornerPos = Vec2(img_corner.x, App->window->windowSize.y - img_corner.y - img_size.y);
+	cornerPos = Vec2(img_corner.x, Engine->window->windowSize.y - img_corner.y - img_size.y);
 	ImGuizmo::SetRect(img_corner.x, cornerPos.y, img_size.x, img_size.y);
 
 	float modelPtr[16];

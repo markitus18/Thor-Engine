@@ -1,5 +1,5 @@
 #include "Globals.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_FileSystem.h"
 #include "PathNode.h"
 
@@ -41,7 +41,7 @@ bool M_FileSystem::Init(Config& config)
 	bool ret = true;
 
 	// Ask SDL for a write dir
-	char* write_path = SDL_GetPrefPath(App->GetOrganizationName(), App->GetTitleName());
+	char* write_path = SDL_GetPrefPath(Engine->GetOrganizationName(), Engine->GetTitleName());
 
 	// Trun this on while in game mode
 	//if(PHYSFS_setWriteDir(write_path) == 0)
@@ -156,7 +156,7 @@ PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::strin
 	if (Exists(directory))
 	{
 		root.path = directory;
-		App->fileSystem->SplitFilePath(directory, nullptr, &root.localPath);
+		Engine->fileSystem->SplitFilePath(directory, nullptr, &root.localPath);
 		if (root.localPath == "")
 			root.localPath = directory;
 
@@ -331,24 +331,6 @@ uint M_FileSystem::Load(const char* file, char** buffer) const
 		LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
 
 	return ret;
-}
-
-// Read a whole file and put it in a new buffer
-SDL_RWops* M_FileSystem::Load(const char* file) const
-{
-	char* buffer;
-	int size = Load(file, &buffer);
-
-	if (size > 0)
-	{
-		SDL_RWops* r = SDL_RWFromConstMem(buffer, size);
-		if (r != nullptr)
-			r->close = close_sdl_rwops;
-
-		return r;
-	}
-	else
-		return nullptr;
 }
 
 bool M_FileSystem::DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath)

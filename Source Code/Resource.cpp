@@ -44,3 +44,13 @@ bool Resource::DrawTreeNode() const
 {
 	return (type == FOLDER);
 }
+
+bool Resource::HasResource(uint64 ID) const
+{
+	for (uint i = 0; i < containedResources.size(); ++i)
+	{
+		if (containedResources[i] == ID)
+			return true;
+	}
+	return false;
+}

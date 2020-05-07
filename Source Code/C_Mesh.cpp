@@ -1,6 +1,6 @@
 #include "C_Mesh.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_Resources.h"
 
 #include "GameObject.h"
@@ -27,7 +27,7 @@ C_Mesh::~C_Mesh()
 const AABB& C_Mesh::GetAABB() const
 {
 	if (resourceID != 0)
-		return ((R_Mesh*)App->moduleResources->GetResource(resourceID))->aabb;
+		return ((R_Mesh*)Engine->moduleResources->GetResource(resourceID))->aabb;
 	else
 		return AABB(float3(-.5f, -.5f, .5f), float3(.5f, .5f, .5f));
 }

@@ -1,6 +1,6 @@
 #include "W_ParticleEditor.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_Editor.h"
 #include "W_Explorer.h"
 #include "Resource.h"

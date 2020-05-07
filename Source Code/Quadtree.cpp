@@ -1,7 +1,7 @@
 #include "Quadtree.h"
 #include "GameObject.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_Renderer3D.h"
 
 Quadtree::Quadtree(const AABB& box)
@@ -229,7 +229,7 @@ void QuadtreeNode::Draw()
 	toDraw.maxPoint.z -= 1;
 	toDraw.minPoint.x += 1;
 	toDraw.minPoint.z += 1;
-	App->renderer3D->AddAABB(toDraw, color);
+	Engine->renderer3D->AddAABB(toDraw, color);
 
 	for (uint i = 0; i < childs.size(); i++)
 		childs[i].Draw();

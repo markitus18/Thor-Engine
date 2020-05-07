@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Engine.h"
 #include "M_Camera3D.h"
 #include "M_Editor.h"
 #include "M_Input.h"
@@ -39,7 +39,7 @@ M_Camera3D::~M_Camera3D()
 // -----------------------------------------------------------------
 bool M_Camera3D::Init(Config& config)
 {
-	App->renderer3D->camera = camera;
+	Engine->renderer3D->camera = camera;
 
 	return true;
 }
@@ -57,19 +57,19 @@ bool M_Camera3D::CleanUp()
 {
 	LOG("Cleaning camera");
 
-	App->renderer3D->camera = nullptr;
+	Engine->renderer3D->camera = nullptr;
 	return true;
 }
 
 // -----------------------------------------------------------------
 update_status M_Camera3D::Update(float dt)
 {
-	if (App->moduleEditor->UsingKeyboard() == false)
+	if (Engine->moduleEditor->UsingKeyboard() == false)
 		Move_Keyboard(dt);
 
-	if (App->moduleEditor->UsingMouse() == false)
+	if (Engine->moduleEditor->UsingMouse() == false)
 	{
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 		{
 			//OnClick();
 		}
@@ -158,7 +158,7 @@ void M_Camera3D::Move_Keyboard(float dt)
 void M_Camera3D::Move_Mouse(float motion_x, float motion_y)
 {
 	// Mouse wheel for zoom
-	int wheel = App->input->GetMouseZ();
+	int wheel = Engine->input->GetMouseZ();
 	if (wheel != 0)
 		Zoom(wheel);
 }
@@ -221,15 +221,15 @@ void M_Camera3D::Zoom(float zoom)
 
 void M_Camera3D::OnClick(const Vec2& mousePos)
 {
-	float mouseNormX = mousePos.x / (float)App->window->windowSize.x;
+	float mouseNormX = mousePos.x / (float)Engine->window->windowSize.x;
 	//TODO: quick fix, mouse click is inverting Y
-	float mouseNormY = mousePos.y / (float)App->window->windowSize.y;
+	float mouseNormY = mousePos.y / (float)Engine->window->windowSize.y;
 
 	//Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
 	mouseNormY = (mouseNormY - 0.5) / 0.5;
 
-	lastRay = App->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
+	lastRay = Engine->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 
- 	App->scene->OnClickSelection(lastRay);
+ 	Engine->scene->OnClickSelection(lastRay);
 }

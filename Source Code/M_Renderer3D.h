@@ -68,11 +68,11 @@ public:
 	M_Renderer3D(bool start_enabled = true);
 	~M_Renderer3D();
 
-	bool Init(Config& config);
-	bool Start();
-	update_status PreUpdate(float dt);
-	update_status PostUpdate(float dt);
-	bool CleanUp();
+	bool Init(Config& config) override;
+	bool Start() override;
+	update_status PreUpdate(float dt) override;
+	update_status PostUpdate(float dt) override;
+	bool CleanUp() override;
 	void GenerateSceneBuffers();
 
 	void OnResize();
@@ -108,7 +108,7 @@ public:
 	void ReleaseBuffers(R_Texture* texture);
 	//----------------------------------------------
 
-	void OnRemoveGameObject(GameObject* gameObject);
+	void OnRemoveGameObject(GameObject* gameObject) override;
 
 	uint SaveImage(const char* pathr);
 	uint SaveModelThumbnail(GameObject* gameObject);

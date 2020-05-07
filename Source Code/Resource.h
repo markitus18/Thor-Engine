@@ -24,7 +24,7 @@ public:
 		MATERIAL,
 		ANIMATION,
 		ANIMATOR_CONTROLLER,
-		MODEL,
+		PREFAB,
 		PARTICLESYSTEM,
 		SHADER,
 		SCENE,
@@ -44,6 +44,7 @@ public:
 	virtual std::vector<TreeNode*> GetChilds() const { std::vector<TreeNode*> ret; return ret; };
 	bool IsNodeActive() const { return true; };
 	bool DrawTreeNode() const;
+	bool HasResource(uint64 ID) const;
 
 	virtual inline void AddContainedResource(uint64 ID) { containedResources.push_back(ID); };
 
@@ -55,7 +56,7 @@ public:
 	bool needs_save = false;
 	bool isInternal = false;
 
-	//TODO: Set it to prived, moved to public for faster iteration
+	//TODO: Set it to private, moved to public for faster iteration
 	std::string name = "";
 	std::vector<uint64> containedResources;
 

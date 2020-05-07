@@ -9,7 +9,7 @@
 #include <map>
 #include <vector>
 
-class R_Prefab;
+class R_Folder;
 struct PathNode;
 
 struct ResourceInfo
@@ -34,27 +34,28 @@ public:
 	M_Resources(bool start_enabled = true);
 	~M_Resources();
 
-	bool Init(Config& config);
-	bool Start();
-	update_status Update(float dt);
-	bool CleanUp();
+	bool Init(Config& config) override;
+	bool Start() override;
+	update_status Update(float dt) override;
+	bool CleanUp() override;
 
 	//Import a file from outside the project folder
-	//The file will be duplicated in the current active folder in the asset explorer
+	//The file will be duplicated into the current active folder in the asset explorer
 	void ImportFileFromExplorer(const char* path, const char* dstDir);
 
 	//Import a file existing in assets and create its resources
 	uint64 ImportFileFromAssets(const char* path);
 
 	//Import a folder existing in assets and create it as a resource
-	uint64 ImportFolderFromAssets(const char* path);
+	uint64 ImportFolderFromAssets(const char* path, uint64 forceID = 0);
 	
 	//Import a 3D scene file
-	void ImportModel(const char* buffer, uint size, Resource* model);
+	void ImportModel(const char* buffer, uint size, Resource* prefab);
 
 	//Import a resource existing in a prefab (3D scene) file
 	uint64 ImportResourceFromScene(const char* file, const void* data, const char* name, Resource::Type type);
 
+	//Generates the model's thumbnail and saves it in library
 	uint64 ImportModelThumbnail(char* buffer, const char* source_file, uint sizeX, uint sizeY);
 
 	//Generates the base data for a resource
@@ -78,17 +79,19 @@ public:
 	inline uint64 GetNewID() { return random.Int(); }
 
 private:
-	void LoadResourceLibrary();
-	void LoadLibraryFromFolder(PathNode node);
-	void LoadResourceInfo(const char* file);
+	void LoadResourcesLibrary();
+	uint64 LoadResourceInfoFromFolder(PathNode node);
+	uint64 LoadResourceInfo(const char* file);
+	uint64 LoadFolderInfo(const char* file);
 
 	ResourceInfo	GetMetaInfo(const Resource* resource) const;
 
 	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
 
-	//Search through all assets and imports / re-imports
+	//Search through all assets. Detects if there is a new/modified file and (re)imports
 	void UpdateAssetsImport();
+
 	uint64 UpdateAssetsFolder(const PathNode& node, bool ignoreResource = false);
 
 	//Remove all .meta files in assets
@@ -104,9 +107,12 @@ private:
 	//Completely deletes a resource, including its file (not yet though)
 	//Return number of instances previous to deletion
 	uint DeleteResource(uint64 ID);
-	//Removes a resource from memory
+
+	//Deletes the memory from a loaded resource
 	void UnLoadResource(uint64 ID);
 
+	//Calls importers to generate a filled binary file and saves it into Library
+	//If the resource can be modified in Assets, it is saved there aswell
 	void SaveResource(Resource* resource);
 
 	//Returns if this resource can be modified in Assets file and thus has to be overitten there too

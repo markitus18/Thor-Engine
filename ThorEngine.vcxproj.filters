@@ -109,9 +109,6 @@
     <ClCompile Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.cpp">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\Application.cpp">
-      <Filter>Source Code</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Main.cpp">
       <Filter>Source Code</Filter>
     </ClCompile>
@@ -122,9 +119,6 @@
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Light.cpp">
-      <Filter>Source Code\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\Primitive.cpp">
       <Filter>Source Code\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Color.cpp">
@@ -328,8 +322,11 @@
     <ClCompile Include="Source Code\I_Folders.cpp">
       <Filter>Source Code\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\R_Model.cpp">
+    <ClCompile Include="Source Code\R_Prefab.cpp">
       <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Engine.cpp">
+      <Filter>Source Code</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -522,9 +519,6 @@
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Time\Clock.h">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\Application.h">
-      <Filter>Source Code</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Timer.h">
       <Filter>Source Code\Tools</Filter>
     </ClInclude>
@@ -532,9 +526,6 @@
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Light.h">
-      <Filter>Source Code\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\Primitive.h">
       <Filter>Source Code\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Color.h">
@@ -778,8 +769,11 @@
     <ClInclude Include="Source Code\I_Folders.h">
       <Filter>Source Code\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\R_Model.h">
+    <ClInclude Include="Source Code\R_Prefab.h">
       <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Engine.h">
+      <Filter>Source Code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

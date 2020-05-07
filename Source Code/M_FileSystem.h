@@ -23,10 +23,10 @@ public:
 	~M_FileSystem();
 
 	// Called before render is available
-	bool Init(Config& config);
+	bool Init(Config& config) override;
 
 	// Called before quitting
-	bool CleanUp();
+	bool CleanUp() override;
 
 	void CreateLibraryDirectories();
 
@@ -52,7 +52,6 @@ public:
 	// Open for Read/Write
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Load(const char* file, char** buffer) const;
-	SDL_RWops* Load(const char* file) const;
 
 	bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	bool DuplicateFile(const char* srcFile, const char* dstFile);

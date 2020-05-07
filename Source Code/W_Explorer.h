@@ -11,7 +11,7 @@
 
 class Resource;
 
-class R_Model;
+class R_Prefab;
 class R_Folder;
 
 struct ImVec2;
@@ -71,7 +71,7 @@ private:
 
 	Vec2 windowSize;
 
-	R_Model*  openModel = nullptr;
+	R_Prefab*  openModel = nullptr;
 };
 
 #endif

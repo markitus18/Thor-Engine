@@ -6,14 +6,14 @@
 
 #include "Glew/include/glew.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "M_Resources.h"
 #include "M_FileSystem.h"
 #include "M_Editor.h"
 
 #include "Resource.h"
 #include "R_Texture.h"
-#include "R_Model.h"
+#include "R_Prefab.h"
 #include "R_Folder.h"
 
 #include "Dock.h"
@@ -26,10 +26,10 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 
 	allowScrollbar = false;
 
-	Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Assets").ID);
+	Resource* resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo("Assets").ID);
 	currentFolder = assetsFolder = (R_Folder*)resource;
 
-	resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo("Engine/Assets").ID);
+	resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo("Engine/Assets").ID);
 	engineAssetsFolder = (R_Folder*)resource;
 }
 
@@ -82,7 +82,7 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			Resource* resource = App->moduleResources->GetResource(App->moduleResources->GetResourceInfo(node.path.c_str()).ID);
+			Resource* resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo(node.path.c_str()).ID);
 			currentFolder = (R_Folder*)resource;
 		}
 		if (open && !node.IsLastFolder())
@@ -137,7 +137,7 @@ void W_Explorer::DrawSelectedFolderContent()
 
 	for (uint i = 0; i < currentFolder->containedResources.size(); ++i)
 	{
-		Resource* res = App->moduleResources->GetResource(currentFolder->containedResources[i]);
+		Resource* res = Engine->moduleResources->GetResource(currentFolder->containedResources[i]);
 		DrawResourceItem(res, itemIndex, windowCursorPosition);
 		itemIndex++;
 	}
@@ -169,7 +169,7 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 	{
 		ImGui::SetCursorPos(drawPos - ImVec2(topMarginOffset, topMarginOffset));
 		float textSize = ImGui::GetTextLineHeight();
-		uint texBuffer = ((R_Texture*)App->moduleResources->GetResource(selectedResourceImage))->buffer;
+		uint texBuffer = ((R_Texture*)Engine->moduleResources->GetResource(selectedResourceImage))->buffer;
 		ImGui::Image((ImTextureID)texBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
 	}
 
@@ -179,8 +179,8 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 		selectedResource = resource;
 
 		//TODO: quick workaround to select resources
-		App->moduleEditor->selectedResources.clear();
-		App->moduleEditor->selectedResources.push_back(resource);
+		Engine->moduleEditor->selectedResources.clear();
+		Engine->moduleEditor->selectedResources.push_back(resource);
 	}
 	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
 	{
@@ -191,10 +191,10 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 	ImGui::SetCursorPos(textPos);
 	ImGui::Text(GetTextAdjusted(resource->GetName()).c_str());
 
-	//Drawing node Button (if it's a model)
-	if (resource->GetType() == Resource::MODEL)
+	//Drawing node Button (if it's a prefab)
+	if (resource->GetType() == Resource::PREFAB)
 	{
-		R_Model* modelNode = (R_Model*)resource;
+		R_Prefab* modelNode = (R_Prefab*)resource;
 
 		ImGui::SetCursorPos(drawPos + ImVec2(imageSize / 2 + nodeButtonOffset, imageSize / 2 - ImGui::GetFrameHeight() / 2));
 		ImGui::ArrowButton("ArrowButton?", modelNode == openModel ? ImGuiDir_Left : ImGuiDir_Right);
@@ -209,7 +209,7 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 			for (uint i = 0; i < modelNode->containedResources.size(); ++i)
 			{
 				itemIndex++;
-				Resource* containedResource = App->moduleResources->GetResource(modelNode->containedResources[i]);
+				Resource* containedResource = Engine->moduleResources->GetResource(modelNode->containedResources[i]);
 				DrawResourceItem(containedResource, itemIndex, windowCursorPos);
 			}
 		}
@@ -222,7 +222,7 @@ void W_Explorer::UpdateTree()
 {
 	std::vector<std::string> ignore_ext;
 	ignore_ext.push_back("meta");
-	assets = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
+	assets = Engine->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
 }
 
 std::string W_Explorer::GetTextAdjusted(const char* text) const
@@ -248,13 +248,6 @@ void W_Explorer::HandleResourceDoubleClick(const Resource* resource)
 {
 	if (resource->GetType() == Resource::FOLDER)
 		nextCurrentFolder = (R_Folder*)resource;
-	else
-	{
-		if (resource->GetType() == Resource::MODEL)
-		{
-			App->moduleResources->LoadModel(resource->GetID());
-		}
-	}
 }
 
 uint W_Explorer::GetTextureFromResource(const Resource* resource, std::string* dnd_event)
@@ -266,7 +259,7 @@ uint W_Explorer::GetTextureFromResource(const Resource* resource, std::string* d
 	}
 	else
 	{
-		R_Texture* texture = (R_Texture*)App->moduleResources->GetResource(resourceIcons[resource->GetType()]);
+		R_Texture* texture = (R_Texture*)Engine->moduleResources->GetResource(resourceIcons[resource->GetType()]);
 		textureBuffer = texture->buffer;
 	}
 	dnd_event->assign("DND_RESOURCE_").append(std::to_string((int)resource->GetType()));

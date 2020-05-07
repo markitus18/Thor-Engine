@@ -3,7 +3,7 @@
 #include "ImGui/imgui.h"
 
 #include "M_Editor.h"
-#include "Application.h"
+#include "Engine.h"
 #include "M_Input.h"
 #include "M_Scene.h"
 #include "M_Resources.h"
@@ -74,7 +74,7 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	bool gameObject_static = gameObject->isStatic;
 	if (ImGui::Checkbox("static", &gameObject_static))
 	{
-		App->scene->SetStaticGameObject(gameObject, gameObject_static, true);
+		Engine->scene->SetStaticGameObject(gameObject, gameObject_static, true);
 	}
 
 	ImGui::Unindent();
@@ -174,19 +174,19 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 
 		if (ImGui::DragFloat3("Position", (float*)&pos, 0.15f))
 		{
-			App->input->InfiniteHorizontal();
+			Engine->input->InfiniteHorizontal();
 			transform->SetPosition(pos);
 		}
 
 		if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.5f))
 		{
-			App->input->InfiniteHorizontal();
+			Engine->input->InfiniteHorizontal();
 			transform->SetEulerRotation(rotation);
 		}
 
 		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.15f))
 		{
-			App->input->InfiniteHorizontal();
+			Engine->input->InfiniteHorizontal();
 			transform->SetScale(scale);
 		}
 
@@ -252,7 +252,7 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 				if (payload->DataSize == sizeof(uint64))
 				{
 					uint64 resourceID = *(const uint64*)payload->Data;
-					Resource* resource = App->moduleResources->GetResource(resourceID);
+					Resource* resource = Engine->moduleResources->GetResource(resourceID);
 
 					if (resource->GetType() == Resource::Type::MESH)
 					{
@@ -296,7 +296,7 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 
 		if (material->textureID != 0)
 		{
-			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(material->textureID);
+			R_Texture* rTex = (R_Texture*)Engine->moduleResources->GetResource(material->textureID);
 			if (rTex)
 			{
 				ImGui::Text(rTex->GetName());
@@ -309,7 +309,7 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
 						if (payload->DataSize == sizeof(uint64))
 						{
 							uint64 resourceID = *(const uint64*)payload->Data;
-							Resource* resource = App->moduleResources->GetResource(resourceID);
+							Resource* resource = Engine->moduleResources->GetResource(resourceID);
 
 							if (resource->GetType() == Resource::Type::TEXTURE)
 							{
@@ -343,17 +343,17 @@ void W_Inspector::DrawCamera(GameObject* gameObject, C_Camera* camera)
 
 		if (ImGui::Button("Match camera"))
 		{
-			App->camera->Match(camera);
+			Engine->camera->Match(camera);
 		}
 
 		if (ImGui::Checkbox("Set View Camera", &camera->active_camera))
 		{
-			camera->active_camera ? App->renderer3D->SetActiveCamera(camera) : App->renderer3D->SetActiveCamera(nullptr);
+			camera->active_camera ? Engine->renderer3D->SetActiveCamera(camera) : Engine->renderer3D->SetActiveCamera(nullptr);
 		}
 
 		if (ImGui::Checkbox("Camera Culling", &camera->culling))
 		{
-			camera->culling ? App->renderer3D->SetCullingCamera(camera) : App->renderer3D->SetCullingCamera(nullptr);
+			camera->culling ? Engine->renderer3D->SetCullingCamera(camera) : Engine->renderer3D->SetCullingCamera(nullptr);
 		}
 
 		//TODO: move all frustum functions to C_Camera and call from there
@@ -395,7 +395,7 @@ void W_Inspector::DrawAnimator(GameObject* gameObject, C_Animator* animator)
 		R_AnimatorController* rAnimator = (R_AnimatorController*)animator->GetResource();
 		for (uint i = 0; i < rAnimator->animations.size(); ++i)
 		{
-			R_Animation* animation = (R_Animation*)App->moduleResources->GetResource(rAnimator->animations[i]);
+			R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
 			ImGui::Text(animation ? animation->name.c_str() : "Empty Animation");
 		}
 
@@ -450,14 +450,14 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 			if (ImGui::MenuItem("Create New"))
 			{
 				const char* dir = editor->w_explorer->GetCurrentFolder()->GetOriginalFile();
-				if (uint64 resourceID = App->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", dir))
+				if (uint64 resourceID = Engine->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", dir))
 				{
 					particleSystem->SetResource(resourceID);
 				}
 			}
 			
 			std::vector<const ResourceInfo*> ResourceInfos;
-			if (App->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, ResourceInfos))
+			if (Engine->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, ResourceInfos))
 			{
 				ImGui::Separator();
 				for (uint i = 0; i < ResourceInfos.size(); ++i)

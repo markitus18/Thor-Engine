@@ -24,9 +24,9 @@ public:
 	M_Input(bool start_enabled = true);
 	~M_Input();
 
-	bool Init(Config& config);
-	update_status PreUpdate(float dt);
-	bool CleanUp();
+	bool Init(Config& config) override;
+	update_status PreUpdate(float dt) override;
+	bool CleanUp() override;
 
 	void SetMouseX(int x);
 	void SetMouseY(int y);

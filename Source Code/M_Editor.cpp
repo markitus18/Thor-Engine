@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Engine.h"
 #include "Config.h"
 #include "M_Editor.h"
 #include "M_Window.h"
@@ -57,7 +57,7 @@ M_Editor::~M_Editor()
 bool M_Editor::Init(Config& config)
 {
 	ImGui::CreateContext();
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
+	ImGui_ImplSDL2_InitForOpenGL(Engine->window->window, Engine->renderer3D->context);
 	ImGui_ImplOpenGL3_Init();
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -81,17 +81,17 @@ bool M_Editor::Start()
 {
 	CreateWindows();
 
-	w_explorer->resourceIcons[Resource::Type::FOLDER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FolderIcon.png").ID;
-	w_explorer->resourceIcons[Resource::Type::MESH] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/FileIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::FOLDER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/FolderIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::MESH] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/FileIcon.png").ID;
 	w_explorer->resourceIcons[Resource::Type::TEXTURE] = 0;
-	w_explorer->resourceIcons[Resource::Type::MATERIAL] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").ID;
-	w_explorer->resourceIcons[Resource::Type::ANIMATION] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").ID;
-	w_explorer->resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").ID;
-	w_explorer->resourceIcons[Resource::Type::MODEL] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").ID;
-	w_explorer->resourceIcons[Resource::Type::PARTICLESYSTEM] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").ID;
-	w_explorer->resourceIcons[Resource::Type::SHADER] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").ID;
-	w_explorer->resourceIcons[Resource::Type::SCENE] = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").ID;
-	w_explorer->selectedResourceImage = App->moduleResources->GetResourceInfo("Engine/Assets/Icons/SelectedIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::MATERIAL] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::ANIMATION] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::PREFAB] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::PARTICLESYSTEM] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::SHADER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").ID;
+	w_explorer->resourceIcons[Resource::Type::SCENE] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").ID;
+	w_explorer->selectedResourceImage = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SelectedIcon.png").ID;
 
 	return true;
 }
@@ -99,7 +99,7 @@ bool M_Editor::Start()
 update_status M_Editor::PreUpdate(float dt)
 {
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui_ImplSDL2_NewFrame(Engine->window->window);
 	ImGui::NewFrame();
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -116,7 +116,7 @@ void M_Editor::CreateWindows()
 	buttons = new P_Buttons();
 
 	//Creating dock base windows
-	Dock* baseDock = new Dock("BaseWindowDock", App->window->windowSize);
+	Dock* baseDock = new Dock("BaseWindowDock", Engine->window->windowSize);
 	docks.push_back(baseDock);
 	baseDock->Split(VERTICAL, 0.8f);
 	baseDock->GetDockChildren()[0]->Split(HORIZONTAL, 0.7f);
@@ -163,12 +163,12 @@ void M_Editor::Draw()
 	//DrawPanels();
 	docks[0]->Draw(); //TOOD: Do a proper data access
 
-	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	if (Engine->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
 		DeleteSelected();
 	}
 
-	if (dragging == true && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP || App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE))
+	if (dragging == true && (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP || Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE))
 	{
 		toDragGOs.clear();
 		FinishDrag(true, false);
@@ -192,20 +192,20 @@ void M_Editor::Draw()
 		{
 			if (ImGui::MenuItem("New Scene"))
 			{
-				App->scene->CreateDefaultScene();
+				Engine->scene->CreateDefaultScene();
 			}
 
 			if (ImGui::BeginMenu("Open Scene"))
 			{
 				//TODO: avoid doing this every frame
 				sceneList.clear();
-				App->fileSystem->GetAllFilesWithExtension("", "scene", sceneList);
+				Engine->fileSystem->GetAllFilesWithExtension("", "scene", sceneList);
 				
 				for (uint i = 0; i < sceneList.size(); i++)
 				{
 					if (ImGui::MenuItem(sceneList[i].c_str()))
 					{
-						App->LoadScene(sceneList[i].c_str());
+						Engine->LoadScene(sceneList[i].c_str());
 					}
 				}
 				ImGui::EndMenu();
@@ -213,13 +213,13 @@ void M_Editor::Draw()
 
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				if (App->scene->current_scene == "Untitled")
+				if (Engine->scene->current_scene == "Untitled")
 				{
 					OpenFileNameWindow();
 				}
 				else
 				{
-					App->SaveScene(App->scene->current_scene.c_str());
+					Engine->SaveScene(Engine->scene->current_scene.c_str());
 				}
 			}
 
@@ -244,7 +244,7 @@ void M_Editor::Draw()
 			{
 				if (ImGui::MenuItem("Camera"))
 				{
-					App->scene->CreateCamera();
+					Engine->scene->CreateCamera();
 				}
 				ImGui::EndMenu();
 			}
@@ -255,16 +255,16 @@ void M_Editor::Draw()
 		{
 			if (ImGui::MenuItem("Create Empty"))
 			{
-				std::string name(App->scene->GetNewGameObjectName("GameObject"));
-				GameObject* newGameObject = App->scene->CreateGameObject(name.c_str());
+				std::string name(Engine->scene->GetNewGameObjectName("GameObject"));
+				GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str());
 				SelectSingle(newGameObject);
 			}
 
 			if (ImGui::MenuItem("Create Empty Child"))
 			{
 				GameObject* parent = (GameObject*)(selectedGameObjects.size() > 0 ? selectedGameObjects[0] : nullptr);
-				std::string name(App->scene->GetNewGameObjectName("GameObject", parent));
-				GameObject* newGameObject = App->scene->CreateGameObject(name.c_str(), parent);
+				std::string name(Engine->scene->GetNewGameObjectName("GameObject", parent));
+				GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str(), parent);
 				SelectSingle(newGameObject);
 			}
 
@@ -272,8 +272,8 @@ void M_Editor::Draw()
 			{
 				for (uint i = 0; i < 10; i++)
 				{
-					std::string name(App->scene->GetNewGameObjectName("GameObject"));
-					GameObject* newGameObject = App->scene->CreateGameObject(name.c_str());
+					std::string name(Engine->scene->GetNewGameObjectName("GameObject"));
+					GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str());
 					SelectSingle(newGameObject);
 				}
 			}
@@ -281,8 +281,8 @@ void M_Editor::Draw()
 			{
 				if (ImGui::MenuItem("Cube"))
 				{
-					std::string name(App->scene->GetNewGameObjectName("Cube"));
-					GameObject* newGameObject = App->scene->CreateGameObject(name.c_str());
+					std::string name(Engine->scene->GetNewGameObjectName("Cube"));
+					GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str());
 					SelectSingle(newGameObject);
 
 				}
@@ -314,15 +314,15 @@ void M_Editor::Draw()
 			ImGui::Separator();
 			if (ImGui::MenuItem("Documentation       "))
 			{
-				App->RequestBrowser("https://github.com/markitus18/Game-Engine/wiki");
+				Engine->RequestBrowser("https://github.com/markitus18/Game-Engine/wiki");
 			}
 			if (ImGui::MenuItem("Download latest     "))
 			{
-				App->RequestBrowser("https://github.com/markitus18/Game-Engine/releases");
+				Engine->RequestBrowser("https://github.com/markitus18/Game-Engine/releases");
 			}
 			if (ImGui::MenuItem("Report a bug        "))
 			{
-				App->RequestBrowser("https://github.com/markitus18/Game-Engine/issues");
+				Engine->RequestBrowser("https://github.com/markitus18/Game-Engine/issues");
 			}
 
 			ImGui::EndMenu();
@@ -333,10 +333,10 @@ void M_Editor::Draw()
 			ImGui::MenuItem("ImGui Demo", nullptr, &show_Demo_window);
 			if (ImGui::BeginMenu("Display"))
 			{
-				ImGui::MenuItem("Quadtree", nullptr, &App->scene->drawQuadtree);
-				ImGui::MenuItem("Ray picking", nullptr, &App->camera->drawRay);
-				ImGui::MenuItem("GameObjects box", nullptr, &App->scene->drawBounds);
-				ImGui::MenuItem("GameObjects box (selected)", nullptr, &App->scene->drawBoundsSelected);
+				ImGui::MenuItem("Quadtree", nullptr, &Engine->scene->drawQuadtree);
+				ImGui::MenuItem("Ray picking", nullptr, &Engine->camera->drawRay);
+				ImGui::MenuItem("GameObjects box", nullptr, &Engine->scene->drawBounds);
+				ImGui::MenuItem("GameObjects box (selected)", nullptr, &Engine->scene->drawBoundsSelected);
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();
@@ -405,7 +405,7 @@ void M_Editor::ShowPlayWindow()
 		std::string name = Time::running ? "Stop" : "Play";
 		if (ImGui::Button(name.c_str()))
 		{
-			Time::running ? App->scene->Stop() : App->scene->Play();
+			Time::running ? Engine->scene->Stop() : Engine->scene->Play();
 		}
 		ImGui::SameLine();
 		std::string name2 = Time::paused ? "Resmue" : "Pause";
@@ -431,12 +431,12 @@ void M_Editor::ShowFileNameWindow()
 
 	if (ImGui::InputText("", fileName, 50, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 	{
-		App->SaveScene(fileName);
+		Engine->SaveScene(fileName);
 	}
 
 	if (ImGui::Button("Accept"))
 	{
-		App->SaveScene(fileName);
+		Engine->SaveScene(fileName);
 		show_fileName_window = false;
 	}
 
@@ -452,7 +452,7 @@ void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
 	std::string file, extension;
-	App->fileSystem->SplitFilePath(App->scene->current_scene.c_str(), nullptr, &file, &extension);
+	Engine->fileSystem->SplitFilePath(Engine->scene->current_scene.c_str(), nullptr, &file, &extension);
 	std::string str = file;
 	if (extension != "")
 		file.append("." + extension);
@@ -603,7 +603,7 @@ void M_Editor::DeleteSelected()
 		selectedGameObjects[i]->Unselect();
 		if (selectedGameObjects[i]->GetType() == GAMEOBJECT)
 		{
-			App->scene->DeleteGameObject((GameObject*)selectedGameObjects[i]);
+			Engine->scene->DeleteGameObject((GameObject*)selectedGameObjects[i]);
 		}
 		else
 		{

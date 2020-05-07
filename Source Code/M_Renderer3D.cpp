@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Engine.h"
 
 #include "Gizmos.h"
 #include "OpenGL.h"
@@ -53,7 +53,7 @@ bool M_Renderer3D::Init(Config& config)
 	bool ret = true;
 	
 	//Create context
-	context = SDL_GL_CreateContext(App->window->window);
+	context = SDL_GL_CreateContext(Engine->window->window);
 	if(context == nullptr)
 	{
 		LOG("OpenGL context could not be created! SDL_Error: %s", SDL_GetError());
@@ -151,9 +151,9 @@ bool M_Renderer3D::Init(Config& config)
 
 	OnResize();
 
-	mesh_draw_timer = App->moduleEditor->AddTimer("Mesh draw", "Render");
-	particles_draw_timer = App->moduleEditor->AddTimer("Particles draw", "Render");
-	box_draw_timer = App->moduleEditor->AddTimer("Box draw", "Render");
+	mesh_draw_timer = Engine->moduleEditor->AddTimer("Mesh draw", "Render");
+	particles_draw_timer = Engine->moduleEditor->AddTimer("Particles draw", "Render");
+	box_draw_timer = Engine->moduleEditor->AddTimer("Box draw", "Render");
 
 	//Creating screenshot camera----------------
 	screenshotCamera = new C_Camera(nullptr);
@@ -174,7 +174,7 @@ bool M_Renderer3D::Init(Config& config)
 
 bool M_Renderer3D::Start()
 {
-	defaultTextureID = App->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Texture.png").ID;
+	defaultTextureID = Engine->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Texture.png").ID;
 	return true;
 }
 
@@ -193,7 +193,7 @@ update_status M_Renderer3D::PreUpdate(float dt)
 	glLoadMatrixf(camera->GetOpenGLViewMatrix());
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->GetCamera()->frustum.Pos().x, App->camera->GetCamera()->frustum.Pos().y, App->camera->GetCamera()->frustum.Pos().z);
+	lights[0].SetPos(Engine->camera->GetCamera()->frustum.Pos().x, Engine->camera->GetCamera()->frustum.Pos().y, Engine->camera->GetCamera()->frustum.Pos().z);
 
 //	for(uint i = 0; i < MAX_LIGHTS; ++i)
 //		lights[i].Render();
@@ -205,16 +205,16 @@ update_status M_Renderer3D::PreUpdate(float dt)
 update_status M_Renderer3D::PostUpdate(float dt)
 {
 	DrawAllScene();
-	App->moduleEditor->Draw();
+	Engine->moduleEditor->Draw();
 
-	SDL_GL_SwapWindow(App->window->window);
+	SDL_GL_SwapWindow(Engine->window->window);
 
 	return UPDATE_CONTINUE;
 }
 
 uint M_Renderer3D::SaveImage(const char* source_file)
 {
-	SDL_Surface* surface = SDL_GetWindowSurface(App->window->window);
+	SDL_Surface* surface = SDL_GetWindowSurface(Engine->window->window);
 	//Enable surface pixel read-write
 	SDL_LockSurface(surface);
 
@@ -223,7 +223,7 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 	
 	SDL_UnlockSurface(surface);
 
-	uint64 ret = App->moduleResources->ImportModelThumbnail(pixels, source_file, surface->w, surface->h);
+	uint64 ret = Engine->moduleResources->ImportModelThumbnail(pixels, source_file, surface->w, surface->h);
 	/*
 	//Generating IL Texture
 	ILuint img;
@@ -292,13 +292,13 @@ void M_Renderer3D::GenerateSceneBuffers()
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->windowSize.x, App->window->windowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine->window->windowSize.x, Engine->window->windowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//Generating the depth buffer
 	glGenRenderbuffers(1, &depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, App->window->windowSize.x, App->window->windowSize.y);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, Engine->window->windowSize.x, Engine->window->windowSize.y);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -315,8 +315,8 @@ void M_Renderer3D::GenerateSceneBuffers()
 
 void M_Renderer3D::OnResize()
 {
-	glViewport(0, 0, App->window->windowSize.x, App->window->windowSize.y);
-	camera->SetAspectRatio((float)App->window->windowSize.x / (float)App->window->windowSize.y);
+	glViewport(0, 0, Engine->window->windowSize.x, Engine->window->windowSize.y);
+	camera->SetAspectRatio((float)Engine->window->windowSize.x / (float)Engine->window->windowSize.y);
 	UpdateProjectionMatrix();
 	GenerateSceneBuffers();
 }
@@ -338,7 +338,7 @@ void M_Renderer3D::SetActiveCamera(C_Camera* camera)
 	{
 		this->camera->active_camera = false;
 	}
-	this->camera = camera ? camera : App->camera->GetCamera();
+	this->camera = camera ? camera : Engine->camera->GetCamera();
 	if (camera)
 	{
 		camera->active_camera = true;
@@ -368,7 +368,7 @@ void M_Renderer3D::SetCullingCamera(C_Camera* camera)
 void M_Renderer3D::DrawAllScene()
 {
 	glUseProgram(0);
-	//TODO: Move this into a mesh "model" or a renderer method
+	//TODO: Move this into a mesh "prefab" or a renderer method
 	//Both draw and input handling
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
@@ -396,27 +396,27 @@ void M_Renderer3D::DrawAllScene()
 		glEnd();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+	if (Engine->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 	{
 		drawGrid = !drawGrid;
 	}
 
-	App->moduleEditor->StartTimer(mesh_draw_timer);
+	Engine->moduleEditor->StartTimer(mesh_draw_timer);
 	DrawAllMeshes();
-	App->moduleEditor->ReadTimer(mesh_draw_timer);
+	Engine->moduleEditor->ReadTimer(mesh_draw_timer);
 
-	App->moduleEditor->StartTimer(particles_draw_timer);
+	Engine->moduleEditor->StartTimer(particles_draw_timer);
 	DrawAllParticles();
-	App->moduleEditor->ReadTimer(particles_draw_timer);
+	Engine->moduleEditor->ReadTimer(particles_draw_timer);
 
-	App->moduleEditor->StartTimer(box_draw_timer);
+	Engine->moduleEditor->StartTimer(box_draw_timer);
 	DrawAllBox();
-	App->moduleEditor->ReadTimer(box_draw_timer);
+	Engine->moduleEditor->ReadTimer(box_draw_timer);
 	
 	//TODO: move to another side. Camera call to draw on renderer
-	if (App->camera->drawRay)
+	if (Engine->camera->drawRay)
 	{
-		App->camera->DrawRay();
+		Engine->camera->DrawRay();
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
@@ -445,12 +445,12 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	R_Material* mat = (R_Material*)rMesh.material->GetResource();
 	if (mat->shaderID == 0) return;
 	
-	R_Shader* shader = (R_Shader*)App->moduleResources->GetResource(mat->shaderID);
+	R_Shader* shader = (R_Shader*)Engine->moduleResources->GetResource(mat->shaderID);
 	glUseProgram(shader->shaderProgram);
 
 	uint64 textureID = mat->textureID ? mat->textureID : defaultTextureID; //TODO: Default texture is set manually from library ID
 
-	R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(textureID);
+	R_Texture* rTex = (R_Texture*)Engine->moduleResources->GetResource(textureID);
 	if (rTex && rTex->buffer != 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, rTex->buffer);
@@ -459,17 +459,17 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	uint colorLoc = glGetUniformLocation(shader->shaderProgram, "baseColor");
 	glUniform4fv(colorLoc, 1, &mat->color);
 
-	//Sending model matrix
+	//Sending prefab matrix
 	uint modelLoc = glGetUniformLocation(shader->shaderProgram, "model_matrix");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, rMesh.transform.ptr());
 
 	//Sending view matrix
 	uint projectionLoc = glGetUniformLocation(shader->shaderProgram, "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetCamera()->GetOpenGLProjectionMatrix());
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, Engine->camera->GetCamera()->GetOpenGLProjectionMatrix());
 
 	//Sending projection matrix
 	uint viewLoc = glGetUniformLocation(shader->shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, App->camera->GetCamera()->GetOpenGLViewMatrix());
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, Engine->camera->GetCamera()->GetOpenGLViewMatrix());
 	
 	//Binding vertex array object
 	if (rMesh.mesh->animMesh == nullptr)
@@ -511,11 +511,11 @@ void M_Renderer3D::DrawParticle(RenderParticle& particle)
 	glMultMatrixf((float*)&particle.transform);
 
 	//Binding particle Texture
-	//if (R_Material* mat = (R_Material*)App->moduleResources->GetResource(particle.materialID))
+	//if (R_Material* mat = (R_Material*)Engine->moduleResources->GetResource(particle.materialID))
 	//{
 	//	if (mat->textureID)
 	//	{
-			R_Texture* rTex = (R_Texture*)App->moduleResources->GetResource(particle.materialID);
+			R_Texture* rTex = (R_Texture*)Engine->moduleResources->GetResource(particle.materialID);
 			if (rTex && rTex->buffer != 0)
 			{
 				glBindTexture(GL_TEXTURE_2D, rTex->buffer);

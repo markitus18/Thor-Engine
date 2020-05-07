@@ -1,6 +1,6 @@
 #include "M_Scene.h"
 
-#include "Application.h"
+#include "Engine.h"
 #include "Globals.h"
 #include "Intersections.h"
 #include "Config.h"
@@ -17,7 +17,7 @@
 
 #include "GameObject.h"
 
-#include "R_Model.h"
+#include "R_Prefab.h"
 #include "R_Mesh.h"
 
 #include "C_Mesh.h"
@@ -42,14 +42,14 @@ bool M_Scene::Init(Config& config)
 {
 	std::string newScene = config.GetString("Current Scene");
 
-	if (newScene == "" || !App->fileSystem->Exists(newScene.c_str()))
+	if (newScene == "" || !Engine->fileSystem->Exists(newScene.c_str()))
 	{
 		CreateDefaultScene();
 	}
 	else
 	{
 		current_scene = newScene;
-		App->LoadScene(current_scene.c_str());
+		Engine->LoadScene(current_scene.c_str());
 	}
 
 	quadtree = new Quadtree(AABB(vec(-80, -30, -80), vec(80, 30, 80)));
@@ -63,9 +63,9 @@ bool M_Scene::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	cullingTimer_library = App->moduleEditor->AddTimer("Math library culling", "Culling");
-	cullingTimer_normal = App->moduleEditor->AddTimer("Normal culling", "Culling");
-	cullingTimer_optimized = App->moduleEditor->AddTimer("Optimized culling", "Culling");
+	cullingTimer_library = Engine->moduleEditor->AddTimer("Math library culling", "Culling");
+	cullingTimer_normal = Engine->moduleEditor->AddTimer("Normal culling", "Culling");
+	cullingTimer_optimized = Engine->moduleEditor->AddTimer("Optimized culling", "Culling");
 
 	return ret;
 }
@@ -84,7 +84,7 @@ bool M_Scene::CleanUp()
 update_status M_Scene::Update(float dt)
 {
 #pragma region WindowTest
-	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
+	if (Engine->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
 	{
 
 		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED |
@@ -106,22 +106,22 @@ update_status M_Scene::Update(float dt)
 #pragma endregion
  	UpdateAllGameObjects(root, dt);
 
-	if (App->renderer3D->culling_camera)
+	if (Engine->renderer3D->culling_camera)
 	{
 		std::vector<const GameObject*> candidates;
 
-		App->moduleEditor->StartTimer(cullingTimer_optimized);
-		quadtree->CollectCandidates(candidates, App->renderer3D->culling_camera->frustum);
+		Engine->moduleEditor->StartTimer(cullingTimer_optimized);
+		quadtree->CollectCandidates(candidates, Engine->renderer3D->culling_camera->frustum);
 
 		std::vector<const GameObject*> gameObjects;
 		TestGameObjectsCulling(candidates, gameObjects);
 		TestGameObjectsCulling(nonStatic, gameObjects);
-		App->moduleEditor->ReadTimer(cullingTimer_optimized);
+		Engine->moduleEditor->ReadTimer(cullingTimer_optimized);
 
 		for (uint i = 0; i < gameObjects.size(); i++)
 		{
 			if (gameObjects[i]->name != "root");
-			((GameObject*)gameObjects[i])->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
+			((GameObject*)gameObjects[i])->Draw(Engine->moduleEditor->shaded, Engine->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
 		}
 		gameObjects.clear();
 	}
@@ -239,7 +239,7 @@ void M_Scene::LoadConfig(Config& config)
 	if (newScene != "" && newScene != current_scene)
 	{
 		current_scene = newScene;
-		App->LoadScene(current_scene.c_str());
+		Engine->LoadScene(current_scene.c_str());
 	}
 }
 
@@ -247,11 +247,11 @@ void M_Scene::SaveScene(Config& node) const
 {
 	//This is a a workaround. SaveScene returns a serialized buffer.
 	//We use that buffer to generate a new Config node and assign it to the original one
-	R_Model model;
-	model.root = root;
+	R_Prefab prefab;
+	prefab.root = root;
 
 	char* buffer = nullptr;
-	Importer::Scenes::SaveScene(&model, &buffer);
+	Importer::Scenes::SaveScene(&prefab, &buffer);
 
 	Config sceneNode(buffer);
 	node = sceneNode;
@@ -289,7 +289,7 @@ void M_Scene::LoadScene(Config& node, bool tmp)
 void M_Scene::LoadScene(const char* file)
 {
 	current_scene = file;
-	App->LoadScene(file);
+	Engine->LoadScene(file);
 }
 
 void M_Scene::LoadGameObject(const Config& config)
@@ -341,7 +341,7 @@ void M_Scene::DeleteGameObject(GameObject* gameObject)
 			return;
 	}
 	toRemove.push_back(gameObject);
-	App->OnRemoveGameObject(gameObject);
+	Engine->OnRemoveGameObject(gameObject);
 
 	while (gameObject->childs.empty() == false) //"DeleteGameObject" will remove the gameObject from the childs list
 	{
@@ -432,7 +432,7 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 			}
 		}
 	}
-	App->moduleEditor->SelectSingle((GameObject*)toSelect);
+	Engine->moduleEditor->SelectSingle((GameObject*)toSelect);
 }
 
 GameObject* M_Scene::CreateCamera()
@@ -451,20 +451,20 @@ GameObject* M_Scene::CreateCamera()
 void M_Scene::Play()
 {
 	Time::Start(60);
-	App->SaveScene("Engine/tmp.scene", true);
+	Engine->SaveScene("Engine/tmp.scene", true);
 }
 
 void M_Scene::Stop()
 {
 	Time::Stop();
-	App->LoadScene("Engine/tmp.scene");
+	Engine->LoadScene("Engine/tmp.scene");
 }
 
 void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)
 {
 	for (uint i = 0; i < vector.size(); i++)
 	{
-		if (App->renderer3D->culling_camera->frustum.Intersects(vector[i]->GetAABB()))
+		if (Engine->renderer3D->culling_camera->frustum.Intersects(vector[i]->GetAABB()))
 		{
 			final.push_back(vector[i]);
 		}
@@ -479,7 +479,7 @@ void M_Scene::UpdateAllGameObjects(GameObject* gameObject, float dt)
 void M_Scene::DrawAllGameObjects(GameObject* gameObject)
 {
 	if (gameObject->name != "root");
-		gameObject->Draw(App->moduleEditor->shaded, App->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
+		gameObject->Draw(Engine->moduleEditor->shaded, Engine->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{
@@ -516,7 +516,7 @@ void M_Scene::DeleteAllGameObjects()
 
 void M_Scene::CreateDefaultScene()
 {
-	App->LoadScene("Engine/Assets/Defaults/Untitled.scene");
+	Engine->LoadScene("Engine/Assets/Defaults/Untitled.scene");
 }
 
 void M_Scene::DeleteToRemoveGameObjects()

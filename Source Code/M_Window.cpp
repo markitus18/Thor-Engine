@@ -72,6 +72,8 @@ bool M_Window::Init(Config& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
+		flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+
 		window = SDL_CreateWindow(Engine->GetTitleName(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.x, windowSize.y, flags);
 
 		if(window == nullptr)
@@ -83,6 +85,9 @@ bool M_Window::Init(Config& config)
 		{
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
+
+			//Get GL Context
+			context = SDL_GL_CreateContext(window);
 		}
 	}
 
@@ -93,6 +98,8 @@ bool M_Window::Init(Config& config)
 bool M_Window::CleanUp()
 {
 	LOG("Destroying SDL window and quitting all SDL systems");
+
+	SDL_GL_DeleteContext(context);
 
 	//Destroy window
 	if(window != nullptr)

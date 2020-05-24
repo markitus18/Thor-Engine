@@ -27,6 +27,9 @@ public:
 	//The window we'll be rendering to
 	SDL_Window* window = nullptr;
 
+	//The openGL context associated with this window
+	SDL_GLContext context;
+
 	//The surface contained by the window
 	SDL_Surface* screen_surface = nullptr;
 

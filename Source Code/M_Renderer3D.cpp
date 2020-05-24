@@ -155,15 +155,6 @@ bool M_Renderer3D::Init(Config& config)
 	particles_draw_timer = Engine->moduleEditor->AddTimer("Particles draw", "Render");
 	box_draw_timer = Engine->moduleEditor->AddTimer("Box draw", "Render");
 
-	screenshotCamera->frustum.SetViewPlaneDistances(0.1f, 2000.0f);
-	screenshotCamera->frustum.SetPerspective(1.0f, 1.0f);
-
-	screenshotCamera->frustum.SetPos(float3(50, 50, 50));
-//	screenshotCamera->frustum.SetFront(float3::unitZ);
-//	screenshotCamera->frustum.SetUp(float3::unitY);
-	screenshotCamera->Look(float3(0, 0, 0));
-	screenshotCamera->frustum.SetUp(-screenshotCamera->frustum.Up());
-	screenshotCamera->update_projection = true;
 	//-----------------------------------------
 
 	return ret;

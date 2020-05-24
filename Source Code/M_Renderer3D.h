@@ -1,4 +1,6 @@
-#
+#ifndef __M_RENDERER_H__
+#define __M_RENDERER_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "Light.h"
@@ -149,3 +151,5 @@ private:
 	std::vector<RenderBox<Frustum>> frustum;
 	std::vector<RenderLine> lines;
 };
+
+#endif //__M_RENDERER_H__

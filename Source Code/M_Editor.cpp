@@ -384,7 +384,7 @@ void M_Editor::DrawPanels()
 void M_Editor::ShowAboutWindow()
 {
 	ImGui::SetNextWindowSize(ImVec2(600, 100));
-	ImGui::Begin("About Thor Engine", &show_About_window, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoResize);
+	ImGui::Begin("About Thor Engine", &show_About_window, ImGuiWindowFlags_NoResize);
 	ImGui::Text("v0.4-alpha");
 	ImGui::Separator();
 	ImGui::Text("By Marc Garrigo for educational purposes.");
@@ -427,7 +427,7 @@ void M_Editor::ShowPlayWindow()
 void M_Editor::ShowFileNameWindow()
 {
 	ImGui::SetNextWindowSize(ImVec2(400, 100));
-	ImGui::Begin("File Name", &show_fileName_window, ImVec2(0, 0), 1.0f, ImGuiWindowFlags_NoResize);
+	ImGui::Begin("File Name", &show_fileName_window, ImGuiWindowFlags_NoResize);
 
 	if (ImGui::InputText("", fileName, 50, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 	{

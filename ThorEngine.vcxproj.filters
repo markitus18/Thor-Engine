@@ -328,6 +328,9 @@
     <ClCompile Include="Source Code\Engine.cpp">
       <Filter>Source Code</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\WDetails.cpp">
+      <Filter>Source Code\Editor\DockBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -774,6 +777,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\Engine.h">
       <Filter>Source Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\WDetails.h">
+      <Filter>Source Code\Editor\DockBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

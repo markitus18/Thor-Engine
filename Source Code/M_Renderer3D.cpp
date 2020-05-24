@@ -122,8 +122,8 @@ bool M_Renderer3D::Init(Config& config)
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		GLfloat lmodel_ambient[] = { 1.4, 1.4, 1.4, 1.0 };
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+		//GLfloat lmodel_ambient[] = { 1.4, 1.4, 1.4, 1.0 };
+		//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
 
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
@@ -154,9 +154,6 @@ bool M_Renderer3D::Init(Config& config)
 	mesh_draw_timer = Engine->moduleEditor->AddTimer("Mesh draw", "Render");
 	particles_draw_timer = Engine->moduleEditor->AddTimer("Particles draw", "Render");
 	box_draw_timer = Engine->moduleEditor->AddTimer("Box draw", "Render");
-
-	//Creating screenshot camera----------------
-	screenshotCamera = new C_Camera(nullptr);
 
 	screenshotCamera->frustum.SetViewPlaneDistances(0.1f, 2000.0f);
 	screenshotCamera->frustum.SetPerspective(1.0f, 1.0f);
@@ -245,7 +242,6 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 uint M_Renderer3D::SaveModelThumbnail(GameObject* gameObject)
 {
 	C_Camera* previous_camera = camera;
-	SetActiveCamera(screenshotCamera);
 
 	PreUpdate(0);
 	gameObject->DrawResursive(true, false, false, false);

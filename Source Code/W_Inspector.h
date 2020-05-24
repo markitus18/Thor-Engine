@@ -1,7 +1,7 @@
 #ifndef __W_INSPECTOR_H__
 #define __W_INSPECTOR_H__
 
-#include "DWindow.h"
+#include "WDetails.h"
 
 #include <vector>
 #include <string>
@@ -13,10 +13,9 @@ class C_Camera;
 class C_Animator;
 class C_Billboard;
 class C_ParticleSystem;
+class C_Material;
 
-class R_Material;
-
-class W_Inspector : public DWindow
+class W_Inspector : public WDetails
 {
 public:
 	W_Inspector(M_Editor* editor);
@@ -30,7 +29,8 @@ private:
 
 	void DrawTransform(GameObject* gameObject, C_Transform* transform);
 	void DrawMesh(GameObject* gameObject, C_Mesh* mesh);
-	void DrawMaterial(GameObject* gameObject, R_Material* material);
+	void DrawMaterials(GameObject* gameObject);
+	void DrawMaterial(GameObject* gameObject, C_Material* material, uint index);
 	void DrawCamera(GameObject* gameObject, C_Camera* camera);
 	void DrawAnimator(GameObject* gameObject, C_Animator* animator);
 	void DrawBillboard(GameObject* gameObject, C_Billboard* billboard);
@@ -39,6 +39,8 @@ private:
 private:
 	std::vector<char*> billboardAlignmentOptions;
 	std::vector<char*> billboardLockOptions;
+
+	float nameTabRatio = 0.3f;
 
 };
 

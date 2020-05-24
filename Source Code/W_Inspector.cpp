@@ -4,18 +4,17 @@
 
 #include "M_Editor.h"
 #include "Engine.h"
-#include "M_Input.h"
-#include "M_Scene.h"
+#include "M_Scene.h" //Included for static changes
 #include "M_Resources.h"
-#include "M_Camera3D.h"
-#include "M_Renderer3D.h"
+#include "M_Camera3D.h" //Included for camera editor matching
+#include "M_Renderer3D.h" //Included for camera editor matching
 #include "W_Explorer.h"
 
 #include "TreeNode.h"
 #include "GameObject.h"
 
 #include "C_Mesh.h"
-#include "C_Transform.h" //TODO: why wasnt it necessary?
+#include "C_Transform.h"
 #include "C_Material.h"
 #include "C_Animator.h"
 #include "C_Camera.h"
@@ -29,7 +28,7 @@
 #include "R_AnimatorController.h"
 #include "R_ParticleSystem.h"
 
-W_Inspector::W_Inspector(M_Editor* editor) : DWindow(editor, "Inspector")
+W_Inspector::W_Inspector(M_Editor* editor) : WDetails(editor, "Inspector")
 {
 	billboardAlignmentOptions.push_back("Screen");
 	billboardAlignmentOptions.push_back("Camera");
@@ -48,7 +47,6 @@ void W_Inspector::Draw()
 		DrawGameObject((GameObject*)editor->selectedGameObjects[0]);
 	}
 
-	
 }
 
 void W_Inspector::OnResize()
@@ -90,6 +88,8 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	C_Mesh* mesh = gameObject->GetComponent<C_Mesh>();
 	DrawMesh(gameObject, mesh);
 
+	DrawMaterials(gameObject);
+
 	C_Camera* camera = gameObject->GetComponent<C_Camera>();
 	DrawCamera(gameObject, camera);
 
@@ -105,7 +105,9 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	ImGui::Separator();
 	ImGui::Separator();
 
-	if (ImGui::Button("Add Component"))
+	int buttonPos_x = ImGui::GetWindowWidth() / 2 - 100;
+	ImGui::SetCursorPosX(buttonPos_x);
+	if (ImGui::Button("Add Component", ImVec2(200, 0)))
 	{
 		ImGui::OpenPopup("Add Component Popup");
 	}
@@ -172,23 +174,9 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 		float3 scale = transform->GetScale();
 		float3 rotation = transform->GetEulerRotation();
 
-		if (ImGui::DragFloat3("Position", (float*)&pos, 0.15f))
-		{
-			Engine->input->InfiniteHorizontal();
-			transform->SetPosition(pos);
-		}
-
-		if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.5f))
-		{
-			Engine->input->InfiniteHorizontal();
-			transform->SetEulerRotation(rotation);
-		}
-
-		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.15f))
-		{
-			Engine->input->InfiniteHorizontal();
-			transform->SetScale(scale);
-		}
+		if (DrawDetails_Float3("Position", pos)) transform->SetPosition(pos);
+		if (DrawDetails_Float3("Rotation", rotation)) transform->SetEulerRotation(rotation);
+		if (DrawDetails_Float3("Scale", scale)) transform->SetScale(scale);
 
 		if (showDebugInfo)
 		{
@@ -229,107 +217,58 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 
 void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 {
-	std::vector<C_Material*> materials;
-	gameObject->GetComponents(materials);
 	if (mesh == nullptr) return;
-
 	R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
 
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
 
-		ImGui::Text("Mesh"); ImGui::SameLine();
-		
-		if (ImGui::Button(rMesh ? rMesh->name.c_str() : "", ImVec2(ImGui::GetWindowSize().x - ImGui::GetCursorPosX(), 0)));
-		{
-			//TODO: Open window with meshes list
-		}
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_1"))
-			{
-				if (payload->DataSize == sizeof(uint64))
-				{
-					uint64 resourceID = *(const uint64*)payload->Data;
-					Resource* resource = Engine->moduleResources->GetResource(resourceID);
+		Resource* resource = (Resource*)rMesh;
 
-					if (resource->GetType() == Resource::Type::MESH)
-					{
-						mesh->SetResource(resource);
-					}
-				}
-			}
-			ImGui::EndDragDropTarget();
-		}
-
-		ImGui::Separator();
-		ImGui::Text("Materials");
-		ImGui::Separator();
-		ImGui::Text("Size: %i", materials.size());
-		for (uint i = 0; i < materials.size(); i++)
+		if (DrawDetails_Resource("Mesh", resource))
 		{
-			R_Material* rMat = (R_Material*)materials[i]->GetResource();
-			ImGui::Text("Element %i: %s", i, rMat->GetName());
+			mesh->SetResource(resource);
 		}
 
 		ImGui::Unindent();
 	}
 
-	if (materials.size() > 0)
-	{
-		for (uint i = 0; i < materials.size(); i++)
-		{
-			R_Material* rMat = (R_Material*)materials[i]->GetResource();
-			DrawMaterial(gameObject, rMat);
-		}
-	}
+
 }
 
-void W_Inspector::DrawMaterial(GameObject* gameObject, R_Material* material)
+void W_Inspector::DrawMaterials(GameObject* gameObject)
 {
-	if (material == nullptr) return;
+	std::vector<C_Material*> materials;
+	gameObject->GetComponents(materials);
 
-	if (ImGui::CollapsingHeader(material->GetName(), ImGuiTreeNodeFlags_DefaultOpen))
+	if (materials.size() == 0) return;
+	if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
 
-		if (material->textureID != 0)
+		if (materials.size() > 0)
 		{
-			R_Texture* rTex = (R_Texture*)Engine->moduleResources->GetResource(material->textureID);
-			if (rTex)
+			for (uint i = 0; i < materials.size(); i++)
 			{
-				ImGui::Text(rTex->GetName());
-				ImGui::Image((ImTextureID)rTex->buffer, ImVec2(128, 128), ImVec2(0, 1), ImVec2(1, 0));
-
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_2"))
-					{
-						if (payload->DataSize == sizeof(uint64))
-						{
-							uint64 resourceID = *(const uint64*)payload->Data;
-							Resource* resource = Engine->moduleResources->GetResource(resourceID);
-
-							if (resource->GetType() == Resource::Type::TEXTURE)
-							{
-								material->textureID = resourceID;
-							}
-						}
-					}
-					ImGui::EndDragDropTarget();
-				}
+				DrawMaterial(gameObject, materials[i], i);
 			}
 		}
 
-		float color[3] = { material->color.r, material->color.g, material->color.b };
-		if (ImGui::ColorEdit3("Color", color))
-		{
-			material->color.Set(color[0], color[1], color[2]);
-			material->needs_save = true;
-		}
-
 		ImGui::Unindent();
+	}
+}
+
+void W_Inspector::DrawMaterial(GameObject* gameObject, C_Material* material, uint index)
+{
+	if (material == nullptr) return;
+	R_Material* rMat = (R_Material*)material->GetResource();
+
+	std::string name = std::string("Element ") + std::to_string(index);
+	Resource* resource = (Resource*)rMat;
+	if (DrawDetails_Resource(name.c_str(), resource))
+	{
+		material->SetResource(resource);
 	}
 }
 
@@ -346,31 +285,30 @@ void W_Inspector::DrawCamera(GameObject* gameObject, C_Camera* camera)
 			Engine->camera->Match(camera);
 		}
 
-		if (ImGui::Checkbox("Set View Camera", &camera->active_camera))
+		if (DrawDetails_CheckBox("Set View Camera", camera->active_camera))
 		{
 			camera->active_camera ? Engine->renderer3D->SetActiveCamera(camera) : Engine->renderer3D->SetActiveCamera(nullptr);
 		}
 
-		if (ImGui::Checkbox("Camera Culling", &camera->culling))
+		if (DrawDetails_CheckBox("Camera Culling", camera->culling))
 		{
 			camera->culling ? Engine->renderer3D->SetCullingCamera(camera) : Engine->renderer3D->SetCullingCamera(nullptr);
 		}
 
-		//TODO: move all frustum functions to C_Camera and call from there
 		float camera_fov = camera->GetFOV();
-		if (ImGui::DragFloat("Field of View", (float*)&camera_fov))
+		if (DrawDetails_Float("Field of View", camera_fov))
 		{
 			camera->SetFOV(camera_fov);
 		}
 
 		float camera_near_plane = camera->GetNearPlane();
-		if (ImGui::DragFloat("Near plane", &camera_near_plane))
+		if (DrawDetails_Float("Near plane", camera_near_plane))
 		{
 			camera->SetNearPlane(camera_near_plane);
 		}
 
 		float camera_far_plane = camera->GetFarPlane();
-		if (ImGui::DragFloat("Far plane", &camera_far_plane))
+		if (DrawDetails_Float("Far plane", camera_far_plane))
 		{
 			camera->SetFarPlane(camera_far_plane);
 		}

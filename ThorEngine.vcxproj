@@ -14,19 +14,19 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>ThorEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -220,6 +220,7 @@
     <ClInclude Include="Source Code\Time.h" />
     <ClInclude Include="Source Code\Timer.h" />
     <ClInclude Include="Source Code\Vec2.h" />
+    <ClInclude Include="Source Code\WDetails.h" />
     <ClInclude Include="Source Code\W_Console.h" />
     <ClInclude Include="Source Code\W_EngineConfig.h" />
     <ClInclude Include="Source Code\W_Explorer.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="Source Code\TreeDisplay.cpp" />
     <ClCompile Include="Source Code\TreeNode.cpp" />
     <ClCompile Include="Source Code\Vec2.cpp" />
+    <ClCompile Include="Source Code\WDetails.cpp" />
     <ClCompile Include="Source Code\W_Console.cpp" />
     <ClCompile Include="Source Code\W_EngineConfig.cpp" />
     <ClCompile Include="Source Code\W_Explorer.cpp" />

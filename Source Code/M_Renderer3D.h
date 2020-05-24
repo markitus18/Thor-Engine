@@ -121,7 +121,6 @@ public:
 
 public:
 	C_Camera* camera = nullptr;
-	C_Camera* screenshotCamera = nullptr;
 	C_Camera* culling_camera = nullptr;
 
 	Light lights[MAX_LIGHTS];

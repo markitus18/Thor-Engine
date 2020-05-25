@@ -27,35 +27,42 @@ W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 
 void W_Scene::Draw()
 {
-	ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
-	img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
-	img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
-
-	ImGui::Image((ImTextureID)Engine->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
-
-	if (ImGui::BeginDragDropTarget())
+	ImGuiWindowFlags flags = 0;
+		//| ImGuiWindowFlags_NoMove;
+	if (ImGui::Begin("Scene", nullptr, flags))
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_6"))
+		ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
+		img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
+		img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
+
+		ImGui::Image((ImTextureID)Engine->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
+
+		if (ImGui::BeginDragDropTarget())
 		{
-			if (payload->DataSize == sizeof(uint64))
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_6"))
 			{
-				uint64 resourceID = *(const uint64*)payload->Data;
-				Resource* resource = Engine->moduleResources->GetResource(resourceID);
-
-				if (resource->GetType() == Resource::Type::PREFAB)
+				if (payload->DataSize == sizeof(uint64))
 				{
-					Engine->moduleResources->LoadModel(resourceID);
+					uint64 resourceID = *(const uint64*)payload->Data;
+					Resource* resource = Engine->moduleResources->GetResource(resourceID);
+
+					if (resource->GetType() == Resource::Type::PREFAB)
+					{
+						Engine->moduleResources->LoadModel(resourceID);
+					}
+
 				}
-
 			}
+			ImGui::EndDragDropTarget();
 		}
-		ImGui::EndDragDropTarget();
+
+		HandleGizmoUsage();
+
+		if (ImGuizmo::IsUsing() == false)
+			HandleInput();
+
+		ImGui::End();
 	}
-
-	HandleGizmoUsage();
-
-	if (ImGuizmo::IsUsing() == false)
-		HandleInput();
 }
 
 void W_Scene::OnResize()

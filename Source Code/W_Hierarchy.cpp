@@ -5,6 +5,8 @@
 
 #include "GameObject.h"
 
+#include "ImGui/imgui.h"
+
 W_Hierarchy::W_Hierarchy(M_Editor* editor) : DWindow(editor, "Hierarchy")
 {
 
@@ -12,7 +14,11 @@ W_Hierarchy::W_Hierarchy(M_Editor* editor) : DWindow(editor, "Hierarchy")
 
 void W_Hierarchy::Draw()
 {
-	DrawTree(Engine->scene->GetRoot());
+	if (ImGui::Begin("Hierarchy"))
+	{
+		DrawTree(Engine->scene->GetRoot());
+		ImGui::End();
+	}
 }
 
 void W_Hierarchy::OnResize()

@@ -23,6 +23,7 @@ class W_EngineConfig;
 class W_ParticleEditor;
 class W_Resources;
 class W_Inspector;
+class W_Hierarchy;
 
 class M_Editor : public Module
 {
@@ -95,6 +96,7 @@ public:
 
 	Dock* focusedDock = nullptr;
 
+	W_Hierarchy* w_hierarchy = nullptr;
 	W_Console* w_console = nullptr;
 	W_EngineConfig* w_econfig = nullptr;
 	W_Explorer* w_explorer = nullptr;
@@ -135,6 +137,9 @@ private:
 
 	bool using_keyboard;
 	bool using_mouse;
+
+	float mainWindowPositionY = 0;
+	float toolbarSizeY = 30;
 };
 
 #endif //!__M_EDITOR_H__

@@ -2,6 +2,7 @@
 #define __DOCK_DATA_H__
 
 #include <string>
+#include "Vec2.h"
 
 class Dock;
 typedef unsigned int uint;
@@ -12,20 +13,18 @@ class DWindow
 {
 public:
 	DWindow(M_Editor* editor, std::string name);
-	~DWindow();
+	virtual ~DWindow();
 
 	virtual void Draw() = 0;
 
-	void SetParent(Dock* dock);
 	void SetActive(bool active);
 
-	virtual void OnResize() {};
+	virtual void OnResize(Vec2 newSize) {};
 
 	virtual void SaveConfig(Config& config);
 	virtual void LoadConfig(Config& config);
 
-	Dock* GetParent() const;
-	bool IsActive() const;
+	inline bool IsActive() const { return active; };
 
 private:
 
@@ -35,10 +34,10 @@ public:
 	M_Editor* editor;
 	bool allowScrollbar = true;
 	bool showDebugInfo = false;
+	Vec2 windowSize = { 0, 0 };
 
 protected:
-	Dock* parent = nullptr;
-	bool active = false;
+	bool active = true;
 };
 
 #endif //__DOCK_DATA_H__

@@ -10,7 +10,6 @@
 
 #include "W_Scene.h"
 
-#include "Dock.h"
 #include "TreeNode.h"
 
 W_EngineConfig::W_EngineConfig(M_Editor* editor) : DWindow(editor, "EngineConfig")
@@ -24,6 +23,9 @@ W_EngineConfig::W_EngineConfig(M_Editor* editor) : DWindow(editor, "EngineConfig
 
 void W_EngineConfig::Draw()
 {
+	if (!active) return;
+	if (!ImGui::Begin("Engine Config")) { ImGui::End(); return; }
+
 	if (ImGui::BeginMenu("Options"))
 	{
 		ImGui::MenuItem("Default", NULL, false, false);
@@ -114,11 +116,8 @@ void W_EngineConfig::Draw()
 		ImGui::Text("Image corner: %i, %i", (int)Engine->moduleEditor->w_scene->cornerPos.x, (int)Engine->moduleEditor->w_scene->cornerPos.y);
 		ImGui::Text("Image size: %i, %i", (int)Engine->moduleEditor->w_scene->img_size.x, (int)Engine->moduleEditor->w_scene->img_size.y);
 	}
-}
 
-void W_EngineConfig::OnResize()
-{
-
+	ImGui::End();
 }
 
 void W_EngineConfig::UpdateFPSData(int fps, int ms)

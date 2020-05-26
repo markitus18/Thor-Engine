@@ -19,6 +19,9 @@ W_Resources::W_Resources(M_Editor* editor) : DWindow(editor, "Resources")
 
 void W_Resources::Draw()
 {
+	if (!active) return;
+	if (!ImGui::Begin("Resources")) { ImGui::End(); return; }
+
 	ImGui::Text("Resources loaded in memory");
 
 	if (ImGui::CollapsingHeader("Models"))
@@ -90,10 +93,8 @@ void W_Resources::Draw()
 			}
 		}
 	}
-}
-void W_Resources::OnResize()
-{
 
+	ImGui::End();
 }
 
 void W_Resources::DisplayResourceInfo(Resource* resource)

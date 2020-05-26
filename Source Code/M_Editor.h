@@ -78,7 +78,6 @@ public:
 	void OnRemoveGameObject(GameObject* gameObject) override;
 
 private:
-	void DrawPanels();
 	//void DisplayFolderTree();
 
 	void ShowAboutWindow();
@@ -91,10 +90,7 @@ private:
 public:
 
 	//Windows system
-	std::vector<Dock*> docks;
 	std::vector<DWindow*> windows;
-
-	Dock* focusedDock = nullptr;
 
 	W_Hierarchy* w_hierarchy = nullptr;
 	W_Console* w_console = nullptr;
@@ -104,8 +100,6 @@ public:
 	W_ParticleEditor* w_particles = nullptr;
 	W_Inspector* w_inspector = nullptr;
 	W_Resources* w_resources = nullptr;
-	//Panels
-	P_Buttons*			buttons = nullptr;
 
 	ImVec2 playWindow;
 

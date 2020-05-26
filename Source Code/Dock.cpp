@@ -47,11 +47,6 @@ void Dock::Draw()
 		{
 			if (data_children.empty()) break;
 
-			if (ImGui::IsItemHovered() && ImGui::IsMouseDown(0))
-			{
-				Engine->moduleEditor->focusedDock = this;
-			}
-
 			tabSpacing = Vec2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y);
 			DrawTabPanels();
 			ImGui::Separator();
@@ -204,7 +199,7 @@ void Dock::AddChildData(DWindow* data, int position)
 {
 	if (dock_children.size() == 0)
 	{
-		data->SetParent(this);
+		
 		if (position == -1 || position > data_children.size())
 			data_children.push_back(data);
 		else

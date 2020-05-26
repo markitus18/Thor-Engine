@@ -21,8 +21,7 @@ public:
 	W_ParticleEditor(M_Editor* editor);
 	~W_ParticleEditor() {}
 
-	void Draw();
-	void OnResize();
+	void Draw() override;
 
 private:
 	std::string GetModuleName(const ParticleModule* module) const;

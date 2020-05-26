@@ -11,8 +11,8 @@ public:
 	W_Scene(M_Editor* editor);
 	~W_Scene() {}
 
-	void Draw();
-	void OnResize();
+	void Draw() override;
+	void OnResize(Vec2 newSize) override;
 
 	//Converts a 2D point in the scene image to a 2D point in the real scene
 	Vec2 ScreenToWorld(Vec2 p) const;

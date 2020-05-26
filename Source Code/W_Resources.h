@@ -11,8 +11,7 @@ public:
 	W_Resources(M_Editor* editor);
 	~W_Resources() {}
 
-	void Draw();
-	void OnResize();
+	void Draw() override;
 
 	void DisplayResourceInfo(Resource* resource);
 

@@ -11,8 +11,7 @@ public:
 	W_Console(M_Editor* editor);
 	~W_Console() { ClearLog(); }
 
-	void Draw();
-	void OnResize();
+	void Draw() override;
 
 	void ClearLog();
 	void AddLog(const char* input);

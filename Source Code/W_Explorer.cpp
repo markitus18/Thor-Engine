@@ -16,9 +16,6 @@
 #include "R_Prefab.h"
 #include "R_Folder.h"
 
-#include "Dock.h"
-
-
 W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 {
 	updateTimer.Start();
@@ -35,6 +32,13 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 
 void W_Explorer::Draw()
 {
+	if (!active) return;
+	if (!ImGui::Begin("Explorer")) { ImGui::End(); return; }
+
+	ImVec2 winSize = ImGui::GetWindowSize();
+	if (winSize.x != windowSize.x || winSize.y != windowSize.y)
+		OnResize(Vec2(winSize.x, winSize.y));
+
 	if (updateTimer.ReadSec() > updateTime)
 	{
 		UpdateTree();
@@ -54,12 +58,14 @@ void W_Explorer::Draw()
 	ImGui::EndChild();
 
 	ImGui::PopID();
+
+	ImGui::End();
 }
 
-void W_Explorer::OnResize()
+void W_Explorer::OnResize(Vec2 newSize)
 {
-	columnsNumber = ((parent->size.x * 0.8f ) * 10) / 1152;
-	windowSize = parent->size - Vec2(0.0f, 25.0f);
+	windowSize = newSize;
+	columnsNumber = ((newSize.x * 0.8f ) * 10) / 1152;
 }
 
 void W_Explorer::DrawFolderNode(PathNode& node)
@@ -153,6 +159,8 @@ void W_Explorer::DrawSelectedFolderContent()
 
 void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 windowCursorPos)
 {
+	if (columnsNumber == 0) return; //No space to draw any resource, exit function
+
 	uint row = itemIndex / columnsNumber;
 	uint column = itemIndex - (row * columnsNumber);
 

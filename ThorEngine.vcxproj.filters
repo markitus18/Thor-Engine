@@ -187,9 +187,6 @@
     <ClCompile Include="Source Code\M_Window.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\P_Buttons.cpp">
-      <Filter>Source Code\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\R_Mesh.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
@@ -216,9 +213,6 @@
     </ClCompile>
     <ClCompile Include="Source Code\TreeDisplay.cpp">
       <Filter>Source Code\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\Dock.cpp">
-      <Filter>Source Code\Editor\DockBase</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\DWindow.cpp">
       <Filter>Source Code\Editor\DockBase</Filter>
@@ -627,9 +621,6 @@
     <ClInclude Include="Source Code\M_Window.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\P_Buttons.h">
-      <Filter>Source Code\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\R_Mesh.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
@@ -659,9 +650,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\TreeDisplay.h">
       <Filter>Source Code\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\Dock.h">
-      <Filter>Source Code\Editor\DockBase</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\DWindow.h">
       <Filter>Source Code\Editor\DockBase</Filter>

@@ -21,8 +21,7 @@ public:
 	W_Inspector(M_Editor* editor);
 	~W_Inspector() {}
 
-	void Draw();
-	void OnResize();
+	void Draw() override;
 
 private:
 	void DrawGameObject(GameObject* gameObject);

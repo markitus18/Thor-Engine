@@ -13,8 +13,7 @@ public:
 	W_EngineConfig(M_Editor* editor);
 	~W_EngineConfig() {}
 
-	void Draw();
-	void OnResize();
+	void Draw() override;
 
 	void UpdateFPSData(int fps, int ms);
 

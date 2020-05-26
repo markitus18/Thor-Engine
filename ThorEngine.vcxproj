@@ -92,7 +92,6 @@
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
-    <ClInclude Include="Source Code\Dock.h" />
     <ClInclude Include="Source Code\DWindow.h" />
     <ClInclude Include="Source Code\Emitter.h" />
     <ClInclude Include="Source Code\EmitterInstance.h" />
@@ -208,7 +207,6 @@
     <ClInclude Include="Source Code\OpenGL.h" />
     <ClInclude Include="Source Code\Panel.h" />
     <ClInclude Include="Source Code\PathNode.h" />
-    <ClInclude Include="Source Code\P_Buttons.h" />
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\Quadtree.h" />
     <ClInclude Include="Source Code\Resource.h" />
@@ -243,7 +241,6 @@
     <ClCompile Include="Source Code\C_Camera.cpp" />
     <ClCompile Include="Source Code\C_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
-    <ClCompile Include="Source Code\Dock.cpp" />
     <ClCompile Include="Source Code\DWindow.cpp" />
     <ClCompile Include="Source Code\Emitter.cpp" />
     <ClCompile Include="Source Code\EmitterInstance.cpp" />
@@ -317,7 +314,6 @@
     <ClCompile Include="Source Code\Panel.cpp" />
     <ClCompile Include="Source Code\Particle.cpp" />
     <ClCompile Include="Source Code\ParticleModule.cpp" />
-    <ClCompile Include="Source Code\P_Buttons.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />
     <ClCompile Include="Source Code\Quadtree.cpp" />
     <ClCompile Include="Source Code\Resource.cpp" />

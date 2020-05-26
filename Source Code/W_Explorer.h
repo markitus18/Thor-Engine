@@ -22,8 +22,8 @@ public:
 	W_Explorer(M_Editor* editor);
 	~W_Explorer() {}
 
-	void Draw();
-	void OnResize();
+	void Draw() override;
+	void OnResize(Vec2 newSize) override;
 
 	const Resource* GetCurrentFolder() const { return (Resource*)currentFolder; };
 

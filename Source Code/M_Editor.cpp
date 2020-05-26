@@ -5,11 +5,7 @@
 
 #include "M_Input.h"
 
-//Panels
-#include "P_Buttons.h"
-
 //Windows
-#include "Dock.h"
 #include "W_Scene.h"
 #include "W_Hierarchy.h"
 #include "W_Inspector.h"
@@ -127,56 +123,33 @@ update_status M_Editor::PreUpdate(float dt)
 
 void M_Editor::CreateWindows()
 {
-	//Initializing all panels
-	buttons = new P_Buttons();
-	
-	//Creating dock base windows
-	Dock* baseDock = new Dock("BaseWindowDock", Engine->window->windowSize);
-	docks.push_back(baseDock);
-	baseDock->Split(VERTICAL, 0.8f);
-	baseDock->GetDockChildren()[0]->Split(HORIZONTAL, 0.7f);
-	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->Split(VERTICAL, 0.2f);
-	baseDock->GetDockChildren()[1]->Split(HORIZONTAL, 0.6f);
-
 	w_hierarchy = new W_Hierarchy(this);
 	windows.push_back(w_hierarchy);
-	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[0]->AddChildData(w_hierarchy);
 
 	w_scene = new W_Scene(this);
 	windows.push_back(w_scene);
-	baseDock->GetDockChildren()[0]->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_scene);
 
 	w_inspector = new W_Inspector(this);
 	windows.push_back(w_inspector);
-	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(w_inspector);
 
 	w_particles = new W_ParticleEditor(this);
 	windows.push_back(w_particles);
-	baseDock->GetDockChildren()[1]->GetDockChildren()[0]->AddChildData(w_particles);
 
 	w_explorer = new W_Explorer(this);
 	windows.push_back(w_explorer);
-	baseDock->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_explorer);
 
 	w_console = new W_Console(this);
 	windows.push_back(w_console);
-	baseDock->GetDockChildren()[0]->GetDockChildren()[1]->AddChildData(w_console);
 
 	w_resources = new W_Resources(this);
 	windows.push_back(w_resources);
-	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(w_resources);
 
 	w_econfig = new W_EngineConfig(this);
 	windows.push_back(w_econfig);
-	baseDock->GetDockChildren()[1]->GetDockChildren()[1]->AddChildData(w_econfig);
-
 }
 
 void M_Editor::Draw()
 {
-	//DrawPanels();
-	//docks[0]->Draw(); //TOOD: Do a proper data access
-
 	if (Engine->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
 		DeleteSelected();
@@ -196,14 +169,6 @@ void M_Editor::Draw()
 		ImGui::ShowDemoWindow(&show_Demo_window);
 	if (show_fileName_window)
 		ShowFileNameWindow();
-
-	//ShowPlayWindow();
-
-	/*
-	// -----------------------------
-	*/
-	//----------------------------
-	
 
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
@@ -405,24 +370,18 @@ void M_Editor::Draw()
 
 	ImGui::End();
 
-	ImGuiWindowFlags winFlags = ImGuiWindowFlags_NoMove;// | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar;
-	//ImGui logic is too hard to keep track using their functions. Storing hard-coded value by now
-	float menuBarHeight = 19;
-	mainWindowPositionY = ImGui::GetMainViewport()->Pos.y + menuBarHeight - 1;
-	//ImGui::SetNextWindowPos(ImVec2(0, mainWindowPositionY));
-	//ImGui::SetNextWindowSize(ImVec2(Engine->window->windowSize.x, Engine->window->windowSize.y - (menuBarHeight - 1)));
-	//ImGui::Begin("GlobalWindow", nullptr, winFlags);
-	
-	//ImGui::DockSpace()
 	w_scene->Draw();
 	w_hierarchy->Draw();
-
-	//ImGui::End();
+	w_console->Draw();
+	w_econfig->Draw();
+	w_explorer->Draw();
+	w_particles->Draw();
+	w_inspector->Draw();
+	w_resources->Draw();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	//ImGuiIO& io = ImGui::GetIO();
+	
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
@@ -435,9 +394,6 @@ void M_Editor::Draw()
 
 bool M_Editor::CleanUp()
 {
-	//TODO: remove docking memory
-	RELEASE(buttons);
-
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
@@ -453,15 +409,6 @@ void M_Editor::Log(const char* input)
 void M_Editor::GetEvent(SDL_Event* event)
 {
 	ImGui_ImplSDL2_ProcessEvent(event);
-}
-
-void M_Editor::DrawPanels()
-{
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	if (buttons != nullptr)
-	{
-		buttons->Draw(windowFlags);
-	}
 }
 
 void M_Editor::ShowAboutWindow()
@@ -496,11 +443,7 @@ void M_Editor::ShowPlayWindow()
 		{
 			Time::paused ? Time::Resume() : Time::Pause();
 		}
-		//ImGui::SameLine();
-		//if (ImGui::Button("Frame"))
-		//{
 
-		//}
 		ImGui::End();
 	}
 
@@ -550,16 +493,11 @@ void M_Editor::UpdateFPSData(int fps, int ms)
 
 void M_Editor::OnResize(int screen_width, int screen_height)
 {
-	buttons->UpdatePosition(screen_width, screen_height);
-
 	playWindow.x = screen_width / 2 - 90;
 	playWindow.y = screen_height / 20;
 	
 	ImGuiContext& g = *ImGui::GetCurrentContext();
 	float iconbar_size = 30.0f;
-	
-	docks[0]->SetSize(Vec2(screen_width, screen_height - 49));
-	docks[0]->position = Vec2(0, 49);
 }
 
 bool M_Editor::UsingKeyboard() const

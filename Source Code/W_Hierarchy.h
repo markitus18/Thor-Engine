@@ -10,9 +10,7 @@ public:
 	W_Hierarchy(M_Editor* editor);
 	~W_Hierarchy() {}
 
-	void Draw();
-	void OnResize();
-
+	void Draw() override;
 };
 
 #endif

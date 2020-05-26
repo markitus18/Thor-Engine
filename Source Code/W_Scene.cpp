@@ -3,8 +3,6 @@
 #include "ImGui\imgui.h"
 #include "Glew/include/glew.h"
 
-#include "Dock.h"
-
 #include "Engine.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
@@ -27,48 +25,50 @@ W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 
 void W_Scene::Draw()
 {
-	ImGuiWindowFlags flags = 0;
-		//| ImGuiWindowFlags_NoMove;
-	if (ImGui::Begin("Scene", nullptr, flags))
-	{
-		ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
+	if (!active) return;
+	if (!ImGui::Begin("Scene", &active)) { ImGui::End(); return; }
+
+	ImVec2 winSize = ImGui::GetWindowSize();
+	if (winSize.x != windowSize.x || winSize.y != windowSize.y)
+		OnResize(Vec2(winSize.x, winSize.y));
+
+	ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
 		img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
 		img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
 
-		ImGui::Image((ImTextureID)Engine->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)Engine->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
 
-		if (ImGui::BeginDragDropTarget())
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_6"))
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_RESOURCE_6"))
+			if (payload->DataSize == sizeof(uint64))
 			{
-				if (payload->DataSize == sizeof(uint64))
+				uint64 resourceID = *(const uint64*)payload->Data;
+				Resource* resource = Engine->moduleResources->GetResource(resourceID);
+
+				if (resource->GetType() == Resource::Type::PREFAB)
 				{
-					uint64 resourceID = *(const uint64*)payload->Data;
-					Resource* resource = Engine->moduleResources->GetResource(resourceID);
-
-					if (resource->GetType() == Resource::Type::PREFAB)
-					{
-						Engine->moduleResources->LoadModel(resourceID);
-					}
-
+					Engine->moduleResources->LoadModel(resourceID);
 				}
+
 			}
-			ImGui::EndDragDropTarget();
 		}
-
-		HandleGizmoUsage();
-
-		if (ImGuizmo::IsUsing() == false)
-			HandleInput();
-
-		ImGui::End();
+		ImGui::EndDragDropTarget();
 	}
+
+	HandleGizmoUsage();
+
+	if (ImGuizmo::IsUsing() == false)
+		HandleInput();
+
+	ImGui::End();
 }
 
-void W_Scene::OnResize()
+void W_Scene::OnResize(Vec2 newSize)
 {
 	//Getting window size - some margins - separator (7)
-	win_size = Vec2(parent->size.x, parent->size.y) - Vec2(17, 25 + 10); //TODO: should be using tab spacing (25) but at the beggining it has not been calculated
+	win_size = newSize;
 
 	//Calculating the image size according to the window size.
 	img_size = Engine->window->windowSize;// -Vec2(0.0f, 25.0f); //Removing the tab area

@@ -2,8 +2,6 @@
 
 #include "ImGui/imgui.h"
 
-#include "Dock.h"
-
 W_Console::W_Console(M_Editor* editor) : DWindow(editor, "Console")
 {
 	ClearLog();
@@ -11,6 +9,9 @@ W_Console::W_Console(M_Editor* editor) : DWindow(editor, "Console")
 
 void W_Console::Draw()
 {
+	if (!active) return;
+	if (!ImGui::Begin("Console")) { ImGui::End(); return; }
+
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing
 
 	for (uint i = 0; i < items.size(); i++)
@@ -35,11 +36,8 @@ void W_Console::Draw()
 	ImGui::PopStyleVar();
 
 	scrollToBottom = false;
-}
 
-void W_Console::OnResize()
-{
-
+	ImGui::End();
 }
 
 void W_Console::ClearLog()

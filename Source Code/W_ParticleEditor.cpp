@@ -17,8 +17,7 @@ W_ParticleEditor::W_ParticleEditor(M_Editor* editor) : DWindow(editor, "Particle
 
 void W_ParticleEditor::Draw()
 {
-	if (!active) return;
-	if (!ImGui::Begin("Particle Editor")) { ImGui::End(); return; }
+	if (!ImGui::Begin("Particle Editor", &active)) { ImGui::End(); return; }
 	
 	R_ParticleSystem* particleSystem = nullptr;
 	if (editor->selectedResources.size() > 0)
@@ -32,8 +31,7 @@ void W_ParticleEditor::Draw()
 	{
 		ImGui::Text("Select a Particle System to edit it");
 	}
-	
-	if (ImGui::CollapsingHeader("Emitters"))
+	else if (ImGui::CollapsingHeader("Emitters"))
 	{
 		if (particleSystem->emitters.size() > 0)
 		{

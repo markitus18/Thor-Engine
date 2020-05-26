@@ -121,7 +121,7 @@ update_status M_Scene::Update(float dt)
 		for (uint i = 0; i < gameObjects.size(); i++)
 		{
 			if (gameObjects[i]->name != "root");
-			((GameObject*)gameObjects[i])->Draw(Engine->moduleEditor->shaded, Engine->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
+			((GameObject*)gameObjects[i])->Draw(true, false, drawBounds, drawBoundsSelected);
 		}
 		gameObjects.clear();
 	}
@@ -479,7 +479,7 @@ void M_Scene::UpdateAllGameObjects(GameObject* gameObject, float dt)
 void M_Scene::DrawAllGameObjects(GameObject* gameObject)
 {
 	if (gameObject->name != "root");
-		gameObject->Draw(Engine->moduleEditor->shaded, Engine->moduleEditor->wireframe, drawBounds, drawBoundsSelected);
+		gameObject->Draw(true, false, drawBounds, drawBoundsSelected);
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
 	{

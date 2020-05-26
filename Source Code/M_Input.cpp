@@ -10,6 +10,7 @@
 #include "SDL/include/SDL_mouse.h"
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
+#include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
 #define MAX_KEYS 300

@@ -58,9 +58,7 @@ bool M_Editor::Init(Config& config)
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-	//ImGui::StyleColorsClassic();
 	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsLight();
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -71,14 +69,12 @@ bool M_Editor::Init(Config& config)
 	}
 	style.Colors[ImGuiCol_DragDropTarget] = ImVec4(0.0f, 1.0f, 1.0f, 1.0f);
 
-
 	ImGui_ImplSDL2_InitForOpenGL(Engine->window->window, Engine->renderer3D->context);
 	ImGui_ImplOpenGL3_Init();
 
 	io.IniFilename = nullptr;
 	io.MouseDrawCursor = false;
 	
-
 	int screen_width = GetSystemMetrics(SM_CXSCREEN);
 	int screen_height = GetSystemMetrics(SM_CYSCREEN);
 
@@ -162,14 +158,6 @@ void M_Editor::Draw()
 		dragging = false;
 	}
 
-	//Showing all windows ----------
-	if (show_About_window)
-		ShowAboutWindow();
-	if (show_Demo_window)
-		ImGui::ShowDemoWindow(&show_Demo_window);
-	if (show_fileName_window)
-		ShowFileNameWindow();
-
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
 	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
@@ -190,24 +178,52 @@ void M_Editor::Draw()
 	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 	window_flags |= ImGuiWindowFlags_NoBackground;
 
-	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-	// all active windows docked into it will lose their parent and become undocked.
-	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("DockSpace Demo", nullptr, window_flags);
 	ImGui::PopStyleVar();
 
 	ImGui::PopStyleVar(2);
 
-	// DockSpace
+	static bool doOnce = true;
+
+
 	ImGuiIO& io = ImGui::GetIO();
+	ImGuiID dockspace_id = 0;
 	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 	{
-		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	}
+
+	if (doOnce)
+	{
+		ImGuiID leftSpace_id, rightspace_id;
+		ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.2f, &rightspace_id, &leftSpace_id);
+
+		ImGuiID topRightSpace_id, bottomRightSpace_id;
+		ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.7f, &topRightSpace_id, &bottomRightSpace_id);
+
+		ImGui::DockBuilderDockWindow("Inspector", topRightSpace_id);
+		ImGui::DockBuilderDockWindow("Engine Config", bottomRightSpace_id);
+		ImGui::DockBuilderDockWindow("Resources", bottomRightSpace_id);
+		
+		ImGuiID topLeftSpace_id, bottomLeftSpace_id;
+		ImGui::DockBuilderSplitNode(leftSpace_id, ImGuiDir_Up, 0.7f, &topLeftSpace_id, &bottomLeftSpace_id);
+
+		ImGui::DockBuilderDockWindow("Explorer", bottomLeftSpace_id);
+		ImGui::DockBuilderDockWindow("Console", bottomLeftSpace_id);
+
+		ImGuiID leftTopLeftSpace_id, rightTopLeftSpace_id;
+		ImGui::DockBuilderSplitNode(topLeftSpace_id, ImGuiDir_Right, 0.8f, &rightTopLeftSpace_id, &leftTopLeftSpace_id);
+
+		ImGui::DockBuilderDockWindow("Hierarchy", leftTopLeftSpace_id);
+		ImGui::DockBuilderDockWindow("Scene", rightTopLeftSpace_id);
+		
+		ImGui::DockBuilderFinish(dockspace_id);
+
+		doOnce = false;
+	}
+
 
 	if (ImGui::BeginMenuBar())
 	{
@@ -370,14 +386,11 @@ void M_Editor::Draw()
 
 	ImGui::End();
 
-	w_scene->Draw();
-	w_hierarchy->Draw();
-	w_console->Draw();
-	w_econfig->Draw();
-	w_explorer->Draw();
-	w_particles->Draw();
-	w_inspector->Draw();
-	w_resources->Draw();
+	for (uint i = 0; i < windows.size(); ++i)
+	{
+		if (windows[i]->IsActive())
+			windows[i]->Draw();
+	}
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -427,7 +440,6 @@ void M_Editor::ShowPlayWindow()
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
 	ImGui::SetNextWindowSize(ImVec2(150, 30));
-	ImGui::SetNextWindowPos(playWindow);
 
 	bool open = true;
 	if (ImGui::Begin("PlayButton", &open, flags))
@@ -493,8 +505,6 @@ void M_Editor::UpdateFPSData(int fps, int ms)
 
 void M_Editor::OnResize(int screen_width, int screen_height)
 {
-	playWindow.x = screen_width / 2 - 90;
-	playWindow.y = screen_height / 20;
 	
 	ImGuiContext& g = *ImGui::GetCurrentContext();
 	float iconbar_size = 30.0f;

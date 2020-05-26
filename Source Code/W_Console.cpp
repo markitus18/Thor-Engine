@@ -9,8 +9,7 @@ W_Console::W_Console(M_Editor* editor) : DWindow(editor, "Console")
 
 void W_Console::Draw()
 {
-	if (!active) return;
-	if (!ImGui::Begin("Console")) { ImGui::End(); return; }
+	if (!ImGui::Begin("Console", &active)) { ImGui::End(); return; }
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing
 

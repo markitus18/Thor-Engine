@@ -25,7 +25,6 @@ W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
 
 void W_Scene::Draw()
 {
-	if (!active) return;
 	if (!ImGui::Begin("Scene", &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();

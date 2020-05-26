@@ -2,19 +2,15 @@
 #define __M_EDITOR_H__
 
 #include "Module.h"
-#include "ImGui\imgui.h" //TODO: try to forward declare ImVec2
-#include "SDL/include/SDL_events.h" //TODO: try to forward declare
+
 #include <string>
 #include <vector>
-
-class P_Buttons;
 
 class Config;
 class GameObject;
 class Resource;
 class TreeNode;
 
-class Dock;
 class DWindow;
 class W_Scene;
 class W_Console;
@@ -24,6 +20,8 @@ class W_ParticleEditor;
 class W_Resources;
 class W_Inspector;
 class W_Hierarchy;
+
+union SDL_Event;
 
 class M_Editor : public Module
 {
@@ -100,11 +98,6 @@ public:
 	W_ParticleEditor* w_particles = nullptr;
 	W_Inspector* w_inspector = nullptr;
 	W_Resources* w_resources = nullptr;
-
-	ImVec2 playWindow;
-
-	bool shaded = true;
-	bool wireframe = false;
 
 	std::vector<TreeNode*> selectedGameObjects;
 	std::vector<TreeNode*> toSelectGOs;

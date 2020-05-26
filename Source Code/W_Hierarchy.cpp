@@ -14,7 +14,7 @@ W_Hierarchy::W_Hierarchy(M_Editor* editor) : DWindow(editor, "Hierarchy")
 
 void W_Hierarchy::Draw()
 {
-	if (ImGui::Begin("Hierarchy"))
+	if (ImGui::Begin("Hierarchy", &active))
 		DrawTree(Engine->scene->GetRoot());
 
 	ImGui::End();

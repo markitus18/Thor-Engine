@@ -205,7 +205,6 @@
     <ClInclude Include="Source Code\M_Editor.h" />
     <ClInclude Include="Source Code\M_Window.h" />
     <ClInclude Include="Source Code\OpenGL.h" />
-    <ClInclude Include="Source Code\Panel.h" />
     <ClInclude Include="Source Code\PathNode.h" />
     <ClInclude Include="Source Code\PerfTimer.h" />
     <ClInclude Include="Source Code\Quadtree.h" />
@@ -311,7 +310,6 @@
     <ClCompile Include="Source Code\M_Editor.cpp" />
     <ClCompile Include="Source Code\I_Shaders.cpp" />
     <ClCompile Include="Source Code\M_Window.cpp" />
-    <ClCompile Include="Source Code\Panel.cpp" />
     <ClCompile Include="Source Code\Particle.cpp" />
     <ClCompile Include="Source Code\ParticleModule.cpp" />
     <ClCompile Include="Source Code\PerfTimer.cpp" />

@@ -130,9 +130,6 @@
     <ClCompile Include="Source Code\GameObject.cpp">
       <Filter>Source Code\GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\Panel.cpp">
-      <Filter>Source Code\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Component.cpp">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
@@ -215,7 +212,7 @@
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\DWindow.cpp">
-      <Filter>Source Code\Editor\DockBase</Filter>
+      <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\W_Scene.cpp">
       <Filter>Source Code\Editor\Windows</Filter>
@@ -323,7 +320,7 @@
       <Filter>Source Code</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\WDetails.cpp">
-      <Filter>Source Code\Editor\DockBase</Filter>
+      <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -564,9 +561,6 @@
     <ClInclude Include="Source Code\External Libraries\Devil\include\ilut_config.h">
       <Filter>External Libraries\Devil</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\Panel.h">
-      <Filter>Source Code\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Component.h">
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
@@ -652,7 +646,7 @@
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\DWindow.h">
-      <Filter>Source Code\Editor\DockBase</Filter>
+      <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\W_Scene.h">
       <Filter>Source Code\Editor\Windows</Filter>
@@ -767,7 +761,7 @@
       <Filter>Source Code</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\WDetails.h">
-      <Filter>Source Code\Editor\DockBase</Filter>
+      <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -822,9 +816,6 @@
     <Filter Include="External Libraries\parson">
       <UniqueIdentifier>{ba2abca1-375c-41b2-ae5c-bb3ea88488dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Code\Editor\DockBase">
-      <UniqueIdentifier>{9fc6a5eb-f8f7-42e9-a1b3-d8ceed62feda}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Code\Editor\Windows">
       <UniqueIdentifier>{f2c4dac0-ac1a-4fa0-85fd-6694283bd30c}</UniqueIdentifier>
     </Filter>
@@ -842,6 +833,9 @@
     </Filter>
     <Filter Include="Source Code\Importers">
       <UniqueIdentifier>{3150bfbf-0070-4964-814c-181000b057ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Editor\Windows\Base">
+      <UniqueIdentifier>{9fc6a5eb-f8f7-42e9-a1b3-d8ceed62feda}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

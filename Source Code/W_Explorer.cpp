@@ -32,8 +32,7 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 
 void W_Explorer::Draw()
 {
-	if (!active) return;
-	if (!ImGui::Begin("Explorer")) { ImGui::End(); return; }
+	if (!ImGui::Begin("Explorer", &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();
 	if (winSize.x != windowSize.x || winSize.y != windowSize.y)

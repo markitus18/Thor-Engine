@@ -7,6 +7,8 @@
 #include "M_Resources.h"
 #include "W_Explorer.h"
 
+#include "WindowFrame.h" //TODO: Remove as the code gets cleaner. Acess in PreUpdate -> DROPFILE
+
 #include "SDL/include/SDL_mouse.h"
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
@@ -168,7 +170,9 @@ update_status M_Input::PreUpdate(float dt)
 				LOG("[error] Dropped file: %s", event.drop.file);
 				LOG("[warning] Dropped file: %s", event.drop.file);
 				
-				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, Engine->moduleEditor->w_explorer->GetCurrentFolder()->GetOriginalFile());
+				//TODO: Remove dirty access as the code gets cleaner.
+				W_Explorer* w_explorer = (W_Explorer*)Engine->moduleEditor->windowFrames[0]->windows[3];
+				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, w_explorer->GetCurrentFolder()->GetOriginalFile());
 
 				SDL_free(event.drop.file);
 				break;

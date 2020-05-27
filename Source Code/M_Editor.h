@@ -11,15 +11,8 @@ class GameObject;
 class Resource;
 class TreeNode;
 
+class WindowFrame;
 class DWindow;
-class W_Scene;
-class W_Console;
-class W_Explorer;
-class W_EngineConfig;
-class W_ParticleEditor;
-class W_Resources;
-class W_Inspector;
-class W_Hierarchy;
 
 union SDL_Event;
 
@@ -89,16 +82,8 @@ private:
 public:
 
 	//Windows system
+	std::vector<WindowFrame*> windowFrames;
 	std::vector<DWindow*> windows;
-
-	W_Hierarchy* w_hierarchy = nullptr;
-	W_Console* w_console = nullptr;
-	W_EngineConfig* w_econfig = nullptr;
-	W_Explorer* w_explorer = nullptr;
-	W_Scene* w_scene = nullptr;
-	W_ParticleEditor* w_particles = nullptr;
-	W_Inspector* w_inspector = nullptr;
-	W_Resources* w_resources = nullptr;
 
 	std::vector<TreeNode*> selectedGameObjects;
 	std::vector<TreeNode*> toSelectGOs;
@@ -112,12 +97,12 @@ public:
 
 	bool showDebugInfo = false;
 
-private:
-
 	//Active window controllers
 	bool show_About_window = false;
 	bool show_Demo_window = false;
 	bool show_fileName_window = false;
+
+private:
 
 	char fileName[50];
 

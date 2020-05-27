@@ -10,6 +10,8 @@
 #include "M_Renderer3D.h" //Included for camera editor matching
 #include "W_Explorer.h"
 
+#include "WindowFrame.h" //TODO: Remove as the code gets cleaner. Acess in DrawParticleSystem
+
 #include "TreeNode.h"
 #include "GameObject.h"
 
@@ -386,7 +388,8 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 		{
 			if (ImGui::MenuItem("Create New"))
 			{
-				const char* dir = editor->w_explorer->GetCurrentFolder()->GetOriginalFile();
+				W_Explorer* w_explorer = (W_Explorer*)editor->windowFrames[0]->windows[3];
+				const char* dir = w_explorer->GetCurrentFolder()->GetOriginalFile();
 				if (uint64 resourceID = Engine->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", dir))
 				{
 					particleSystem->SetResource(resourceID);

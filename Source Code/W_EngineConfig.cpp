@@ -110,12 +110,6 @@ void W_EngineConfig::Draw()
 		}
 	}
 
-	if (ImGui::CollapsingHeader("Editor - Scene"))
-	{
-		ImGui::Text("Image corner: %i, %i", (int)Engine->moduleEditor->w_scene->cornerPos.x, (int)Engine->moduleEditor->w_scene->cornerPos.y);
-		ImGui::Text("Image size: %i, %i", (int)Engine->moduleEditor->w_scene->img_size.x, (int)Engine->moduleEditor->w_scene->img_size.y);
-	}
-
 	ImGui::End();
 }
 

@@ -4,7 +4,7 @@
 #include "Resource.h"
 
 #include "Emitter.h"
-struct Config;
+class Config;
 
 class R_ParticleSystem : public Resource
 {

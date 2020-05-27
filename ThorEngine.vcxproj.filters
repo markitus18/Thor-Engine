@@ -322,6 +322,12 @@
     <ClCompile Include="Source Code\WDetails.cpp">
       <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\WindowFrame.cpp">
+      <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\WF_MainWindow.cpp">
+      <Filter>Source Code\Editor\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -762,6 +768,12 @@
     </ClInclude>
     <ClInclude Include="Source Code\WDetails.h">
       <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\WindowFrame.h">
+      <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\WF_MainWindow.h">
+      <Filter>Source Code\Editor\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

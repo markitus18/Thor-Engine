@@ -218,6 +218,8 @@
     <ClInclude Include="Source Code\Timer.h" />
     <ClInclude Include="Source Code\Vec2.h" />
     <ClInclude Include="Source Code\WDetails.h" />
+    <ClInclude Include="Source Code\WF_MainWindow.h" />
+    <ClInclude Include="Source Code\WindowFrame.h" />
     <ClInclude Include="Source Code\W_Console.h" />
     <ClInclude Include="Source Code\W_EngineConfig.h" />
     <ClInclude Include="Source Code\W_Explorer.h" />
@@ -330,6 +332,8 @@
     <ClCompile Include="Source Code\TreeNode.cpp" />
     <ClCompile Include="Source Code\Vec2.cpp" />
     <ClCompile Include="Source Code\WDetails.cpp" />
+    <ClCompile Include="Source Code\WF_MainWindow.cpp" />
+    <ClCompile Include="Source Code\WindowFrame.cpp" />
     <ClCompile Include="Source Code\W_Console.cpp" />
     <ClCompile Include="Source Code\W_EngineConfig.cpp" />
     <ClCompile Include="Source Code\W_Explorer.cpp" />

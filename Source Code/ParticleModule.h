@@ -9,7 +9,7 @@ class Particle;
 class Emitter;
 class EmitterInstance;
 class C_Transform;
-struct Config;
+class Config;
 
 struct ParticleModule
 {

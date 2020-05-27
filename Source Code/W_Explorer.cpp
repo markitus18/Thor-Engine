@@ -28,6 +28,18 @@ W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
 
 	resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo("Engine/Assets").ID);
 	engineAssetsFolder = (R_Folder*)resource;
+
+	resourceIcons[Resource::Type::FOLDER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/FolderIcon.png").ID;
+	resourceIcons[Resource::Type::MESH] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/FileIcon.png").ID;
+	resourceIcons[Resource::Type::TEXTURE] = 0;
+	resourceIcons[Resource::Type::MATERIAL] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").ID;
+	resourceIcons[Resource::Type::ANIMATION] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").ID;
+	resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").ID;
+	resourceIcons[Resource::Type::PREFAB] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").ID;
+	resourceIcons[Resource::Type::PARTICLESYSTEM] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").ID;
+	resourceIcons[Resource::Type::SHADER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").ID;
+	resourceIcons[Resource::Type::SCENE] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").ID;
+	selectedResourceImage = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SelectedIcon.png").ID;
 }
 
 void W_Explorer::Draw()

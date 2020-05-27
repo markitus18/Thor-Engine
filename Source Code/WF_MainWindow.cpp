@@ -8,7 +8,7 @@
 #include "M_Editor.h"
 #include "M_Camera3D.h"
 
-#include "DWindow.h"
+#include "Window.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -20,6 +20,7 @@
 #include "W_Console.h"
 #include "W_Resources.h"
 #include "W_EngineConfig.h"
+#include "W_About.h"
 
 WF_MainWindow::WF_MainWindow(M_Editor* editor)
 {
@@ -45,6 +46,9 @@ WF_MainWindow::WF_MainWindow(M_Editor* editor)
 
 	w_econfig = new W_EngineConfig(editor);
 	windows.push_back(w_econfig);
+
+	w_about = new W_About(editor);
+	windows.push_back(w_about);
 
 }
 
@@ -88,7 +92,7 @@ void WF_MainWindow::DrawMenuBar()
 			{
 				if (Engine->scene->current_scene == "Untitled")
 				{
-					//OpenFileNameWindow();
+					Engine->moduleEditor->OpenFileNameWindow();
 				}
 				else
 				{
@@ -98,7 +102,7 @@ void WF_MainWindow::DrawMenuBar()
 
 			if (ImGui::MenuItem("Save Scene as"))
 			{
-				//OpenFileNameWindow();
+				Engine->moduleEditor->OpenFileNameWindow();
 			}
 			ImGui::Separator();
 			if (ImGui::MenuItem("Exit          "))
@@ -169,21 +173,24 @@ void WF_MainWindow::DrawMenuBar()
 		{
 			ImGui::Checkbox("Show All Debug Info", &Engine->moduleEditor->showDebugInfo);
 
-			std::vector<DWindow*>::iterator it;
-			/*for (it = windows.begin(); it != windows.end(); ++it)
+			std::vector<Window*>::iterator it;
+			for (it = windows.begin(); it != windows.end(); ++it)
 			{
 				if (ImGui::BeginMenu((*it)->name.c_str()))
 				{
 					ImGui::Checkbox("Show Debug Info", &(*it)->showDebugInfo);
 					ImGui::EndMenu();
 				}
-			}*/
+			}
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Help"))
 		{
-			ImGui::MenuItem("About Thor Engine   ", nullptr, &Engine->moduleEditor->show_About_window);
+			bool aboutActive = w_about->IsActive();
+			if (ImGui::MenuItem("About Thor Engine   ", nullptr, &aboutActive))
+				w_about->SetActive(aboutActive);
+
 			ImGui::Separator();
 			if (ImGui::MenuItem("Documentation       "))
 			{
@@ -201,7 +208,7 @@ void WF_MainWindow::DrawMenuBar()
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Debugging Tools"))
+		if (ImGui::BeginMenu("Development"))
 		{
 			ImGui::MenuItem("ImGui Demo", nullptr, &Engine->moduleEditor->show_Demo_window);
 			if (ImGui::BeginMenu("Display"))

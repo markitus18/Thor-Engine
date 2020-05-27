@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-W_Console::W_Console(M_Editor* editor) : DWindow(editor, "Console")
+W_Console::W_Console(M_Editor* editor) : Window(editor, "Console")
 {
 	ClearLog();
 }

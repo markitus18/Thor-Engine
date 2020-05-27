@@ -1,7 +1,7 @@
 #ifndef __PARTICLE_EDITOR_H__
 #define __PARTICLE_EDITOR_H__
 
-#include "DWindow.h"
+#include "Window.h"
 
 class Emitter;
 struct ParticleModule;
@@ -15,7 +15,7 @@ struct ParticleColor;
 struct ParticleLifetime;
 struct ParticleVelocity;
 
-class W_ParticleEditor : public DWindow
+class W_ParticleEditor : public Window
 {
 public:
 	W_ParticleEditor(M_Editor* editor);

@@ -12,7 +12,7 @@
 
 #include "TreeNode.h"
 
-W_EngineConfig::W_EngineConfig(M_Editor* editor) : DWindow(editor, "EngineConfig")
+W_EngineConfig::W_EngineConfig(M_Editor* editor) : Window(editor, "EngineConfig")
 {
 	for (int i = 0; i < 100; i++)
 	{

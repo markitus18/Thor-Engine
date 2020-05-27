@@ -7,7 +7,7 @@
 
 #include "ImGui/imgui.h"
 
-W_Hierarchy::W_Hierarchy(M_Editor* editor) : DWindow(editor, "Hierarchy")
+W_Hierarchy::W_Hierarchy(M_Editor* editor) : Window(editor, "Hierarchy")
 {
 
 }

@@ -11,7 +11,7 @@
 #include "R_Texture.h"
 #include "R_Prefab.h"
 
-W_Resources::W_Resources(M_Editor* editor) : DWindow(editor, "Resources")
+W_Resources::W_Resources(M_Editor* editor) : Window(editor, "Resources")
 {
 
 

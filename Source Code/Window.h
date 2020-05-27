@@ -9,11 +9,11 @@ typedef unsigned int uint;
 class M_Editor;
 class Config;
 
-class DWindow
+class Window
 {
 public:
-	DWindow(M_Editor* editor, std::string name);
-	virtual ~DWindow();
+	Window(M_Editor* editor, std::string name);
+	virtual ~Window();
 
 	virtual void Draw() = 0;
 

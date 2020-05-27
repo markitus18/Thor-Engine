@@ -1,11 +1,11 @@
 #ifndef __W_RESOURCES_H__
 #define __W_RESOURCES_H__
 
-#include "DWindow.h"
+#include "Window.h"
 
 class Resource;
 
-class W_Resources : public DWindow
+class W_Resources : public Window
 {
 public:
 	W_Resources(M_Editor* editor);

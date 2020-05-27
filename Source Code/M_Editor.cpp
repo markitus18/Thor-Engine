@@ -158,17 +158,6 @@ void M_Editor::GetEvent(SDL_Event* event)
 	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
-void M_Editor::ShowAboutWindow()
-{
-	ImGui::SetNextWindowSize(ImVec2(600, 100));
-	ImGui::Begin("About Thor Engine", &show_About_window, ImGuiWindowFlags_NoResize);
-	ImGui::Text("v0.4-alpha");
-	ImGui::Separator();
-	ImGui::Text("By Marc Garrigo for educational purposes.");
-	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");
-	ImGui::End();
-}
-
 void M_Editor::ShowPlayWindow()
 {
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
@@ -253,26 +242,6 @@ bool M_Editor::UsingKeyboard() const
 bool M_Editor::UsingMouse() const
 {
 	return using_mouse;
-}
-
-//Timer management -------------------
-uint M_Editor::AddTimer(const char* text, const char* tag)
-{
-	return 0;
-}
-
-void M_Editor::StartTimer(uint index)
-{
-
-}
-
-void M_Editor::ReadTimer(uint index)
-{
-}
-
-void M_Editor::StopTimer(uint index)
-{
-
 }
 
 
@@ -418,22 +387,26 @@ void M_Editor::SaveConfig(Config& config) const
 {
 	config.SetBool("Show Debug Info", showDebugInfo);
 
-	std::vector<DWindow*>::const_iterator it;
+	/*
+	std::vector<Window*>::const_iterator it;
 	for (it = windows.begin(); it != windows.end(); ++it)
 	{
 		(*it)->SaveConfig(config.SetNode((*it)->name.c_str()));
 	}
+	*/
 }
 
 void M_Editor::LoadConfig(Config& config)
 {
 	showDebugInfo = config.GetBool("Show Debug Info", false);
 
-	std::vector<DWindow*>::const_iterator it;
+	/*
+	std::vector<Window*>::const_iterator it;
 	for (it = windows.begin(); it != windows.end(); ++it)
 	{
 		(*it)->LoadConfig(config.GetNode((*it)->name.c_str()));
 	}
+	*/
 }
 
 void M_Editor::LoadScene(Config& root, bool tmp)

@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-class DWindow;
+class Window;
 class Config;
 
 class WindowFrame
@@ -22,7 +22,7 @@ public:
 	void SaveLayout(Config& file);
 
 	//TODO: moving to private as the code gets cleaner (used in M_Editor for the port)
-	std::vector<DWindow*> windows;
+	std::vector<Window*> windows;
 
 private:
 	virtual void DrawMenuBar() { };

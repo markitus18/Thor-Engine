@@ -1,13 +1,13 @@
 #ifndef __W_ENGINECONFIG_H__
 #define __W_ENGINECONFIG_H__
 
-#include "DWindow.h"
+#include "Window.h"
 
 #include "PerfTimer.h"
 #include <vector>
 #include <string>
 
-class W_EngineConfig : public DWindow
+class W_EngineConfig : public Window
 {
 public:
 	W_EngineConfig(M_Editor* editor);

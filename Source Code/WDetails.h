@@ -1,14 +1,14 @@
 #ifndef __W_DETAILS_H__
 #define __W_DETAILS_H__
 
-#include "DWindow.h"
+#include "Window.h"
 
 #include "MathGeoLib/src/Math/float3.h"
 #include "ImGui/imgui.h"
 
 class Resource;
 
-class WDetails : public DWindow
+class WDetails : public Window
 {
 public:
 	WDetails(M_Editor* editor, const char* name);

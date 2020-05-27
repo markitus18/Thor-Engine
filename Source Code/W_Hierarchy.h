@@ -1,10 +1,10 @@
 #ifndef __W_HIERARCHY_H__
 #define __W_HIERARCHY_H__
 
-#include "DWindow.h"
+#include "Window.h"
 #include "TreeDisplay.h"
 
-class W_Hierarchy : public DWindow, public TreeDisplay
+class W_Hierarchy : public Window, public TreeDisplay
 {
 public:
 	W_Hierarchy(M_Editor* editor);

@@ -211,32 +211,8 @@
     <ClCompile Include="Source Code\TreeDisplay.cpp">
       <Filter>Source Code\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\DWindow.cpp">
-      <Filter>Source Code\Editor\Windows\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\W_Scene.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Vec2.cpp">
       <Filter>Source Code\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\W_Hierarchy.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\W_Inspector.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\W_Explorer.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\W_Console.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\W_Resources.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Source Code\W_EngineConfig.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.cpp">
       <Filter>External Libraries\ImGuizmo</Filter>
@@ -326,7 +302,34 @@
       <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\WF_MainWindow.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_Console.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_EngineConfig.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_Explorer.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_Hierarchy.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_Inspector.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_Resources.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_Scene.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Window.cpp">
+      <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_About.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -651,32 +654,8 @@
     <ClInclude Include="Source Code\TreeDisplay.h">
       <Filter>Source Code\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\DWindow.h">
-      <Filter>Source Code\Editor\Windows\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_Scene.h">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Vec2.h">
       <Filter>Source Code\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_Hierarchy.h">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_Inspector.h">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_Explorer.h">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_Console.h">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_Resources.h">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_EngineConfig.h">
-      <Filter>Source Code\Editor\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\External Libraries\ImGuizmo\ImGuizmo.h">
       <Filter>External Libraries\ImGuizmo</Filter>
@@ -773,7 +752,34 @@
       <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\WF_MainWindow.h">
-      <Filter>Source Code\Editor\Windows</Filter>
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_Console.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_EngineConfig.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_Explorer.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_Hierarchy.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_Inspector.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_Resources.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_Scene.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_About.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Window.h">
+      <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -848,6 +854,9 @@
     </Filter>
     <Filter Include="Source Code\Editor\Windows\Base">
       <UniqueIdentifier>{9fc6a5eb-f8f7-42e9-a1b3-d8ceed62feda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Editor\Windows\Main">
+      <UniqueIdentifier>{1cc25e30-5681-445b-9eba-4fbb059d88a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@ class Resource;
 class TreeNode;
 
 class WindowFrame;
-class DWindow;
+class Window;
 
 union SDL_Event;
 
@@ -41,13 +41,6 @@ public:
 	bool UsingKeyboard() const;
 	bool UsingMouse() const;
 
-	//Timer management -------------------
-	uint AddTimer(const char* text, const char* tag);
-	void StartTimer(uint index);
-	void ReadTimer(uint index);
-	void StopTimer(uint index);
-	//------------------------------------
-
 	//Selection --------------------
 	void SelectSingle(TreeNode* node, bool openTree = true);
 	void AddSelect(TreeNode* node, bool openTree = true);
@@ -69,21 +62,16 @@ public:
 
 	void OnRemoveGameObject(GameObject* gameObject) override;
 
-private:
-	//void DisplayFolderTree();
-
-	void ShowAboutWindow();
-	void ShowPlayWindow();
-
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();
 
-	//TODO: move into private
+private:
+	void ShowPlayWindow();
+
 public:
 
 	//Windows system
 	std::vector<WindowFrame*> windowFrames;
-	std::vector<DWindow*> windows;
 
 	std::vector<TreeNode*> selectedGameObjects;
 	std::vector<TreeNode*> toSelectGOs;
@@ -97,8 +85,6 @@ public:
 
 	bool showDebugInfo = false;
 
-	//Active window controllers
-	bool show_About_window = false;
 	bool show_Demo_window = false;
 	bool show_fileName_window = false;
 

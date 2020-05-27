@@ -1,11 +1,11 @@
 #ifndef __W_CONSOLE_H__
 #define __W_CONSOLE_H__
 
-#include "DWindow.h"
+#include "Window.h"
 
 #include <vector>
 
-class W_Console : public DWindow
+class W_Console : public Window
 {
 public:
 	W_Console(M_Editor* editor);

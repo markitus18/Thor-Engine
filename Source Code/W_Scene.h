@@ -1,11 +1,11 @@
 #ifndef __W_SCENE_H__
 #define __W_SCENE_H__
 
-#include "DWindow.h"
+#include "Window.h"
 #include "Vec2.h"
 #include "ImGuizmo/ImGuizmo.h"
 
-class W_Scene : public DWindow
+class W_Scene : public Window
 {
 public:
 	W_Scene(M_Editor* editor);

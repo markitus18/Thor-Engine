@@ -1,7 +1,7 @@
 #ifndef __W_EXPLORER_H__
 #define __W_EXPLORER_H__
 
-#include "DWindow.h"
+#include "Window.h"
 
 #include "PathNode.h"
 #include "Vec2.h"
@@ -16,7 +16,7 @@ class R_Folder;
 
 struct ImVec2;
 
-class W_Explorer : public DWindow
+class W_Explorer : public Window
 {
 public:
 	W_Explorer(M_Editor* editor);

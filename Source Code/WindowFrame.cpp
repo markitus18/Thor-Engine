@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "Config.h"
 
-#include "DWindow.h"
+#include "Window.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -51,7 +51,8 @@ void WindowFrame::Draw()
 
 	for (uint i = 0; i < windows.size(); ++i)
 	{
-		windows[i]->Draw();
+		if (windows[i]->IsActive())
+			windows[i]->Draw();
 	}
 }
 

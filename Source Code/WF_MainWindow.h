@@ -12,6 +12,7 @@ class W_EngineConfig;
 class W_Resources;
 class W_Inspector;
 class W_Hierarchy;
+class W_About;
 
 class WF_MainWindow : public WindowFrame
 {
@@ -22,7 +23,7 @@ public:
 	void DrawMenuBar();
 
 private:
-	//TODO: Is it worth storing it as a ptr? Saves compilation time but gets saved in the heap
+	//TODO: Is it worth storing it as a ptr? Saves compilation time but it's stored in the heap
 	W_Hierarchy*	w_hierarchy = nullptr;
 	W_Console*		w_console = nullptr;
 	W_EngineConfig* w_econfig = nullptr;
@@ -30,6 +31,7 @@ private:
 	W_Scene*		w_scene = nullptr;
 	W_Inspector*	w_inspector = nullptr;
 	W_Resources*	w_resources = nullptr;
+	W_About*		w_about = nullptr;
 };
 
 #endif // !__WF_MAIN_WINDOW_H

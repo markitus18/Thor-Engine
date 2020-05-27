@@ -17,7 +17,7 @@
 #include "C_Transform.h"
 #include "Component.h"
 
-W_Scene::W_Scene(M_Editor* editor) : DWindow(editor, "Scene")
+W_Scene::W_Scene(M_Editor* editor) : Window(editor, "Scene")
 {
 	allowScrollbar = false;
 	ImGuizmo::Enable(true);

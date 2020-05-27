@@ -16,7 +16,7 @@
 #include "R_Prefab.h"
 #include "R_Folder.h"
 
-W_Explorer::W_Explorer(M_Editor* editor) : DWindow(editor, "Explorer")
+W_Explorer::W_Explorer(M_Editor* editor) : Window(editor, "Explorer")
 {
 	updateTimer.Start();
 	UpdateTree();

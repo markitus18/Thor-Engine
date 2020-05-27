@@ -15,7 +15,7 @@
 
 int WDetails::previewImage;
 
-WDetails::WDetails(M_Editor* editor, const char* name) : DWindow(editor, name)
+WDetails::WDetails(M_Editor* editor, const char* name) : Window(editor, name)
 {
 	previewImage = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/PreviewIcon.png").ID;
 }

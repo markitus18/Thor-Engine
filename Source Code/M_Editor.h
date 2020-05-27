@@ -36,6 +36,7 @@ public:
 	bool CleanUp() override;
 
 	void CreateWindows();
+	void LoadLayout();
 	void Draw();
 
 	void Log(const char* input);

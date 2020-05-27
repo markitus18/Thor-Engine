@@ -58,8 +58,6 @@ bool M_Editor::Init(Config& config)
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-	ImGui::StyleColorsDark();
-
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -142,6 +140,53 @@ void M_Editor::CreateWindows()
 
 	w_econfig = new W_EngineConfig(this);
 	windows.push_back(w_econfig);
+
+	LoadLayout();
+}
+
+void M_Editor::LoadLayout()
+{
+	//We generate a fake ImGui frame in order to load the layout correctly and set up all docking data
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(Engine->window->window);
+	ImGui::NewFrame();
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowSize(viewport->GetWorkSize());
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	ImGui::Begin("DockSpace Demo", nullptr, 0);
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
+
+	ImGuiID leftSpace_id, rightspace_id;
+	ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.2f, &rightspace_id, &leftSpace_id);
+
+	ImGuiID topRightSpace_id, bottomRightSpace_id;
+	ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.7f, &topRightSpace_id, &bottomRightSpace_id);
+
+	ImGui::DockBuilderDockWindow("Inspector", topRightSpace_id);
+	ImGui::DockBuilderDockWindow("Engine Config", bottomRightSpace_id);
+	ImGui::DockBuilderDockWindow("Resources", bottomRightSpace_id);
+
+	ImGuiID topLeftSpace_id, bottomLeftSpace_id;
+	ImGui::DockBuilderSplitNode(leftSpace_id, ImGuiDir_Up, 0.7f, &topLeftSpace_id, &bottomLeftSpace_id);
+
+	ImGui::DockBuilderDockWindow("Explorer", bottomLeftSpace_id);
+	ImGui::DockBuilderDockWindow("Console", bottomLeftSpace_id);
+
+	ImGuiID leftTopLeftSpace_id, rightTopLeftSpace_id;
+	ImGui::DockBuilderSplitNode(topLeftSpace_id, ImGuiDir_Right, 0.8f, &rightTopLeftSpace_id, &leftTopLeftSpace_id);
+
+	ImGui::DockBuilderDockWindow("Hierarchy", leftTopLeftSpace_id);
+	ImGui::DockBuilderDockWindow("Scene", rightTopLeftSpace_id);
+
+	ImGui::DockBuilderFinish(dockspace_id);
+
+	ImGui::End();
+	ImGui::EndFrame();
+	ImGui::UpdatePlatformWindows();
 }
 
 void M_Editor::Draw()
@@ -158,7 +203,6 @@ void M_Editor::Draw()
 		dragging = false;
 	}
 
-	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
 	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 	// because it would be confusing to have two docking targets within each others.
@@ -175,6 +219,7 @@ void M_Editor::Draw()
 
 	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
 	// and handle the pass-thru hole, so we ask Begin() to not render a background.
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 	window_flags |= ImGuiWindowFlags_NoBackground;
 
@@ -184,9 +229,6 @@ void M_Editor::Draw()
 
 	ImGui::PopStyleVar(2);
 
-	static bool doOnce = true;
-
-
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuiID dockspace_id = 0;
 	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -195,35 +237,15 @@ void M_Editor::Draw()
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	}
 
+	static bool doOnce = true;
 	if (doOnce)
 	{
-		ImGuiID leftSpace_id, rightspace_id;
-		ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.2f, &rightspace_id, &leftSpace_id);
-
-		ImGuiID topRightSpace_id, bottomRightSpace_id;
-		ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.7f, &topRightSpace_id, &bottomRightSpace_id);
-
-		ImGui::DockBuilderDockWindow("Inspector", topRightSpace_id);
-		ImGui::DockBuilderDockWindow("Engine Config", bottomRightSpace_id);
-		ImGui::DockBuilderDockWindow("Resources", bottomRightSpace_id);
-		
-		ImGuiID topLeftSpace_id, bottomLeftSpace_id;
-		ImGui::DockBuilderSplitNode(leftSpace_id, ImGuiDir_Up, 0.7f, &topLeftSpace_id, &bottomLeftSpace_id);
-
-		ImGui::DockBuilderDockWindow("Explorer", bottomLeftSpace_id);
-		ImGui::DockBuilderDockWindow("Console", bottomLeftSpace_id);
-
-		ImGuiID leftTopLeftSpace_id, rightTopLeftSpace_id;
-		ImGui::DockBuilderSplitNode(topLeftSpace_id, ImGuiDir_Right, 0.8f, &rightTopLeftSpace_id, &leftTopLeftSpace_id);
-
-		ImGui::DockBuilderDockWindow("Hierarchy", leftTopLeftSpace_id);
-		ImGui::DockBuilderDockWindow("Scene", rightTopLeftSpace_id);
-		
-		ImGui::DockBuilderFinish(dockspace_id);
-
+	//	LoadLayout();
 		doOnce = false;
 	}
 
+//	ImGuiDockNode* node = ImGui::DockBuilderGetNode(dockspace_id);
+//	node->HostWindow->name
 
 	if (ImGui::BeginMenuBar())
 	{

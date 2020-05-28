@@ -44,6 +44,7 @@ W_Inspector::W_Inspector(M_Editor* editor) : WDetails(editor, "Inspector")
 
 void W_Inspector::Draw()
 {
+	ImGui::SetNextWindowClass(editor->normalWindowClass);
 	if (!ImGui::Begin("Inspector", &active)) { ImGui::End(); return; }
 
 	if (editor->selectedGameObjects.size() > 0)

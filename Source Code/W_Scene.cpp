@@ -28,6 +28,7 @@ W_Scene::W_Scene(M_Editor* editor) : Window(editor, "Scene")
 
 void W_Scene::Draw()
 {
+	ImGui::SetNextWindowClass(editor->normalWindowClass);
 	if (!ImGui::Begin("Scene", &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();

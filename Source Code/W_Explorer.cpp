@@ -44,6 +44,7 @@ W_Explorer::W_Explorer(M_Editor* editor) : Window(editor, "Explorer")
 
 void W_Explorer::Draw()
 {
+	ImGui::SetNextWindowClass(editor->normalWindowClass);
 	if (!ImGui::Begin("Explorer", &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();

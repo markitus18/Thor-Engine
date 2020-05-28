@@ -31,7 +31,7 @@ void WindowFrame::Draw()
 	
 	std::string dockName = name + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0/*, Engine->moduleEditor->normalWindowClass*/);
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0, Engine->moduleEditor->normalWindowClass);
 
 	DrawMenuBar();
 

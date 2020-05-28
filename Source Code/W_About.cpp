@@ -1,5 +1,7 @@
 #include "W_About.h"
 
+#include "M_Editor.h"
+
 #include "ImGui/imgui.h"
 
 W_About::W_About(M_Editor* editor) : Window(editor, "About")
@@ -10,6 +12,7 @@ W_About::W_About(M_Editor* editor) : Window(editor, "About")
 
 void W_About::Draw()
 {
+	ImGui::SetNextWindowClass(editor->normalWindowClass);
 	if (!ImGui::Begin("About Thor Engine", &active, ImGuiWindowFlags_NoResize)) { ImGui::End(); return; }
 
 	ImGui::Text("v0.4-alpha");

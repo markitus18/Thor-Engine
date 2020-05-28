@@ -21,6 +21,7 @@
 #include "OpenGL.h"
 
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
 
@@ -41,6 +42,8 @@ bool M_Editor::Init(Config& config)
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigViewportsNoDecoration = false;
+	io.ConfigViewportsNoAutoMerge = true;
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -69,6 +72,13 @@ bool M_Editor::Init(Config& config)
 bool M_Editor::Start()
 {
 	//TODO: Some mid-way functions can be removed
+
+	frameWindowClass = new ImGuiWindowClass();
+	frameWindowClass->ClassId = 1;
+
+	normalWindowClass = new ImGuiWindowClass();
+	normalWindowClass->ClassId = 2;
+
 	CreateWindows();
 	
 	return true;
@@ -102,14 +112,26 @@ void M_Editor::LoadLayout()
 	ImGui_ImplSDL2_NewFrame(Engine->window->window);
 	ImGui::NewFrame();
 
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowSize(viewport->GetWorkSize());
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::SetNextWindowClass(frameWindowClass);
+	ImGui::Begin("Main Window");
+
+	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
+	ImGui::DockBuilderDockWindow("Random Window", dockspace_id);
+
 	char* buffer = nullptr;
 	uint size = Engine->fileSystem->Load("Engine/Layouts/Default.lay", &buffer);
 	if (size > 0)
 	{
 		Config layout(buffer);
-		windowFrames[0]->LoadLayout(layout);
+		windowFrames[0]->LoadLayout_ForceDefault(layout, dockspace_id);
 	}
 
+	ImGui::End();
+	ImGui::DockBuilderFinish(dockspace_id);
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
 }
@@ -128,7 +150,30 @@ void M_Editor::Draw()
 		dragging = false;
 	}
 
+	ImGuiWindowFlags frameWindow_flags =
+		ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->GetWorkPos());
+	ImGui::SetNextWindowSize(viewport->GetWorkSize());
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::SetNextWindowClass(frameWindowClass);
+	ImGui::Begin("Main Window", nullptr, frameWindow_flags);
+	ImGui::PopStyleVar();
+
+	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
+
 	windowFrames[0]->Draw();
+	ImGui::End();
+
+	ImGui::SetNextWindowClass(frameWindowClass);
+	ImGui::Begin("Random Window");
+	ImGui::End();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

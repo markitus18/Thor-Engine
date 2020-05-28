@@ -22,7 +22,7 @@ public:
 
 	void SaveLayout(Config& file);
 	void LoadLayout(Config& file);
-	void LoadLayout_ForceDefault(Config& file);
+	void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID);
 
 	//TODO: moving to private as the code gets cleaner (used in M_Editor for the port)
 	std::vector<Window*> windows;

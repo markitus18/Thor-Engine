@@ -6,6 +6,7 @@
 
 #include "Window.h"
 #include "M_FileSystem.h"
+#include "M_Editor.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -22,32 +23,18 @@ WindowFrame::~WindowFrame()
 
 void WindowFrame::Draw()
 {
-	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-	// because it would be confusing to have two docking targets within each others.
-	ImGuiWindowFlags frameWindow_flags =
-	ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking| ImGuiWindowFlags_NoTitleBar |
-	ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
 	ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->GetWorkPos());
-	ImGui::SetNextWindowSize(viewport->GetWorkSize());
-	ImGui::SetNextWindowViewport(viewport->ID);
-	
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::SetNextWindowClass(Engine->moduleEditor->frameWindowClass);
 	ImGui::Begin(name.c_str(), nullptr, frameWindow_flags);
-	ImGui::PopStyleVar();
-
-	ImGuiIO& io = ImGui::GetIO();
-	ImGuiID dockspace_id = 0;
-	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-	{
-		std::string dockName = name + std::string("_DockSpace");
-		dockspace_id = ImGui::GetID(dockName.c_str());
-		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f));
-	}
+	
+	std::string dockName = name + std::string("_DockSpace");
+	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0/*, Engine->moduleEditor->normalWindowClass*/);
 
 	DrawMenuBar();
+
 	ImGui::End();
 
 	for (uint i = 0; i < windows.size(); ++i)
@@ -118,7 +105,7 @@ void WindowFrame::LoadLayout(Config& file)
 
 	std::string dockName = name + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit);
 
 	LoadDockLayout(dockspace_id, file.GetNode("Root Node"));
 
@@ -148,13 +135,9 @@ void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
 	}
 }
 
-void WindowFrame::LoadLayout_ForceDefault(Config& file)
+void WindowFrame::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
 {
-	//TODO: viewport should be handled differently, windows han be outside of the main viewport?
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowSize(viewport->GetWorkSize());
-	ImGui::SetNextWindowViewport(viewport->ID);
-
+	ImGui::DockBuilderDockWindow(name.c_str(), mainDockID);
 	ImGui::Begin(name.c_str());
 
 	std::string dockName = name + std::string("_DockSpace");
@@ -179,7 +162,11 @@ void WindowFrame::LoadLayout_ForceDefault(Config& file)
 	ImGui::DockBuilderSplitNode(rightTopLeftSpace_id, ImGuiDir_Up, 0.10f, &topCenterSpace_id, &bottomCenterSpace_id);
 
 	ImGui::DockBuilderDockWindow("Toolbar", topCenterSpace_id);
+	ImGuiDockNode* node = ImGui::DockBuilderGetNode(topCenterSpace_id);
+	node->WantHiddenTabBarToggle = true;
 	ImGui::DockBuilderDockWindow("Scene", bottomCenterSpace_id);
+	node = ImGui::DockBuilderGetNode(bottomCenterSpace_id);
+	node->WantHiddenTabBarToggle = true;
 
 	ImGuiID topRightSpace_id, bottomRightSpace_id;
 	ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.65f, &topRightSpace_id, &bottomRightSpace_id);

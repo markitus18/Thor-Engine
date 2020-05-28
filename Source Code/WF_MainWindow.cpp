@@ -25,7 +25,7 @@
 
 WF_MainWindow::WF_MainWindow(M_Editor* editor)
 {
-	name = "MainWindow"; //TODO: Cannot be initialized in constructor, create constructor paramter
+	name = "Scene Window"; //TODO: Cannot be initialized in constructor, create constructor paramter
 
 	w_hierarchy = new W_Hierarchy(editor);
 	windows.push_back(w_hierarchy);

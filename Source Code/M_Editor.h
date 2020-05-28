@@ -15,6 +15,7 @@ class WindowFrame;
 class Window;
 
 union SDL_Event;
+struct ImGuiWindowClass;
 
 class M_Editor : public Module
 {
@@ -94,6 +95,9 @@ public:
 
 	bool show_Demo_window = false;
 	bool show_fileName_window = false;
+	
+	ImGuiWindowClass* frameWindowClass = nullptr;
+	ImGuiWindowClass* normalWindowClass = nullptr;
 
 private:
 

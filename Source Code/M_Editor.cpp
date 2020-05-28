@@ -102,7 +102,13 @@ void M_Editor::LoadLayout()
 	ImGui_ImplSDL2_NewFrame(Engine->window->window);
 	ImGui::NewFrame();
 
-	windowFrames[0]->LoadLayout(Config());
+	char* buffer = nullptr;
+	uint size = Engine->fileSystem->Load("Engine/Layouts/Default.lay", &buffer);
+	if (size > 0)
+	{
+		Config layout(buffer);
+		windowFrames[0]->LoadLayout(layout);
+	}
 
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
@@ -242,6 +248,26 @@ bool M_Editor::UsingKeyboard() const
 bool M_Editor::UsingMouse() const
 {
 	return using_mouse;
+}
+
+//Timer management -------------------
+uint M_Editor::AddTimer(const char* text, const char* tag)
+{
+	return 0;
+}
+
+void M_Editor::StartTimer(uint index)
+{
+
+}
+
+void M_Editor::ReadTimer(uint index)
+{
+}
+
+void M_Editor::StopTimer(uint index)
+{
+
 }
 
 

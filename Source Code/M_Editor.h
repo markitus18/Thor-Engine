@@ -41,6 +41,13 @@ public:
 	bool UsingKeyboard() const;
 	bool UsingMouse() const;
 
+	//Timer management -------------------
+	uint AddTimer(const char* text, const char* tag);
+	void StartTimer(uint index);
+	void ReadTimer(uint index);
+	void StopTimer(uint index);
+	//------------------------------------
+
 	//Selection --------------------
 	void SelectSingle(TreeNode* node, bool openTree = true);
 	void AddSelect(TreeNode* node, bool openTree = true);

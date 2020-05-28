@@ -21,6 +21,7 @@
 #include "W_Resources.h"
 #include "W_EngineConfig.h"
 #include "W_About.h"
+#include "W_MainToolbar.h"
 
 WF_MainWindow::WF_MainWindow(M_Editor* editor)
 {
@@ -48,7 +49,11 @@ WF_MainWindow::WF_MainWindow(M_Editor* editor)
 	windows.push_back(w_econfig);
 
 	w_about = new W_About(editor);
+	w_about->SetActive(false);
 	windows.push_back(w_about);
+
+	w_toolbar = new W_MainToolbar(editor);
+	windows.push_back(w_toolbar);
 
 }
 

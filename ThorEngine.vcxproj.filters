@@ -331,6 +331,9 @@
     <ClCompile Include="Source Code\W_About.cpp">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\W_MainToolbar.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -780,6 +783,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\Window.h">
       <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_MainToolbar.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

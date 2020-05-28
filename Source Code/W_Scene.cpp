@@ -17,6 +17,9 @@
 #include "C_Transform.h"
 #include "Component.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "ImGui/imgui_internal.h"
+
 W_Scene::W_Scene(M_Editor* editor) : Window(editor, "Scene")
 {
 	allowScrollbar = false;
@@ -31,7 +34,7 @@ void W_Scene::Draw()
 	if (winSize.x != windowSize.x || winSize.y != windowSize.y)
 		OnResize(Vec2(winSize.x, winSize.y));
 
-	ImGui::SetCursorPos(ImVec2(img_offset.x, img_offset.y));
+	ImGui::SetCursorPos(/*ImGui::GetCursorPos() +*/ ImVec2(img_offset.x, img_offset.y));
 		img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
 		img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
 
@@ -71,15 +74,15 @@ void W_Scene::OnResize(Vec2 newSize)
 
 	//Calculating the image size according to the window size.
 	img_size = Engine->window->windowSize;// -Vec2(0.0f, 25.0f); //Removing the tab area
-	if (img_size.x > win_size.x)
+	if (img_size.x > win_size.x - 10.0f)
 	{
-		img_size /= (img_size.x / win_size.x);
+		img_size /= (img_size.x / (win_size.x - 10.0f));
 	}
-	if (img_size.y > win_size.y)
+	if (img_size.y > win_size.y - 10.0f)
 	{
-		img_size /= (img_size.y / win_size.y);
+		img_size /= (img_size.y / (win_size.y - 10.0f));
 	}
-	img_offset = Vec2(win_size.x - img_size.x, win_size.y - img_size.y) / 2 + Vec2(12.0f, 5.0f);
+	img_offset = Vec2(win_size.x - 5.0f - img_size.x, win_size.y - 5.0f - img_size.y) / 2;
 
 }
 

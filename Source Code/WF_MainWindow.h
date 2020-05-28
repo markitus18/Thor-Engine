@@ -13,6 +13,7 @@ class W_Resources;
 class W_Inspector;
 class W_Hierarchy;
 class W_About;
+class W_MainToolbar;
 
 class WF_MainWindow : public WindowFrame
 {
@@ -32,6 +33,7 @@ private:
 	W_Inspector*	w_inspector = nullptr;
 	W_Resources*	w_resources = nullptr;
 	W_About*		w_about = nullptr;
+	W_MainToolbar*	w_toolbar = nullptr;
 };
 
 #endif // !__WF_MAIN_WINDOW_H

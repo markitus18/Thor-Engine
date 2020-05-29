@@ -15,13 +15,18 @@ class W_Hierarchy;
 class W_About;
 class W_MainToolbar;
 
-class WF_MainWindow : public WindowFrame
+class WF_SceneEditor : public WindowFrame
 {
 public:
-	WF_MainWindow(M_Editor* editor);
-	~WF_MainWindow();
+	WF_SceneEditor(M_Editor* editor);
+	~WF_SceneEditor();
 
-	void DrawMenuBar();
+	void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) override;
+
+private:
+	void MenuBar_File() override;
+	void MenuBar_Custom() override;
+	void MenuBar_Development() override;
 
 private:
 	//TODO: Is it worth storing it as a ptr? Saves compilation time but it's stored in the heap

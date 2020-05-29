@@ -13,6 +13,8 @@
 #include "C_Transform.h"
 #include "C_Mesh.h"
 
+#include "Time.h"
+
 typedef std::map<double, float3>::const_iterator key_f3;
 typedef std::map<double, Quat>::const_iterator key_Quat;
 

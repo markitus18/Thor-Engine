@@ -6,7 +6,7 @@
 #include "M_Input.h"
 
 //Windows
-#include "WF_MainWindow.h"
+#include "WF_SceneEditor.h"
 #include "W_Console.h"
 #include "W_EngineConfig.h"
 
@@ -100,7 +100,7 @@ update_status M_Editor::PreUpdate(float dt)
 
 void M_Editor::CreateWindows()
 {
-	windowFrames.push_back(new WF_MainWindow(this));
+	windowFrames.push_back(new WF_SceneEditor(this));
 
 	LoadLayout();
 }
@@ -172,7 +172,7 @@ void M_Editor::Draw()
 	ImGui::End();
 
 	ImGui::SetNextWindowClass(frameWindowClass);
-	ImGui::Begin("Random Window");
+	ImGui::Begin("Random Window", nullptr);
 	ImGui::End();
 
 	ImGui::Render();

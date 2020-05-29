@@ -23,6 +23,7 @@ M_Window::M_Window(bool start_enabled) : Module("Window", start_enabled)
 // Destructor
 M_Window::~M_Window()
 {
+
 }
 
 // Called before render is available

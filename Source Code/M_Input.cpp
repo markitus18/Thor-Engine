@@ -158,9 +158,13 @@ update_status M_Input::PreUpdate(float dt)
 			{
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 				{
-					Engine->window->windowSize = Vec2(event.window.data1, event.window.data2);
-					Engine->renderer3D->OnResize();
-					Engine->moduleEditor->OnResize(event.window.data1, event.window.data2);
+					if (event.window.windowID == SDL_GetWindowID(Engine->window->window))
+					{
+						Engine->window->windowSize = Vec2(event.window.data1, event.window.data2);
+						Engine->renderer3D->OnResize();
+						Engine->moduleEditor->OnResize(event.window.data1, event.window.data2);
+					}
+
 				}
 				break;
 			}

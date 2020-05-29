@@ -301,9 +301,6 @@
     <ClCompile Include="Source Code\WindowFrame.cpp">
       <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\WF_MainWindow.cpp">
-      <Filter>Source Code\Editor\Windows\Main</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\W_Console.cpp">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
@@ -332,6 +329,9 @@
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\W_MainToolbar.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\WF_SceneEditor.cpp">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
   </ItemGroup>
@@ -754,9 +754,6 @@
     <ClInclude Include="Source Code\WindowFrame.h">
       <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\WF_MainWindow.h">
-      <Filter>Source Code\Editor\Windows\Main</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\W_Console.h">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClInclude>
@@ -785,6 +782,9 @@
       <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\W_MainToolbar.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\WF_SceneEditor.h">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClInclude>
   </ItemGroup>
@@ -863,6 +863,9 @@
     </Filter>
     <Filter Include="Source Code\Editor\Windows\Main">
       <UniqueIdentifier>{1cc25e30-5681-445b-9eba-4fbb059d88a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Editor\Windows\Particles">
+      <UniqueIdentifier>{91cea8fe-bca6-40c1-90b0-f5b2e2d6ef96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,10 @@
 #include "WindowFrame.h"
 
 #include "Engine.h"
-#include "Globals.h"
 #include "Config.h"
 
 #include "Window.h"
-#include "M_FileSystem.h"
-#include "M_Editor.h"
+#include "M_Editor.h" //Can be removed when 'frameWindowClass' is sent in the constructor
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -18,16 +16,20 @@ WindowFrame::WindowFrame()
 
 WindowFrame::~WindowFrame()
 {
+	for (uint i = 0; i < windows.size(); ++i)
+		delete windows[i];
 
+	windows.clear();
 }
 
 void WindowFrame::Draw()
 {
-	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-	ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+										 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 	ImGui::SetNextWindowClass(Engine->moduleEditor->frameWindowClass);
-	ImGui::Begin(name.c_str(), nullptr, frameWindow_flags);
+	std::string displayTab = displayName + std::string("###") + name;
+	ImGui::Begin(displayTab.c_str(), nullptr, frameWindow_flags);
 	
 	std::string dockName = name + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
@@ -42,18 +44,6 @@ void WindowFrame::Draw()
 		if (windows[i]->IsActive())
 			windows[i]->Draw();
 	}
-/*
-	Config layoutFile;
-	SaveLayout(layoutFile);
-
-	char* buffer = nullptr;
-	uint size = layoutFile.Serialize(&buffer);
-	if (size > 0)
-	{
-		Engine->fileSystem->Save("Engine/Layouts/Default.lay", buffer, size);
-		RELEASE_ARRAY(buffer);
-	}
-*/
 }
 
 void WindowFrame::SaveLayout(Config& file)
@@ -135,46 +125,97 @@ void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
 	}
 }
 
-void WindowFrame::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
+void WindowFrame::DrawMenuBar()
 {
-	ImGui::DockBuilderDockWindow(name.c_str(), mainDockID);
-	ImGui::Begin(name.c_str());
+	if (ImGui::BeginMenuBar())
+	{
+		MenuBar_File();
+		MenuBar_Edit();
+		MenuBar_Custom();
+		MenuBar_Window();
+		MenuBar_Help();
+		MenuBar_Development();
 
-	std::string dockName = name + std::string("_DockSpace");
-	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
+		ImGui::EndMenuBar();
+	}
+}
 
-	ImGuiID leftSpace_id, rightspace_id;
-	ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.8f, &leftSpace_id, &rightspace_id);
+void WindowFrame::MenuBar_File()
+{
+	if (ImGui::BeginMenu("File"))
+	{
+		if (ImGui::MenuItem("Save", nullptr, nullptr, false)) {}
+		if (ImGui::MenuItem("Save as...", nullptr, nullptr, false)) {}
+		ImGui::Separator();
+		if (ImGui::MenuItem("Open Asset", nullptr, nullptr, false)) {}
+		if (ImGui::MenuItem("Save All", nullptr, nullptr, false)) {}
 
-	ImGuiID topLeftSpace_id, bottomLeftSpace_id;
-	ImGui::DockBuilderSplitNode(leftSpace_id, ImGuiDir_Up, 0.7f, &topLeftSpace_id, &bottomLeftSpace_id);
+		ImGui::EndMenu();
+	}
+}
 
-	ImGui::DockBuilderDockWindow("Explorer", bottomLeftSpace_id);
-	ImGui::DockBuilderDockWindow("Console", bottomLeftSpace_id);
+void WindowFrame::MenuBar_Edit()
+{
+	if (ImGui::BeginMenu("Edit"))
+	{
+		ImGui::Text("History"); ImGui::Indent();
+			if (ImGui::MenuItem("Undo", "Ctrl + Z", nullptr, false)) {}
+			if (ImGui::MenuItem("Redo", "Ctrl + Y", nullptr, false)) {}
+			if (ImGui::MenuItem("View Undo History", nullptr, nullptr, false)) {}
+		ImGui::Unindent();  ImGui::Separator();
+		ImGui::Text("Edit"); ImGui::Indent();
+			if (ImGui::MenuItem("Cut", "Ctrl + X", nullptr, false)) {}
+			if (ImGui::MenuItem("Copy", "Ctrl + C", nullptr, false)) {}
+			if (ImGui::MenuItem("Paste", "Ctrl + V", nullptr, false)) {}
+			if (ImGui::MenuItem("Duplciate", "Ctrl + W", nullptr, false)) {}
+			if (ImGui::MenuItem("Delete", "Delete", nullptr, false)) {}
+		ImGui::Unindent();  ImGui::Separator();
+		ImGui::Text("Configuration"); ImGui::Indent();
+			if (ImGui::MenuItem("Editor preferences", nullptr, nullptr, false)) {}
+			if (ImGui::MenuItem("Project Settings", nullptr, nullptr, false)) {}
+		ImGui::Unindent();
 
-	ImGuiID leftTopLeftSpace_id, rightTopLeftSpace_id;
-	ImGui::DockBuilderSplitNode(topLeftSpace_id, ImGuiDir_Left, 0.2f, &leftTopLeftSpace_id, &rightTopLeftSpace_id);
+		ImGui::EndMenu();
+	}
+}
 
-	ImGui::DockBuilderDockWindow("Hierarchy", leftTopLeftSpace_id);
+void WindowFrame::MenuBar_Window()
+{
+	if (ImGui::BeginMenu("Windows"))
+	{
+		std::vector<Window*>::iterator it;
+		for (it = windows.begin(); it != windows.end(); ++it)
+		{
+			bool windowActive = (*it)->IsActive();
+			if (ImGui::Checkbox((*it)->name.c_str(), &windowActive))
+			{
+				(*it)->SetActive(windowActive);
+			}
+		}
+		ImGui::EndMenu();
+	}
 
-	ImGuiID topCenterSpace_id, bottomCenterSpace_id;
-	ImGui::DockBuilderSplitNode(rightTopLeftSpace_id, ImGuiDir_Up, 0.10f, &topCenterSpace_id, &bottomCenterSpace_id);
+}
 
-	ImGui::DockBuilderDockWindow("Toolbar", topCenterSpace_id);
-	ImGuiDockNode* node = ImGui::DockBuilderGetNode(topCenterSpace_id);
-	node->WantHiddenTabBarToggle = true;
-	ImGui::DockBuilderDockWindow("Scene", bottomCenterSpace_id);
-	node = ImGui::DockBuilderGetNode(bottomCenterSpace_id);
-	node->WantHiddenTabBarToggle = true;
+void WindowFrame::MenuBar_Help()
+{
+	if (ImGui::BeginMenu("Help"))
+	{
+		//TODO: Add "About" as a generic modal window shared by all window frames
 
-	ImGuiID topRightSpace_id, bottomRightSpace_id;
-	ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.65f, &topRightSpace_id, &bottomRightSpace_id);
+		if (ImGui::MenuItem("Documentation       "))
+		{
+			Engine->RequestBrowser("https://github.com/markitus18/Game-Engine/wiki");
+		}
+		if (ImGui::MenuItem("Download latest     "))
+		{
+			Engine->RequestBrowser("https://github.com/markitus18/Game-Engine/releases");
+		}
+		if (ImGui::MenuItem("Report a bug        "))
+		{
+			Engine->RequestBrowser("https://github.com/markitus18/Game-Engine/issues");
+		}
 
-	ImGui::DockBuilderDockWindow("Inspector", topRightSpace_id);
-	ImGui::DockBuilderDockWindow("Engine Config", bottomRightSpace_id);
-	ImGui::DockBuilderDockWindow("Resources", bottomRightSpace_id);
-
-	ImGui::DockBuilderFinish(dockspace_id);
-	ImGui::End();
+		ImGui::EndMenu();
+	}
 }

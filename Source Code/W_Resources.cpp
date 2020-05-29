@@ -4,7 +4,6 @@
 
 #include "Engine.h"
 #include "M_Resources.h"
-#include "M_Editor.h"
 
 //Resources
 #include "R_Mesh.h"
@@ -12,7 +11,7 @@
 #include "R_Texture.h"
 #include "R_Prefab.h"
 
-W_Resources::W_Resources(M_Editor* editor) : Window(editor, "Resources")
+W_Resources::W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
 {
 
 
@@ -20,7 +19,7 @@ W_Resources::W_Resources(M_Editor* editor) : Window(editor, "Resources")
 
 void W_Resources::Draw()
 {
-	ImGui::SetNextWindowClass(editor->normalWindowClass);
+	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin("Resources", &active)) { ImGui::End(); return; }
 
 	ImGui::Text("Resources loaded in memory");

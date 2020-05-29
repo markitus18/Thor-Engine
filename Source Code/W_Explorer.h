@@ -15,17 +15,19 @@ class R_Prefab;
 class R_Folder;
 
 struct ImVec2;
+struct ImGuiWindowClass;
 
 class W_Explorer : public Window
 {
 public:
-	W_Explorer(M_Editor* editor);
+	W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass);
 	~W_Explorer() {}
 
 	void Draw() override;
 	void OnResize(Vec2 newSize) override;
 
 	const Resource* GetCurrentFolder() const { return (Resource*)currentFolder; };
+	static inline const char* GetName() { return "Explorer"; };
 
 private:
 	void DrawFolderNode(PathNode& pathNode);

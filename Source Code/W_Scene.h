@@ -5,10 +5,12 @@
 #include "Vec2.h"
 #include "ImGuizmo/ImGuizmo.h"
 
+struct ImGuiWindowClass;
+
 class W_Scene : public Window
 {
 public:
-	W_Scene(M_Editor* editor);
+	W_Scene(M_Editor* editor, ImGuiWindowClass* windowClass);
 	~W_Scene() {}
 
 	void Draw() override;
@@ -18,6 +20,8 @@ public:
 	Vec2 ScreenToWorld(Vec2 p) const;
 	//Converts a 2D point in the real scene to a 2D point in the scene image
 	Vec2 WorldToScreen(Vec2 p) const;
+
+	static inline const char* GetName() { return "Scene"; };
 
 private:
 	//Handles user input

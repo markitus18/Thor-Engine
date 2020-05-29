@@ -20,15 +20,14 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui/imgui_internal.h"
 
-W_Scene::W_Scene(M_Editor* editor) : Window(editor, "Scene")
+W_Scene::W_Scene(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
 {
-	allowScrollbar = false;
 	ImGuizmo::Enable(true);
 }
 
 void W_Scene::Draw()
 {
-	ImGui::SetNextWindowClass(editor->normalWindowClass);
+	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin("Scene", &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();

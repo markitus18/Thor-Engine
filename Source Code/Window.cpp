@@ -2,7 +2,7 @@
 
 #include "Config.h"
 
-Window::Window(M_Editor* editor, std::string name) : editor(editor), name(name)
+Window::Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass) : editor(editor), name(name), windowClass(windowClass)
 {
 
 }

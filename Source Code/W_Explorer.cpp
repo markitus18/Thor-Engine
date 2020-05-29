@@ -16,12 +16,10 @@
 #include "R_Prefab.h"
 #include "R_Folder.h"
 
-W_Explorer::W_Explorer(M_Editor* editor) : Window(editor, "Explorer")
+W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
 {
 	updateTimer.Start();
 	UpdateTree();
-
-	allowScrollbar = false;
 
 	Resource* resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo("Assets").ID);
 	currentFolder = assetsFolder = (R_Folder*)resource;

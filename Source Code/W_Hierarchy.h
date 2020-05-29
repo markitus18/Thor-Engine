@@ -4,13 +4,17 @@
 #include "Window.h"
 #include "TreeDisplay.h"
 
+struct ImGuiWindowClass;
+
 class W_Hierarchy : public Window, public TreeDisplay
 {
 public:
-	W_Hierarchy(M_Editor* editor);
+	W_Hierarchy(M_Editor* editor, ImGuiWindowClass* windowClass);
 	~W_Hierarchy() {}
 
 	void Draw() override;
+	static inline const char* GetName() { return "Hierarchy"; };
+
 };
 
 #endif

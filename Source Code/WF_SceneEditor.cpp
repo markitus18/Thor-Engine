@@ -23,43 +23,34 @@
 #include "W_About.h"
 #include "W_MainToolbar.h"
 
-WF_SceneEditor::WF_SceneEditor(M_Editor* editor)
+WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass) : WindowFrame(GetName(), frameWindowClass, windowClass)
 {
-	displayName = name = "Scene Window"; //TODO: Cannot be initialized in constructor, create constructor paramter
+	displayName = name = GetName(); //TODO: Cannot be initialized in constructor, create constructor paramter
 
-	w_hierarchy = new W_Hierarchy(editor);
-	windows.push_back(w_hierarchy);
+	windows.push_back(new W_Hierarchy(editor, windowClass));
+	windows.push_back(new W_Scene(editor, windowClass));
+	windows.push_back(new W_Inspector(editor, windowClass));
+	windows.push_back(new W_Explorer(editor, windowClass));
+	windows.push_back(new W_Console(editor, windowClass));
+	windows.push_back(new W_Resources(editor, windowClass));
+	windows.push_back(new W_EngineConfig(editor, windowClass));
+	windows.push_back(new W_MainToolbar(editor, windowClass));
 
-	w_scene = new W_Scene(editor);
-	windows.push_back(w_scene);
-
-	w_inspector = new W_Inspector(editor);
-	windows.push_back(w_inspector);
-
-	w_explorer = new W_Explorer(editor);
-	windows.push_back(w_explorer);
-
-	w_console = new W_Console(editor);
-	windows.push_back(w_console);
-
-	w_resources = new W_Resources(editor);
-	windows.push_back(w_resources);
-
-	w_econfig = new W_EngineConfig(editor);
-	windows.push_back(w_econfig);
-
-	w_about = new W_About(editor);
+	W_About* w_about = new W_About(editor, windowClass);
 	w_about->SetActive(false);
 	windows.push_back(w_about);
-
-	w_toolbar = new W_MainToolbar(editor);
-	windows.push_back(w_toolbar);
-
 }
 
 WF_SceneEditor::~WF_SceneEditor()
 {
 
+}
+
+void WF_SceneEditor::OnSceneChange(const char* newSceneFile)
+{
+	std::string sceneName = "";
+	Engine->fileSystem->SplitFilePath(newSceneFile, nullptr, &sceneName);
+	displayName = sceneName + std::string(".scene");
 }
 
 void WF_SceneEditor::MenuBar_File()
@@ -73,7 +64,7 @@ void WF_SceneEditor::MenuBar_File()
 
 		if (ImGui::BeginMenu("Open Scene"))
 		{
-			//TODO: avoid doing this every frame
+			//FIXME: avoid doing this every frame
 			std::vector<std::string> sceneList;
 			sceneList.clear();
 			Engine->fileSystem->GetAllFilesWithExtension("", "scene", sceneList);

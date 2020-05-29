@@ -15,13 +15,16 @@ class C_Billboard;
 class C_ParticleSystem;
 class C_Material;
 
+struct ImGuiWindowClass;
+
 class W_Inspector : public WDetails
 {
 public:
-	W_Inspector(M_Editor* editor);
+	W_Inspector(M_Editor* editor, ImGuiWindowClass* windowClass);
 	~W_Inspector() {}
 
 	void Draw() override;
+	static inline const char* GetName() { return "Inspector"; };
 
 private:
 	void DrawGameObject(GameObject* gameObject);

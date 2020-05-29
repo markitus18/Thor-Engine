@@ -1,17 +1,15 @@
 #include "W_Console.h"
 
-#include "M_Editor.h"
-
 #include "ImGui/imgui.h"
 
-W_Console::W_Console(M_Editor* editor) : Window(editor, "Console")
+W_Console::W_Console(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
 {
 	ClearLog();
 }
 
 void W_Console::Draw()
 {
-	ImGui::SetNextWindowClass(editor->normalWindowClass);
+	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin("Console", &active)) { ImGui::End(); return; }
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing

@@ -8,11 +8,12 @@ class Dock;
 typedef unsigned int uint;
 class M_Editor;
 class Config;
+struct ImGuiWindowClass;
 
 class Window
 {
 public:
-	Window(M_Editor* editor, std::string name);
+	Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass);
 	virtual ~Window();
 
 	virtual void Draw() = 0;
@@ -26,15 +27,12 @@ public:
 
 	inline bool IsActive() const { return active; };
 
-private:
-
 public:
-	uint child_index = 0;
 	std::string name;
 	M_Editor* editor;
-	bool allowScrollbar = true;
 	bool showDebugInfo = false;
 	Vec2 windowSize = { 0, 0 };
+	ImGuiWindowClass* windowClass = nullptr;
 
 protected:
 	bool active = true;

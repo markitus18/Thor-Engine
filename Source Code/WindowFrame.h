@@ -7,25 +7,24 @@
 class Window;
 class Config;
 struct ImGuiDockNode;
+struct ImGuiWindowClass;
 typedef unsigned int ImGuiID;
 
 class WindowFrame
 {
 public:
-	WindowFrame();
+	WindowFrame(const char* name, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass);
 	virtual ~WindowFrame();
 
 	void Draw();
-
-	inline void SetName(const char* name) { this->name = name; };
-	inline const char* GetName() const { return name.c_str(); }
 
 	void SaveLayout(Config& file);
 	void LoadLayout(Config& file);
 	virtual void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) = 0;
 
-	//TODO: moving to private as the code gets cleaner (used in M_Editor for the port)
-	std::vector<Window*> windows;
+	inline const char* GetName() { return name.c_str(); };
+
+	Window* GetWindow(const char* name);
 
 private:
 	//Performs the entire management of drawing the menu bar
@@ -59,6 +58,13 @@ protected:
 	//The name that will be displayed in the window tab. Some windows will change names depending on the content
 	//i.e: scene will display the name of the currently open scene
 	std::string displayName;
+
+	//Windows belonging in this particular window frame. All windows are added in the constructor, even if not active
+	std::vector<Window*> windows;
+
+	ImGuiWindowClass* frameWindowClass = nullptr;
+	ImGuiWindowClass* windowClass = nullptr;
+
 };
 
 #endif //__WINDOW_FRAME_H__

@@ -9,7 +9,7 @@
 
 #include "ImGui/imgui.h"
 
-W_ParticleEditor::W_ParticleEditor(M_Editor* editor) : Window(editor, "Particle Editor")
+W_ParticleEditor::W_ParticleEditor(M_Editor* editor) : Window(editor, "Particle Editor", nullptr)
 {
 
 }

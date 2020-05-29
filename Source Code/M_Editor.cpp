@@ -100,7 +100,7 @@ update_status M_Editor::PreUpdate(float dt)
 
 void M_Editor::CreateWindows()
 {
-	windowFrames.push_back(new WF_SceneEditor(this));
+	windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass));
 
 	LoadLayout();
 }
@@ -199,9 +199,12 @@ bool M_Editor::CleanUp()
 
 void M_Editor::Log(const char* input)
 {
-	//TODO: Remove dirty access as the code gets cleaner.
-	if (windowFrames.size() > 0 && windowFrames[0]->windows[4] != nullptr)
-		((W_Console*)windowFrames[0]->windows[4])->AddLog(input);
+	if (windowFrames.size() > 0)
+	{
+		W_Console* w_console = (W_Console*)GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_Console::GetName());
+		if (w_console)
+			w_console->AddLog(input);
+	}
 }
 
 void M_Editor::GetEvent(SDL_Event* event)
@@ -271,11 +274,22 @@ void M_Editor::OpenFileNameWindow()
 	strcpy_s(fileName, 50, str.c_str());
 }
 
+WindowFrame* M_Editor::GetWindowFrame(const char* name)
+{
+	for (uint i = 0; i < windowFrames.size(); ++i)
+		if (strcmp(windowFrames[i]->GetName(), name) == 0) return windowFrames[i];
+
+	return nullptr;
+}
+
 void M_Editor::UpdateFPSData(int fps, int ms)
 {
-	//TODO: Remove dirty access as the code gets cleaner.
-	if (windowFrames[0]->windows[6] != nullptr)
-		((W_EngineConfig*)windowFrames[0]->windows[6])->UpdateFPSData(fps, ms);
+	if (windowFrames.size() > 0)
+	{
+		W_EngineConfig* w_engineConfig = (W_EngineConfig*)GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_EngineConfig::GetName());
+		if (w_engineConfig)
+			w_engineConfig->UpdateFPSData(fps, ms);
+	}
 }
 
 void M_Editor::OnResize(int screen_width, int screen_height)
@@ -487,6 +501,9 @@ void M_Editor::LoadScene(Config& root, bool tmp)
 	toUnselectGOs.clear();
 	toDragGOs.clear();
 	dragging = false;
+
+	WF_SceneEditor* sceneEditor = (WF_SceneEditor*)GetWindowFrame(WF_SceneEditor::GetName());
+	sceneEditor->OnSceneChange(Engine->scene->current_scene.c_str());
 }
 
 void M_Editor::ResetScene()

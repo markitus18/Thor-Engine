@@ -2,13 +2,12 @@
 
 #include "Engine.h"
 #include "M_Scene.h"
-#include "M_Editor.h"
 
 #include "Time.h"
 
 #include "ImGui/imgui.h"
 
-W_MainToolbar::W_MainToolbar(M_Editor* editor) : Window(editor, "Toolbar")
+W_MainToolbar::W_MainToolbar(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
 {
 
 }
@@ -16,7 +15,7 @@ W_MainToolbar::W_MainToolbar(M_Editor* editor) : Window(editor, "Toolbar")
 
 void W_MainToolbar::Draw()
 {
-	ImGui::SetNextWindowClass(editor->normalWindowClass);
+	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin(name.c_str(), &active)) { ImGui::End(); return; }
 
 	std::string name = Time::running ? "Stop" : "Play";

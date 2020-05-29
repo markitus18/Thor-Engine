@@ -119,7 +119,7 @@
       <Filter>Source Code\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Light.cpp">
-      <Filter>Source Code\Helpers</Filter>
+      <Filter>Source Code\GameObjects\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Color.cpp">
       <Filter>Source Code\Containers</Filter>
@@ -146,10 +146,10 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Gizmos.cpp">
-      <Filter>Source Code\Helpers</Filter>
+      <Filter>Source Code\GameObjects\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\Intersections.cpp">
-      <Filter>Source Code\Helpers</Filter>
+      <Filter>Source Code\GameObjects\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source Code\External Libraries\parson\parson.c">
       <Filter>External Libraries\parson</Filter>
@@ -532,7 +532,7 @@
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Light.h">
-      <Filter>Source Code\Helpers</Filter>
+      <Filter>Source Code\GameObjects\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Color.h">
       <Filter>Source Code\Containers</Filter>
@@ -589,10 +589,10 @@
       <Filter>Source Code\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Gizmos.h">
-      <Filter>Source Code\Helpers</Filter>
+      <Filter>Source Code\GameObjects\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\Intersections.h">
-      <Filter>Source Code\Helpers</Filter>
+      <Filter>Source Code\GameObjects\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\External Libraries\parson\parson.h">
       <Filter>External Libraries\parson</Filter>
@@ -795,9 +795,6 @@
     <Filter Include="Source Code\Containers">
       <UniqueIdentifier>{25dffa32-e346-4af8-9669-2bc3f87525f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Code\Helpers">
-      <UniqueIdentifier>{d504f829-ec6d-4862-b41a-942669824cca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Code\Modules">
       <UniqueIdentifier>{f317e83d-1e91-4b12-b14b-79ece024fba9}</UniqueIdentifier>
     </Filter>
@@ -866,6 +863,9 @@
     </Filter>
     <Filter Include="Source Code\Editor\Windows\Particles">
       <UniqueIdentifier>{91cea8fe-bca6-40c1-90b0-f5b2e2d6ef96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\GameObjects\Helpers">
+      <UniqueIdentifier>{d504f829-ec6d-4862-b41a-942669824cca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

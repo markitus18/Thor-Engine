@@ -6,6 +6,7 @@
 #include "M_Window.h"
 #include "M_Resources.h"
 #include "W_Explorer.h"
+#include "WF_SceneEditor.h"
 
 #include "WindowFrame.h" //TODO: Remove as the code gets cleaner. Acess in PreUpdate -> DROPFILE
 
@@ -174,8 +175,8 @@ update_status M_Input::PreUpdate(float dt)
 				LOG("[error] Dropped file: %s", event.drop.file);
 				LOG("[warning] Dropped file: %s", event.drop.file);
 				
-				//TODO: Remove dirty access as the code gets cleaner.
-				W_Explorer* w_explorer = (W_Explorer*)Engine->moduleEditor->windowFrames[0]->windows[3];
+				//FIXME: Current folder should be stored in editor rather than window explorer
+				W_Explorer* w_explorer = (W_Explorer*)Engine->moduleEditor->GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_Explorer::GetName());
 				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, w_explorer->GetCurrentFolder()->GetOriginalFile());
 
 				SDL_free(event.drop.file);

@@ -5,14 +5,19 @@
 
 class Resource;
 
+struct ImGuiWindowClass;
+
 class W_Resources : public Window
 {
 public:
-	W_Resources(M_Editor* editor);
+	W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass);
 	~W_Resources() {}
 
 	void Draw() override;
 
+	static inline const char* GetName() { return "Resources"; };
+
+private:
 	void DisplayResourceInfo(Resource* resource);
 
 };

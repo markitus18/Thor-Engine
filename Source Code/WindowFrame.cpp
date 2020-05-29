@@ -4,12 +4,12 @@
 #include "Config.h"
 
 #include "Window.h"
-#include "M_Editor.h" //Can be removed when 'frameWindowClass' is sent in the constructor
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
-WindowFrame::WindowFrame()
+WindowFrame::WindowFrame(const char* name, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass) : name(name), displayName(name),
+						frameWindowClass(frameWindowClass), windowClass(windowClass)
 {
 
 }
@@ -27,13 +27,13 @@ void WindowFrame::Draw()
 	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
 										 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-	ImGui::SetNextWindowClass(Engine->moduleEditor->frameWindowClass);
+	ImGui::SetNextWindowClass(frameWindowClass);
 	std::string displayTab = displayName + std::string("###") + name;
 	ImGui::Begin(displayTab.c_str(), nullptr, frameWindow_flags);
 	
 	std::string dockName = name + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0, Engine->moduleEditor->normalWindowClass);
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0, windowClass);
 
 	DrawMenuBar();
 
@@ -48,8 +48,6 @@ void WindowFrame::Draw()
 
 void WindowFrame::SaveLayout(Config& file)
 {
-	file.SetString("Window Name", name.c_str());
-
 	std::string dockName = name + std::string("_DockSpace");
 	ImGuiWindow* window = ImGui::FindWindowByName(name.c_str());
 	ImGuiID dockspace_id = window->GetID(dockName.c_str());
@@ -84,8 +82,6 @@ void WindowFrame::SaveDockLayout(ImGuiDockNode* node, Config& file)
 
 void WindowFrame::LoadLayout(Config& file)
 {
-	name = file.GetString("Window Name");
-
 	//TODO: viewport should be handled differently, windows han be outside of the main viewport?
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowSize(viewport->GetWorkSize());
@@ -123,6 +119,14 @@ void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
 		for (uint i = 0; i < win_arr.GetSize(); ++i)
 			ImGui::DockBuilderDockWindow(win_arr.GetString(i), dockID);
 	}
+}
+
+Window* WindowFrame::GetWindow(const char* name)
+{
+	for (uint i = 0; i < windows.size(); ++i)
+		if (windows[i]->name == name) return windows[i];
+
+	return nullptr;
 }
 
 void WindowFrame::DrawMenuBar()

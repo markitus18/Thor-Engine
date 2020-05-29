@@ -8,10 +8,12 @@
 
 class Resource;
 
+struct ImGuiWindowClass;
+
 class WDetails : public Window
 {
 public:
-	WDetails(M_Editor* editor, const char* name);
+	WDetails(M_Editor* editor, const char* name, ImGuiWindowClass* windowClass);
 	~WDetails() { }
 
 	void BeginItemDraw(const char* name);

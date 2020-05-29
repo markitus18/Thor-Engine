@@ -10,7 +10,7 @@
 #include "M_Renderer3D.h" //Included for camera editor matching
 #include "W_Explorer.h"
 
-#include "WindowFrame.h" //TODO: Remove as the code gets cleaner. Acess in DrawParticleSystem
+#include "WF_SceneEditor.h"
 
 #include "TreeNode.h"
 #include "GameObject.h"
@@ -30,7 +30,7 @@
 #include "R_AnimatorController.h"
 #include "R_ParticleSystem.h"
 
-W_Inspector::W_Inspector(M_Editor* editor) : WDetails(editor, "Inspector")
+W_Inspector::W_Inspector(M_Editor* editor, ImGuiWindowClass* windowClass) : WDetails(editor, GetName(), windowClass)
 {
 	billboardAlignmentOptions.push_back("Screen");
 	billboardAlignmentOptions.push_back("Camera");
@@ -39,7 +39,6 @@ W_Inspector::W_Inspector(M_Editor* editor) : WDetails(editor, "Inspector")
 	billboardLockOptions.push_back("x");
 	billboardLockOptions.push_back("y");
 	billboardLockOptions.push_back("z");
-
 }
 
 void W_Inspector::Draw()
@@ -389,7 +388,7 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 		{
 			if (ImGui::MenuItem("Create New"))
 			{
-				W_Explorer* w_explorer = (W_Explorer*)editor->windowFrames[0]->windows[3];
+				W_Explorer* w_explorer = (W_Explorer*)editor->GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_Explorer::GetName());
 				const char* dir = w_explorer->GetCurrentFolder()->GetOriginalFile();
 				if (uint64 resourceID = Engine->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", dir))
 				{

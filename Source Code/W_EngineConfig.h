@@ -7,15 +7,18 @@
 #include <vector>
 #include <string>
 
+struct ImGuiWindowClass;
+
 class W_EngineConfig : public Window
 {
 public:
-	W_EngineConfig(M_Editor* editor);
+	W_EngineConfig(M_Editor* editor, ImGuiWindowClass* windowClass);
 	~W_EngineConfig() {}
 
 	void Draw() override;
 
 	void UpdateFPSData(int fps, int ms);
+	static inline const char* GetName() { return "Engine Config"; };
 
 private:
 	float FPS_data[100];

@@ -73,13 +73,12 @@ public:
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();
 
+	WindowFrame* GetWindowFrame(const char* name);
+
 private:
 	void ShowPlayWindow();
 
 public:
-
-	//Windows system
-	std::vector<WindowFrame*> windowFrames;
 
 	std::vector<TreeNode*> selectedGameObjects;
 	std::vector<TreeNode*> toSelectGOs;
@@ -100,6 +99,8 @@ public:
 	ImGuiWindowClass* normalWindowClass = nullptr;
 
 private:
+	//All currently active window frames
+	std::vector<WindowFrame*> windowFrames;
 
 	char fileName[50];
 

@@ -26,11 +26,13 @@ public:
 
 	bool Init(Config& config) override;
 	bool Start() override;
-	update_status PreUpdate(float dt) override;
+	update_status PreUpdate() override;
 	bool CleanUp() override;
 
 	void CreateWindows();
-	void LoadLayout();
+	void LoadLayout(WindowFrame* windowFrame, const char* layout = "Default");
+	void SaveLayout(WindowFrame* windowFrame, const char* layout = "Default");
+
 	void Draw();
 
 	void Log(const char* input);
@@ -75,9 +77,6 @@ public:
 
 	WindowFrame* GetWindowFrame(const char* name);
 
-private:
-	void ShowPlayWindow();
-
 public:
 
 	std::vector<TreeNode*> selectedGameObjects;
@@ -95,16 +94,14 @@ public:
 	bool show_Demo_window = false;
 	bool show_fileName_window = false;
 	
-	ImGuiWindowClass* frameWindowClass = nullptr;
-	ImGuiWindowClass* normalWindowClass = nullptr;
-
 private:
 	//All currently active window frames
 	std::vector<WindowFrame*> windowFrames;
 
-	char fileName[50];
+	ImGuiWindowClass* frameWindowClass = nullptr;
+	ImGuiWindowClass* normalWindowClass = nullptr;
 
-	std::vector<std::string> sceneList;
+	char fileName[50];
 
 	bool using_keyboard;
 	bool using_mouse;

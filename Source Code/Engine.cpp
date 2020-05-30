@@ -140,20 +140,20 @@ update_status TEngine::Update()
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 	
-	BROFILER_CATEGORY("App PreUpdate", Profiler::Color::Yellow)
+	BROFILER_CATEGORY("Engine PreUpdate", Profiler::Color::Yellow)
 	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
-		ret = list_modules[i]->PreUpdate(dt);
+		ret = list_modules[i]->PreUpdate();
 	}
-	BROFILER_CATEGORY("App Update", Profiler::Color::Purple)
+	BROFILER_CATEGORY("Engine Update", Profiler::Color::Purple)
 	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
-		ret = list_modules[i]->Update(dt);
+		ret = list_modules[i]->Update();
 	}
-	BROFILER_CATEGORY("App PostUpdate", Profiler::Color::Green)
+	BROFILER_CATEGORY("Engine PostUpdate", Profiler::Color::Green)
 	for (uint i = 0; i < list_modules.size() && ret == UPDATE_CONTINUE; i++)
 	{
-		ret = list_modules[i]->PostUpdate(dt);
+		ret = list_modules[i]->PostUpdate();
 	}
 
 	FinishUpdate();

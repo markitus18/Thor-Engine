@@ -25,7 +25,7 @@ public:
 	~M_Input();
 
 	bool Init(Config& config) override;
-	update_status PreUpdate(float dt) override;
+	update_status PreUpdate() override;
 	bool CleanUp() override;
 
 	void SetMouseX(int x);

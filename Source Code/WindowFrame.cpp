@@ -49,9 +49,10 @@ void WindowFrame::Draw()
 void WindowFrame::SaveLayout(Config& file)
 {
 	std::string dockName = name + std::string("_DockSpace");
-	ImGuiWindow* window = ImGui::FindWindowByName(name.c_str());
-	ImGuiID dockspace_id = window->GetID(dockName.c_str());
+	std::string windowStringID = std::string("###") + name;
 
+	ImGuiWindow* window = ImGui::FindWindowByName(windowStringID.c_str());
+	ImGuiID dockspace_id = window->GetID(dockName.c_str());
 	ImGuiDockNode* mainNode = ImGui::DockBuilderGetNode(dockspace_id);
 
 	SaveDockLayout(mainNode, file.SetNode("Root Node"));
@@ -76,18 +77,20 @@ void WindowFrame::SaveDockLayout(ImGuiDockNode* node, Config& file)
 		Config_Array win_arr = file.SetArray("Windows");
 
 		for (uint i = 0; i < node->Windows.size(); ++i)
-			win_arr.AddString(node->Windows[i]->Name);
+		{
+			Config win = win_arr.AddNode();
+			win.SetString("Window Name", node->Windows[i]->Name);
+			win.SetBool("Hidden Tab", node->IsHiddenTabBar());
+		}
 	}
 }
 
-void WindowFrame::LoadLayout(Config& file)
+void WindowFrame::LoadLayout(Config& file, ImGuiID mainDockID)
 {
-	//TODO: viewport should be handled differently, windows han be outside of the main viewport?
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowSize(viewport->GetWorkSize());
-	ImGui::SetNextWindowViewport(viewport->ID);
+	std::string windowNameID = std::string("###").append(name);
+	ImGui::DockBuilderDockWindow(windowNameID.c_str(), mainDockID);
+	ImGui::Begin(windowNameID.c_str());
 
-	ImGui::Begin(name.c_str());
 
 	std::string dockName = name + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
@@ -117,7 +120,15 @@ void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
 	{
 		Config_Array win_arr = file.GetArray("Windows");
 		for (uint i = 0; i < win_arr.GetSize(); ++i)
-			ImGui::DockBuilderDockWindow(win_arr.GetString(i), dockID);
+		{
+			Config win = win_arr.GetNode(i);
+			ImGui::DockBuilderDockWindow(win.GetString("Window Name").c_str(), dockID);
+			if (win.GetBool("Hidden Tab"))
+			{
+				ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockID);
+				dockNode->WantHiddenTabBarToggle = true;
+			}
+		}
 	}
 }
 
@@ -185,17 +196,35 @@ void WindowFrame::MenuBar_Edit()
 
 void WindowFrame::MenuBar_Window()
 {
-	if (ImGui::BeginMenu("Windows"))
+	if (ImGui::BeginMenu("Window"))
 	{
+		ImGui::Text("Display"); ImGui::Indent();
 		std::vector<Window*>::iterator it;
 		for (it = windows.begin(); it != windows.end(); ++it)
 		{
 			bool windowActive = (*it)->IsActive();
-			if (ImGui::Checkbox((*it)->name.c_str(), &windowActive))
+			if (ImGui::MenuItem((*it)->name.c_str(), nullptr, &windowActive))
 			{
 				(*it)->SetActive(windowActive);
 			}
 		}
+		ImGui::Unindent(); ImGui::Separator();
+		ImGui::Text("Layout"); ImGui::Indent();
+		if (ImGui::MenuItem("Save Layout"))
+		{
+			//TODO: Open modal window to display layout name input / select from existing one
+			requestLayoutSave = true;
+		}
+		if (ImGui::MenuItem("Load Layout", nullptr, nullptr, false))
+		{
+			//TODO: Open modal window to select existing layout list
+			requestLayoutLoad = true;
+		}
+		if (ImGui::MenuItem("Reset Layout"))
+		{
+			requestLayoutLoad = true;
+		}
+		ImGui::Unindent();
 		ImGui::EndMenu();
 	}
 

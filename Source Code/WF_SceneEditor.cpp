@@ -25,8 +25,6 @@
 
 WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass) : WindowFrame(GetName(), frameWindowClass, windowClass)
 {
-	displayName = name = GetName(); //TODO: Cannot be initialized in constructor, create constructor paramter
-
 	windows.push_back(new W_Hierarchy(editor, windowClass));
 	windows.push_back(new W_Scene(editor, windowClass));
 	windows.push_back(new W_Inspector(editor, windowClass));
@@ -96,10 +94,8 @@ void WF_SceneEditor::MenuBar_File()
 			Engine->moduleEditor->OpenFileNameWindow();
 		}
 		ImGui::Separator();
-		if (ImGui::MenuItem("Exit          "))
+		if (ImGui::MenuItem("Exit          ", nullptr, nullptr, false))
 		{
-			ImGui::EndMenu();
-			ImGui::EndMainMenuBar();
 			return;
 		}
 		ImGui::EndMenu();

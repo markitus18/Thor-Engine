@@ -26,7 +26,7 @@ public:
 	void OnSceneChange(const char* newSceneFile);
 
 	void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) override;
-	static inline const char* GetName() { return "Scene Editor"; };
+	static inline const char* GetName() { return "SceneEditor"; };
 
 private:
 	void MenuBar_File() override;

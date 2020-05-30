@@ -72,8 +72,8 @@ public:
 
 	bool Init(Config& config) override;
 	bool Start() override;
-	update_status PreUpdate(float dt) override;
-	update_status PostUpdate(float dt) override;
+	update_status PreUpdate() override;
+	update_status PostUpdate() override;
 	bool CleanUp() override;
 	void GenerateSceneBuffers();
 

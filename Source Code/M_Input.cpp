@@ -48,7 +48,7 @@ bool M_Input::Init(Config& config)
 }
 
 // Called every draw update
-update_status M_Input::PreUpdate(float dt)
+update_status M_Input::PreUpdate()
 {
 	static SDL_Event event;
 

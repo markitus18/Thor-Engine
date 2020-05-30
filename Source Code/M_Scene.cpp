@@ -81,7 +81,7 @@ bool M_Scene::CleanUp()
 }
 
 // Update
-update_status M_Scene::Update(float dt)
+update_status M_Scene::Update()
 {
 #pragma region WindowTest
 	if (Engine->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
@@ -104,7 +104,7 @@ update_status M_Scene::Update(float dt)
 		}
 	}
 #pragma endregion
- 	UpdateAllGameObjects(root, dt);
+ 	UpdateAllGameObjects(root, Time::deltaTime);
 
 	if (Engine->renderer3D->culling_camera)
 	{
@@ -136,7 +136,7 @@ update_status M_Scene::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status M_Scene::PostUpdate(float dt)
+update_status M_Scene::PostUpdate()
 {
 	DeleteToRemoveGameObjects();
 	return UPDATE_CONTINUE;

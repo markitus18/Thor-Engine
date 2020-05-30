@@ -19,7 +19,7 @@ public:
 	void Draw();
 
 	void SaveLayout(Config& file);
-	void LoadLayout(Config& file);
+	void LoadLayout(Config& file, ImGuiID mainDockID);
 	virtual void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) = 0;
 
 	inline const char* GetName() { return name.c_str(); };
@@ -50,6 +50,11 @@ private:
 
 	void SaveDockLayout(ImGuiDockNode* node, Config& file);
 	void LoadDockLayout(ImGuiID dockID, Config& file);
+
+public:
+	bool requestLayoutSave = false;
+	bool requestLayoutLoad = false;
+	std::string layoutRequestName = "Default";
 
 protected:
 	//The name of the window frame. Used for saving layout information references

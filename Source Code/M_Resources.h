@@ -36,7 +36,7 @@ public:
 
 	bool Init(Config& config) override;
 	bool Start() override;
-	update_status Update(float dt) override;
+	update_status Update() override;
 	bool CleanUp() override;
 
 	//Import a file from outside the project folder

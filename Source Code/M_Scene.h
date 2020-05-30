@@ -21,8 +21,8 @@ public:
 
 	bool Init(Config& config) override;
 	bool Start() override;
-	update_status Update(float dt) override;
-	update_status PostUpdate(float dt) override;
+	update_status Update() override;
+	update_status PostUpdate() override;
 	bool CleanUp() override;
 
 	GameObject* GetRoot();

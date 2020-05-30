@@ -167,7 +167,7 @@ bool M_Renderer3D::Start()
 }
 
 // PreUpdate: clear buffer
-update_status M_Renderer3D::PreUpdate(float dt)
+update_status M_Renderer3D::PreUpdate()
 {
 	if (camera->update_projection)
 	{
@@ -190,7 +190,7 @@ update_status M_Renderer3D::PreUpdate(float dt)
 }
 
 // PostUpdate present buffer to screen
-update_status M_Renderer3D::PostUpdate(float dt)
+update_status M_Renderer3D::PostUpdate()
 {
 	DrawAllScene();
 	Engine->moduleEditor->Draw();
@@ -234,7 +234,7 @@ uint M_Renderer3D::SaveModelThumbnail(GameObject* gameObject)
 {
 	C_Camera* previous_camera = camera;
 
-	PreUpdate(0);
+	PreUpdate();
 	gameObject->DrawResursive(true, false, false, false);
 	DrawAllScene();
 

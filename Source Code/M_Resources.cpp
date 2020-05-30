@@ -47,7 +47,7 @@ bool M_Resources::Start()
 	return true;
 }
 
-update_status M_Resources::Update(float dt)
+update_status M_Resources::Update()
 {
 	//Little dirty trick to offset both updates
 	if (saveChangedResources_timer.IsRunning() == false && updateAssets_timer.ReadSec() > 2.5)

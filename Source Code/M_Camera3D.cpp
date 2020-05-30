@@ -11,6 +11,7 @@
 #include "Quadtree.h"
 #include "M_Scene.h"
 #include "Vec2.h"
+#include "Time.h"
 
 #include <vector>
 #include <map>
@@ -62,10 +63,10 @@ bool M_Camera3D::CleanUp()
 }
 
 // -----------------------------------------------------------------
-update_status M_Camera3D::Update(float dt)
+update_status M_Camera3D::Update()
 {
 	if (Engine->moduleEditor->UsingKeyboard() == false)
-		Move_Keyboard(dt);
+		Move_Keyboard(Time::deltaTime);
 
 	if (Engine->moduleEditor->UsingMouse() == false)
 	{

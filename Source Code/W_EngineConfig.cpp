@@ -23,7 +23,7 @@ W_EngineConfig::W_EngineConfig(M_Editor* editor, ImGuiWindowClass* windowClass) 
 
 void W_EngineConfig::Draw()
 {
-	ImGui::SetNextWindowClass(editor->normalWindowClass);
+	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin("Engine Config", &active)) { ImGui::End(); return; }
 
 	if (ImGui::BeginMenu("Options"))

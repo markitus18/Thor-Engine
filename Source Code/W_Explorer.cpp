@@ -42,7 +42,7 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass) : Window
 
 void W_Explorer::Draw()
 {
-	ImGui::SetNextWindowClass(editor->normalWindowClass);
+	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin("Explorer", &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();
@@ -135,7 +135,7 @@ void W_Explorer::DrawResourceImage(const Resource* resource)
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 }
 
-//TODO: function needs some cleaning. Pathnodes force GetResource constantly which means can't free resource memory properly
+//FIXME: function needs some cleaning. Pathnodes force GetResource constantly which means can't free resource memory properly
 void W_Explorer::DrawSelectedFolderContent()
 {
 	nextCurrentFolder = nullptr;

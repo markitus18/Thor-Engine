@@ -84,14 +84,28 @@ bool M_Editor::Start()
 	return true;
 }
 
-update_status M_Editor::PreUpdate(float dt)
+update_status M_Editor::PreUpdate()
 {
+	//Handle all save / load layout requests
+	for (uint i = 0; i < windowFrames.size(); ++i)
+	{
+		if (windowFrames[i]->requestLayoutSave)
+		{
+			SaveLayout(windowFrames[i], windowFrames[i]->layoutRequestName.c_str());
+		}
+		else if (windowFrames[i]->requestLayoutLoad)
+		{
+			LoadLayout(windowFrames[i], windowFrames[i]->layoutRequestName.c_str());
+		}
+	}
+
+	//Begin new ImGui Frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(Engine->window->window);
 	ImGui::NewFrame();
 
+	//Update ImGui input usage
 	ImGuiIO& io = ImGui::GetIO();
-
 	using_keyboard = io.WantCaptureKeyboard;
 	using_mouse = io.WantCaptureMouse;
 	
@@ -101,11 +115,10 @@ update_status M_Editor::PreUpdate(float dt)
 void M_Editor::CreateWindows()
 {
 	windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass));
-
-	LoadLayout();
+	LoadLayout(windowFrames.back());
 }
 
-void M_Editor::LoadLayout()
+void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
 {
 	//We generate a fake ImGui frame in order to load the layout correctly and set up all docking data
 	ImGui_ImplOpenGL3_NewFrame();
@@ -120,20 +133,40 @@ void M_Editor::LoadLayout()
 
 	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
-	ImGui::DockBuilderDockWindow("Random Window", dockspace_id);
 
 	char* buffer = nullptr;
-	uint size = Engine->fileSystem->Load("Engine/Layouts/Default.lay", &buffer);
+	std::string fileName = std::string("Engine/Layouts/") + windowFrame->GetName() + "_" + layout + ".lay";
+	uint size = Engine->fileSystem->Load(fileName.c_str(), &buffer);
 	if (size > 0)
 	{
-		Config layout(buffer);
-		windowFrames[0]->LoadLayout_ForceDefault(layout, dockspace_id);
+		Config layoutFile(buffer);
+		windowFrame->LoadLayout(layoutFile, dockspace_id);
 	}
 
 	ImGui::End();
 	ImGui::DockBuilderFinish(dockspace_id);
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
+
+	windowFrame->requestLayoutLoad = false;
+}
+
+void M_Editor::SaveLayout(WindowFrame* windowFrame, const char* layout)
+{
+	//Store all layout information
+	Config layoutFile;
+	windowFrame->SaveLayout(layoutFile);
+
+	//Save to a new/existing file
+	char* buffer = nullptr;
+	if (uint size = layoutFile.Serialize(&buffer))
+	{
+		std::string fileName = std::string("Engine/Layouts/") + windowFrame->GetName() + "_" + layout + ".lay";
+		Engine->fileSystem->Save(fileName.c_str(), buffer, size);
+		RELEASE_ARRAY(buffer);
+	}
+
+	windowFrame->requestLayoutSave = false;
 }
 
 void M_Editor::Draw()
@@ -168,11 +201,9 @@ void M_Editor::Draw()
 	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
 
-	windowFrames[0]->Draw();
-	ImGui::End();
+	for (uint i = 0; i < windowFrames.size(); ++i)
+		windowFrames[i]->Draw();
 
-	ImGui::SetNextWindowClass(frameWindowClass);
-	ImGui::Begin("Random Window", nullptr);
 	ImGui::End();
 
 	ImGui::Render();
@@ -210,33 +241,6 @@ void M_Editor::Log(const char* input)
 void M_Editor::GetEvent(SDL_Event* event)
 {
 	ImGui_ImplSDL2_ProcessEvent(event);
-}
-
-void M_Editor::ShowPlayWindow()
-{
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
-	ImGui::SetNextWindowSize(ImVec2(150, 30));
-
-	bool open = true;
-	if (ImGui::Begin("PlayButton", &open, flags))
-	{
-		std::string name = Time::running ? "Stop" : "Play";
-		if (ImGui::Button(name.c_str()))
-		{
-			Time::running ? Engine->scene->Stop() : Engine->scene->Play();
-		}
-		ImGui::SameLine();
-		std::string name2 = Time::paused ? "Resmue" : "Pause";
-		if (ImGui::Button(name2.c_str()))
-		{
-			Time::paused ? Time::Resume() : Time::Pause();
-		}
-
-		ImGui::End();
-	}
-
-	ImGui::PopStyleColor();
 }
 
 void M_Editor::ShowFileNameWindow()

@@ -81,6 +81,7 @@ void WindowFrame::SaveDockLayout(ImGuiDockNode* node, Config& file)
 			Config win = win_arr.AddNode();
 			win.SetString("Window Name", node->Windows[i]->Name);
 			win.SetBool("Hidden Tab", node->IsHiddenTabBar());
+			win.SetBool("Window Visible", node->Windows[i] == node->VisibleWindow);
 		}
 	}
 }
@@ -104,6 +105,7 @@ void WindowFrame::LoadLayout(Config& file, ImGuiID mainDockID)
 void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
 {
 	std::string divisionAxis = file.GetString("Division Axis");
+	//Node has child nodes. Divide it and load each child.
 	if (divisionAxis != "None")
 	{
 		ImGuiID childDock1, childDock2;
@@ -116,17 +118,27 @@ void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
 		LoadDockLayout(childDock1, arr.GetNode(0));
 		LoadDockLayout(childDock2, arr.GetNode(1));
 	}
+	//Node contains at least window. Empty nodes are not left out in the current system
 	else
 	{
 		Config_Array win_arr = file.GetArray("Windows");
 		for (uint i = 0; i < win_arr.GetSize(); ++i)
 		{
 			Config win = win_arr.GetNode(i);
-			ImGui::DockBuilderDockWindow(win.GetString("Window Name").c_str(), dockID);
+			std::string windowName = win.GetString("Window Name");
+			ImGui::DockBuilderDockWindow(windowName.c_str(), dockID);
+		
 			if (win.GetBool("Hidden Tab"))
 			{
 				ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockID);
 				dockNode->WantHiddenTabBarToggle = true;
+			}
+			else if (win.GetBool("Window Visible"))
+			{
+				//TODO: Current DockBuilder system doesn't support loading the last active window
+				ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockID);
+				//dockNode->TabBar->SelectedTabId = ImGui::FindOrCreateWindowSettings(windowName.c_str())->ID;
+				//dockNode->SelectedTabId = ImGui::FindOrCreateWindowSettings(windowName.c_str())->ID;
 			}
 		}
 	}

@@ -92,6 +92,7 @@
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
+    <ClInclude Include="Source Code\WF_ParticleEditor.h" />
     <ClInclude Include="Source Code\Window.h" />
     <ClInclude Include="Source Code\Emitter.h" />
     <ClInclude Include="Source Code\EmitterInstance.h" />
@@ -222,12 +223,14 @@
     <ClInclude Include="Source Code\WindowFrame.h" />
     <ClInclude Include="Source Code\W_About.h" />
     <ClInclude Include="Source Code\W_Console.h" />
+    <ClInclude Include="Source Code\W_Emitters.h" />
     <ClInclude Include="Source Code\W_EngineConfig.h" />
     <ClInclude Include="Source Code\W_Explorer.h" />
     <ClInclude Include="Source Code\W_Hierarchy.h" />
     <ClInclude Include="Source Code\W_Inspector.h" />
     <ClInclude Include="Source Code\W_MainToolbar.h" />
     <ClInclude Include="Source Code\W_ParticleEditor.h" />
+    <ClInclude Include="Source Code\W_ParticleDetails.h" />
     <ClInclude Include="Source Code\W_Resources.h" />
     <ClInclude Include="Source Code\W_Scene.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
@@ -244,6 +247,7 @@
     <ClCompile Include="Source Code\C_Camera.cpp" />
     <ClCompile Include="Source Code\C_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
+    <ClCompile Include="Source Code\WF_ParticleEditor.cpp" />
     <ClCompile Include="Source Code\Window.cpp" />
     <ClCompile Include="Source Code\Emitter.cpp" />
     <ClCompile Include="Source Code\EmitterInstance.cpp" />
@@ -338,12 +342,14 @@
     <ClCompile Include="Source Code\WindowFrame.cpp" />
     <ClCompile Include="Source Code\W_About.cpp" />
     <ClCompile Include="Source Code\W_Console.cpp" />
+    <ClCompile Include="Source Code\W_Emitters.cpp" />
     <ClCompile Include="Source Code\W_EngineConfig.cpp" />
     <ClCompile Include="Source Code\W_Explorer.cpp" />
     <ClCompile Include="Source Code\W_Hierarchy.cpp" />
     <ClCompile Include="Source Code\W_Inspector.cpp" />
     <ClCompile Include="Source Code\W_MainToolbar.cpp" />
     <ClCompile Include="Source Code\W_ParticleEditor.cpp" />
+    <ClCompile Include="Source Code\W_ParticleDetails.cpp" />
     <ClCompile Include="Source Code\W_Resources.cpp" />
     <ClCompile Include="Source Code\W_Scene.cpp" />
   </ItemGroup>

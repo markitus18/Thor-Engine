@@ -256,9 +256,6 @@
     <ClCompile Include="Source Code\EmitterInstance.cpp">
       <Filter>Source Code\GameObjects\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\W_ParticleEditor.cpp">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\R_Shader.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
@@ -333,6 +330,18 @@
     </ClCompile>
     <ClCompile Include="Source Code\WF_SceneEditor.cpp">
       <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_ParticleEditor.cpp">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\WF_ParticleEditor.cpp">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_Emitters.cpp">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_ParticleDetails.cpp">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -709,9 +718,6 @@
     <ClInclude Include="Source Code\EmitterInstance.h">
       <Filter>Source Code\GameObjects\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\W_ParticleEditor.h">
-      <Filter>Source Code\Editor\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\R_Shader.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
@@ -786,6 +792,18 @@
     </ClInclude>
     <ClInclude Include="Source Code\WF_SceneEditor.h">
       <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_ParticleEditor.h">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\WF_ParticleEditor.h">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_Emitters.h">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_ParticleDetails.h">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

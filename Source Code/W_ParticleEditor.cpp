@@ -138,70 +138,45 @@ void W_ParticleEditor::DrawModuleData(ParticleModule* module)
 
 void W_ParticleEditor::DrawModule(EmitterBase* module)
 {
-	ImGui::InputFloat3("Origin: ", module->emitterOrigin.ptr());
-
-	static char* alignmentOptions[9] = { "None", "Screen", "Camera", "LockYZ", "LockYX", "LockXY", "LockXZ", "LockZX", "LockZY" };
-	int currentOption = (int)module->alignment;
-
-	if (ImGui::BeginCombo("Alignment", alignmentOptions[(int)currentOption]))
-	{
-		for (uint i = 0; i < 9; ++i)
-		{
-			if (ImGui::Selectable(alignmentOptions[i], i == currentOption))
-				module->alignment = (EmitterBase::Alignment)i;
-		}
-		ImGui::EndCombo();
-	}
 
 }
 
 void W_ParticleEditor::DrawModule(EmitterSpawn* module)
 {
-	if (ImGui::InputFloat("Spawn Ratio", &module->spawnRatio))
-		module->spawnRatio = math::Clamp<float>(module->spawnRatio, 0.0f, module->spawnRatio);
+
 }
 
 void W_ParticleEditor::DrawModule(EmitterArea* module)
 {
-	ImGui::Text("-- Needs Update --");
+
 }
 
 void W_ParticleEditor::DrawModule(ParticlePosition* module)
 {
-	ImGui::InputFloat3("Position 1", module->initialPosition1.ptr());
-	ImGui::InputFloat3("Position 2", module->initialPosition2.ptr());
+
 }
 
 void W_ParticleEditor::DrawModule(ParticleRotation* module)
 {
-	ImGui::InputFloat("Rotation 1", &module->initialRotation1);
-	ImGui::InputFloat("Rotation 2", &module->initialRotation2);
+
 }
 
 void W_ParticleEditor::DrawModule(ParticleSize* module)
 {
-	if (ImGui::InputFloat("Size 1", &module->initialSize1))
-		module->initialSize1 = math::Clamp<float>(module->initialSize1, 0.0f, module->initialSize1);
-	if (ImGui::InputFloat("Size 2", &module->initialSize2))
-		module->initialSize2 = math::Clamp<float>(module->initialSize2, 0.0f, module->initialSize2);
+
 }
 
 void W_ParticleEditor::DrawModule(ParticleColor* module)
 {
-	ImGui::ColorEdit4("Color 1", module->initialColor1.ptr());
-	ImGui::ColorEdit4("Color 2", module->initialColor2.ptr());
+
 }
 
 void W_ParticleEditor::DrawModule(ParticleLifetime* module)
 {
-	if (ImGui::InputFloat("Lifetime 1", &module->initialLifetime1))
-		module->initialLifetime1 = math::Clamp<float>(module->initialLifetime1, 0.0f, module->initialLifetime1);
-	if (ImGui::InputFloat("Lifetime 2", &module->initialLifetime2))
-		module->initialLifetime2 = math::Clamp<float>(module->initialLifetime2, 0.0f, module->initialLifetime2);
+
 }
 
 void W_ParticleEditor::DrawModule(ParticleVelocity* module)
 {
-	ImGui::InputFloat4("Velocity 1", module->initialVelocity1.ptr());
-	ImGui::InputFloat4("Velocity 2", module->initialVelocity2.ptr());
+
 }

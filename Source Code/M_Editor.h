@@ -20,7 +20,6 @@ struct ImGuiWindowClass;
 class M_Editor : public Module
 {
 public:
-
 	M_Editor(bool start_enabled = true);
 	~M_Editor();
 
@@ -43,6 +42,8 @@ public:
 
 	bool UsingKeyboard() const;
 	bool UsingMouse() const;
+
+	void OpenResource(Resource* resource);
 
 	//Timer management -------------------
 	uint AddTimer(const char* text, const char* tag);
@@ -76,7 +77,6 @@ public:
 	void ShowFileNameWindow();
 
 	WindowFrame* GetWindowFrame(const char* name);
-
 public:
 
 	std::vector<TreeNode*> selectedGameObjects;

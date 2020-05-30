@@ -39,7 +39,7 @@ private:
 	void UpdateTree();
 	std::string GetTextAdjusted(const char* text) const;
 
-	void HandleResourceDoubleClick(const Resource* resource);
+	void HandleResourceDoubleClick(Resource* resource);
 	uint GetTextureFromResource(const Resource* resource, std::string* dnd_event = nullptr);
 
 public:

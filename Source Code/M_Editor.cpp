@@ -7,6 +7,7 @@
 
 //Windows
 #include "WF_SceneEditor.h"
+#include "WF_ParticleEditor.h"
 #include "W_Console.h"
 #include "W_EngineConfig.h"
 
@@ -311,6 +312,17 @@ bool M_Editor::UsingKeyboard() const
 bool M_Editor::UsingMouse() const
 {
 	return using_mouse;
+}
+
+void M_Editor::OpenResource(Resource* resource)
+{
+	if (resource->GetType() == Resource::PARTICLESYSTEM)
+	{
+		WF_ParticleEditor* particleEditorWindow = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass);
+		particleEditorWindow->requestLayoutLoad = true;
+		particleEditorWindow->SetParticleSystem((R_ParticleSystem*)resource);
+		windowFrames.push_back(particleEditorWindow);
+	}
 }
 
 //Timer management -------------------

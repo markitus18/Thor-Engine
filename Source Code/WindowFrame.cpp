@@ -71,7 +71,7 @@ void WindowFrame::SaveDockLayout(ImGuiDockNode* node, Config& file)
 		SaveDockLayout(node->ChildNodes[0], arr.AddNode());
 		SaveDockLayout(node->ChildNodes[1], arr.AddNode());
 	}
-	else if (node->Windows.size() > 0)
+	else
 	{
 		file.SetString("Division Axis", "None");
 		Config_Array win_arr = file.SetArray("Windows");
@@ -111,14 +111,13 @@ void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
 		ImGuiID childDock1, childDock2;
 
 		float divisionValue = file.GetNumber("Division Value");
-		float roundedDivision = (float)((int)(divisionValue * 100 + 0.5f)) / 100;
-		ImGui::DockBuilderSplitNode(dockID, divisionAxis == "X" ? ImGuiDir_Left : ImGuiDir_Up, roundedDivision, &childDock1, &childDock2);
+		ImGui::DockBuilderSplitNode(dockID, divisionAxis == "X" ? ImGuiDir_Left : ImGuiDir_Up, divisionValue, &childDock1, &childDock2);
 
 		Config_Array arr = file.GetArray("Children");
 		LoadDockLayout(childDock1, arr.GetNode(0));
 		LoadDockLayout(childDock2, arr.GetNode(1));
 	}
-	//Node contains at least window. Empty nodes are not left out in the current system
+	//Node contains at least one window. Empty nodes are not left out in the current system
 	else
 	{
 		Config_Array win_arr = file.GetArray("Windows");

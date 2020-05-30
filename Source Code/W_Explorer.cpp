@@ -43,7 +43,7 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass) : Window
 void W_Explorer::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin("Explorer", &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(GetName(), &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();
 	if (winSize.x != windowSize.x || winSize.y != windowSize.y)
@@ -262,10 +262,12 @@ std::string W_Explorer::GetTextAdjusted(const char* text) const
 	return newText;
 }
 
-void W_Explorer::HandleResourceDoubleClick(const Resource* resource)
+void W_Explorer::HandleResourceDoubleClick(Resource* resource)
 {
 	if (resource->GetType() == Resource::FOLDER)
 		nextCurrentFolder = (R_Folder*)resource;
+	else
+		editor->OpenResource(resource);
 }
 
 uint W_Explorer::GetTextureFromResource(const Resource* resource, std::string* dnd_event)

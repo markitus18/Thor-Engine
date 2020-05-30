@@ -229,7 +229,10 @@
     <ClInclude Include="Source Code\W_Hierarchy.h" />
     <ClInclude Include="Source Code\W_Inspector.h" />
     <ClInclude Include="Source Code\W_MainToolbar.h" />
+    <ClInclude Include="Source Code\W_ParticleCurves.h" />
     <ClInclude Include="Source Code\W_ParticleDetails.h" />
+    <ClInclude Include="Source Code\W_ParticleViewport.h" />
+    <ClInclude Include="Source Code\W_ParticleToolbar.h" />
     <ClInclude Include="Source Code\W_Resources.h" />
     <ClInclude Include="Source Code\W_Scene.h" />
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
@@ -347,7 +350,10 @@
     <ClCompile Include="Source Code\W_Hierarchy.cpp" />
     <ClCompile Include="Source Code\W_Inspector.cpp" />
     <ClCompile Include="Source Code\W_MainToolbar.cpp" />
+    <ClCompile Include="Source Code\W_ParticleCurves.cpp" />
     <ClCompile Include="Source Code\W_ParticleDetails.cpp" />
+    <ClCompile Include="Source Code\W_ParticleViewport.cpp" />
+    <ClCompile Include="Source Code\W_ParticleToolbar.cpp" />
     <ClCompile Include="Source Code\W_Resources.cpp" />
     <ClCompile Include="Source Code\W_Scene.cpp" />
   </ItemGroup>

@@ -2,6 +2,9 @@
 
 #include "W_Emitters.h"
 #include "W_ParticleDetails.h"
+#include "W_ParticleCurves.h"
+#include "W_ParticleViewport.h"
+#include "W_ParticleToolbar.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -10,6 +13,9 @@ WF_ParticleEditor::WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWi
 {
 	windows.push_back(new W_Emitters(editor, windowClass, ID, this));
 	windows.push_back(new W_ParticleDetails(editor, windowClass, ID, this));
+	windows.push_back(new W_ParticleCurves(editor, windowClass, ID, this));
+	windows.push_back(new W_ParticleViewport(editor, windowClass, ID, this));
+	windows.push_back(new W_ParticleToolbar(editor, windowClass, ID, this));
 }
 
 WF_ParticleEditor::~WF_ParticleEditor()
@@ -34,7 +40,7 @@ void WF_ParticleEditor::MenuBar_Development()
 {
 	if (ImGui::BeginMenu("Development"))
 	{
-
+		ImGui::EndMenu();
 	}
 }
 
@@ -47,7 +53,7 @@ void WF_ParticleEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID
 	std::string dockName = name + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
-
+	/*
 	ImGuiID leftSpace_id, rightspace_id;
 	ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.8f, &leftSpace_id, &rightspace_id);
 
@@ -78,7 +84,7 @@ void WF_ParticleEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID
 	ImGui::DockBuilderDockWindow("Inspector", topRightSpace_id);
 	ImGui::DockBuilderDockWindow("Engine Config", bottomRightSpace_id);
 	ImGui::DockBuilderDockWindow("Resources", bottomRightSpace_id);
-
+	*/
 	ImGui::DockBuilderFinish(dockspace_id);
 	ImGui::End();
 }

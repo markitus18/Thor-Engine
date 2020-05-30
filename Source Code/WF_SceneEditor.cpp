@@ -171,11 +171,11 @@ void WF_SceneEditor::MenuBar_Development()
 
 void WF_SceneEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
 {
-	std::string windowNameID = std::string("###").append(name);
-	ImGui::DockBuilderDockWindow(windowNameID.c_str(), mainDockID);
-	ImGui::Begin(windowNameID.c_str());
+	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);
+	ImGui::Begin(windowStrID.c_str());
 
-	std::string dockName = name + std::string("_DockSpace");
+	std::string dockName = windowStrID + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
 
@@ -185,30 +185,39 @@ void WF_SceneEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
 	ImGuiID topLeftSpace_id, bottomLeftSpace_id;
 	ImGui::DockBuilderSplitNode(leftSpace_id, ImGuiDir_Up, 0.7f, &topLeftSpace_id, &bottomLeftSpace_id);
 
-	ImGui::DockBuilderDockWindow("Explorer", bottomLeftSpace_id);
-	ImGui::DockBuilderDockWindow("Console", bottomLeftSpace_id);
+	std::string windowName = std::string("Explorer") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomLeftSpace_id);
+	windowName = std::string("Console") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomLeftSpace_id);
 
 	ImGuiID leftTopLeftSpace_id, rightTopLeftSpace_id;
 	ImGui::DockBuilderSplitNode(topLeftSpace_id, ImGuiDir_Left, 0.2f, &leftTopLeftSpace_id, &rightTopLeftSpace_id);
 
-	ImGui::DockBuilderDockWindow("Hierarchy", leftTopLeftSpace_id);
+	windowName = std::string("Hierarchy") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), leftTopLeftSpace_id);
 
 	ImGuiID topCenterSpace_id, bottomCenterSpace_id;
 	ImGui::DockBuilderSplitNode(rightTopLeftSpace_id, ImGuiDir_Up, 0.10f, &topCenterSpace_id, &bottomCenterSpace_id);
 
-	ImGui::DockBuilderDockWindow("Toolbar", topCenterSpace_id);
+	windowName = std::string("Toolbar") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), topCenterSpace_id);
 	ImGuiDockNode* node = ImGui::DockBuilderGetNode(topCenterSpace_id);
 	node->WantHiddenTabBarToggle = true;
-	ImGui::DockBuilderDockWindow("Scene", bottomCenterSpace_id);
+
+	windowName = std::string("Scene") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomCenterSpace_id);
 	node = ImGui::DockBuilderGetNode(bottomCenterSpace_id);
 	node->WantHiddenTabBarToggle = true;
 
 	ImGuiID topRightSpace_id, bottomRightSpace_id;
 	ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.65f, &topRightSpace_id, &bottomRightSpace_id);
 
-	ImGui::DockBuilderDockWindow("Inspector", topRightSpace_id);
-	ImGui::DockBuilderDockWindow("Engine Config", bottomRightSpace_id);
-	ImGui::DockBuilderDockWindow("Resources", bottomRightSpace_id);
+	windowName = std::string("Inspector") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), topRightSpace_id);
+	windowName = std::string("Engine Config") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomRightSpace_id);
+	windowName = std::string("Resources") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomRightSpace_id);
 
 	ImGui::DockBuilderFinish(dockspace_id);
 	ImGui::End();

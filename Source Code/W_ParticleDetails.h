@@ -25,7 +25,7 @@ public:
 
 	void Draw() override;
 
-	static inline const char* GetName() { return "Details_Particles"; };
+	static inline const char* GetName() { return "Details"; };
 
 private:
 	void DrawModule(EmitterBase* module);

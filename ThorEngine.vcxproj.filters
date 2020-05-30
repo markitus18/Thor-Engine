@@ -340,6 +340,15 @@
     <ClCompile Include="Source Code\W_ParticleDetails.cpp">
       <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\W_ParticleCurves.cpp">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_ParticleToolbar.cpp">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_ParticleViewport.cpp">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
@@ -797,6 +806,15 @@
       <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\W_ParticleDetails.h">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_ParticleCurves.h">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_ParticleToolbar.h">
+      <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_ParticleViewport.h">
       <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClInclude>
   </ItemGroup>

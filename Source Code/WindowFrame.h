@@ -53,7 +53,7 @@ private:
 
 public:
 	bool requestLayoutSave = false;
-	bool requestLayoutLoad = false;
+	bool requestLayoutLoad = true;
 	std::string layoutRequestName = "Default";
 
 protected:

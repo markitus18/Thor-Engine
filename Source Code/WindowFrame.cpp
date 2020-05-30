@@ -24,16 +24,20 @@ WindowFrame::~WindowFrame()
 
 void WindowFrame::Draw()
 {
+	if (requestLayoutLoad) return; //Avoid Drawing before the first Layout is loaded as ImGui will mess with docking sizes
+
 	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 	if (!isDockable)
 		frameWindow_flags |= ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
+	//Window settings and display
 	ImGui::SetNextWindowClass(frameWindowClass);
 	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin(windowStrID.c_str(), nullptr, frameWindow_flags);
 	ImGui::PopStyleVar();
 
+	//Adding a dock space to dock all child windows
 	std::string dockName = windowStrID + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0, windowClass);
@@ -57,6 +61,9 @@ void WindowFrame::SaveLayout(Config& file)
 	ImGuiWindow* window = ImGui::FindWindowByName(windowStrID.c_str());
 	ImGuiID dockspace_id = window->GetID(dockName.c_str());
 	ImGuiDockNode* mainNode = ImGui::DockBuilderGetNode(dockspace_id);
+
+	file.SetNumber("Window Size X", window->Size.x);
+	file.SetNumber("Window Size Y", window->Size.y);
 
 	SaveDockLayout(mainNode, file.SetNode("Root Node"));
 }
@@ -82,7 +89,10 @@ void WindowFrame::SaveDockLayout(ImGuiDockNode* node, Config& file)
 		for (uint i = 0; i < node->Windows.size(); ++i)
 		{
 			Config win = win_arr.AddNode();
-			win.SetString("Window Name", node->Windows[i]->Name);
+			//Window name stored in ImGui keeps the #ID so it has to be removed before saving
+			std::string winName = node->Windows[i]->Name;
+			winName = winName.substr(0, winName.find("#"));
+			win.SetString("Window Name", winName.c_str());
 			win.SetBool("Hidden Tab", node->IsHiddenTabBar());
 			win.SetBool("Window Visible", node->Windows[i] == node->VisibleWindow);
 		}
@@ -93,8 +103,11 @@ void WindowFrame::LoadLayout(Config& file, ImGuiID mainDockID)
 {
 	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
  	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);
-	ImGui::Begin(windowStrID.c_str());
 
+	ImVec2 winSize(file.GetNumber("Window Size X"), file.GetNumber("Window Size Y"));
+	ImGui::SetNextWindowSize(winSize);
+
+	ImGui::Begin(windowStrID.c_str());
 
 	std::string dockName = windowStrID + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());

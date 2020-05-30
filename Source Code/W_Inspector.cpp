@@ -30,7 +30,7 @@
 #include "R_AnimatorController.h"
 #include "R_ParticleSystem.h"
 
-W_Inspector::W_Inspector(M_Editor* editor, ImGuiWindowClass* windowClass) : WDetails(editor, GetName(), windowClass)
+W_Inspector::W_Inspector(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : WDetails(editor, GetName(), windowClass, ID)
 {
 	billboardAlignmentOptions.push_back("Screen");
 	billboardAlignmentOptions.push_back("Camera");
@@ -44,7 +44,7 @@ W_Inspector::W_Inspector(M_Editor* editor, ImGuiWindowClass* windowClass) : WDet
 void W_Inspector::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin("Inspector", &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
 
 	if (editor->selectedGameObjects.size() > 0)
 	{

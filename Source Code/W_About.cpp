@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-W_About::W_About(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
+W_About::W_About(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
 
 }

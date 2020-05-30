@@ -23,18 +23,20 @@
 #include "W_About.h"
 #include "W_MainToolbar.h"
 
-WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass) : WindowFrame(GetName(), frameWindowClass, windowClass)
+WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID) : WindowFrame(GetName(), frameWindowClass, windowClass, ID)
 {
-	windows.push_back(new W_Hierarchy(editor, windowClass));
-	windows.push_back(new W_Scene(editor, windowClass));
-	windows.push_back(new W_Inspector(editor, windowClass));
-	windows.push_back(new W_Explorer(editor, windowClass));
-	windows.push_back(new W_Console(editor, windowClass));
-	windows.push_back(new W_Resources(editor, windowClass));
-	windows.push_back(new W_EngineConfig(editor, windowClass));
-	windows.push_back(new W_MainToolbar(editor, windowClass));
+	isDockable = false;
 
-	W_About* w_about = new W_About(editor, windowClass);
+	windows.push_back(new W_Hierarchy(editor, windowClass, ID));
+	windows.push_back(new W_Scene(editor, windowClass, ID));
+	windows.push_back(new W_Inspector(editor, windowClass, ID));
+	windows.push_back(new W_Explorer(editor, windowClass, ID));
+	windows.push_back(new W_Console(editor, windowClass, ID));
+	windows.push_back(new W_Resources(editor, windowClass, ID));
+	windows.push_back(new W_EngineConfig(editor, windowClass, ID));
+	windows.push_back(new W_MainToolbar(editor, windowClass, ID));
+
+	W_About* w_about = new W_About(editor, windowClass, ID);
 	w_about->SetActive(false);
 	windows.push_back(w_about);
 }

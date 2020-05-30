@@ -20,7 +20,7 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui/imgui_internal.h"
 
-W_Scene::W_Scene(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
+W_Scene::W_Scene(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
 	ImGuizmo::Enable(true);
 }
@@ -28,7 +28,7 @@ W_Scene::W_Scene(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(edito
 void W_Scene::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin("Scene", &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();
 	if (winSize.x != windowSize.x || winSize.y != windowSize.y)

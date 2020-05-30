@@ -13,7 +13,7 @@ struct ImGuiWindowClass;
 class WF_ParticleEditor : public WindowFrame
 {
 public:
-	WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass);
+	WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID);
 	~WF_ParticleEditor();
 
 	void SetParticleSystem(R_ParticleSystem* particleSystem);

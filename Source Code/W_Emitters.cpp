@@ -6,7 +6,7 @@
 
 #include "ImGui/imgui.h"
 
-W_Emitters::W_Emitters(M_Editor* editor, ImGuiWindowClass* windowClass, WF_ParticleEditor* hostWindow) : Window(editor, GetName(), windowClass), hostWindow(hostWindow)
+W_Emitters::W_Emitters(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow) : Window(editor, GetName(), windowClass, ID), hostWindow(hostWindow)
 {
 
 }
@@ -19,7 +19,7 @@ void W_Emitters::Draw()
 	ParticleModule* selectedModule = hostWindow->selectedModule;
 
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin(GetName(), &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
 
 	if (particleSystem->emitters.size() > 0)
 	{

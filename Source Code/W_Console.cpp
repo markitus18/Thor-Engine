@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-W_Console::W_Console(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
+W_Console::W_Console(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
 	ClearLog();
 }
@@ -10,7 +10,7 @@ W_Console::W_Console(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(e
 void W_Console::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin("Console", &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6)); // Tighten spacing
 

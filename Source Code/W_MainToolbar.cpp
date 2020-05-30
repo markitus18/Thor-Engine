@@ -7,7 +7,7 @@
 
 #include "ImGui/imgui.h"
 
-W_MainToolbar::W_MainToolbar(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
+W_MainToolbar::W_MainToolbar(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
 
 }
@@ -16,7 +16,7 @@ W_MainToolbar::W_MainToolbar(M_Editor* editor, ImGuiWindowClass* windowClass) : 
 void W_MainToolbar::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin(name.c_str(), &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
 
 	std::string name = Time::running ? "Stop" : "Play";
 	if (ImGui::Button(name.c_str()))

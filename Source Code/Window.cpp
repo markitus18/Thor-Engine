@@ -2,9 +2,9 @@
 
 #include "Config.h"
 
-Window::Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass) : editor(editor), name(name), windowClass(windowClass)
+Window::Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass, int ID) : editor(editor), name(name), windowClass(windowClass), ID(ID)
 {
-
+	windowStrID = name + ("##") + std::to_string(ID);
 }
 
 Window::~Window()

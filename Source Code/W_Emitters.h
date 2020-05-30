@@ -13,7 +13,7 @@ struct ImGuiWindowClass;
 class W_Emitters : public Window
 {
 public:
-	W_Emitters(M_Editor* editor, ImGuiWindowClass* windowClass, WF_ParticleEditor* hostWindow);
+	W_Emitters(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow);
 	~W_Emitters() {}
 
 	void Draw() override;

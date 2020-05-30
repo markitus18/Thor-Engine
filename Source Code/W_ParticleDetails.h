@@ -20,12 +20,12 @@ struct ParticleVelocity;
 class W_ParticleDetails : public Window
 {
 public:
-	W_ParticleDetails(M_Editor* editor, ImGuiWindowClass* windowClass, WF_ParticleEditor* hostWindow);
+	W_ParticleDetails(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow);
 	~W_ParticleDetails() {}
 
 	void Draw() override;
 
-	static inline const char* GetName() { return "Details##Particles"; };
+	static inline const char* GetName() { return "Details_Particles"; };
 
 private:
 	void DrawModule(EmitterBase* module);

@@ -13,7 +13,7 @@ typedef unsigned int ImGuiID;
 class WindowFrame
 {
 public:
-	WindowFrame(const char* name, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass);
+	WindowFrame(const char* name, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID);
 	virtual ~WindowFrame();
 
 	void Draw();
@@ -67,9 +67,15 @@ protected:
 	//Windows belonging in this particular window frame. All windows are added in the constructor, even if not active
 	std::vector<Window*> windows;
 
+	//Flag to allow docking/un-docking on this WindowFrame. The main window should not be moved or resized
+	bool isDockable = true;
+
+	//ImGui classes for blocking docking a frame window into a normal window and viceversa
 	ImGuiWindowClass* frameWindowClass = nullptr;
 	ImGuiWindowClass* windowClass = nullptr;
 
+	//An Unique Identifier in order to have different WindowStrID sent to ImGui for the same type of window frames
+	int ID = -1;
 };
 
 #endif //__WINDOW_FRAME_H__

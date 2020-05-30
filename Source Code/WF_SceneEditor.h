@@ -20,7 +20,7 @@ struct ImGuiWindowClass;
 class WF_SceneEditor : public WindowFrame
 {
 public:
-	WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass);
+	WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID);
 	~WF_SceneEditor();
 
 	void OnSceneChange(const char* newSceneFile);

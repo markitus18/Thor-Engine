@@ -6,10 +6,10 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
-WF_ParticleEditor::WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass) : WindowFrame(GetName(), frameWindowClass, windowClass)
+WF_ParticleEditor::WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID) : WindowFrame(GetName(), frameWindowClass, windowClass, ID)
 {
-	windows.push_back(new W_Emitters(editor, windowClass, this));
-	windows.push_back(new W_ParticleDetails(editor, windowClass, this));
+	windows.push_back(new W_Emitters(editor, windowClass, ID, this));
+	windows.push_back(new W_ParticleDetails(editor, windowClass, ID, this));
 }
 
 WF_ParticleEditor::~WF_ParticleEditor()

@@ -11,7 +11,7 @@ struct ImGuiWindowClass;
 class W_Console : public Window
 {
 public:
-	W_Console(M_Editor* editor, ImGuiWindowClass* windowClass);
+	W_Console(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
 	~W_Console() { ClearLog(); }
 
 	void Draw() override;

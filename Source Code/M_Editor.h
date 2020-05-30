@@ -108,6 +108,8 @@ private:
 
 	float mainWindowPositionY = 0;
 	float toolbarSizeY = 30;
+
+	int nextWindowID = 0;
 };
 
 #endif //!__M_EDITOR_H__

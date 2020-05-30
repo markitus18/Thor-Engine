@@ -115,7 +115,7 @@ update_status M_Editor::PreUpdate()
 
 void M_Editor::CreateWindows()
 {
-	windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass));
+	windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass, nextWindowID++));
 	LoadLayout(windowFrames.back());
 }
 
@@ -318,7 +318,7 @@ void M_Editor::OpenResource(Resource* resource)
 {
 	if (resource->GetType() == Resource::PARTICLESYSTEM)
 	{
-		WF_ParticleEditor* particleEditorWindow = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass);
+		WF_ParticleEditor* particleEditorWindow = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, nextWindowID++);
 		particleEditorWindow->requestLayoutLoad = true;
 		particleEditorWindow->SetParticleSystem((R_ParticleSystem*)resource);
 		windowFrames.push_back(particleEditorWindow);

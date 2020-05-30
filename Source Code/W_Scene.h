@@ -10,7 +10,7 @@ struct ImGuiWindowClass;
 class W_Scene : public Window
 {
 public:
-	W_Scene(M_Editor* editor, ImGuiWindowClass* windowClass);
+	W_Scene(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
 	~W_Scene() {}
 
 	void Draw() override;

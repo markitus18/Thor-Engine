@@ -16,7 +16,7 @@
 #include "R_Prefab.h"
 #include "R_Folder.h"
 
-W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
+W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
 	updateTimer.Start();
 	UpdateTree();
@@ -43,7 +43,7 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass) : Window
 void W_Explorer::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin(GetName(), &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
 
 	ImVec2 winSize = ImGui::GetWindowSize();
 	if (winSize.x != windowSize.x || winSize.y != windowSize.y)

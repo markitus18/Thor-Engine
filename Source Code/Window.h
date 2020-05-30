@@ -13,7 +13,7 @@ struct ImGuiWindowClass;
 class Window
 {
 public:
-	Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass);
+	Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass, int ID);
 	virtual ~Window();
 
 	virtual void Draw() = 0;
@@ -36,6 +36,8 @@ public:
 
 protected:
 	bool active = true;
+	int ID = -1;
+	std::string windowStrID;
 };
 
 #endif //__DOCK_DATA_H__

@@ -11,7 +11,7 @@
 #include "R_Texture.h"
 #include "R_Prefab.h"
 
-W_Resources::W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
+W_Resources::W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
 
 
@@ -20,7 +20,7 @@ W_Resources::W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass) : Wind
 void W_Resources::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (!ImGui::Begin("Resources", &active)) { ImGui::End(); return; }
+	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
 
 	ImGui::Text("Resources loaded in memory");
 

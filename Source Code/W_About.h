@@ -8,7 +8,7 @@ struct ImGuiWindowClass;
 class W_About : public Window
 {
 public:
-	W_About(M_Editor* editor, ImGuiWindowClass* windowClass);
+	W_About(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
 	~W_About() {  }
 
 	void Draw() override;

@@ -7,7 +7,7 @@
 
 #include "ImGui/imgui.h"
 
-W_Hierarchy::W_Hierarchy(M_Editor* editor, ImGuiWindowClass* windowClass) : Window(editor, GetName(), windowClass)
+W_Hierarchy::W_Hierarchy(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
 
 }
@@ -15,7 +15,7 @@ W_Hierarchy::W_Hierarchy(M_Editor* editor, ImGuiWindowClass* windowClass) : Wind
 void W_Hierarchy::Draw()
 {
 	ImGui::SetNextWindowClass(windowClass);
-	if (ImGui::Begin("Hierarchy", &active))
+	if (ImGui::Begin(windowStrID.c_str(), &active))
 		DrawTree(Engine->scene->GetRoot());
 
 	ImGui::End();

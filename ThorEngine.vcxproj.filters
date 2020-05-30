@@ -331,9 +331,6 @@
     <ClCompile Include="Source Code\WF_SceneEditor.cpp">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\W_ParticleEditor.cpp">
-      <Filter>Source Code\Editor\Windows\Particles</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\WF_ParticleEditor.cpp">
       <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClCompile>
@@ -792,9 +789,6 @@
     </ClInclude>
     <ClInclude Include="Source Code\WF_SceneEditor.h">
       <Filter>Source Code\Editor\Windows\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="Source Code\W_ParticleEditor.h">
-      <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClInclude>
     <ClInclude Include="Source Code\WF_ParticleEditor.h">
       <Filter>Source Code\Editor\Windows\Particles</Filter>

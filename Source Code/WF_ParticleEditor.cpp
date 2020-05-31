@@ -6,6 +6,8 @@
 #include "W_ParticleViewport.h"
 #include "W_ParticleToolbar.h"
 
+#include "R_ParticleSystem.h"
+
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
@@ -26,6 +28,7 @@ WF_ParticleEditor::~WF_ParticleEditor()
 void WF_ParticleEditor::SetParticleSystem(R_ParticleSystem* particleSystem)
 {
 	this->particleSystem = particleSystem;
+	displayName = particleSystem->GetName();
 }
 
 void WF_ParticleEditor::MenuBar_Custom()
@@ -46,45 +49,40 @@ void WF_ParticleEditor::MenuBar_Development()
 
 void WF_ParticleEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
 {
-	std::string windowNameID = std::string("###").append(name);
-	ImGui::DockBuilderDockWindow(windowNameID.c_str(), mainDockID);
-	ImGui::Begin(windowNameID.c_str());
+	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);
+	ImGui::Begin(windowStrID.c_str());
 
-	std::string dockName = name + std::string("_DockSpace");
+	std::string dockName = windowStrID + std::string("_DockSpace");
 	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
-	/*
-	ImGuiID leftSpace_id, rightspace_id;
-	ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.8f, &leftSpace_id, &rightspace_id);
+	
+	ImGuiID topSpace_id, bottomSpace_id;
+	ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Up, 0.08f, &topSpace_id, &bottomSpace_id);
+	
+	std::string windowName = std::string("Toolbar") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), topSpace_id);
 
-	ImGuiID topLeftSpace_id, bottomLeftSpace_id;
-	ImGui::DockBuilderSplitNode(leftSpace_id, ImGuiDir_Up, 0.7f, &topLeftSpace_id, &bottomLeftSpace_id);
+	ImGuiID leftBottomSpace_id, rightBottomSpace_id;
+	ImGui::DockBuilderSplitNode(bottomSpace_id, ImGuiDir_Left, 0.24f, &leftBottomSpace_id, &rightBottomSpace_id);
 
-	ImGui::DockBuilderDockWindow("Explorer", bottomLeftSpace_id);
-	ImGui::DockBuilderDockWindow("Console", bottomLeftSpace_id);
+	ImGuiID upLeftBottomSpace_id, bottomLeftBottomSpace_id;
+	ImGui::DockBuilderSplitNode(leftBottomSpace_id, ImGuiDir_Up, 0.54f, &upLeftBottomSpace_id, &bottomLeftBottomSpace_id);
 
-	ImGuiID leftTopLeftSpace_id, rightTopLeftSpace_id;
-	ImGui::DockBuilderSplitNode(topLeftSpace_id, ImGuiDir_Left, 0.2f, &leftTopLeftSpace_id, &rightTopLeftSpace_id);
+	windowName = std::string("Viewport") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), upLeftBottomSpace_id);
 
-	ImGui::DockBuilderDockWindow("Hierarchy", leftTopLeftSpace_id);
+	windowName = std::string("Details") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomLeftBottomSpace_id);
 
-	ImGuiID topCenterSpace_id, bottomCenterSpace_id;
-	ImGui::DockBuilderSplitNode(rightTopLeftSpace_id, ImGuiDir_Up, 0.10f, &topCenterSpace_id, &bottomCenterSpace_id);
+	ImGuiID upRightBottomSpace_id, bottomRightBottomSpace_id;
+	ImGui::DockBuilderSplitNode(rightBottomSpace_id, ImGuiDir_Up, 0.7f, &upRightBottomSpace_id, &bottomRightBottomSpace_id);
 
-	ImGui::DockBuilderDockWindow("Toolbar", topCenterSpace_id);
-	ImGuiDockNode* node = ImGui::DockBuilderGetNode(topCenterSpace_id);
-	node->WantHiddenTabBarToggle = true;
-	ImGui::DockBuilderDockWindow("Scene", bottomCenterSpace_id);
-	node = ImGui::DockBuilderGetNode(bottomCenterSpace_id);
-	node->WantHiddenTabBarToggle = true;
-
-	ImGuiID topRightSpace_id, bottomRightSpace_id;
-	ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.65f, &topRightSpace_id, &bottomRightSpace_id);
-
-	ImGui::DockBuilderDockWindow("Inspector", topRightSpace_id);
-	ImGui::DockBuilderDockWindow("Engine Config", bottomRightSpace_id);
-	ImGui::DockBuilderDockWindow("Resources", bottomRightSpace_id);
-	*/
+	windowName = std::string("Emitters") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), upRightBottomSpace_id);
+	windowName = std::string("Curve Editor") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomRightBottomSpace_id);
+	
 	ImGui::DockBuilderFinish(dockspace_id);
 	ImGui::End();
 }

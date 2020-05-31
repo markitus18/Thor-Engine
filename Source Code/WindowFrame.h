@@ -23,6 +23,7 @@ public:
 	virtual void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) = 0;
 
 	inline const char* GetName() { return name.c_str(); };
+	inline bool IsActive() { return active; };
 
 	Window* GetWindow(const char* name);
 
@@ -76,6 +77,9 @@ protected:
 
 	//An Unique Identifier in order to have different WindowStrID sent to ImGui for the same type of window frames
 	int ID = -1;
+
+	//Flag used to request a window close. When the window frame is closed by the user, we can safely destroy its memory
+	bool active = true;
 };
 
 #endif //__WINDOW_FRAME_H__

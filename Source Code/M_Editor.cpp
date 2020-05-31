@@ -87,9 +87,9 @@ bool M_Editor::Start()
 
 update_status M_Editor::PreUpdate()
 {
-	//Handle all save / load layout requests
 	for (uint i = 0; i < windowFrames.size(); ++i)
 	{
+		//Handle all save / load layout requests
 		if (windowFrames[i]->requestLayoutSave)
 		{
 			SaveLayout(windowFrames[i], windowFrames[i]->layoutRequestName.c_str());
@@ -97,6 +97,13 @@ update_status M_Editor::PreUpdate()
 		else if (windowFrames[i]->requestLayoutLoad)
 		{
 			LoadLayout(windowFrames[i], windowFrames[i]->layoutRequestName.c_str());
+		}
+		//Handle any window frame close requests
+		if (!windowFrames[i]->IsActive())
+		{
+			delete windowFrames[i];
+			windowFrames.erase(windowFrames.begin() + i);
+			--i;
 		}
 	}
 
@@ -141,7 +148,7 @@ void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
 	if (size > 0)
 	{
 		Config layoutFile(buffer);
-		windowFrame->LoadLayout(layoutFile, dockspace_id);
+		windowFrame->LoadLayout_ForceDefault(layoutFile, dockspace_id);
 	}
 
 	ImGui::End();

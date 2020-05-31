@@ -34,7 +34,7 @@ void WindowFrame::Draw()
 	ImGui::SetNextWindowClass(frameWindowClass);
 	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin(windowStrID.c_str(), nullptr, frameWindow_flags);
+	ImGui::Begin(windowStrID.c_str(), isDockable ? &active : nullptr, frameWindow_flags);
 	ImGui::PopStyleVar();
 
 	//Adding a dock space to dock all child windows

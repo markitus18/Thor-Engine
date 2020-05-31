@@ -27,10 +27,13 @@ WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowCl
 {
 	isDockable = false;
 
+	explorerWindowClass = new ImGuiWindowClass();
+	explorerWindowClass->ClassId = 3;
+
 	windows.push_back(new W_Hierarchy(editor, windowClass, ID));
 	windows.push_back(new W_Scene(editor, windowClass, ID));
 	windows.push_back(new W_Inspector(editor, windowClass, ID));
-	windows.push_back(new W_Explorer(editor, windowClass, ID));
+	windows.push_back(new W_Explorer(editor, windowClass, explorerWindowClass, ID));
 	windows.push_back(new W_Console(editor, windowClass, ID));
 	windows.push_back(new W_Resources(editor, windowClass, ID));
 	windows.push_back(new W_EngineConfig(editor, windowClass, ID));
@@ -171,22 +174,58 @@ void WF_SceneEditor::MenuBar_Development()
 
 void WF_SceneEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
 {
+	//3. Generate a new window docked into the previous dock space.
+	//   And attach a new dock space to it
 	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);
 	ImGui::Begin(windowStrID.c_str());
 
 	std::string dockName = windowStrID + std::string("_DockSpace");
-	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), 0);
+	ImGuiID dock_space_B = ImGui::GetID(dockName.c_str());
+	ImGui::DockSpace(dock_space_B, ImVec2(0.0f, 0.0f), 0);
 
+	//4. Start building dock space node hierarchy
 	ImGuiID leftSpace_id, rightspace_id;
-	ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.8f, &leftSpace_id, &rightspace_id);
+	ImGui::DockBuilderSplitNode(dock_space_B, ImGuiDir_Left, 0.8f, &leftSpace_id, &rightspace_id);
 
 	ImGuiID topLeftSpace_id, bottomLeftSpace_id;
 	ImGui::DockBuilderSplitNode(leftSpace_id, ImGuiDir_Up, 0.7f, &topLeftSpace_id, &bottomLeftSpace_id);
 
+	//5. Dock new window to one of the newly generated docks (the issue begins here)
+	//   Attach a new dock space to it
 	std::string windowName = std::string("Explorer") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomLeftSpace_id);
+	ImGui::Begin(windowName.c_str());
+
+	dockName = windowName + "_DockSpace";
+	ImGuiID explorerDockspace_id = ImGui::GetID(dockName.c_str());
+	ImGui::DockSpace(explorerDockspace_id, ImVec2(0.0f, 0.0f), 0, explorerWindowClass);
+
+	//6. Split the new dock in two pieces (top and bottom)
+	ImGuiID topExplorerSpace_id, bottomExplorerSpace_id;
+	ImGui::DockBuilderSplitNode(explorerDockspace_id, ImGuiDir_Up, 0.10f, &topExplorerSpace_id, &bottomExplorerSpace_id);
+
+	windowName = std::string("Explorer_Toolbar") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), topExplorerSpace_id);
+	ImGui::DockBuilderGetNode(topExplorerSpace_id)->WantHiddenTabBarToggle = true;
+
+	//7. Split the bottom dock in two more pieces (left and right)
+	//   The issue resolves at this precise point
+	ImGuiID leftExplorerSpace_id, rightExplorerSpace_id;
+	ImGui::DockBuilderSplitNode(bottomExplorerSpace_id, ImGuiDir_Left, 0.5f, &leftExplorerSpace_id, &rightExplorerSpace_id);
+
+	//8. Attach windows to the different nodes (code irrelevant from this point)
+	windowName = std::string("Explorer_Tree") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), leftExplorerSpace_id);
+	ImGui::DockBuilderGetNode(leftExplorerSpace_id)->WantHiddenTabBarToggle = true;
+
+	windowName = std::string("Explorer_Folder") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), rightExplorerSpace_id);
+	ImGui::DockBuilderGetNode(rightExplorerSpace_id)->WantHiddenTabBarToggle = true;
+
+	ImGui::End();
+	//------------------------------------------------------------------------------------------
+
 	windowName = std::string("Console") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomLeftSpace_id);
 
@@ -206,8 +245,7 @@ void WF_SceneEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
 
 	windowName = std::string("Scene") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomCenterSpace_id);
-	node = ImGui::DockBuilderGetNode(bottomCenterSpace_id);
-	node->WantHiddenTabBarToggle = true;
+	ImGui::DockBuilderGetNode(bottomCenterSpace_id)->WantHiddenTabBarToggle = true;
 
 	ImGuiID topRightSpace_id, bottomRightSpace_id;
 	ImGui::DockBuilderSplitNode(rightspace_id, ImGuiDir_Up, 0.65f, &topRightSpace_id, &bottomRightSpace_id);

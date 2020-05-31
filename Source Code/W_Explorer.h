@@ -20,7 +20,7 @@ struct ImGuiWindowClass;
 class W_Explorer : public Window
 {
 public:
-	W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
+	W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWindowClass* explorerWindowClass, int ID);
 	~W_Explorer() {}
 
 	void Draw() override;
@@ -56,6 +56,8 @@ public:
 	uint nodeButtonOffset = 30;
 
 private:
+	ImGuiWindowClass* explorerWindowClass = nullptr;
+
 	PathNode assets;
 
 	R_Folder* assetsFolder = nullptr;

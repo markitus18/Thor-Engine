@@ -16,7 +16,8 @@
 #include "R_Prefab.h"
 #include "R_Folder.h"
 
-W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
+W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWindowClass* explorerWindowClass, int ID) : Window(editor, GetName(), windowClass, ID),
+																														 explorerWindowClass(explorerWindowClass)
 {
 	updateTimer.Start();
 	UpdateTree();
@@ -55,19 +56,30 @@ void W_Explorer::Draw()
 		updateTimer.Start();
 	}
 
-	ImGui::PushID(this);
+	std::string dockStrID = windowStrID + "_DockSpace";
+	ImGuiID dockspace_id = ImGui::GetID(dockStrID.c_str());
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, explorerWindowClass);
 
-	ImGui::BeginChild("ExplorerTree", ImVec2(windowSize.x * 0.2f, windowSize.y));
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoMove;
+
+	ImGui::SetNextWindowClass(explorerWindowClass);
+	std::string childWindowName = std::string("Explorer_Tree") + ("##") + std::to_string(ID);
+	ImGui::Begin(childWindowName.c_str(), nullptr, windowFlags);
 	DrawFolderNode(assets);
+	ImGui::End();
 
-	ImGui::EndChild();
-
-	ImGui::SameLine();
-	ImGui::BeginChild("ExplorerFolder", ImVec2(windowSize.x * 0.8f, windowSize.y), false, ImGuiWindowFlags_NoScrollbar);
+	ImGui::SetNextWindowClass(explorerWindowClass);
+	childWindowName = std::string("Explorer_Folder") + ("##") + std::to_string(ID);
+	ImGui::Begin(childWindowName.c_str(), false, windowFlags);
 	DrawSelectedFolderContent();
-	ImGui::EndChild();
+	ImGui::End();
 
-	ImGui::PopID();
+
+	ImGui::SetNextWindowClass(explorerWindowClass);
+	childWindowName = std::string("Explorer_Toolbar") + ("##") + std::to_string(ID);
+	ImGui::Begin(childWindowName.c_str(), false, windowFlags);
+	//TODO: Add toolbar content for explorer
+	ImGui::End();
 
 	ImGui::End();
 }

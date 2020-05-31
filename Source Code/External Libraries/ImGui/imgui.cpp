@@ -14215,6 +14215,7 @@ void ImGui::DockBuilderDockWindow(const char* window_name, ImGuiID node_id)
             settings = CreateNewWindowSettings(window_name);
         settings->DockId = node_id;
         settings->DockOrder = -1;
+        settings->Size = ImVec2ih(DockBuilderGetNode(node_id)->Size);
     }
 }
 

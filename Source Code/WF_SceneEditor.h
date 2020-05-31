@@ -32,6 +32,9 @@ private:
 	void MenuBar_File() override;
 	void MenuBar_Custom() override;
 	void MenuBar_Development() override;
+
+	//Specific window class for the explorer smallest windows
+	ImGuiWindowClass* explorerWindowClass = nullptr;
 };
 
 #endif // !__WF_MAIN_WINDOW_H

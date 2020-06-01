@@ -80,7 +80,9 @@ bool M_Editor::Start()
 	normalWindowClass = new ImGuiWindowClass();
 	normalWindowClass->ClassId = 2;
 
+	//ImGuiIO& io = ImGui::GetIO();
 	CreateWindows();
+	//io.IniFilename = "Imgui.ini";
 	
 	return true;
 }
@@ -128,30 +130,36 @@ void M_Editor::CreateWindows()
 
 void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
 {
-	//Generate a "fake" ImGui frame in order to load the layout correctly and set up all docking data
+	//We generate a fake ImGui frame in order to load the layout correctly and set up all docking data
+	
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(Engine->window->window);
 	ImGui::NewFrame();
 
-	//1. Create a new window and a dock space attached to it
+	//Create a main window and attach a dock space to it
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowSize(viewport->GetWorkSize());
 	ImGui::SetNextWindowViewport(viewport->ID);
 	ImGui::SetNextWindowClass(frameWindowClass);
 	ImGui::Begin("Main Window");
 
-	ImGuiID dock_space_A = ImGui::GetID("Main Dockspace");
-	ImGui::DockSpace(dock_space_A, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
+	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
 
-	//2. Call specific window layout load
-	Config layoutFile; // (not used in this example)
-	windowFrame->LoadLayout_ForceDefault(layoutFile, dock_space_A);
+	char* buffer = nullptr;
+	std::string fileName = std::string("Engine/Layouts/") + windowFrame->GetName() + "_" + layout + ".lay";
+	uint size = Engine->fileSystem->Load(fileName.c_str(), &buffer);
+	if (size > 0)
+	{
+		Config layoutFile(buffer);
+		windowFrame->LoadLayout_ForceDefault(layoutFile, dockspace_id);
+	}
 
 	ImGui::End();
-	ImGui::DockBuilderFinish(dock_space_A);
+	ImGui::DockBuilderFinish(dockspace_id);
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
-
+	
 	windowFrame->requestLayoutLoad = false;
 }
 

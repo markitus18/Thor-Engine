@@ -14215,6 +14215,8 @@ void ImGui::DockBuilderDockWindow(const char* window_name, ImGuiID node_id)
             settings = CreateNewWindowSettings(window_name);
         settings->DockId = node_id;
         settings->DockOrder = -1;
+        //Thor Modification: Initializing window size when docking it into a node
+        //As adding several layers without a size will ignore split_ratio on docks
         settings->Size = ImVec2ih(DockBuilderGetNode(node_id)->Size);
     }
 }
@@ -14769,7 +14771,10 @@ void ImGui::BeginDocked(ImGuiWindow* window, bool* p_open)
 void ImGui::BeginDockableDragDropSource(ImGuiWindow* window)
 {
     ImGuiContext& g = *GImGui;
-    IM_ASSERT(g.ActiveId == window->MoveId);
+    //Thor Modification: Don't really know the point of this assert.
+    //When un-docking a window from a dock that contains another window, and this 2nd window
+    //Contains a dockspace, the g.ActiveId is reset sa the 2nd window wants to be popped up
+    //IM_ASSERT(g.ActiveId == window->MoveId); 
     IM_ASSERT(g.MovingWindow == window);
 
     window->DC.LastItemId = window->MoveId;

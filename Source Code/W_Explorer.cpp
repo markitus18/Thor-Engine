@@ -74,7 +74,6 @@ void W_Explorer::Draw()
 	DrawSelectedFolderContent();
 	ImGui::End();
 
-
 	ImGui::SetNextWindowClass(explorerWindowClass);
 	childWindowName = std::string("Explorer_Toolbar") + ("##") + std::to_string(ID);
 	ImGui::Begin(childWindowName.c_str(), false, windowFlags);

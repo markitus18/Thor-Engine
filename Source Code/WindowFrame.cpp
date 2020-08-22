@@ -3,7 +3,10 @@
 #include "Engine.h"
 #include "Config.h"
 
+#include "M_Resources.h"
+
 #include "Window.h"
+#include "Resource.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -24,8 +27,6 @@ WindowFrame::~WindowFrame()
 
 void WindowFrame::Draw()
 {
-	if (requestLayoutLoad) return; //Avoid Drawing before the first Layout is loaded as ImGui will mess with docking sizes
-
 	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 	if (!isDockable)
 		frameWindow_flags |= ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
@@ -53,113 +54,17 @@ void WindowFrame::Draw()
 	}
 }
 
-void WindowFrame::SaveLayout(Config& file)
+void WindowFrame::SetResource(uint64 resourceID)
 {
-	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
-	std::string dockName = windowStrID + std::string("_DockSpace");
-
-	ImGuiWindow* window = ImGui::FindWindowByName(windowStrID.c_str());
-	ImGuiID dockspace_id = window->GetID(dockName.c_str());
-	ImGuiDockNode* mainNode = ImGui::DockBuilderGetNode(dockspace_id);
-
-	file.SetNumber("Window Size X", window->Size.x);
-	file.SetNumber("Window Size Y", window->Size.y);
-
-	SaveDockLayout(mainNode, file.SetNode("Root Node"));
+	if (Resource* oldResource = Engine->moduleResources->GetResource(this->resourceID))
+		oldResource->instances--;
+	
+	this->resourceID = resourceID;
+	if (Resource* newResource = Engine->moduleResources->GetResource(this->resourceID))
+		newResource->instances++;
 }
 
-void WindowFrame::SaveDockLayout(ImGuiDockNode* node, Config& file)
-{
-	if (node->IsSplitNode())
-	{
-		float availableNodeSize = node->Size[node->SplitAxis] - 2.0f;
-
-		file.SetString("Division Axis", node->SplitAxis == 0 ? "X" : "Y"); //-1 for none, 0 for x, 1 for y
-		file.SetNumber("Division Value", node->ChildNodes[0]->Size[node->SplitAxis] / availableNodeSize);
-
-		Config_Array arr = file.SetArray("Children");
-		SaveDockLayout(node->ChildNodes[0], arr.AddNode());
-		SaveDockLayout(node->ChildNodes[1], arr.AddNode());
-	}
-	else
-	{
-		file.SetString("Division Axis", "None");
-		Config_Array win_arr = file.SetArray("Windows");
-
-		for (uint i = 0; i < node->Windows.size(); ++i)
-		{
-			Config win = win_arr.AddNode();
-			//Window name stored in ImGui keeps the #ID so it has to be removed before saving
-			std::string winName = node->Windows[i]->Name;
-			winName = winName.substr(0, winName.find("#"));
-			win.SetString("Window Name", winName.c_str());
-			win.SetBool("Hidden Tab", node->IsHiddenTabBar());
-			win.SetBool("Window Visible", node->Windows[i] == node->VisibleWindow);
-		}
-	}
-}
-
-void WindowFrame::LoadLayout(Config& file, ImGuiID mainDockID)
-{
-	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
- 	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);
-
-	ImVec2 winSize(file.GetNumber("Window Size X"), file.GetNumber("Window Size Y"));
-	ImGui::SetNextWindowSize(winSize);
-
-	ImGui::Begin(windowStrID.c_str());
-
-	std::string dockName = windowStrID + std::string("_DockSpace");
-	ImGuiID dockspace_id = ImGui::GetID(dockName.c_str());
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit);
-
-	LoadDockLayout(dockspace_id, file.GetNode("Root Node"));
-
-	ImGui::End();
-}
-
-void WindowFrame::LoadDockLayout(ImGuiID dockID, Config& file)
-{
-	std::string divisionAxis = file.GetString("Division Axis");
-	//Node has child nodes. Divide it and load each child.
-	if (divisionAxis != "None")
-	{
-		ImGuiID childDock1, childDock2;
-
-		float divisionValue = file.GetNumber("Division Value");
-		ImGui::DockBuilderSplitNode(dockID, divisionAxis == "X" ? ImGuiDir_Left : ImGuiDir_Up, divisionValue, &childDock1, &childDock2);
-
-		Config_Array arr = file.GetArray("Children");
-		LoadDockLayout(childDock1, arr.GetNode(0));
-		LoadDockLayout(childDock2, arr.GetNode(1));
-	}
-	//Node contains at least one window. Empty nodes are not left out in the current system
-	else
-	{
-		Config_Array win_arr = file.GetArray("Windows");
-		for (uint i = 0; i < win_arr.GetSize(); ++i)
-		{
-			Config win = win_arr.GetNode(i);
-			std::string windowName = win.GetString("Window Name") + ("##") + std::to_string(ID);
-			ImGui::DockBuilderDockWindow(windowName.c_str(), dockID);
-		
-			if (win.GetBool("Hidden Tab"))
-			{
-				ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockID);
-				dockNode->WantHiddenTabBarToggle = true;
-			}
-			else if (win.GetBool("Window Visible"))
-			{
-				//TODO: Current DockBuilder system doesn't support loading the last active window
-				ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockID);
-				//dockNode->TabBar->SelectedTabId = ImGui::FindOrCreateWindowSettings(windowName.c_str())->ID;
-				//dockNode->SelectedTabId = ImGui::FindOrCreateWindowSettings(windowName.c_str())->ID;
-			}
-		}
-	}
-}
-
-Window* WindowFrame::GetWindow(const char* name)
+Window* WindowFrame::GetWindow(const char* name) const
 {
 	for (uint i = 0; i < windows.size(); ++i)
 		if (windows[i]->name == name) return windows[i];
@@ -237,24 +142,14 @@ void WindowFrame::MenuBar_Window()
 		}
 		ImGui::Unindent(); ImGui::Separator();
 		ImGui::Text("Layout"); ImGui::Indent();
-		if (ImGui::MenuItem("Save Layout"))
-		{
-			//TODO: Open modal window to display layout name input / select from existing one
-			requestLayoutSave = true;
-		}
-		if (ImGui::MenuItem("Load Layout", nullptr, nullptr, false))
-		{
-			//TODO: Open modal window to select existing layout list
-			requestLayoutLoad = true;
-		}
-		if (ImGui::MenuItem("Reset Layout"))
-		{
-			requestLayoutLoad = true;
-		}
+		if (ImGui::MenuItem("Save Layout", nullptr, nullptr, false)){}
+		if (ImGui::MenuItem("Load Layout", nullptr, nullptr, false)){}
+		if (ImGui::MenuItem("Reset Layout", nullptr, nullptr, false)) {}
+		ImGui::Separator();
+
 		ImGui::Unindent();
 		ImGui::EndMenu();
 	}
-
 }
 
 void WindowFrame::MenuBar_Help()

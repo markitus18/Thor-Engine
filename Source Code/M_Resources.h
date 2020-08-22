@@ -67,14 +67,20 @@ public:
 	//Finds the ID in the resource library and creates the resource base of that type
 	Resource* LoadResourceBase(uint64 ID);
 
+	//Calls importers to generate a filled binary file and saves it into Library
+	//If the resource can be modified in Assets, it is saved there aswell
+	void SaveResource(Resource* resource);
+
+	//Saves the current resource as a new resource located at 'newPath'
+	//Returns the newly created resource's ID
+	uint64 SaveResourceAs(Resource* resource, const char* directory, const char* fileName);
+
 	const ResourceInfo& GetResourceInfo(const char* path, const char* name = nullptr, Resource::Type type = Resource::UNKNOWN) const;
 
 	Resource* GetResource(uint64 ID);
 
 	Resource::Type GetTypeFromFileExtension(const char* path) const;
 	bool GetAllMetaFromType(Resource::Type type, std::vector<const ResourceInfo*>& metas) const;
-
-	void LoadModel(uint64 ID);
 
 	inline uint64 GetNewID() { return random.Int(); }
 
@@ -84,7 +90,7 @@ private:
 	uint64 LoadResourceInfo(const char* file);
 	uint64 LoadFolderInfo(const char* file);
 
-	ResourceInfo	GetMetaInfo(const Resource* resource) const;
+	ResourceInfo GetMetaInfo(const Resource* resource) const;
 
 	//.meta file generation
 	void SaveMetaInfo(const Resource* resource);
@@ -110,10 +116,6 @@ private:
 
 	//Deletes the memory from a loaded resource
 	void UnLoadResource(uint64 ID);
-
-	//Calls importers to generate a filled binary file and saves it into Library
-	//If the resource can be modified in Assets, it is saved there aswell
-	void SaveResource(Resource* resource);
 
 	//Returns if this resource can be modified in Assets file and thus has to be overitten there too
 	bool IsModifiableResource(const Resource* resource) const;

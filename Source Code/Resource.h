@@ -24,7 +24,7 @@ public:
 		MATERIAL,
 		ANIMATION,
 		ANIMATOR_CONTROLLER,
-		PREFAB,
+		MODEL,
 		PARTICLESYSTEM,
 		SHADER,
 		SCENE,
@@ -69,6 +69,6 @@ protected:
 
 	//TODO: UID that should point to containing folder
 	Resource* parent;
-};
+};  
 
 #endif // !__RESOURCE_H__

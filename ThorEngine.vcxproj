@@ -92,6 +92,7 @@
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
+    <ClInclude Include="Source Code\R_Scene.h" />
     <ClInclude Include="Source Code\WF_ParticleEditor.h" />
     <ClInclude Include="Source Code\Window.h" />
     <ClInclude Include="Source Code\Emitter.h" />
@@ -213,7 +214,7 @@
     <ClInclude Include="Source Code\R_Animation.h" />
     <ClInclude Include="Source Code\R_Material.h" />
     <ClInclude Include="Source Code\R_Mesh.h" />
-    <ClInclude Include="Source Code\R_Prefab.h" />
+    <ClInclude Include="Source Code\R_Model.h" />
     <ClInclude Include="Source Code\R_Texture.h" />
     <ClInclude Include="Source Code\Time.h" />
     <ClInclude Include="Source Code\Timer.h" />
@@ -249,6 +250,7 @@
     <ClCompile Include="Source Code\C_Camera.cpp" />
     <ClCompile Include="Source Code\C_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
+    <ClCompile Include="Source Code\R_Scene.cpp" />
     <ClCompile Include="Source Code\WF_ParticleEditor.cpp" />
     <ClCompile Include="Source Code\Window.cpp" />
     <ClCompile Include="Source Code\Emitter.cpp" />
@@ -331,7 +333,7 @@
     <ClCompile Include="Source Code\R_Material.cpp" />
     <ClCompile Include="Source Code\R_Mesh.cpp" />
     <ClCompile Include="Source Code\R_ParticleSystem.cpp" />
-    <ClCompile Include="Source Code\R_Prefab.cpp" />
+    <ClCompile Include="Source Code\R_Model.cpp" />
     <ClCompile Include="Source Code\R_Shader.cpp" />
     <ClCompile Include="Source Code\R_Texture.cpp" />
     <ClCompile Include="Source Code\Time.cpp" />

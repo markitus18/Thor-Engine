@@ -10,6 +10,8 @@
 #include "M_Editor.h"
 #include "M_Resources.h"
 
+#include "R_Scene.h"
+
 #include "Config.h"
 #include "Time.h"
 
@@ -127,11 +129,6 @@ void TEngine::FinishUpdate()
 	}
 
 	Engine->moduleEditor->UpdateFPSData(last_FPS, frameTimer.Read());
-
-	if (save_scene)
-		SaveSceneNow();
-	if (load_scene)
-		LoadSceneNow();
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -197,7 +194,7 @@ void TEngine::UpdateSceneName()
 {
 	std::string windowTitle = title;
 	std::string sceneName = "", sceneExtension = "";
-	Engine->fileSystem->SplitFilePath(scene->current_scene.c_str(), nullptr, &sceneName, &sceneExtension);
+	Engine->fileSystem->SplitFilePath(scene->scene->GetOriginalFile(), nullptr, &sceneName, &sceneExtension); //TODO: avoid accessing a resource
 	windowTitle.append(" - ").append(sceneName);
 	if (sceneExtension != "")
 	{
@@ -210,25 +207,6 @@ void TEngine::SetTitleName(const char* new_name)
 {
 	title = new_name;
 	UpdateSceneName();
-}
-
-void TEngine::OpenSceneWindow()
-{
-
-}
-
-void TEngine::SaveScene(const char* scene, bool tmp)
-{
-	scene_to_save = tmp ? "" : "Assets/";
-	scene_to_save += scene;
-	tmpScene = tmp;
-	save_scene = true;
-}
-
-void TEngine::LoadScene(const char* scene)
-{
-	scene_to_load = scene;
-	load_scene = true;
 }
 
 void TEngine::OnRemoveGameObject(GameObject* gameObject)
@@ -280,75 +258,4 @@ void TEngine::LoadSettingsNow(const char* full_path)
 			}
 		}
 	}
-}
-
-void TEngine::SaveSceneNow()
-{
-	Config config;
-
-	for (uint i = 0; i < list_modules.size(); i++)
-	{
-		list_modules[i]->SaveScene(config.SetNode(list_modules[i]->name.c_str()));
-	}
-
-	char* buffer = nullptr;
-	uint size = config.Serialize(&buffer);
-
-	std::string extension = "";
-	std::string full_path = "";
-
-	fileSystem->SplitFilePath(scene_to_save.c_str(), nullptr, nullptr, &extension);
-
-	if (extension != "scene")
-		scene_to_save.append(".scene");
-	
-	if (tmpScene == false)
-	{
-		scene->current_scene = scene_to_save;
-		UpdateSceneName();
-	}
-
-	fileSystem->Save(scene_to_save.c_str(), buffer, size);
-	RELEASE_ARRAY(buffer);
-
-	save_scene = false;
-}
-
-void TEngine::LoadSceneNow()
-{
-	char* buffer = nullptr;
-
-	if (Engine->fileSystem->Exists(scene_to_load.c_str()))
-	{
-		uint size = Engine->fileSystem->Load(scene_to_load.c_str(), &buffer);
-
-		if (size > 0)
-		{
-			if (tmpScene == false && scene_to_load.find("ProjectSettings/") == scene_to_load.npos)
-				scene->current_scene = scene_to_load;
-			
-			Config config(buffer);
-
-			for (uint i = 0; i < list_modules.size(); i++)
-			{
-				list_modules[i]->LoadScene(config.GetNode(list_modules[i]->name.c_str()), tmpScene);
-			}
-		}
-		else
-		{
-			LOG("[error] File '%s' is empty", scene_to_load.c_str());
-		}
-	}
-	else
-	{
-		LOG("[error] File '%s' not found", scene_to_load.c_str());
-	}
-	
-	RELEASE_ARRAY(buffer);
-
-	if (tmpScene == false)
-		UpdateSceneName();
-
-	load_scene = false;
-	tmpScene = false;
 }

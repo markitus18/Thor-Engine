@@ -10,6 +10,7 @@
 #include "M_Input.h"
 #include "M_Editor.h"
 #include "M_Resources.h"
+#include "M_Scene.h"
 
 #include "C_Camera.h"
 #include "TreeNode.h"
@@ -49,11 +50,10 @@ void W_Scene::Draw()
 				uint64 resourceID = *(const uint64*)payload->Data;
 				Resource* resource = Engine->moduleResources->GetResource(resourceID);
 
-				if (resource->GetType() == Resource::Type::PREFAB)
+				if (resource->GetType() == Resource::Type::MODEL)
 				{
-					Engine->moduleResources->LoadModel(resourceID);
+					Engine->scene->LoadModel(resourceID);
 				}
-
 			}
 		}
 		ImGui::EndDragDropTarget();

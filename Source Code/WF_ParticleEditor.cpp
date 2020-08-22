@@ -47,7 +47,7 @@ void WF_ParticleEditor::MenuBar_Development()
 	}
 }
 
-void WF_ParticleEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
+void WF_ParticleEditor::LoadLayout_Default(ImGuiID mainDockID)
 {
 	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);

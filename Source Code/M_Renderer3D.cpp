@@ -150,11 +150,6 @@ bool M_Renderer3D::Init(Config& config)
 	}
 
 	OnResize();
-
-	mesh_draw_timer = Engine->moduleEditor->AddTimer("Mesh draw", "Render");
-	particles_draw_timer = Engine->moduleEditor->AddTimer("Particles draw", "Render");
-	box_draw_timer = Engine->moduleEditor->AddTimer("Box draw", "Render");
-
 	//-----------------------------------------
 
 	return ret;
@@ -364,11 +359,10 @@ void M_Renderer3D::DrawAllScene()
 
 	if (drawGrid)
 	{
-
 		glLineWidth(1.0f);
 
 		glBegin(GL_LINES);
-		glColor4f(0.8f, 0.8f, 0.8f, 0.5f);
+		glColor4f(0.8f, 0.8f, 0.8f, 0.8f);
 
 		float d = 40.0f;
 
@@ -388,17 +382,9 @@ void M_Renderer3D::DrawAllScene()
 		drawGrid = !drawGrid;
 	}
 
-	Engine->moduleEditor->StartTimer(mesh_draw_timer);
 	DrawAllMeshes();
-	Engine->moduleEditor->ReadTimer(mesh_draw_timer);
-
-	Engine->moduleEditor->StartTimer(particles_draw_timer);
 	DrawAllParticles();
-	Engine->moduleEditor->ReadTimer(particles_draw_timer);
-
-	Engine->moduleEditor->StartTimer(box_draw_timer);
 	DrawAllBox();
-	Engine->moduleEditor->ReadTimer(box_draw_timer);
 	
 	//TODO: move to another side. Camera call to draw on renderer
 	if (Engine->camera->drawRay)

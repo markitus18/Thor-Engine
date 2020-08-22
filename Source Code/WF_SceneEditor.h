@@ -23,9 +23,9 @@ public:
 	WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID);
 	~WF_SceneEditor();
 
-	void OnSceneChange(const char* newSceneFile);
+	void SetResource(uint64 resourceID) override;
 
-	void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) override;
+	void LoadLayout_Default(ImGuiID mainDockID) override;
 	static inline const char* GetName() { return "SceneEditor"; };
 
 private:

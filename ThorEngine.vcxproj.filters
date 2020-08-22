@@ -286,9 +286,6 @@
     <ClCompile Include="Source Code\I_Folders.cpp">
       <Filter>Source Code\Importers</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\R_Prefab.cpp">
-      <Filter>Source Code\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Engine.cpp">
       <Filter>Source Code</Filter>
     </ClCompile>
@@ -348,6 +345,12 @@
     </ClCompile>
     <ClCompile Include="Source Code\W_ParticleViewport.cpp">
       <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\R_Scene.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\R_Model.cpp">
+      <Filter>Source Code\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -754,9 +757,6 @@
     <ClInclude Include="Source Code\I_Folders.h">
       <Filter>Source Code\Importers</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\R_Prefab.h">
-      <Filter>Source Code\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\Engine.h">
       <Filter>Source Code</Filter>
     </ClInclude>
@@ -816,6 +816,12 @@
     </ClInclude>
     <ClInclude Include="Source Code\W_ParticleViewport.h">
       <Filter>Source Code\Editor\Windows\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Scene.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Model.h">
+      <Filter>Source Code\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

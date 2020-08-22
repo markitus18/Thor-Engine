@@ -7,7 +7,7 @@ Resource::Resource(Type type) : type(type), TreeNode(RESOURCE)
 
 Resource::~Resource()
 {
-
+	
 }
 
 Resource::Type Resource::GetType() const

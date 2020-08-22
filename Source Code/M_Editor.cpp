@@ -16,6 +16,8 @@
 #include "M_Resources.h"
 #include "M_Renderer3D.h"
 
+#include "R_Scene.h"
+
 #include "GameObject.h"
 #include "Resource.h"
 
@@ -72,17 +74,23 @@ bool M_Editor::Init(Config& config)
 
 bool M_Editor::Start()
 {
-	//TODO: Some mid-way functions can be removed
-
 	frameWindowClass = new ImGuiWindowClass();
 	frameWindowClass->ClassId = 1;
 
 	normalWindowClass = new ImGuiWindowClass();
 	normalWindowClass->ClassId = 2;
 
-	//ImGuiIO& io = ImGui::GetIO();
-	CreateWindows();
-	//io.IniFilename = "Imgui.ini";
+	if (TryLoadEditorState() == false)
+	{
+		windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass, nextWindowID++));
+		LoadLayout_Default(windowFrames.back());
+
+		uint64 sceneID = Engine->scene->LoadScene("Engine/Assets/Defaults/Untitled.scene");
+		windowFrames[0]->SetResource(sceneID);
+	}
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.IniFilename = "Imgui.ini";
 	
 	return true;
 }
@@ -91,15 +99,6 @@ update_status M_Editor::PreUpdate()
 {
 	for (uint i = 0; i < windowFrames.size(); ++i)
 	{
-		//Handle all save / load layout requests
-		if (windowFrames[i]->requestLayoutSave)
-		{
-			SaveLayout(windowFrames[i], windowFrames[i]->layoutRequestName.c_str());
-		}
-		else if (windowFrames[i]->requestLayoutLoad)
-		{
-			LoadLayout(windowFrames[i], windowFrames[i]->layoutRequestName.c_str());
-		}
 		//Handle any window frame close requests
 		if (!windowFrames[i]->IsActive())
 		{
@@ -122,16 +121,10 @@ update_status M_Editor::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-void M_Editor::CreateWindows()
-{
-	windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass, nextWindowID++));
-	LoadLayout(windowFrames.back());
-}
 
-void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
+void M_Editor::LoadLayout_Default(WindowFrame* windowFrame)
 {
 	//We generate a fake ImGui frame in order to load the layout correctly and set up all docking data
-	
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(Engine->window->window);
 	ImGui::NewFrame();
@@ -146,39 +139,57 @@ void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
 	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
 
-	char* buffer = nullptr;
-	std::string fileName = std::string("Engine/Layouts/") + windowFrame->GetName() + "_" + layout + ".lay";
-	uint size = Engine->fileSystem->Load(fileName.c_str(), &buffer);
-	if (size > 0)
-	{
-		Config layoutFile(buffer);
-		windowFrame->LoadLayout_ForceDefault(layoutFile, dockspace_id);
-	}
+	windowFrame->LoadLayout_Default(dockspace_id);
 
 	ImGui::End();
 	ImGui::DockBuilderFinish(dockspace_id);
 	ImGui::EndFrame();
 	ImGui::UpdatePlatformWindows();
-	
-	windowFrame->requestLayoutLoad = false;
 }
 
-void M_Editor::SaveLayout(WindowFrame* windowFrame, const char* layout)
+void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
 {
-	//Store all layout information
-	Config layoutFile;
-	windowFrame->SaveLayout(layoutFile);
 
-	//Save to a new/existing file
-	char* buffer = nullptr;
-	if (uint size = layoutFile.Serialize(&buffer))
+}
+
+void M_Editor::SaveEditorState()
+{
+	Config file;
+	Config_Array arr = file.SetArray("Windows");
+	for (uint i = 0; i < windowFrames.size(); ++i)
 	{
-		std::string fileName = std::string("Engine/Layouts/") + windowFrame->GetName() + "_" + layout + ".lay";
-		Engine->fileSystem->Save(fileName.c_str(), buffer, size);
-		RELEASE_ARRAY(buffer);
+		Config node = arr.AddNode();
+		node.SetNumber("ID", windowFrames[i]->GetID());
+		node.SetNumber("Resource ID", windowFrames[i]->GetID());
 	}
+	char* buffer = nullptr;
+	if (uint size = file.Serialize(&buffer))
+	{
+		Engine->fileSystem->Save("Engine/EditorState.json", buffer, size);
+	}
+}
 
-	windowFrame->requestLayoutSave = false;
+bool M_Editor::TryLoadEditorState()
+{
+	return false;
+	char* buffer = nullptr;
+	if (uint size = Engine->fileSystem->Load("Engine/EditorState.json", &buffer))
+	{
+		Config file(buffer);
+		Config_Array arr = file.GetArray("Windows");
+		for (uint i = 0; i < windowFrames.size(); ++i)
+		{
+			Config windowNode = arr.GetNode(i);
+			OpenWindowFromResource(windowNode.GetNumber("Resource ID"), windowNode.GetNumber("ID"));
+		}
+		return true;
+	}
+	return false;
+}
+
+bool M_Editor::IsWindowLayoutSaved(WindowFrame* windowFrame) const
+{
+	return false;
 }
 
 void M_Editor::Draw()
@@ -234,6 +245,8 @@ void M_Editor::Draw()
 
 bool M_Editor::CleanUp()
 {
+	SaveEditorState();
+
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
@@ -262,12 +275,13 @@ void M_Editor::ShowFileNameWindow()
 
 	if (ImGui::InputText("", fileName, 50, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 	{
-		Engine->SaveScene(fileName);
+		Engine->moduleResources->SaveResourceAs((Resource*)Engine->scene->scene, "Assets/Scenes", fileName);
+		show_fileName_window = false;
 	}
 
 	if (ImGui::Button("Accept"))
 	{
-		Engine->SaveScene(fileName);
+		Engine->moduleResources->SaveResourceAs((Resource*)Engine->scene->scene, "Assets/Scenes", fileName);
 		show_fileName_window = false;
 	}
 
@@ -283,7 +297,7 @@ void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
 	std::string file, extension;
-	Engine->fileSystem->SplitFilePath(Engine->scene->current_scene.c_str(), nullptr, &file, &extension);
+	Engine->fileSystem->SplitFilePath(Engine->scene->scene->GetOriginalFile(), nullptr, &file, &extension);
 	std::string str = file;
 	if (extension != "")
 		file.append("." + extension);
@@ -325,37 +339,45 @@ bool M_Editor::UsingMouse() const
 	return using_mouse;
 }
 
-void M_Editor::OpenResource(Resource* resource)
+bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 {
-	if (resource->GetType() == Resource::PARTICLESYSTEM)
+	Resource* resource = Engine->moduleResources->GetResource(resourceID);
+	if (resource == nullptr) return false;
+
+	WindowFrame* windowFrame = nullptr;
+
+	switch (resource->GetType())
 	{
-		WF_ParticleEditor* particleEditorWindow = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, nextWindowID++);
-		particleEditorWindow->requestLayoutLoad = true;
-		particleEditorWindow->SetParticleSystem((R_ParticleSystem*)resource);
-		windowFrames.push_back(particleEditorWindow);
+		case(Resource::SCENE):
+		{
+			if (windowFrame = GetWindowFrame(WF_SceneEditor::GetName()))
+				{ windowFrame->SetResource(resourceID); return true; }
+			else
+				windowFrame = new WF_SceneEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : nextWindowID++);
+		}
+		case (Resource::MATERIAL):
+		{
+			//Yeah, I wish (:
+			break;
+		}
+		case(Resource::PARTICLESYSTEM):
+		{
+			windowFrame = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : nextWindowID++);
+			break;
+		}
+	}
+	if (windowFrame != nullptr)
+	{
+		windowFrame->SetResource(resourceID);
+		windowFrames.push_back(windowFrame);
+
+		//If the window layout is not saved in ImGui.ini file, generate the default layout
+		if (forceWindowID == 0)
+		{
+			LoadLayout_Default(windowFrame);
+		}
 	}
 }
-
-//Timer management -------------------
-uint M_Editor::AddTimer(const char* text, const char* tag)
-{
-	return 0;
-}
-
-void M_Editor::StartTimer(uint index)
-{
-
-}
-
-void M_Editor::ReadTimer(uint index)
-{
-}
-
-void M_Editor::StopTimer(uint index)
-{
-
-}
-
 
 //Selection----------------------------
 void M_Editor::SelectSingle(TreeNode* node, bool openTree)
@@ -521,16 +543,14 @@ void M_Editor::LoadConfig(Config& config)
 	*/
 }
 
-void M_Editor::LoadScene(Config& root, bool tmp)
+void M_Editor::LoadScene(const char* path, bool tmp)
 {
-	selectedGameObjects.clear();
-	toSelectGOs.clear();
-	toUnselectGOs.clear();
-	toDragGOs.clear();
-	dragging = false;
+	ResetScene();
+
+	uint64 sceneID = Engine->scene->LoadScene(path);
 
 	WF_SceneEditor* sceneEditor = (WF_SceneEditor*)GetWindowFrame(WF_SceneEditor::GetName());
-	sceneEditor->OnSceneChange(Engine->scene->current_scene.c_str());
+	sceneEditor->SetResource(sceneID);
 }
 
 void M_Editor::ResetScene()

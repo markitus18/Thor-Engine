@@ -28,10 +28,6 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	void CreateWindows();
-	void LoadLayout(WindowFrame* windowFrame, const char* layout = "Default");
-	void SaveLayout(WindowFrame* windowFrame, const char* layout = "Default");
-
 	void Draw();
 
 	void Log(const char* input);
@@ -43,14 +39,7 @@ public:
 	bool UsingKeyboard() const;
 	bool UsingMouse() const;
 
-	void OpenResource(Resource* resource);
-
-	//Timer management -------------------
-	uint AddTimer(const char* text, const char* tag);
-	void StartTimer(uint index);
-	void ReadTimer(uint index);
-	void StopTimer(uint index);
-	//------------------------------------
+	bool OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID = 0);
 
 	//Selection --------------------
 	void SelectSingle(TreeNode* node, bool openTree = true);
@@ -68,7 +57,7 @@ public:
 	void SaveConfig(Config& config) const override;
 	void LoadConfig(Config& config) override;
 
-	void LoadScene(Config& root, bool tmp = false) override;
+	void LoadScene(const char* path, bool tmp = false);
 	void ResetScene();
 
 	void OnRemoveGameObject(GameObject* gameObject) override;
@@ -77,6 +66,14 @@ public:
 	void ShowFileNameWindow();
 
 	WindowFrame* GetWindowFrame(const char* name);
+
+private:
+	void LoadLayout_Default(WindowFrame* windowFrame);
+	void LoadLayout(WindowFrame* windowFrame, const char* layout = "Default");
+	void SaveEditorState();
+	bool TryLoadEditorState();
+	bool IsWindowLayoutSaved(WindowFrame* windowFrame) const;
+
 public:
 
 	std::vector<TreeNode*> selectedGameObjects;
@@ -109,7 +106,7 @@ private:
 	float mainWindowPositionY = 0;
 	float toolbarSizeY = 30;
 
-	int nextWindowID = 0;
+	int nextWindowID = 1;
 };
 
 #endif //!__M_EDITOR_H__

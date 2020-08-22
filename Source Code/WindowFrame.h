@@ -6,9 +6,13 @@
 
 class Window;
 class Config;
+class Resource;
+struct ImGuiWindow;
 struct ImGuiDockNode;
 struct ImGuiWindowClass;
 typedef unsigned int ImGuiID;
+typedef unsigned int uint;
+typedef unsigned __int64 uint64;
 
 class WindowFrame
 {
@@ -18,14 +22,15 @@ public:
 
 	void Draw();
 
-	void SaveLayout(Config& file);
-	void LoadLayout(Config& file, ImGuiID mainDockID);
-	virtual void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) = 0;
+	virtual void LoadLayout_Default(ImGuiID mainDockID) = 0;
 
 	inline const char* GetName() { return name.c_str(); };
 	inline bool IsActive() { return active; };
 
-	Window* GetWindow(const char* name);
+	virtual void SetResource(uint64 resourceID);
+	inline uint64 GetResource() const { return resourceID; };
+	inline uint GetID() const { return ID; };
+	Window* GetWindow(const char* name) const;
 
 private:
 	//Performs the entire management of drawing the menu bar
@@ -48,14 +53,6 @@ private:
 
 	//Generic Development tab. Can be overriden in child classes
 	virtual void MenuBar_Development() { };
-
-	void SaveDockLayout(ImGuiDockNode* node, Config& file);
-	void LoadDockLayout(ImGuiID dockID, Config& file);
-
-public:
-	bool requestLayoutSave = false;
-	bool requestLayoutLoad = true;
-	std::string layoutRequestName = "Default";
 
 protected:
 	//The name of the window frame. Used for saving layout information references
@@ -80,6 +77,9 @@ protected:
 
 	//Flag used to request a window close. When the window frame is closed by the user, we can safely destroy its memory
 	bool active = true;
+
+	//Most if not all windows will have a resource assigned to them (scene, particle editor, material editor,...)
+	uint64 resourceID = 0;
 };
 
 #endif //__WINDOW_FRAME_H__

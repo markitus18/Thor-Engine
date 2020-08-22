@@ -12,6 +12,7 @@ class GameObject;
 class Config;
 class Quadtree;
 class C_Camera;
+class R_Scene;
 
 class M_Scene : public Module
 {
@@ -37,12 +38,10 @@ public:
 	void SaveConfig(Config& config) const override;
 	void LoadConfig(Config& config) override;
 
-	void SaveScene(Config& node) const override;
-	void LoadScene(Config& node, bool tmp = false) override; //Load itself
-	void LoadScene(const char* file); //Calls application and prepares to load
+	uint64 LoadScene(const char* file); //Calls application and prepares to load
 
-	void LoadGameObject(const Config& file); //Calls module import to load a Game Object file
-	//Endof Scene and prefab save / load ------------------------------------------
+	void LoadModel(uint64 resourceID); //Calls module import to load a Game Object file
+	//Endof Scene and model save / load ------------------------------------------
 
 	//GameObject management -------------------------------------------------------
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);
@@ -58,12 +57,10 @@ public:
 
 	//----------------------------------------
 
-	const C_Camera* GetMainCamera() const { return mainCamera; };
+	const C_Camera* GetMainCamera() const;
 
 	void Play();
 	void Stop();
-
-	void CreateDefaultScene();
 
 private:
 	void TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final);
@@ -80,21 +77,16 @@ public:
 	bool drawBoundsSelected = false;
 
 	bool reset = false;
-	std::string current_scene = "Untitled";
 	Quadtree* quadtree;
 
+	R_Scene* scene = nullptr;
 private:
-	GameObject* root = nullptr;
 	std::vector<const GameObject*> nonStatic;
 	std::vector<GameObject*> toRemove;
 
-	uint cullingTimer_library = 0;
-	uint cullingTimer_normal = 0;
-	uint cullingTimer_optimized = 0;
+	uint64 tmpSceneID = 0;
 
 	LCG random;
-
-	C_Camera* mainCamera = nullptr;
 };
 
 #endif //__MODULE_SCENE_H__

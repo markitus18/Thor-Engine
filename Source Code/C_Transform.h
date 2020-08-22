@@ -15,6 +15,8 @@ class C_Transform : public Component
 {
 public:
 	C_Transform(GameObject* new_GameObject, float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one);
+	C_Transform(GameObject* new_GameObject, const float4x4& transform = float4x4::identity);
+
 	~C_Transform();
 
 	float4x4	GetTransform() const;

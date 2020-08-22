@@ -14,16 +14,26 @@
 
 GameObject::GameObject() : TreeNode(GAMEOBJECT)
 {
+	AddComponent(new C_Transform(this, float3::zero, Quat::identity, float3::one));
 }
 
-GameObject::GameObject(GameObject* new_parent, const char* new_name, const float3& translation, const float3& scale, const Quat& rotation) : name(new_name), TreeNode(GAMEOBJECT)
+GameObject::GameObject(GameObject* parent, const char* name, const float3& translation, const Quat& rotation, const float3& scale) : name(name), TreeNode(GAMEOBJECT)
 {
-	parent = new_parent;
-	if (new_parent)
-		new_parent->childs.push_back(this);
+	this->parent = parent;
+	if (parent)
+		parent->childs.push_back(this);
 
 	AddComponent(new C_Transform(this, translation, rotation, scale));
 	
+}
+
+GameObject::GameObject(GameObject* parent, const float4x4& transform, const char* name) : name(name), TreeNode(GAMEOBJECT)
+{
+	this->parent = parent;
+	if (parent)
+		parent->childs.push_back(this);
+
+	AddComponent(new C_Transform(this, transform));
 }
 
 GameObject::~GameObject()

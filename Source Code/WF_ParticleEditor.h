@@ -18,7 +18,7 @@ public:
 
 	void SetParticleSystem(R_ParticleSystem* particleSystem);
 
-	void LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID) override;
+	void LoadLayout_Default(ImGuiID mainDockID) override;
 	static inline const char* GetName() { return "ParticleEditor"; };
 
 

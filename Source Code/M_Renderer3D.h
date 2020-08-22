@@ -139,10 +139,6 @@ public:
 private:
 	uint defaultTextureID = 0;
 
-	uint mesh_draw_timer;
-	uint particles_draw_timer;
-	uint box_draw_timer;
-
 	std::vector<RenderMesh> meshes;
 	std::map<float, RenderParticle> particles;
 

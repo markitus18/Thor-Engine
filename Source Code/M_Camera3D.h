@@ -31,9 +31,6 @@ public:
 
 	C_Camera* GetCamera() const;
 
-	void SaveScene(Config& root) const override;
-	void LoadScene(Config& root, bool tmp = false) override;
-
 	void OnClick(const Vec2& mousePos);
 	void Move_Mouse(float motion_x, float motion_y);
 	void Orbit(float motion_x, float motion_y);

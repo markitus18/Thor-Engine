@@ -8,6 +8,13 @@ C_Transform::C_Transform(GameObject* new_GameObject, float3 position, Quat rotat
 	UpdateEulerAngles();
 }
 
+C_Transform::C_Transform(GameObject* new_GameObject, const float4x4& transform) : Component(Component::Type::Transform, gameObject, false)
+{
+	this->transform = transform;
+	transform.Decompose(position, rotation, scale);
+	UpdateEulerAngles();
+}
+
 C_Transform::~C_Transform()
 {
 

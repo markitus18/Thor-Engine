@@ -4,9 +4,10 @@
 #include "Globals.h"
 
 #include "M_Scene.h"
-#include "M_FileSystem.h"
 #include "M_Editor.h"
 #include "M_Camera3D.h"
+#include "M_Resources.h"
+#include "M_FileSystem.h"
 
 #include "Window.h"
 
@@ -22,6 +23,8 @@
 #include "W_EngineConfig.h"
 #include "W_About.h"
 #include "W_MainToolbar.h"
+
+#include "R_Scene.h"
 
 WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID) : WindowFrame(GetName(), frameWindowClass, windowClass, ID)
 {
@@ -39,9 +42,9 @@ WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowCl
 	windows.push_back(new W_EngineConfig(editor, windowClass, ID));
 	windows.push_back(new W_MainToolbar(editor, windowClass, ID));
 
-	W_About* w_about = new W_About(editor, windowClass, ID);
-	w_about->SetActive(false);
-	windows.push_back(w_about);
+	//W_About* w_about = new W_About(editor, windowClass, ID);
+	//w_about->SetActive(false);
+	//windows.push_back(w_about);
 }
 
 WF_SceneEditor::~WF_SceneEditor()
@@ -49,11 +52,10 @@ WF_SceneEditor::~WF_SceneEditor()
 
 }
 
-void WF_SceneEditor::OnSceneChange(const char* newSceneFile)
+void WF_SceneEditor::SetResource(uint64 resourceID)
 {
-	std::string sceneName = "";
-	Engine->fileSystem->SplitFilePath(newSceneFile, nullptr, &sceneName);
-	displayName = sceneName + std::string(".scene");
+	WindowFrame::SetResource(resourceID);
+	displayName = Engine->moduleResources->GetResource(resourceID)->name; 
 }
 
 void WF_SceneEditor::MenuBar_File()
@@ -62,7 +64,7 @@ void WF_SceneEditor::MenuBar_File()
 	{
 		if (ImGui::MenuItem("New Scene"))
 		{
-			Engine->scene->CreateDefaultScene();
+			Engine->moduleEditor->LoadScene("Engine/Assets/Defaults/Untitled.scene");
 		}
 
 		if (ImGui::BeginMenu("Open Scene"))
@@ -76,7 +78,7 @@ void WF_SceneEditor::MenuBar_File()
 			{
 				if (ImGui::MenuItem(sceneList[i].c_str()))
 				{
-					Engine->LoadScene(sceneList[i].c_str());
+					Engine->scene->LoadScene(sceneList[i].c_str());
 				}
 			}
 			ImGui::EndMenu();
@@ -84,13 +86,13 @@ void WF_SceneEditor::MenuBar_File()
 
 		if (ImGui::MenuItem("Save Scene"))
 		{
-			if (Engine->scene->current_scene == "Untitled")
+			if (Engine->scene->scene->GetOriginalFile() == "Engine/Assets/Defaults/Untitled.scene")
 			{
 				Engine->moduleEditor->OpenFileNameWindow();
 			}
 			else
 			{
-				Engine->SaveScene(Engine->scene->current_scene.c_str());
+				Engine->moduleResources->SaveResource((Resource*)Engine->scene->scene);
 			}
 		}
 
@@ -172,7 +174,7 @@ void WF_SceneEditor::MenuBar_Development()
 	}
 }
 
-void WF_SceneEditor::LoadLayout_ForceDefault(Config& file, ImGuiID mainDockID)
+void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 {
 	// Generate a new window docked into the previous dock space.
 	// And attach a new dock space to it

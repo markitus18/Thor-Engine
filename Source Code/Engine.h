@@ -24,7 +24,7 @@ class GameObject;
 class TEngine
 {
 public:
-	M_FileSystem* fileSystem;
+	M_FileSystem* fileSystem = nullptr;
 	M_Window* window = nullptr;
 	M_Input* input = nullptr;
 	M_Scene* scene = nullptr;
@@ -55,13 +55,6 @@ private:
 	std::string title;
 	std::string organization;
 
-	bool save_scene = false;
-	bool load_scene = false;
-	bool tmpScene = false;
-
-	std::string scene_to_save;
-	std::string scene_to_load;
-
 public:
 
 	TEngine();
@@ -81,10 +74,6 @@ public:
 	void UpdateSceneName();
 	void SetTitleName(const char* new_name);
 
-	void OpenSceneWindow();
-	void SaveScene(const char* file, bool tmp = false);
-	void LoadScene(const char* file);
-
 	void OnRemoveGameObject(GameObject* gameObject);
 
 private:
@@ -95,9 +84,6 @@ private:
 
 	void SaveSettingsNow(const char*);
 	void LoadSettingsNow(const char*);
-
-	void SaveSceneNow();
-	void LoadSceneNow();
 };
 
 extern TEngine* Engine;

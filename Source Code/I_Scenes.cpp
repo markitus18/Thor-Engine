@@ -1,6 +1,6 @@
 #include "I_Scenes.h"
 
-//TODO: Temporal app include. Workaround until scene owns resources
+//TODO: Temporal engine include. Workaround until scene owns resources
 #include "Engine.h"
 #include "M_Resources.h"
 
@@ -15,7 +15,8 @@
 #include "C_ParticleSystem.h"
 
 #include "Resource.h"
-#include "R_Prefab.h"
+#include "R_Model.h"
+#include "R_Scene.h"
 
 #include "Config.h"
 
@@ -26,18 +27,188 @@
 
 #include "MathGeoLib\src\MathGeoLib.h"
 
-R_Prefab* Importer::Scenes::Create()
+//TODO: kind of a dirty method to have a private variable in the namespace
+namespace Importer { namespace Models { LCG randomID; } }
+
+R_Model* Importer::Models::Create()
 {
-	return new R_Prefab();
+	return new R_Model();
 }
 
-uint64 Importer::Scenes::SaveScene(const R_Prefab* prefab, char** buffer)
+const aiScene* Importer::Models::ProcessAssimpScene(const char* buffer, uint size)
+{
+	return aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+}
+
+void Importer::Models::Import(const aiScene* scene, R_Model* model)
+{
+	Private::ImportNodeData(scene, scene->mRootNode, model, 0);
+	(*model->nodes.begin()).name = model->name;
+}
+
+void Importer::Models::Private::ImportNodeData(const aiScene* scene, const aiNode* node, R_Model* model, uint64 parentID)
+{
+	aiVector3D		aiTranslation, aiScale;
+	aiQuaternion	aiRotation;
+
+	//Decomposing transform matrix into translation rotation and scale
+	node->mTransformation.Decompose(aiScale, aiRotation, aiTranslation);
+
+	float3 pos(aiTranslation.x, aiTranslation.y, aiTranslation.z);
+	float3 scale(aiScale.x, aiScale.y, aiScale.z);
+	Quat rot(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
+
+	//Assimp loads "dummy" modules to stack fbx transformation. Here we collapse all those transformations
+	//to the first node that is not a dummy
+	std::string nodeName = node->mName.C_Str();
+	bool dummyFound = true;
+	while (dummyFound)
+	{
+		dummyFound = false;
+
+		//All dummy modules have one children (next dummy module or last module containing the mesh)
+		if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1)
+		{
+			//Dummy module have only one child node, so we use that one as our next node
+			node = node->mChildren[0];
+
+			// Accumulate transform 
+			node->mTransformation.Decompose(aiScale, aiRotation, aiTranslation);
+			pos += float3(aiTranslation.x, aiTranslation.y, aiTranslation.z);
+			scale = float3(scale.x * aiScale.x, scale.y * aiScale.y, scale.z * aiScale.z);
+			rot = rot * Quat(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
+
+			nodeName = node->mName.C_Str();
+			dummyFound = true;
+		}
+	}
+
+	ModelNode newNode(randomID.Int(), nodeName.c_str(), pos, scale, rot, parentID);
+	newNode.ID = randomID.Int();
+
+	// Loading node meshes ----------------------------------------
+	for (uint i = 0; i < node->mNumMeshes && i < 1; i++)
+	{
+		//TODO: Warning: some nodes might have 2 meshes!
+		const aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
+
+		newNode.meshID = node->mMeshes[i];
+		newNode.materialID = newMesh->mMaterialIndex;
+	}
+
+	model->nodes.push_back(newNode);
+
+	// Load all children from the current node. As we are storing all nodes in reverse order due to recursion,
+	// we will be doing the same for all the children in the same node
+	for (uint i = node->mNumChildren; i > 0u; --i)
+	{
+		ImportNodeData(scene, node->mChildren[i - 1], model, newNode.ID);
+	}
+}
+
+void Importer::Models::LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
+{
+	for (uint i = 0u; i < model->nodes.size(); ++i)
+	{
+		//TODO: We need to check what happens when we import a node that has no mesh or material. ID = -1?
+		model->nodes[i].meshID = meshes[model->nodes[i].meshID];
+		model->nodes[i].materialID = materials[model->nodes[i].materialID];
+	}
+}
+
+uint64 Importer::Models::Save(const R_Model* model, char** buffer)
+{
+	Config file;
+	Config_Array nodesArray = file.SetArray("Nodes");
+	
+	for (uint i = 0; i < model->nodes.size(); ++i)
+	{
+		Private::SaveModelNode(nodesArray.AddNode(), model->nodes[i]);
+	}
+
+	uint size = file.Serialize(buffer);
+	return size;
+}
+
+void Importer::Models::Private::SaveModelNode(Config& config, const ModelNode& node)
+{
+	config.SetNumber("Node ID", node.ID);
+	config.SetString("Name", node.name.c_str());
+
+	config.SetNumber("Parent Node ID", node.parentID);
+
+	Config_Array transformArray = config.SetArray("Transform");
+	for (uint i = 0u; i < 16u; ++i)
+	{
+		transformArray.AddNumber(node.transform.ptr()[i]);
+	}
+
+	config.SetNumber("Mesh ID", node.meshID);
+	config.SetNumber("Material ID", node.materialID);
+}
+
+void Importer::Models::Load(const char* buffer, R_Model* model)
+{
+	Config file(buffer);
+	Config_Array nodesArray = file.GetArray("Nodes");
+
+	//We create an empty GameObject that will hold all the model data and will be removed later
+	model->root = new GameObject();
+	std::map<uint64, GameObject*> createdGameObjects;
+
+	for (uint i = 0u; i < nodesArray.GetSize(); ++i)
+	{
+		Config modelNode = nodesArray.GetNode(i);
+
+		//Finding the proper parent for the new GameObject
+		GameObject* parent = model->root;
+		std::map<uint64, GameObject*>::iterator it = createdGameObjects.find(modelNode.GetNumber("Parent Node ID"));
+		if (it != createdGameObjects.end())
+			parent = it->second;
+
+		//Gathering all transform data
+		float4x4 transform;
+		Config_Array transformArray = modelNode.GetArray("Transform");
+		for (uint i = 0u; i < 16; ++i)
+		{
+			transform.ptr()[i] = transformArray.GetNumber(i);
+		}
+
+		GameObject* newGameObject = new GameObject(parent, transform, modelNode.GetString("Name").c_str());
+		newGameObject->uid = randomID.Int(); //Warning: Do not confuse with Node IDs. Node IDs are ONLY for internal node relationships	
+		createdGameObjects[modelNode.GetNumber("Node ID")] = newGameObject; //Here we store Node ID as we only use it for building parentships
+
+		//Adding mesh component and assignint its resource (if any)
+		uint64 meshID = 0;
+		if ((meshID = modelNode.GetNumber("Mesh ID")) != 0)
+		{
+			C_Mesh* meshComponent = (C_Mesh*)newGameObject->CreateComponent(Component::Type::Mesh);
+			meshComponent->SetResource(meshID);
+		}
+
+		//Adding material component and assignint its resource (if any)
+		uint64 materialID = 0;
+		if ((materialID = modelNode.GetNumber("Mesh ID")) != 0)
+		{
+			C_Material* materialComponent = (C_Material*)newGameObject->CreateComponent(Component::Type::Material);
+			materialComponent->SetResource(materialID);
+		}
+	}
+}
+
+R_Scene* Importer::Scenes::Create()
+{
+	return new R_Scene();
+}
+
+uint64 Importer::Scenes::Save(const R_Scene* scene, char** buffer)
 {
 	Config file;
 	Config_Array goArray = file.SetArray("GameObjects");
-	
+
 	std::vector<const GameObject*> gameObjects;
-	prefab->root->CollectChilds(gameObjects);
+	scene->root->CollectChilds(gameObjects);
+	gameObjects.erase(gameObjects.begin());
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
@@ -128,8 +299,10 @@ void Importer::Scenes::Private::SaveComponent(Config& config, const C_ParticleSy
 
 }
 
-void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& roots)
+void Importer::Scenes::Load(const char* buffer, R_Scene* scene)
 {
+	Config file(buffer);
+	scene->root = new GameObject();
 	std::map<uint64, GameObject*> createdGameObjects;
 	Config_Array gameObjects_array = file.GetArray("GameObjects");
 
@@ -148,11 +321,9 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 		if (it != createdGameObjects.end())
 			parent = it->second;
 
-		GameObject* gameObject = new GameObject(parent, gameObject_node.GetString("Name").c_str(), position, scale, rotation);
+		GameObject* gameObject = new GameObject(parent ? parent : scene->root, gameObject_node.GetString("Name").c_str(), position, rotation, scale);
 		gameObject->uid = gameObject_node.GetNumber("UID");
 		createdGameObjects[gameObject->uid] = gameObject;
-
-		if (parent == nullptr) roots.push_back(gameObject);
 
 		gameObject->active = gameObject_node.GetBool("Active");
 		gameObject->isStatic = gameObject_node.GetBool("Static");
@@ -185,13 +356,13 @@ void Importer::Scenes::LoadScene(const Config& file, std::vector<GameObject*>& r
 	}
 }
 
-void Importer::Scenes::SaveContainedResources(R_Prefab* prefab, Config& file)
+void Importer::Scenes::SaveContainedResources(R_Model* model, Config& file)
 {
 	//TODO: The function is accesing App, which should not be done in an importer
 	Config_Array containingResources = file.SetArray("Containing Resources");
-	for (uint i = 0; i < prefab->containedResources.size(); ++i)
+	for (uint i = 0; i < model->containedResources.size(); ++i)
 	{
-		if (Resource* res = Engine->moduleResources->GetResource(prefab->containedResources[i]))
+		if (Resource* res = Engine->moduleResources->GetResource(model->containedResources[i]))
 		{
 			Config resNode = containingResources.AddNode();
 			resNode.SetNumber("ID", res->GetID());
@@ -201,12 +372,12 @@ void Importer::Scenes::SaveContainedResources(R_Prefab* prefab, Config& file)
 	}
 }
 
-void Importer::Scenes::LoadContainedResources(const Config& file, R_Prefab* prefab)
+void Importer::Scenes::LoadContainedResources(const Config& file, R_Model* model)
 {
 	Config_Array containingResources = file.GetArray("Containing Resources");
 	for (uint i = 0; i < containingResources.GetSize(); ++i)
 	{
-		prefab->containedResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
+		model->containedResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
 	}
 }
 
@@ -244,107 +415,4 @@ void Importer::Scenes::Private::LoadComponent(Config& config, C_Animator* animat
 void Importer::Scenes::Private::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
 {
 
-}
-
-//TODO: kind of a dirty method to have a private variable in the namespace
-namespace Importer { namespace Scenes { LCG randomID; } }
-
-const aiScene* Importer::Scenes::ProcessAssimpScene(const char* buffer, uint size)
-{
-	return aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
-}
-
-void Importer::Scenes::Import(const aiScene* scene, R_Prefab* prefab)
-{
-	prefab->root = ImportGameObjectData(scene, scene->mRootNode, nullptr);
-	prefab->root->name = prefab->name;
-}
-
-GameObject* Importer::Scenes::ImportGameObjectData(const aiScene* scene, const aiNode* node, GameObject* parent)
-{
-	aiVector3D		translation;
-	aiVector3D		scaling;
-	aiQuaternion	rotation;
-
-	//Decomposing transform matrix into translation rotation and scale
-	node->mTransformation.Decompose(scaling, rotation, translation);
-
-	float3 pos(translation.x, translation.y, translation.z);
-	float3 scale(scaling.x, scaling.y, scaling.z);
-	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
-
-	//Assimp loads "dummy" modules to stack fbx transformation. Here we collapse all those transformations
-	//to the first node that is not a dummy
-	std::string node_name = node->mName.C_Str();
-	bool dummyFound = false;
-	do
-	{
-		dummyFound = false;
-		//All dummy modules have one children (next dummy module or last module containing the mesh)
-		if (node_name.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1)
-		{
-			//Dummy module have only one child node, so we use that one as our next GameObject
-			node = node->mChildren[0];
-
-			// Accumulate transform 
-			node->mTransformation.Decompose(scaling, rotation, translation);
-			pos += float3(translation.x, translation.y, translation.z);
-			scale = float3(scale.x * scaling.x, scale.y * scaling.y, scale.z * scaling.z);
-			rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-
-			node_name = node->mName.C_Str();
-			dummyFound = true;
-		}
-	} while (dummyFound == true);
-
-	GameObject* gameObject = new GameObject(parent, node_name.c_str(), pos, scale, rot);
-	gameObject->uid = randomID.Int();
-
-	if (parent == nullptr && scene->HasAnimations())
-		gameObject->CreateComponent(Component::Animator);
-
-	// Loading node meshes ----------------------------------------
-	for (uint i = 0; i < node->mNumMeshes && i < 1; i++)
-	{
-		const aiMesh* newMesh = scene->mMeshes[node->mMeshes[i]];
-		GameObject* child = gameObject;
-
-		C_Mesh* cMesh = (C_Mesh*)child->CreateComponent(Component::Mesh);
-		cMesh->SetResource(node->mMeshes[i], false);
-
-		C_Material* cMaterial = (C_Material*)child->CreateComponent(Component::Material);
-		cMaterial->SetResource(newMesh->mMaterialIndex, false);
-	}
-
-	// Load all children from the current node
-	for (uint i = 0; i < node->mNumChildren; i++)
-	{
-		ImportGameObjectData(scene, node->mChildren[i], gameObject);
-	}
-	return gameObject;
-}
-
-void Importer::Scenes::LinkModelResources(R_Prefab* prefab, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
-{
-	Private::LinkGameObjectResources(prefab->root, meshes, materials);
-}
-
-void Importer::Scenes::Private::LinkGameObjectResources(GameObject* gameObject, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
-{
-	//Link loaded mesh resource
-	if (C_Mesh* mesh = gameObject->GetComponent<C_Mesh>())
-	{
-		mesh->SetResource(meshes[mesh->GetResourceID()], false);
-	}
-	//Link loaded mat resource
-	if (C_Material* mat = gameObject->GetComponent<C_Material>())
-	{
-		mat->SetResource(materials[mat->GetResourceID()], false);
-	}
-
-	//Iterate all gameObject's children recursively
-	for (uint i = 0; i < gameObject->childs.size(); ++i)
-	{
-		LinkGameObjectResources(gameObject->childs[i], meshes, materials);
-	}
 }

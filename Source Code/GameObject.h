@@ -3,6 +3,10 @@
 
 #include "MathGeoLib/src/MathBuildConfig.h"
 #include "MathGeoLib/src/MathGeoLib.h"
+
+//#include "MathGeoLib/src/Geometry/AABB.h"
+
+
 #include "TreeNode.h"
 
 #include <vector>
@@ -15,7 +19,9 @@ class GameObject : public TreeNode
 {
 public:
 	GameObject();
-	GameObject(GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity);
+	GameObject(GameObject* parent,  const char* name = "No name", const float3& translation = float3::zero, const Quat& rotation = Quat::identity, const float3& scale = float3::one);
+	GameObject(GameObject* parent, const float4x4& transform, const char* name = "No name");
+
 	~GameObject();
 
 	void Update(float dt);

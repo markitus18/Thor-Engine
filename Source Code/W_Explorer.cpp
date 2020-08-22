@@ -13,7 +13,7 @@
 
 #include "Resource.h"
 #include "R_Texture.h"
-#include "R_Prefab.h"
+#include "R_Model.h"
 #include "R_Folder.h"
 
 W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWindowClass* explorerWindowClass, int ID) : Window(editor, GetName(), windowClass, ID),
@@ -34,7 +34,7 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWin
 	resourceIcons[Resource::Type::MATERIAL] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").ID;
 	resourceIcons[Resource::Type::ANIMATION] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").ID;
 	resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").ID;
-	resourceIcons[Resource::Type::PREFAB] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").ID;
+	resourceIcons[Resource::Type::MODEL] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").ID;
 	resourceIcons[Resource::Type::PARTICLESYSTEM] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").ID;
 	resourceIcons[Resource::Type::SHADER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").ID;
 	resourceIcons[Resource::Type::SCENE] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").ID;
@@ -220,10 +220,10 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 	ImGui::SetCursorPos(textPos);
 	ImGui::Text(GetTextAdjusted(resource->GetName()).c_str());
 
-	//Drawing node Button (if it's a prefab)
-	if (resource->GetType() == Resource::PREFAB)
+	//Drawing node Button (if it's a model)
+	if (resource->GetType() == Resource::MODEL)
 	{
-		R_Prefab* modelNode = (R_Prefab*)resource;
+		R_Model* modelNode = (R_Model*)resource;
 
 		ImGui::SetCursorPos(drawPos + ImVec2(imageSize / 2 + nodeButtonOffset, imageSize / 2 - ImGui::GetFrameHeight() / 2));
 		ImGui::ArrowButton("ArrowButton?", modelNode == openModel ? ImGuiDir_Left : ImGuiDir_Right);
@@ -234,7 +234,7 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 
 		if (modelNode == openModel)
 		{
-			//Draw the resources contained in the prefab
+			//Draw the resources contained in the model
 			for (uint i = 0; i < modelNode->containedResources.size(); ++i)
 			{
 				itemIndex++;
@@ -278,7 +278,7 @@ void W_Explorer::HandleResourceDoubleClick(Resource* resource)
 	if (resource->GetType() == Resource::FOLDER)
 		nextCurrentFolder = (R_Folder*)resource;
 	else
-		editor->OpenResource(resource);
+		editor->OpenWindowFromResource(resource->GetID());
 }
 
 uint W_Explorer::GetTextureFromResource(const Resource* resource, std::string* dnd_event)

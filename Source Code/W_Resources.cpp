@@ -9,7 +9,6 @@
 #include "R_Mesh.h"
 #include "R_Material.h"
 #include "R_Texture.h"
-#include "R_Prefab.h"
 
 W_Resources::W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
 {
@@ -28,7 +27,7 @@ void W_Resources::Draw()
 	{
 		for (std::map<uint64, Resource*>::iterator it = Engine->moduleResources->resources.begin(); it != Engine->moduleResources->resources.end(); it++)
 		{
-			if (it->second->GetType() != Resource::PREFAB) continue;
+			if (it->second->GetType() != Resource::MODEL) continue;
 
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())

@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Timer.h"
 
+#include "ResourceHandle.h"
+
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
 #include "MathGeoLib/src/Geometry/LineSegment.h"
 
@@ -29,8 +31,8 @@ public:
 	GameObject* GetRoot();
 	const GameObject* GetRoot() const;
 	
-	std::string GetNewGameObjectName(const char* name, GameObject* parent = nullptr) const;
-	int GetGameObjectNameCount(const char* name, GameObject* parent = nullptr) const;
+	std::string GetNewGameObjectName(const char* name, const GameObject* parent = nullptr) const;
+	int GetGameObjectNameCount(const char* name, const GameObject* parent = nullptr) const;
 
 	void SetStaticGameObject(GameObject* gameObject, bool isStatic, bool allChilds);
 
@@ -79,12 +81,13 @@ public:
 	bool reset = false;
 	Quadtree* quadtree;
 
-	R_Scene* scene = nullptr;
+	ResourceHandle<R_Scene> hScene;
+
 private:
 	std::vector<const GameObject*> nonStatic;
 	std::vector<GameObject*> toRemove;
 
-	uint64 tmpSceneID = 0;
+	uint64 sceneID = 0;
 
 	LCG random;
 };

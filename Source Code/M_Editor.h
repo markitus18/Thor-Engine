@@ -3,12 +3,13 @@
 
 #include "Module.h"
 
+#include "ResourceHandle.h"
+
 #include <string>
 #include <vector>
 
 class Config;
 class GameObject;
-class Resource;
 class TreeNode;
 
 class WindowFrame;
@@ -81,7 +82,7 @@ public:
 	std::vector<TreeNode*> toDragGOs;
 	std::vector<TreeNode*> toUnselectGOs;
 
-	std::vector<Resource*> selectedResources;
+	ResourceHandle<Resource> hSelectedResource;
 
 	TreeNode* lastSelected = nullptr;
 	bool dragging = false;

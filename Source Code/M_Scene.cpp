@@ -61,6 +61,16 @@ bool M_Scene::CleanUp()
 	return true;
 }
 
+GameObject* M_Scene::GetRoot()
+{
+	return hScene.Get()->root;
+}
+
+const GameObject* M_Scene::GetRoot() const
+{
+	return hScene.Get()->root;
+}
+
 // Update
 update_status M_Scene::Update()
 {
@@ -85,7 +95,7 @@ update_status M_Scene::Update()
 		}
 	}
 #pragma endregion
- 	UpdateAllGameObjects(scene->root, Time::deltaTime);
+ 	UpdateAllGameObjects(GetRoot(), Time::deltaTime);
 
 	if (Engine->renderer3D->culling_camera)
 	{
@@ -106,7 +116,7 @@ update_status M_Scene::Update()
 	}
 	else
 	{
-		DrawAllGameObjects(scene->root);
+		DrawAllGameObjects(GetRoot());
 	}
 
 	if (drawQuadtree)
@@ -121,17 +131,7 @@ update_status M_Scene::PostUpdate()
 	return UPDATE_CONTINUE;
 }
 
-GameObject* M_Scene::GetRoot()
-{
-	return scene->root;
-}
-
-const GameObject* M_Scene::GetRoot() const
-{
-	return scene->root;
-}
-
-std::string M_Scene::GetNewGameObjectName(const char* name, GameObject* parent) const
+std::string M_Scene::GetNewGameObjectName(const char* name, const GameObject* parent) const
 {
 	uint count = GetGameObjectNameCount(name, parent);
 	std::string newName = name;
@@ -140,9 +140,9 @@ std::string M_Scene::GetNewGameObjectName(const char* name, GameObject* parent) 
 	return newName;
 }
 
-int M_Scene::GetGameObjectNameCount(const char* name, GameObject* parent) const
+int M_Scene::GetGameObjectNameCount(const char* name, const GameObject* parent) const
 {
-	if (parent == nullptr) parent = scene->root;
+	if (parent == nullptr) parent = GetRoot();
 	if (parent->childs.size() == 0) return 0;
 
 	std::vector<GameObject*>::iterator it;
@@ -218,18 +218,15 @@ void M_Scene::LoadConfig(Config& config)
 
 uint64 M_Scene::LoadScene(const char* file)
 {
-	uint64 newSceneID = Engine->moduleResources->GetResourceInfo(file).ID;
-	R_Scene* newScene = (R_Scene*)Engine->moduleResources->GetResource(newSceneID);
+	uint64 newID = Engine->moduleResources->GetResourceBase(file).ID;
 
-	if (newScene != nullptr)
+	if (newID != 0)
 	{
 		DeleteAllGameObjects();
 		quadtree->Clear();
-		//Engine->moduleResources->UnloadResource();
-		//TODO: "FreeResource"
-		scene = newScene;
+		hScene.Set(newID); hScene.Get(); //<-- So the resource gets loaded
 		std::vector<GameObject*> newGameObjects;
-		scene->root->CollectChilds(newGameObjects);
+		GetRoot()->CollectChilds(newGameObjects);
 
 		for (uint i = 0; i < newGameObjects.size(); i++)
 		{
@@ -243,13 +240,15 @@ uint64 M_Scene::LoadScene(const char* file)
 			}
 		}
 	}
-	return newSceneID;
+	return hScene.GetID();
 }
 
 void M_Scene::LoadModel(uint64 modelID)
 {
 	std::vector<GameObject*> newGameObjects;
-	R_Model* model = (R_Model*)Engine->moduleResources->GetResource(modelID);
+	//Resource handle will be deleted at the end of the function and the resource will be freed
+	ResourceHandle<R_Model> rModelHandle(modelID);
+	R_Model* model = rModelHandle.Get();
 
 	if (model != nullptr)
 	{
@@ -257,7 +256,7 @@ void M_Scene::LoadModel(uint64 modelID)
 		{
 			//Port each model children into the current scene
 			GameObject* gameObject = model->root->childs[0];
-			gameObject->SetParent(scene->root);
+			gameObject->SetParent(GetRoot());
 
 			//Add all gameObject's children to the static vector
 			gameObject->CollectChilds(newGameObjects);
@@ -267,9 +266,6 @@ void M_Scene::LoadModel(uint64 modelID)
 			}
 			newGameObjects.clear();
 		}
-
-		RELEASE(model->root);
-		//TODO: Free Resource!
 	}
 	else
 	{
@@ -279,7 +275,7 @@ void M_Scene::LoadModel(uint64 modelID)
 
 GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
 {
-	GameObject* go = new GameObject(parent ? parent : scene->root, name);
+	GameObject* go = new GameObject(parent ? parent : GetRoot(), name);
 	go->uid = random.Int();
 	return go;
 }
@@ -356,7 +352,7 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 		const Component* mesh = it->second->GetComponent<C_Mesh>();
 		if (mesh)
 		{
-			const R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
+			const R_Mesh* rMesh = ((C_Mesh*)mesh)->rMeshHandle.Get();
 
 			if (rMesh)
 			{
@@ -389,60 +385,38 @@ void M_Scene::OnClickSelection(const LineSegment& segment)
 
 GameObject* M_Scene::CreateCamera()
 {
-	GameObject* camera = new GameObject(scene->root, "Camera");
+	GameObject* camera = new GameObject(GetRoot(), "Camera");
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
 	camera->CreateComponent(Component::Type::Camera);
 	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
 	camera->uid = random.Int();
 
 	//Keeping a reference to the last camera, by now
-	scene->mainCamera = camera->GetComponent<C_Camera>();
+	hScene.Get()->mainCamera = camera->GetComponent<C_Camera>();
 	return camera;
 }
 
 const C_Camera* M_Scene::GetMainCamera() const
 {
-	return scene->mainCamera;
+	return hScene.Get()->mainCamera;
 }
 
 void M_Scene::Play()
 {
 	Time::Start(60);
-	tmpSceneID = Engine->moduleResources->SaveResourceAs(scene, "Engine", "tmp.scene");
+	Engine->moduleResources->SaveResourceAs(hScene.Get(), "Engine", "tmp.scene");
 }
 
 void M_Scene::Stop()
 {
 	Time::Stop();
 
+	R_Scene* realScene = hScene.Get();
+	realScene->instances++; //Increasing instances just in case. LoadScene will release one instance as the resource is changed
 	LoadScene("Engine/tmp.scene");
-
-	R_Scene* newScene = (R_Scene*)Engine->moduleResources->GetResource(tmpSceneID);
-
-	if (newScene != nullptr)
-	{
-		DeleteAllGameObjects();
-		quadtree->Clear();
-
-		scene->root = newScene->root;
-		newScene->root = nullptr; //Removing tmp scene root so it does not get released when freeing the resource
-		//Engine->moduleResources->UnloadResource(newScene); //TODO: "FreeResource"
-
-		std::vector<GameObject*> newGameObjects;
-		scene->root->CollectChilds(newGameObjects);
-
-		for (uint i = 0; i < newGameObjects.size(); i++)
-		{
-			if (newGameObjects[i]->isStatic)
-			{
-				quadtree->AddGameObject(newGameObjects[i]);
-			}
-			else
-			{
-				nonStatic.push_back(newGameObjects[i]);
-			}
-		}
-	}
+	realScene->root = hScene.Get()->root;
+	hScene.Get()->root = nullptr;
+	hScene.Set(realScene);
 }
 
 void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& final)
@@ -458,7 +432,7 @@ void M_Scene::TestGameObjectsCulling(std::vector<const GameObject*>& vector, std
 
 void M_Scene::UpdateAllGameObjects(GameObject* gameObject, float dt)
 {
-	scene->root->Update(dt);
+	GetRoot()->Update(dt);
 }
 
 void M_Scene::DrawAllGameObjects(GameObject* gameObject)
@@ -492,8 +466,8 @@ void M_Scene::FindGameObjectByID(uint id, GameObject* gameObject, GameObject** r
 
 void M_Scene::DeleteAllGameObjects()
 {
-	if (scene)
-		RELEASE(scene->root);
+	if (hScene.GetID())
+		RELEASE(hScene.Get()->root);
 }
 
 void M_Scene::DeleteToRemoveGameObjects()

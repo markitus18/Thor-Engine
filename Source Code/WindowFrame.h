@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "ResourceHandle.h"
+
 class Window;
 class Config;
 class Resource;
@@ -28,7 +30,7 @@ public:
 	inline bool IsActive() { return active; };
 
 	virtual void SetResource(uint64 resourceID);
-	inline uint64 GetResource() const { return resourceID; };
+	inline uint64 GetResourceID() const { return resourceHandle.GetID(); };
 	inline uint GetID() const { return ID; };
 	Window* GetWindow(const char* name) const;
 
@@ -79,7 +81,7 @@ protected:
 	bool active = true;
 
 	//Most if not all windows will have a resource assigned to them (scene, particle editor, material editor,...)
-	uint64 resourceID = 0;
+	ResourceHandle<Resource> resourceHandle;
 };
 
 #endif //__WINDOW_FRAME_H__

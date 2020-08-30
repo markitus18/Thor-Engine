@@ -2,6 +2,7 @@
 
 #include "Config.h"
 
+#include "R_Material.h"
 #include "ParticleModule.h"
 
 Emitter::Emitter()
@@ -17,7 +18,7 @@ void Emitter::Update(float dt)
 void Emitter::SaveAsset(Config& config) const
 {
 	config.SetString("Name", name.c_str());
-	config.SetNumber("Material ID", materialID);
+	config.SetNumber("Material ID", hMaterial.GetID());
 	config.SetNumber("Max Particle Count", maxParticleCount);
 
 	Config_Array modulesArray = config.SetArray("Modules");
@@ -36,7 +37,7 @@ void Emitter::SaveResource(char* buffer)
 void Emitter::Load(Config& config)
 {
 	name = config.GetString("Name");
-	materialID = config.GetNumber("Material ID", 0);
+	hMaterial.Set(config.GetNumber("Material ID", 0));
 	maxParticleCount = config.GetNumber("Max Particle Count");
 
 	Config_Array modulesArray = config.GetArray("Modules");

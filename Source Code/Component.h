@@ -2,6 +2,7 @@
 #define __COMPONENT_H__
 
 #include "Globals.h"
+#include "ResourceHandle.h"
 
 //TODO: move into .cpp?
 #include "MathGeoLib/src/Math/float4x4.h"
@@ -37,13 +38,11 @@ public:
 	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	//Resource handling
-	virtual void SetResource(Resource* resource);
-	virtual void SetResource(unsigned long long id, bool load = true);
+	virtual void SetResource(Resource* resource) { }
+	virtual void SetResource(unsigned long long id) { }
 	
-	Resource* GetResource();
-	const Resource* GetResource() const;
-	inline uint64 GetResourceID() const { return resourceID; };
-	inline bool HasResource() const { return hasResource; };
+	virtual uint64 GetResourceID() const { return 0; }
+	inline bool HasResource() const { return hasResource; }
 
 public:
 	GameObject* gameObject = nullptr;
@@ -52,8 +51,5 @@ protected:
 	bool hasResource = false;
 	bool active = true;
 	Type type = None;
-	uint64 resourceID = 0;
-
-
 };
 #endif //__COMPONENT_H__

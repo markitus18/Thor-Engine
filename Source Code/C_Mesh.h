@@ -26,9 +26,16 @@ public:
 
 	void GetBoneMapping(std::map<std::string, GameObject*>& boneMapping);
 
+	void SetResource(Resource* resource);
+	void SetResource(unsigned long long id);
+
+	uint64 GetResourceID() const;
+
 public:
 	R_Mesh* animMesh = nullptr;
 	GameObject* rootBone = nullptr;
+
+	ResourceHandle<R_Mesh> rMeshHandle;
 };
 
 #endif

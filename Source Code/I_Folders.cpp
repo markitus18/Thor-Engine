@@ -13,8 +13,8 @@ uint64 Importer::Folders::Save(const R_Folder* rFolder, char** buffer)
 	Config file;
 	Config_Array resourcesNode = file.SetArray("Containing Resources");
 
-	for (uint i = 0; i < rFolder->containedResources.size(); ++i)
-		resourcesNode.AddNumber(rFolder->containedResources[i]);
+	for (uint i = 0; i < rFolder->baseData->containedResources.size(); ++i)
+		resourcesNode.AddNumber(rFolder->baseData->containedResources[i]);
 
 	return file.Serialize(buffer);
 }

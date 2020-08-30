@@ -55,7 +55,7 @@ WF_SceneEditor::~WF_SceneEditor()
 void WF_SceneEditor::SetResource(uint64 resourceID)
 {
 	WindowFrame::SetResource(resourceID);
-	displayName = Engine->moduleResources->GetResource(resourceID)->name; 
+	displayName = resourceHandle.Get()->GetName();
 }
 
 void WF_SceneEditor::MenuBar_File()
@@ -86,13 +86,13 @@ void WF_SceneEditor::MenuBar_File()
 
 		if (ImGui::MenuItem("Save Scene"))
 		{
-			if (Engine->scene->scene->GetOriginalFile() == "Engine/Assets/Defaults/Untitled.scene")
+			if (Engine->scene->hScene.Get()->GetAssetsFile() == "Engine/Assets/Defaults/Untitled.scene")
 			{
 				Engine->moduleEditor->OpenFileNameWindow();
 			}
 			else
 			{
-				Engine->moduleResources->SaveResource((Resource*)Engine->scene->scene);
+				Engine->moduleResources->SaveResource(Engine->scene->hScene.Get());
 			}
 		}
 

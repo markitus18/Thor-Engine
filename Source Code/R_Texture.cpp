@@ -1,7 +1,7 @@
 #include "R_Texture.h"
 #include "OpenGL.h"
 
-R_Texture::R_Texture() : Resource(Resource::TEXTURE)
+R_Texture::R_Texture() : Resource(ResourceType::TEXTURE)
 {
 	isInternal = true;
 }

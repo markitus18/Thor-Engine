@@ -9,6 +9,7 @@ class GameObject;
 class Channel;
 class C_Mesh;
 class R_Animation;
+class R_AnimatorController;
 
 class C_Animator : public Component
 {
@@ -26,6 +27,10 @@ public:
 
 	R_Animation* GetAnimation(uint index);
 
+	void SetResource(Resource* resource);
+	void SetResource(unsigned long long ID);
+
+	uint64 GetResourceID() const;
 	static inline Type GetType() { return Type::Animator; };
 
 private:
@@ -46,6 +51,8 @@ public:
 	uint previous_animation = 0;
 	uint current_animation = 0;
 	bool playing = false;
+
+	ResourceHandle<R_AnimatorController> rAnimatorHandle;
 
 private:
 	bool started = false;

@@ -43,7 +43,7 @@ const aiScene* Importer::Models::ProcessAssimpScene(const char* buffer, uint siz
 void Importer::Models::Import(const aiScene* scene, R_Model* model)
 {
 	Private::ImportNodeData(scene, scene->mRootNode, model, 0);
-	(*model->nodes.begin()).name = model->name;
+	(*model->nodes.begin()).name = model->GetName();
 }
 
 void Importer::Models::Private::ImportNodeData(const aiScene* scene, const aiNode* node, R_Model* model, uint64 parentID)
@@ -259,11 +259,7 @@ void Importer::Scenes::Private::SaveComponentBase(Config& config, const Componen
 	config.SetBool("HasResource", component->HasResource());
 	if (component->HasResource())
 	{
-		//TODO: this should be avoided, forces resource load into memory
-		const Resource* resource = component->GetResource();
 		config.SetNumber("ID", component->GetResourceID());
-		config.SetNumber("Type", resource->GetType());
-		config.SetString("ResourceName", resource->GetName());
 	}
 }
 
@@ -353,31 +349,6 @@ void Importer::Scenes::Load(const char* buffer, R_Scene* scene)
 
 		//Call OnUpdateTransform() to init all components according to the GameObject
 		gameObject->OnUpdateTransform();
-	}
-}
-
-void Importer::Scenes::SaveContainedResources(R_Model* model, Config& file)
-{
-	//TODO: The function is accesing App, which should not be done in an importer
-	Config_Array containingResources = file.SetArray("Containing Resources");
-	for (uint i = 0; i < model->containedResources.size(); ++i)
-	{
-		if (Resource* res = Engine->moduleResources->GetResource(model->containedResources[i]))
-		{
-			Config resNode = containingResources.AddNode();
-			resNode.SetNumber("ID", res->GetID());
-			resNode.SetString("Name", res->GetName());
-			resNode.SetNumber("Type", res->GetType());
-		}
-	}
-}
-
-void Importer::Scenes::LoadContainedResources(const Config& file, R_Model* model)
-{
-	Config_Array containingResources = file.GetArray("Containing Resources");
-	for (uint i = 0; i < containingResources.GetSize(); ++i)
-	{
-		model->containedResources.push_back(containingResources.GetNode(i).GetNumber("ID"));
 	}
 }
 

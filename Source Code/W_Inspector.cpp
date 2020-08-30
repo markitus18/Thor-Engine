@@ -219,23 +219,18 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 {
 	if (mesh == nullptr) return;
-	R_Mesh* rMesh = (R_Mesh*)mesh->GetResource();
+	R_Mesh* rMesh = mesh->rMeshHandle.Get();
 
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
 
-		Resource* resource = (Resource*)rMesh;
-
-		if (DrawDetails_Resource("Mesh", resource))
+		if (uint64 newID = DrawDetails_Resource("Mesh", mesh->rMeshHandle.Get()))
 		{
-			mesh->SetResource(resource);
+			mesh->SetResource(newID);
 		}
-
 		ImGui::Unindent();
 	}
-
-
 }
 
 void W_Inspector::DrawMaterials(GameObject* gameObject)
@@ -263,13 +258,11 @@ void W_Inspector::DrawMaterials(GameObject* gameObject)
 void W_Inspector::DrawMaterial(GameObject* gameObject, C_Material* material, uint index)
 {
 	if (material == nullptr) return;
-	R_Material* rMat = (R_Material*)material->GetResource();
 
 	std::string name = std::string("Element ") + std::to_string(index);
-	Resource* resource = (Resource*)rMat;
-	if (DrawDetails_Resource(name.c_str(), resource))
+	if (uint64 newID = DrawDetails_Resource(name.c_str(), material->rMaterialHandle.Get()))
 	{
-		material->SetResource(resource);
+		material->SetResource(newID);
 	}
 }
 
@@ -331,11 +324,13 @@ void W_Inspector::DrawAnimator(GameObject* gameObject, C_Animator* animator)
 		ImGui::Text("Animations");
 		ImGui::Separator();
 
-		R_AnimatorController* rAnimator = (R_AnimatorController*)animator->GetResource();
+		R_AnimatorController* rAnimator = animator->rAnimatorHandle.Get();
 		for (uint i = 0; i < rAnimator->animations.size(); ++i)
 		{
-			R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
-			ImGui::Text(animation ? animation->name.c_str() : "Empty Animation");
+			//TODO: Animations should all be loaded with animation controller
+
+			//R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
+			//ImGui::Text(animation ? animation->name.c_str() : "Empty Animation");
 		}
 
 		if (ImGui::Button("Add Animation"))
@@ -381,7 +376,7 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 	{
 		ImGui::Indent();
 
-		R_ParticleSystem* resource = (R_ParticleSystem*)particleSystem->GetResource();
+		R_ParticleSystem* resource = particleSystem->rParticleSystemHandle.Get();
 		std::string menuName = resource ? resource->GetName() : "-- Select Particle System --";
 
 		if (ImGui::BeginMenu(menuName.c_str()))
@@ -389,22 +384,22 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 			if (ImGui::MenuItem("Create New"))
 			{
 				W_Explorer* w_explorer = (W_Explorer*)editor->GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_Explorer::GetName());
-				const char* dir = w_explorer->GetCurrentFolder()->GetOriginalFile();
+				const char* dir = w_explorer->GetCurrentFolder()->GetAssetsFile();
 				if (uint64 resourceID = Engine->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", dir))
 				{
 					particleSystem->SetResource(resourceID);
 				}
 			}
 			
-			std::vector<const ResourceInfo*> ResourceInfos;
-			if (Engine->moduleResources->GetAllMetaFromType(Resource::Type::PARTICLESYSTEM, ResourceInfos))
+			std::vector<const ResourceBase*> resourceBases;
+			if (Engine->moduleResources->GetAllMetaFromType(ResourceType::PARTICLESYSTEM, resourceBases))
 			{
 				ImGui::Separator();
-				for (uint i = 0; i < ResourceInfos.size(); ++i)
+				for (uint i = 0; i < resourceBases.size(); ++i)
 				{
-					if (ImGui::MenuItem(ResourceInfos[i]->name.c_str()))
+					if (ImGui::MenuItem(resourceBases[i]->name.c_str()))
 					{
-						particleSystem->SetResource(ResourceInfos[i]->ID);
+						particleSystem->SetResource(resourceBases[i]->ID);
 					}
 				}
 			}

@@ -3,6 +3,8 @@
 
 #include "Window.h"
 
+#include "ResourceHandle.h"
+
 #include "PathNode.h"
 #include "Vec2.h"
 #include "Timer.h"
@@ -13,6 +15,7 @@ class Resource;
 
 class R_Model;
 class R_Folder;
+class R_Texture;
 
 struct ImVec2;
 struct ImGuiWindowClass;
@@ -26,26 +29,28 @@ public:
 	void Draw() override;
 	void OnResize(Vec2 newSize) override;
 
-	const Resource* GetCurrentFolder() const { return (Resource*)currentFolder; };
-	static inline const char* GetName() { return "Explorer"; };
+	inline const Resource* GetCurrentFolder() const { return (Resource*)hCurrentFolder.Get(); }
+	static inline const char* GetName() { return "Explorer"; }
 
 private:
 	void DrawFolderNode(PathNode& pathNode);
 
 	void DrawSelectedFolderContent();
-	void DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 windowCursorPos);
-	void DrawResourceImage(const Resource* resource);
+	void DrawResourceItem(const ResourceBase& base, uint& itemIndex, ImVec2 windowCursorPos);
+	void DrawResourceImage(const ResourceBase& base);
 
 	void UpdateTree();
 	std::string GetTextAdjusted(const char* text) const;
 
-	void HandleResourceDoubleClick(Resource* resource);
-	uint GetTextureFromResource(const Resource* resource, std::string* dnd_event = nullptr);
+	void HandleResourceDoubleClick(const ResourceBase& base);
+	uint GetTextureFromResource(const ResourceBase& base, std::string* dnd_event = nullptr);
+
+	void SetCurrentFolder(uint64 folderID);
+	void SetOpenModel(uint64 modelID);
 
 public:
 	bool explorerActive = true;
-	std::map<uint, uint> resourceIcons;
-	uint selectedResourceImage = 0;
+	std::map<ResourceType, ResourceHandle<R_Texture>> hResourceIcons;
 	
 	uint imageSize = 64;
 	uint columnsNumber = 0;
@@ -60,11 +65,19 @@ private:
 
 	PathNode assets;
 
-	R_Folder* assetsFolder = nullptr;
-	R_Folder* engineAssetsFolder = nullptr;
+	ResourceHandle<R_Folder> hAssetsFolder;
+	ResourceHandle<R_Folder> hEngineAssetsFolder;
+	ResourceHandle<R_Folder> hCurrentFolder;
 
-	R_Folder* currentFolder = nullptr;
-	R_Folder* nextCurrentFolder = nullptr;
+	uint64 openModelID = 0;
+
+	uint64 nextCurrentFolderID = 0;
+
+	ResourceHandle<R_Texture> hResourceHighlight;
+
+	std::map<uint64, ResourceHandle<R_Texture>> texturesInFolder;
+	std::map<uint64, ResourceHandle<R_Texture>> texturesInModel;
+
 	Resource* selectedResource = nullptr;
 
 	Vec2 explorerPosition;
@@ -74,8 +87,6 @@ private:
 	Timer updateTimer;
 
 	Vec2 windowSize;
-
-	R_Model*  openModel = nullptr;
 };
 
 #endif

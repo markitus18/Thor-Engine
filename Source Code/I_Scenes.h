@@ -77,12 +77,6 @@ namespace Importer
 		//Process an json scene buffer and loads all the GameObject hierarchy
 		void Load(const char* buffer, R_Scene* scene);
 
-		//Loads the contained resources from a model meta file into the prefab resources
-		void LoadContainedResources(const Config& file, R_Model* model);
-
-		//Saves the contained resources in a model into a Config file
-		void SaveContainedResources(R_Model* nodel, Config& file);
-
 		namespace Private
 		{
 			//Process a GameObject data with its hierarchy into a config file

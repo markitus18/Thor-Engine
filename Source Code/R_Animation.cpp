@@ -55,7 +55,7 @@ std::map<double, float3>::const_iterator Channel::GetNextScaleKey(double current
 	return scaleKeys.upper_bound(currentKey);
 }
 
-R_Animation::R_Animation() : Resource(Resource::Type::ANIMATION)
+R_Animation::R_Animation() : Resource(ResourceType::ANIMATION)
 {
 	isInternal = true;
 }

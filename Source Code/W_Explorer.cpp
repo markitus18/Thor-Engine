@@ -22,23 +22,23 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWin
 	updateTimer.Start();
 	UpdateTree();
 
-	Resource* resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo("Assets").ID);
-	currentFolder = assetsFolder = (R_Folder*)resource;
+	uint64 assetsID = Engine->moduleResources->GetResourceBase("Assets").ID;
+	hCurrentFolder.Set(assetsID);
+	hAssetsFolder.Set(assetsID);
 
-	resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo("Engine/Assets").ID);
-	engineAssetsFolder = (R_Folder*)resource;
+	hEngineAssetsFolder.Set(Engine->moduleResources->GetResourceBase("Engine/Assets").ID);
 
-	resourceIcons[Resource::Type::FOLDER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/FolderIcon.png").ID;
-	resourceIcons[Resource::Type::MESH] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/FileIcon.png").ID;
-	resourceIcons[Resource::Type::TEXTURE] = 0;
-	resourceIcons[Resource::Type::MATERIAL] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/MaterialIcon.png").ID;
-	resourceIcons[Resource::Type::ANIMATION] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimationIcon.png").ID;
-	resourceIcons[Resource::Type::ANIMATOR_CONTROLLER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/AnimatorIcon.png").ID;
-	resourceIcons[Resource::Type::MODEL] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SceneIcon.png").ID;
-	resourceIcons[Resource::Type::PARTICLESYSTEM] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ParticlesIcon.png").ID;
-	resourceIcons[Resource::Type::SHADER] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ShaderIcon.png").ID;
-	resourceIcons[Resource::Type::SCENE] = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/ThorIcon.png").ID;
-	selectedResourceImage = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/SelectedIcon.png").ID;
+	hResourceIcons[ResourceType::FOLDER].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/FolderIcon.png").ID);
+	hResourceIcons[ResourceType::MESH].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/FileIcon.png").ID);
+	hResourceIcons[ResourceType::TEXTURE].Set(uint64(0));
+	hResourceIcons[ResourceType::MATERIAL].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/MaterialIcon.png").ID);
+	hResourceIcons[ResourceType::ANIMATION].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/AnimationIcon.png").ID);
+	hResourceIcons[ResourceType::ANIMATOR_CONTROLLER].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/AnimatorIcon.png").ID);
+	hResourceIcons[ResourceType::MODEL].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/SceneIcon.png").ID);
+	hResourceIcons[ResourceType::PARTICLESYSTEM].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/ParticlesIcon.png").ID);
+	hResourceIcons[ResourceType::SHADER].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/ShaderIcon.png").ID);
+	hResourceIcons[ResourceType::SCENE].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/ThorIcon.png").ID);
+	hResourceHighlight.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/SelectedIcon.png").ID);
 }
 
 void W_Explorer::Draw()
@@ -98,7 +98,7 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 		nodeFlags |= ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 
-	if (currentFolder && node.path == currentFolder->GetOriginalFile())
+	if (hCurrentFolder.GetID() != 0 && node.path == hCurrentFolder.Get()->GetAssetsFile())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -109,8 +109,7 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			Resource* resource = Engine->moduleResources->GetResource(Engine->moduleResources->GetResourceInfo(node.path.c_str()).ID);
-			currentFolder = (R_Folder*)resource;
+			hCurrentFolder.Set(Engine->moduleResources->GetResourceBase(node.path.c_str()).ID);
 		}
 		if (open && !node.IsLastFolder())
 		{
@@ -123,11 +122,10 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 	}
 }
 
-void W_Explorer::DrawResourceImage(const Resource* resource)
+void W_Explorer::DrawResourceImage(const ResourceBase& base)
 {
-	uint64 resourceID = resource->GetID();
 	std::string dnd_event("NONE");
-	uint textureID = GetTextureFromResource(resource, &dnd_event);
+	uint textureID = GetTextureFromResource(base, &dnd_event);
 
 	ImGui::Image((ImTextureID)textureID, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 
@@ -135,8 +133,8 @@ void W_Explorer::DrawResourceImage(const Resource* resource)
 	{
 		if (dnd_event != "NONE")
 		{
-			ImGui::SetDragDropPayload(dnd_event.c_str(), &resourceID, sizeof(uint64));
-			ImGui::Text(resource->name.c_str());
+			ImGui::SetDragDropPayload(dnd_event.c_str(), &base.ID, sizeof(uint64));
+			ImGui::Text(base.name.c_str());
 			ImGui::SetCursorPos(ImGui::GetCursorPos() - ImVec2(0.0f, 20.0f));
 			ImGui::Image((ImTextureID)textureID, ImVec2(imageSize, imageSize), ImVec2(0, 1), ImVec2(1, 0));
 		}
@@ -149,11 +147,9 @@ void W_Explorer::DrawResourceImage(const Resource* resource)
 //FIXME: function needs some cleaning. Pathnodes force GetResource constantly which means can't free resource memory properly
 void W_Explorer::DrawSelectedFolderContent()
 {
-	nextCurrentFolder = nullptr;
-
 	ImGui::BeginChild("ExplorerFolder", ImVec2(0.0f, 0.0f), false, ImGuiWindowFlags_NoScrollbar);
 
-	ImGui::Text(currentFolder->GetOriginalFile());
+	ImGui::Text(hCurrentFolder.Get()->GetAssetsFile());
 	ImGui::Separator();
 
 	ImGui::BeginChild("ImagesChild");
@@ -162,23 +158,28 @@ void W_Explorer::DrawSelectedFolderContent()
 	ImVec2 windowCursorPosition = ImGui::GetCursorPos();
 	uint itemIndex = 0;
 
-	for (uint i = 0; i < currentFolder->containedResources.size(); ++i)
+	R_Folder* currentFolder = hCurrentFolder.Get();
+	for (uint i = 0; i < currentFolder->baseData->containedResources.size(); ++i)
 	{
-		Resource* res = Engine->moduleResources->GetResource(currentFolder->containedResources[i]);
-		DrawResourceItem(res, itemIndex, windowCursorPosition);
+		const ResourceBase& childBase = Engine->moduleResources->GetResourceBase(currentFolder->baseData->containedResources[i]);
+		DrawResourceItem(childBase, itemIndex, windowCursorPosition);
 		itemIndex++;
 	}
 
 	ImGui::PopStyleVar();
 	ImGui::EndChild();
 
-	if (nextCurrentFolder != nullptr)
-		currentFolder = nextCurrentFolder;
+	if (nextCurrentFolderID != 0)
+	{
+		hCurrentFolder.Set(nextCurrentFolderID);
+		nextCurrentFolderID = 0;
+	}
+
 
 	ImGui::EndChild();
 }
 
-void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 windowCursorPos)
+void W_Explorer::DrawResourceItem(const ResourceBase& base, uint& itemIndex, ImVec2 windowCursorPos)
 {
 	if (columnsNumber == 0) return; //No space to draw any resource, exit function
 
@@ -191,55 +192,49 @@ void W_Explorer::DrawResourceItem(Resource* resource, uint& itemIndex, ImVec2 wi
 	ImGui::PushID(row * column);
 	ImGui::SetCursorPos(drawPos);
 
-	DrawResourceImage(resource);
+	DrawResourceImage(base);
 
 	//Draw selection image
-	if (selectedResource == resource)
+	if (Engine->moduleEditor->hSelectedResource.GetID() == base.ID)
 	{
 		ImGui::SetCursorPos(drawPos - ImVec2(topMarginOffset, topMarginOffset));
 		float textSize = ImGui::GetTextLineHeight();
-		uint texBuffer = ((R_Texture*)Engine->moduleResources->GetResource(selectedResourceImage))->buffer;
+		uint texBuffer = hResourceHighlight.Get()->buffer;
 		ImGui::Image((ImTextureID)texBuffer, ImVec2(imageSize + 20.0f, imageSize + textSize + 24.0f), ImVec2(0, 1), ImVec2(1, 0));
 	}
 
 	//If clicked, select resource to display in inspector
 	if (ImGui::IsItemClicked())
 	{
-		selectedResource = resource;
-
-		//TODO: quick workaround to select resources
-		Engine->moduleEditor->selectedResources.clear();
-		Engine->moduleEditor->selectedResources.push_back(resource);
+		Engine->moduleEditor->hSelectedResource.Set(base.ID);
 	}
 	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
 	{
-		HandleResourceDoubleClick(resource);
+		HandleResourceDoubleClick(base);
 	}
 
 	ImVec2 textPos = drawPos + ImVec2(0.0f, imageSize + textOffset);
 	ImGui::SetCursorPos(textPos);
-	ImGui::Text(GetTextAdjusted(resource->GetName()).c_str());
+	ImGui::Text(GetTextAdjusted(base.name.c_str()).c_str());
 
 	//Drawing node Button (if it's a model)
-	if (resource->GetType() == Resource::MODEL)
+	if (base.type == ResourceType::MODEL)
 	{
-		R_Model* modelNode = (R_Model*)resource;
-
 		ImGui::SetCursorPos(drawPos + ImVec2(imageSize / 2 + nodeButtonOffset, imageSize / 2 - ImGui::GetFrameHeight() / 2));
-		ImGui::ArrowButton("ArrowButton?", modelNode == openModel ? ImGuiDir_Left : ImGuiDir_Right);
+		ImGui::ArrowButton("ArrowButton?", base.ID == openModelID ? ImGuiDir_Left : ImGuiDir_Right);
 		if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
 		{
-			openModel = (openModel == modelNode ? nullptr : modelNode);
+			SetOpenModel(base.ID != openModelID ? base.ID : 0);
 		}
 
-		if (modelNode == openModel)
+		if (base.ID == openModelID)
 		{
 			//Draw the resources contained in the model
-			for (uint i = 0; i < modelNode->containedResources.size(); ++i)
+			for (uint i = 0; i < base.containedResources.size(); ++i)
 			{
 				itemIndex++;
-				Resource* containedResource = Engine->moduleResources->GetResource(modelNode->containedResources[i]);
-				DrawResourceItem(containedResource, itemIndex, windowCursorPos);
+				const ResourceBase& childBase = Engine->moduleResources->GetResourceBase(base.containedResources[i]);
+				DrawResourceItem(childBase, itemIndex, windowCursorPos);
 			}
 		}
 	}
@@ -273,27 +268,79 @@ std::string W_Explorer::GetTextAdjusted(const char* text) const
 	return newText;
 }
 
-void W_Explorer::HandleResourceDoubleClick(Resource* resource)
+void W_Explorer::HandleResourceDoubleClick(const ResourceBase& base)
 {
-	if (resource->GetType() == Resource::FOLDER)
-		nextCurrentFolder = (R_Folder*)resource;
+	if (base.type == ResourceType::FOLDER)
+		nextCurrentFolderID = base.ID;
 	else
-		editor->OpenWindowFromResource(resource->GetID());
+		editor->OpenWindowFromResource(base.ID);
 }
 
-uint W_Explorer::GetTextureFromResource(const Resource* resource, std::string* dnd_event)
+uint W_Explorer::GetTextureFromResource(const ResourceBase& base, std::string* dnd_event)
 {
 	uint64 textureBuffer = 0;
-	if (resource->GetType() == Resource::TEXTURE)
+	if (base.type == ResourceType::TEXTURE)
 	{
-		textureBuffer = ((R_Texture*)resource)->buffer;
+		std::map<uint64, ResourceHandle<R_Texture>>::iterator it = texturesInFolder.find(base.ID);
+		if (it != texturesInFolder.end())
+			textureBuffer = it->second.Get()->buffer;
+		else if ((it = texturesInModel.find(base.ID)) != texturesInModel.end())
+			textureBuffer = it->second.Get()->buffer;
 	}
 	else
 	{
-		R_Texture* texture = (R_Texture*)Engine->moduleResources->GetResource(resourceIcons[resource->GetType()]);
-		textureBuffer = texture->buffer;
+		textureBuffer = hResourceIcons[base.type].Get()->buffer;
 	}
-	dnd_event->assign("DND_RESOURCE_").append(std::to_string((int)resource->GetType()));
+	dnd_event->assign("DND_RESOURCE_").append(std::to_string((int)base.type));
 
 	return textureBuffer;
+}
+
+void W_Explorer::SetCurrentFolder(uint64 folderID)
+{
+	nextCurrentFolderID = 0;
+
+	//Freeing the textures held from the previous folder
+	std::map<uint64, ResourceHandle<R_Texture>>::iterator it;
+	for (it = texturesInFolder.begin(); it != texturesInFolder.end(); ++it)
+	{
+		it->second.Free();
+	}
+	texturesInFolder.clear();
+	SetOpenModel(0);
+
+	//Adding textures from the new folder
+	hCurrentFolder.Set(folderID);
+	R_Folder* newFolder = hCurrentFolder.Get();
+	for (uint i = 0; i < newFolder->baseData->containedResources.size(); ++i)
+	{
+		const ResourceBase& base = Engine->moduleResources->GetResourceBase(newFolder->baseData->containedResources[i]);
+		if (base.type == ResourceType::TEXTURE)
+		{
+			texturesInFolder[base.ID] = ResourceHandle<R_Texture>(base.ID);
+		}
+	}
+}
+
+void W_Explorer::SetOpenModel(uint64 modelID)
+{
+	//Freeing the textures held from the previous model
+	std::map<uint64, ResourceHandle<R_Texture>>::iterator it;
+	for (it = texturesInModel.begin(); it != texturesInModel.end(); ++it)
+	{
+		it->second.Free();
+	}
+	texturesInModel.clear();
+
+	const ResourceBase& base = Engine->moduleResources->GetResourceBase(modelID);
+	for (uint i = 0; i < base.containedResources.size(); ++i)
+	{
+		const ResourceBase& childBase = Engine->moduleResources->GetResourceBase(base.containedResources[i]);
+		if (childBase.type == ResourceType::TEXTURE)
+		{
+			texturesInModel[childBase.ID] = ResourceHandle<R_Texture>(childBase.ID);
+		}
+	}
+
+	openModelID = modelID;
 }

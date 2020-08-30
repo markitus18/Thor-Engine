@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Light.h"
 
+#include "ResourceHandle.h"
+
 //TODO: this should be removed or changed by float4x4
 #include "MathGeoLib\src\MathGeoLib.h"
 #include <map>
@@ -17,6 +19,7 @@ class C_Material;
 
 class R_Mesh;
 class R_Texture;
+class R_Material;
 
 class Config;
 
@@ -57,10 +60,10 @@ struct RenderLine
 
 struct RenderParticle
 {
-	RenderParticle(const float4x4& tr, uint64 mat, float4 color) : transform(tr), materialID(mat), color(color) {}
+	RenderParticle(const float4x4& tr, R_Material* mat, float4 color) : transform(tr), mat(mat), color(color) {}
 
 	float4x4 transform;
-	uint64 materialID;
+	R_Material* mat;
 	float4 color;
 };
 
@@ -90,7 +93,7 @@ public:
 	void DrawAllMeshes();
 	void DrawMesh(RenderMesh& mesh);
 
-	void AddParticle(const float4x4& transform, uint64 material, float4 color, float distanceToCamera);
+	void AddParticle(const float4x4& transform, R_Material* mat, float4 color, float distanceToCamera);
 	void DrawAllParticles();
 	void DrawParticle(RenderParticle& particle);
 
@@ -137,7 +140,7 @@ public:
 	bool depthEnabled = true;
 
 private:
-	uint defaultTextureID = 0;
+	ResourceHandle<R_Texture> rDefaultTextureHandle;
 
 	std::vector<RenderMesh> meshes;
 	std::map<float, RenderParticle> particles;

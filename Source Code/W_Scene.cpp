@@ -48,9 +48,9 @@ void W_Scene::Draw()
 			if (payload->DataSize == sizeof(uint64))
 			{
 				uint64 resourceID = *(const uint64*)payload->Data;
-				Resource* resource = Engine->moduleResources->GetResource(resourceID);
+				const ResourceBase& base = Engine->moduleResources->GetResourceBase(resourceID);
 
-				if (resource->GetType() == Resource::Type::MODEL)
+				if (base.type == ResourceType::MODEL)
 				{
 					Engine->scene->LoadModel(resourceID);
 				}

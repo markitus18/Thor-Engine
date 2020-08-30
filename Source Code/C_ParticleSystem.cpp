@@ -35,23 +35,39 @@ void C_ParticleSystem::Reset()
 
 void C_ParticleSystem::SetResource(Resource* resource)
 {
-	Component::SetResource(resource);
+	Reset();
+	emitters.clear();
 
+	rParticleSystemHandle.Set((R_ParticleSystem*)resource);
+
+	if (R_ParticleSystem* system = rParticleSystemHandle.Get())
+	{
+		for (uint i = 0; i < system->emitters.size(); ++i)
+		{
+			emitters.push_back(EmitterInstance());
+			emitters.back().Init(&system->emitters[i], this);
+		}
+	}
 }
 
 void C_ParticleSystem::SetResource(unsigned long long id)
 {
-	Component::SetResource(id);
-
 	Reset();
 	emitters.clear();
 
-	if (R_ParticleSystem* resource = (R_ParticleSystem*)GetResource())
+	rParticleSystemHandle.Set(id);
+
+	if (R_ParticleSystem* system = rParticleSystemHandle.Get())
 	{
-		for (uint i = 0; i < resource->emitters.size(); ++i)
+		for (uint i = 0; i < system->emitters.size(); ++i)
 		{
 			emitters.push_back(EmitterInstance());
-			emitters.back().Init(&resource->emitters[i], this);
+			emitters.back().Init(&system->emitters[i], this);
 		}
 	}
+}
+
+uint64 C_ParticleSystem::GetResourceID() const
+{
+	return rParticleSystemHandle.GetID();
 }

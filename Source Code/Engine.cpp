@@ -194,7 +194,7 @@ void TEngine::UpdateSceneName()
 {
 	std::string windowTitle = title;
 	std::string sceneName = "", sceneExtension = "";
-	Engine->fileSystem->SplitFilePath(scene->scene->GetOriginalFile(), nullptr, &sceneName, &sceneExtension); //TODO: avoid accessing a resource
+	Engine->fileSystem->SplitFilePath(scene->hScene.Get()->GetAssetsFile(), nullptr, &sceneName, &sceneExtension); //TODO: avoid accessing a resource
 	windowTitle.append(" - ").append(sceneName);
 	if (sceneExtension != "")
 	{

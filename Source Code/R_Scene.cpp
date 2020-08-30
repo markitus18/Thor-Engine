@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-R_Scene::R_Scene() : Resource(Resource::SCENE)
+R_Scene::R_Scene() : Resource(ResourceType::SCENE)
 {
 	root = new GameObject(nullptr, "root");
 	root->hierarchyOpen = true;

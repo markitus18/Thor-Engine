@@ -1,7 +1,7 @@
 #include "R_Mesh.h"
 #include "OpenGL.h"
 
-R_Mesh::R_Mesh() : Resource(MESH)
+R_Mesh::R_Mesh() : Resource(ResourceType::MESH)
 {
 	isInternal = true; //TODO: Could be done in constructor initialization?
 	for (uint i = 0; i < max_buffer_type; i++)

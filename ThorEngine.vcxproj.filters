@@ -160,9 +160,6 @@
     <ClCompile Include="Source Code\Quadtree.cpp">
       <Filter>Source Code\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\Resource.cpp">
-      <Filter>Source Code\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\M_Camera3D.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
@@ -351,6 +348,12 @@
     </ClCompile>
     <ClCompile Include="Source Code\R_Model.cpp">
       <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\ResourceHandle.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Resource.cpp">
+      <Filter>Source Code\Resources\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -621,9 +624,6 @@
     <ClInclude Include="Source Code\Quadtree.h">
       <Filter>Source Code\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\Resource.h">
-      <Filter>Source Code\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\M_Camera3D.h">
       <Filter>Source Code\Modules</Filter>
     </ClInclude>
@@ -823,6 +823,15 @@
     <ClInclude Include="Source Code\R_Model.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Source Code\ResourceHandle.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Resource.h">
+      <Filter>Source Code\Resources\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ResourceBase.h">
+      <Filter>Source Code\Resources\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Code">
@@ -902,6 +911,9 @@
     </Filter>
     <Filter Include="Source Code\GameObjects\Helpers">
       <UniqueIdentifier>{d504f829-ec6d-4862-b41a-942669824cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Code\Resources\Base">
+      <UniqueIdentifier>{58d1bd90-280e-4d97-9088-3689a60ca9e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

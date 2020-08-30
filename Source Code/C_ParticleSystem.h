@@ -7,6 +7,7 @@
 #include "EmitterInstance.h"
 
 class GameObject;
+class R_ParticleSystem;
 
 class C_ParticleSystem : public Component
 {
@@ -22,10 +23,14 @@ public:
 
 	void SetResource(Resource* resource);
 	void SetResource(unsigned long long id);
+	
+	uint64 GetResourceID() const;
 
 public:
-	//TODO: can we avoid this necessary include? Vector needs to know particle size
+	//TODO: can we avoid this necessary include? Vector needs to know instances size
 	std::vector<EmitterInstance> emitters;
+
+	ResourceHandle<R_ParticleSystem> rParticleSystemHandle;
 };
 
 #endif

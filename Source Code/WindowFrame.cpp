@@ -56,12 +56,7 @@ void WindowFrame::Draw()
 
 void WindowFrame::SetResource(uint64 resourceID)
 {
-	if (Resource* oldResource = Engine->moduleResources->GetResource(this->resourceID))
-		oldResource->instances--;
-	
-	this->resourceID = resourceID;
-	if (Resource* newResource = Engine->moduleResources->GetResource(this->resourceID))
-		newResource->instances++;
+	resourceHandle.Set(resourceID);
 }
 
 Window* WindowFrame::GetWindow(const char* name) const

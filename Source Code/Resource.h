@@ -4,49 +4,35 @@
 #include <string>
 #include <vector>
 
-#include "Globals.h"
 #include "TreeNode.h"
+#include "ResourceBase.h"
 
 class Resource : public TreeNode
 {
-
-//Huh... can it be done differently?
-friend class M_Resources;
-friend struct ResourceInfo;
-friend class M_ParticleSystems;
+	//Huh... can it be done differently?
+	friend class M_Resources;
+	friend class M_ParticleSystems;
 
 public:
-	enum Type
-	{
-		FOLDER,
-		MESH,
-		TEXTURE,
-		MATERIAL,
-		ANIMATION,
-		ANIMATOR_CONTROLLER,
-		MODEL,
-		PARTICLESYSTEM,
-		SHADER,
-		SCENE,
-		UNKNOWN,
-	};
 
-	Resource(Type type);
+	Resource(ResourceType type);
 	~Resource();
 
-	Type GetType() const;
-	unsigned long long GetID() const;
 	TreeNode* GetParentNode() const;
 
-	const char* GetOriginalFile() const;
-	const char* GetResourceFile() const;
-	const char* GetName() const;
+	//Getter functions for retreving base data
+	inline ResourceType GetType() const { return baseData->type; }
+	inline unsigned long long GetID() const { return baseData->ID; }
+	inline const char* GetAssetsFile() const { return baseData->assetsFile.c_str(); }
+	inline const char* GetLibraryFile() const { return baseData->libraryFile.c_str(); }
+	inline const char* GetName() const { return baseData->name.c_str(); }
+
 	virtual std::vector<TreeNode*> GetChilds() const { std::vector<TreeNode*> ret; return ret; };
 	bool IsNodeActive() const { return true; };
 	bool DrawTreeNode() const;
 	bool HasResource(uint64 ID) const;
 
-	virtual inline void AddContainedResource(uint64 ID) { containedResources.push_back(ID); };
+	virtual inline void AddContainedResource(uint64 ID) { baseData->containedResources.push_back(ID); };
 
 	virtual void LoadOnMemory() {};
 	virtual void FreeMemory() {};
@@ -56,16 +42,8 @@ public:
 	bool needs_save = false;
 	bool isInternal = false;
 
-	//TODO: Set it to private, moved to public for faster iteration
-	std::string name = "";
-	std::vector<uint64> containedResources;
-
-protected:
-	unsigned long long ID = 0;
-	Type type = UNKNOWN;
-
-	std::string resource_file = "";
-	std::string original_file = "";
+public: //TODO: Can be set to private? Importers need to modify its content
+	struct ResourceBase* baseData;
 
 	//TODO: UID that should point to containing folder
 	Resource* parent;

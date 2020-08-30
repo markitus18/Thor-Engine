@@ -2,8 +2,11 @@
 #define __EMITTER_H__
 
 #include <vector>
-#include "ParticleModule.h"
 #include "Particle.h"
+#include "ParticleModule.h"
+#include "ResourceHandle.h"
+
+class R_Material;
 
 class Emitter
 {
@@ -23,7 +26,8 @@ public:
 public:
 	std::string name = "Particle Emitter";
 	std::vector<ParticleModule*> modules;
-	uint64 materialID = 2130760876;
+	ResourceHandle<R_Material> hMaterial; //TODO: Hardcode default bubble ID!!
+	
 	int maxParticleCount = 100;
 };
 

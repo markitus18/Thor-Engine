@@ -92,6 +92,8 @@
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
+    <ClInclude Include="Source Code\ResourceBase.h" />
+    <ClInclude Include="Source Code\ResourceHandle.h" />
     <ClInclude Include="Source Code\R_Scene.h" />
     <ClInclude Include="Source Code\WF_ParticleEditor.h" />
     <ClInclude Include="Source Code\Window.h" />
@@ -250,6 +252,7 @@
     <ClCompile Include="Source Code\C_Camera.cpp" />
     <ClCompile Include="Source Code\C_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
+    <ClCompile Include="Source Code\ResourceHandle.cpp" />
     <ClCompile Include="Source Code\R_Scene.cpp" />
     <ClCompile Include="Source Code\WF_ParticleEditor.cpp" />
     <ClCompile Include="Source Code\Window.cpp" />

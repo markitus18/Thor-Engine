@@ -4,7 +4,7 @@
 
 #include "Glew/include/glew.h"
 
-R_Shader::R_Shader() : Resource(Resource::SHADER)
+R_Shader::R_Shader() : Resource(ResourceType::SHADER)
 {
 	memset(shaderObjects, 0, (int)Object_Type::Unknown - 1);
 	isInternal = true;

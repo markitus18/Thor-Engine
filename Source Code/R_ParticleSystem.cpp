@@ -4,7 +4,7 @@
 
 #include "ParticleModule.h"
 
-R_ParticleSystem::R_ParticleSystem() : Resource(Resource::Type::PARTICLESYSTEM)
+R_ParticleSystem::R_ParticleSystem() : Resource(ResourceType::PARTICLESYSTEM)
 {
 	emitters.reserve(4);
 }

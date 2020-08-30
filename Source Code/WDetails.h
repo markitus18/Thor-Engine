@@ -3,10 +3,13 @@
 
 #include "Window.h"
 
+#include "ResourceHandle.h"
+
 #include "MathGeoLib/src/Math/float3.h"
 #include "ImGui/imgui.h"
 
 class Resource;
+class R_Texture;
 
 struct ImGuiWindowClass;
 
@@ -24,7 +27,8 @@ public:
 	bool DrawDetails_Float(const char* name, float& value);
 	bool DrawDetails_Float2(const char* name, float2& value);
 	bool DrawDetails_Float3(const char* name, float3& value);
-	bool DrawDetails_Resource(const char* name, Resource*& resource);
+	
+	uint64 DrawDetails_Resource(const char* name, const Resource* resource);
 
 private:
 	float columnSeparator = 0.3f;
@@ -33,7 +37,7 @@ private:
 	float separatorStartDragPosition = 0.0f;
 	ImVec2 initItemCursor = ImVec2(0.0f, 0.0f);
 
-	static int previewImage;
+	static ResourceHandle<R_Texture> hPreviewTexture;
 };
 
 

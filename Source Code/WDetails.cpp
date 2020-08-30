@@ -13,11 +13,11 @@
 #include "MathGeoLib/src/Math/float2.h"
 #include "MathGeoLib/src/Math/float3.h"
 
-int WDetails::previewImage;
+ResourceHandle<R_Texture> WDetails::hPreviewTexture;
 
 WDetails::WDetails(M_Editor* editor, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(editor, name, windowClass, ID)
 {
-	previewImage = Engine->moduleResources->GetResourceInfo("Engine/Assets/Icons/PreviewIcon.png").ID;
+	hPreviewTexture.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/PreviewIcon.png").ID);
 }
 
 void WDetails::BeginItemDraw(const char* name)
@@ -122,16 +122,15 @@ bool WDetails::DrawDetails_Float3(const char* name, float3& value)
 	return ret;
 }
 
-bool WDetails::DrawDetails_Resource(const char* name, Resource*& resource)
+uint64 WDetails::DrawDetails_Resource(const char* name, const Resource* resource)
 {
-	bool ret = false;
+	uint64 ret = 0;
 
 	BeginItemDraw(name);
 
 	ImGui::BeginGroup();
 	ImVec2 prevCursor = ImGui::GetCursorPos();
-	R_Texture* rTexture = ((R_Texture*)Engine->moduleResources->GetResource(previewImage));
-	ImGui::Image((ImTextureID)rTexture->buffer, ImVec2(64, 64), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image((ImTextureID)hPreviewTexture.Get()->buffer, ImVec2(64, 64), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::SetCursorPos(prevCursor + ImVec2(64 + 10, 12));
 	ImGui::Text(resource->GetName());
 
@@ -149,12 +148,7 @@ bool WDetails::DrawDetails_Resource(const char* name, Resource*& resource)
 			if (payload->DataSize == sizeof(uint64))
 			{
 				uint64 resourceID = *(const uint64*)payload->Data;
-				Resource* newResource = Engine->moduleResources->GetResource(resourceID);
-				if (resource)
-				{
-					ret = true;
-					resource = newResource;
-				}
+				ret = resourceID;
 			}
 		}
 		ImGui::EndDragDropTarget();

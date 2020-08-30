@@ -187,7 +187,7 @@ update_status M_Input::PreUpdate()
 				
 				//FIXME: Current folder should be stored in editor rather than window explorer
 				W_Explorer* w_explorer = (W_Explorer*)Engine->moduleEditor->GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_Explorer::GetName());
-				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, w_explorer->GetCurrentFolder()->GetOriginalFile());
+				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, w_explorer->GetCurrentFolder()->GetAssetsFile());
 
 				SDL_free(event.drop.file);
 				break;

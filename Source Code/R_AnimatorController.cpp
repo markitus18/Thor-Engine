@@ -1,6 +1,6 @@
 #include "R_AnimatorController.h"
 
-R_AnimatorController::R_AnimatorController() : Resource(Resource::ANIMATOR_CONTROLLER)
+R_AnimatorController::R_AnimatorController() : Resource(ResourceType::ANIMATOR_CONTROLLER)
 {
 	
 }

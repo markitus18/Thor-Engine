@@ -2,14 +2,13 @@
 
 //TODO: temporal, just to get default shader
 #include "Engine.h"
+#include "R_Shader.h"
 #include "M_Resources.h"
 
-R_Material::R_Material() : Resource(Resource::MATERIAL)
+R_Material::R_Material() : Resource(ResourceType::MATERIAL)
 {
-	//shaderID = Engine->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Shader.shader").ID;
-	shaderID = Engine->moduleResources->GetResourceInfo("Engine/Assets/Shaders/Default Shader_PlainLight.shader").ID;
-
 	isInternal = true;
+	hShader.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Shaders/Default Shader_PlainLight.shader").ID);
 }
 
 R_Material::~R_Material()

@@ -98,7 +98,7 @@ void Importer::Materials::Import(const aiMaterial* material, R_Material* rMateri
 	{
 		if (uint64 textureID = Engine->moduleResources->ImportFileFromAssets(texture_path.c_str()))
 		{
-			rMaterial->textureID = textureID;
+			rMaterial->hTexture.Set(textureID);
 		}
 	}
 
@@ -106,7 +106,7 @@ void Importer::Materials::Import(const aiMaterial* material, R_Material* rMateri
 
 	aiString matName;
 	material->Get(AI_MATKEY_NAME, matName);
-	rMaterial->name = matName.C_Str();
+	rMaterial->baseData->name = matName.C_Str();
 }
 
 //Process R_Material data into a buffer ready to save
@@ -115,28 +115,14 @@ void Importer::Materials::Import(const aiMaterial* material, R_Material* rMateri
 uint64 Importer::Materials::Save(const R_Material* rMaterial, char** buffer)
 {
 	//Name size, name string, texture resource ID, color
-	uint size = sizeof(uint) + rMaterial->name.size() + sizeof(unsigned long long) + sizeof(float) * 4;
+	uint size = sizeof(unsigned long long) + sizeof(float) * 4;
 
 	*buffer = new char[size];
 	char* cursor = *buffer;
 
-	// Store mat name lenght
-	uint bytes = sizeof(uint);
-	uint path_size = rMaterial->name.size();
-	memcpy(cursor, &path_size, bytes);
-	cursor += bytes;
-
-	// Store mat name
-	bytes = rMaterial->name.size();
-
-	if (bytes)
-	{
-		memcpy(cursor, rMaterial->name.c_str(), bytes);
-		cursor += bytes;
-	}
-
-	bytes = sizeof(unsigned long long);
-	memcpy(cursor, &rMaterial->textureID, bytes);
+	uint64 textureID = rMaterial->hTexture.GetID();
+	uint bytes = sizeof(unsigned long long);
+	memcpy(cursor, &textureID, bytes);
 	cursor += bytes;
 
 	float color[4]{ rMaterial->color.r, rMaterial->color.g, rMaterial->color.b, rMaterial->color.a };
@@ -153,26 +139,11 @@ void Importer::Materials::Load(const char* buffer, uint size, R_Material* rMater
 {
 	const char* cursor = buffer;
 
-	uint nameSize = 0;
-	uint bytes = sizeof(uint);
-	memcpy(&nameSize, cursor, bytes);
+	uint64 textureID = 0;
+	uint bytes = sizeof(unsigned long long);
+	memcpy(&textureID, cursor, bytes);
 	cursor += bytes;
-
-	if (nameSize > 0)
-	{
-		char* name = new char[nameSize + 1];
-		bytes = sizeof(char) * nameSize;
-		memcpy(name, cursor, bytes);
-		cursor += bytes;
-
-		name[nameSize] = '\0';
-		rMaterial->name = name;
-		RELEASE_ARRAY(name);
-	}
-
-	bytes = sizeof(unsigned long long);
-	memcpy(&rMaterial->textureID, cursor, bytes);
-	cursor += bytes;
+	rMaterial->hTexture.Set(textureID);
 
 	float color[4];
 	bytes = sizeof(float) * 4;

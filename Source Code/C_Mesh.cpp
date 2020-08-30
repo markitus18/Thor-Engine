@@ -26,8 +26,8 @@ C_Mesh::~C_Mesh()
 
 const AABB& C_Mesh::GetAABB() const
 {
-	if (resourceID != 0)
-		return ((R_Mesh*)Engine->moduleResources->GetResource(resourceID))->aabb;
+	if (rMeshHandle.GetID() != 0)
+		return rMeshHandle.Get()->aabb;
 	else
 		return AABB(float3(-.5f, -.5f, .5f), float3(.5f, .5f, .5f));
 }
@@ -39,7 +39,7 @@ void C_Mesh::StartBoneDeformation()
 	{
 		newMesh = true;
 		animMesh = new R_Mesh();
-		R_Mesh* rMesh = (R_Mesh*)GetResource();
+		R_Mesh* rMesh = rMeshHandle.Get();
 		animMesh->buffersSize[R_Mesh::b_vertices] = rMesh->buffersSize[R_Mesh::b_vertices];
 		animMesh->buffersSize[R_Mesh::b_normals] = rMesh->buffersSize[R_Mesh::b_normals];
 		animMesh->buffersSize[R_Mesh::b_indices] = rMesh->buffersSize[R_Mesh::b_indices];
@@ -75,7 +75,7 @@ void C_Mesh::DeformAnimMesh()
 	if (animMesh == nullptr)
 		StartBoneDeformation();
 
-	R_Mesh* rMesh = (R_Mesh*)GetResource();
+	R_Mesh* rMesh = rMeshHandle.Get();
 		
 	std::map<std::string, GameObject*> boneMapping;
 	GetBoneMapping(boneMapping);
@@ -141,4 +141,19 @@ void C_Mesh::GetBoneMapping(std::map<std::string, GameObject*>& boneMapping)
 	{
 		boneMapping[gameObjects[i]->name] = gameObjects[i];
 	}
+}
+
+void C_Mesh::SetResource(Resource* resource)
+{
+	rMeshHandle.Set((R_Mesh*)resource);
+}
+
+void C_Mesh::SetResource(unsigned long long id)
+{
+	rMeshHandle.Set(id);
+}
+
+uint64 C_Mesh::GetResourceID() const
+{
+	return rMeshHandle.GetID();
 }

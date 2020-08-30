@@ -275,13 +275,13 @@ void M_Editor::ShowFileNameWindow()
 
 	if (ImGui::InputText("", fileName, 50, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 	{
-		Engine->moduleResources->SaveResourceAs((Resource*)Engine->scene->scene, "Assets/Scenes", fileName);
+		Engine->moduleResources->SaveResourceAs(Engine->scene->hScene.Get(), "Assets/Scenes", fileName);
 		show_fileName_window = false;
 	}
 
 	if (ImGui::Button("Accept"))
 	{
-		Engine->moduleResources->SaveResourceAs((Resource*)Engine->scene->scene, "Assets/Scenes", fileName);
+		Engine->moduleResources->SaveResourceAs(Engine->scene->hScene.Get(), "Assets/Scenes", fileName);
 		show_fileName_window = false;
 	}
 
@@ -297,7 +297,7 @@ void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
 	std::string file, extension;
-	Engine->fileSystem->SplitFilePath(Engine->scene->scene->GetOriginalFile(), nullptr, &file, &extension);
+	Engine->fileSystem->SplitFilePath(Engine->scene->hScene.Get()->GetAssetsFile(), nullptr, &file, &extension);
 	std::string str = file;
 	if (extension != "")
 		file.append("." + extension);
@@ -341,26 +341,27 @@ bool M_Editor::UsingMouse() const
 
 bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 {
-	Resource* resource = Engine->moduleResources->GetResource(resourceID);
+	ResourceHandle<Resource> newResourceHandle(resourceID);
+	Resource* resource = newResourceHandle.Get();
 	if (resource == nullptr) return false;
 
 	WindowFrame* windowFrame = nullptr;
 
 	switch (resource->GetType())
 	{
-		case(Resource::SCENE):
+		case(ResourceType::SCENE):
 		{
 			if (windowFrame = GetWindowFrame(WF_SceneEditor::GetName()))
 				{ windowFrame->SetResource(resourceID); return true; }
 			else
 				windowFrame = new WF_SceneEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : nextWindowID++);
 		}
-		case (Resource::MATERIAL):
+		case (ResourceType::MATERIAL):
 		{
 			//Yeah, I wish (:
 			break;
 		}
-		case(Resource::PARTICLESYSTEM):
+		case(ResourceType::PARTICLESYSTEM):
 		{
 			windowFrame = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : nextWindowID++);
 			break;
@@ -461,7 +462,7 @@ void M_Editor::UnselectGameObjects()
 
 void M_Editor::UnselectResources()
 {
-	selectedResources.clear();
+	hSelectedResource.Set((uint64)0);
 }
 
 void M_Editor::DeleteSelected()
@@ -482,7 +483,7 @@ void M_Editor::DeleteSelected()
 	selectedGameObjects.clear();
 
 	//TODO: Delete resources
-	selectedResources.clear();
+	UnselectResources();
 }
 //Endof Selection -----------------------
 

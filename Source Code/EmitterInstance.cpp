@@ -4,6 +4,7 @@
 #include "M_Renderer3D.h"
 
 #include "Emitter.h"
+#include "R_Material.h"
 #include "ParticleModule.h"
 
 #include <map>
@@ -44,7 +45,7 @@ void EmitterInstance::DrawParticles()
 		Particle* particle = &particles[particleIndex];
 
 		float4x4 transform = float4x4::FromTRS(particle->position, particle->worldRotation, float3(particle->size)).Transposed();
-		Engine->renderer3D->AddParticle(transform, emitterReference->materialID, particle->color, particle->distanceToCamera);
+		Engine->renderer3D->AddParticle(transform, emitterReference->hMaterial.Get(), particle->color, particle->distanceToCamera);
 	}
 }
 

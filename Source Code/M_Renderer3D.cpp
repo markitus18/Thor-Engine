@@ -157,7 +157,7 @@ bool M_Renderer3D::Init(Config& config)
 
 bool M_Renderer3D::Start()
 {
-	defaultTextureID = Engine->moduleResources->GetResourceInfo("Engine/Assets/Defaults/Default Texture.png").ID;
+	rDefaultTextureHandle.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Defaults/Default Texture.png").ID);
 	return true;
 }
 
@@ -411,19 +411,17 @@ void M_Renderer3D::DrawAllMeshes()
 
 void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 {
-	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->GetResource();
+	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->rMeshHandle.Get();
 	if (resMesh == nullptr) return;
 	if (rMesh.material == nullptr) return;
 
-	R_Material* mat = (R_Material*)rMesh.material->GetResource();
-	if (mat->shaderID == 0) return;
+	R_Material* mat = (R_Material*)rMesh.material->rMaterialHandle.Get();
+	if (mat->hShader.GetID() == 0) return;
 	
-	R_Shader* shader = (R_Shader*)Engine->moduleResources->GetResource(mat->shaderID);
+	R_Shader* shader = mat->hShader.Get();
 	glUseProgram(shader->shaderProgram);
 
-	uint64 textureID = mat->textureID ? mat->textureID : defaultTextureID; //TODO: Default texture is set manually from library ID
-
-	R_Texture* rTex = (R_Texture*)Engine->moduleResources->GetResource(textureID);
+	R_Texture* rTex = mat->hTexture.GetID() ? mat->hTexture.Get() : rDefaultTextureHandle.Get(); //TODO: Default texture is set manually from library ID
 	if (rTex && rTex->buffer != 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, rTex->buffer);
@@ -463,7 +461,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	//------------------------------------------
 }
 
-void M_Renderer3D::AddParticle(const float4x4& transform, uint64 material, float4 color, float distanceToCamera)
+void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, float4 color, float distanceToCamera)
 {
 	particles.insert(std::pair<float, RenderParticle>(distanceToCamera, RenderParticle(transform, material, color)));
 }
@@ -484,17 +482,16 @@ void M_Renderer3D::DrawParticle(RenderParticle& particle)
 	glMultMatrixf((float*)&particle.transform);
 
 	//Binding particle Texture
-	//if (R_Material* mat = (R_Material*)Engine->moduleResources->GetResource(particle.materialID))
-	//{
-	//	if (mat->textureID)
-	//	{
-			R_Texture* rTex = (R_Texture*)Engine->moduleResources->GetResource(particle.materialID);
+	if (particle.mat)
+	{
+		if (R_Texture* rTex = particle.mat->hTexture.Get())
+		{
 			if (rTex && rTex->buffer != 0)
 			{
 				glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 			}
-		//}
-	//}
+		}
+	}
 
 	glColor4f(particle.color.x, particle.color.y, particle.color.z, particle.color.w);
 

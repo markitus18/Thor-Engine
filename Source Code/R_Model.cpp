@@ -1,6 +1,6 @@
 #include "R_Model.h"
 
-R_Model::R_Model() : Resource(Type::MODEL)
+R_Model::R_Model() : Resource(ResourceType::MODEL)
 {
 	isInternal = true;
 }

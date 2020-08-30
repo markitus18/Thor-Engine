@@ -124,15 +124,19 @@ void C_Animator::Update(float dt)
 
 void C_Animator::SetAnimation(const char* name, float blendTime)
 {
-	R_AnimatorController* rAnimator = (R_AnimatorController*)GetResource();
+	R_AnimatorController* rAnimator = rAnimatorHandle.Get();
 	for (uint i = 0; i < rAnimator->animations.size(); ++i)
 	{
+		//TODO: Animations should be loaded with animator controller
+
+		/*
 		R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
 		if (animation && animation->name == name)
 		{
 			SetAnimation(i, blendTime);
 			break;
 		}
+		*/
 	}
 }
 
@@ -161,11 +165,28 @@ void C_Animator::SetAnimation(uint index, float blendTime)
 
 R_Animation* C_Animator::GetAnimation(uint index)
 {
-	R_AnimatorController* rAnimator = (R_AnimatorController*)GetResource();
+	R_AnimatorController* rAnimator = rAnimatorHandle.Get();
 	if (index < rAnimator->animations.size())
 	{
-		return (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[index]);
+		//TODO: Animations should be all loaded with the animator controller
+		//return (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[index]);
+		return nullptr;
 	}
+}
+
+void C_Animator::SetResource(Resource* resource)
+{
+	rAnimatorHandle.Set((R_AnimatorController*)resource);
+}
+
+void C_Animator::SetResource(unsigned long long ID)
+{
+	rAnimatorHandle.Set(ID);
+}
+
+uint64 C_Animator::GetResourceID() const
+{
+	return rAnimatorHandle.GetID();
 }
 
 void C_Animator::UpdateChannelsTransform(const R_Animation* settings, const R_Animation* blend, float blendRatio)

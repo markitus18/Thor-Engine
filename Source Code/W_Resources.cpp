@@ -27,7 +27,7 @@ void W_Resources::Draw()
 	{
 		for (std::map<uint64, Resource*>::iterator it = Engine->moduleResources->resources.begin(); it != Engine->moduleResources->resources.end(); it++)
 		{
-			if (it->second->GetType() != Resource::MODEL) continue;
+			if (it->second->GetType() != ResourceType::MODEL) continue;
 
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
@@ -41,7 +41,7 @@ void W_Resources::Draw()
 	{
 		for (std::map<uint64, Resource*>::iterator it = Engine->moduleResources->resources.begin(); it != Engine->moduleResources->resources.end(); it++)
 		{
-			if (it->second->GetType() != Resource::MESH) continue;
+			if (it->second->GetType() != ResourceType::MESH) continue;
 			
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
@@ -55,7 +55,7 @@ void W_Resources::Draw()
 	{
 		for (std::map<uint64, Resource*>::iterator it = Engine->moduleResources->resources.begin(); it != Engine->moduleResources->resources.end(); it++)
 		{
-			if (it->second->GetType() != Resource::MATERIAL) continue;
+			if (it->second->GetType() != ResourceType::MATERIAL) continue;
 
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
@@ -69,7 +69,7 @@ void W_Resources::Draw()
 	{
 		for (std::map<uint64, Resource*>::iterator it = Engine->moduleResources->resources.begin(); it != Engine->moduleResources->resources.end(); it++)
 		{
-			if (it->second->GetType() != Resource::TEXTURE) continue;
+			if (it->second->GetType() != ResourceType::TEXTURE) continue;
 
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
@@ -83,7 +83,7 @@ void W_Resources::Draw()
 	{
 		for (std::map<uint64, Resource*>::iterator it = Engine->moduleResources->resources.begin(); it != Engine->moduleResources->resources.end(); it++)
 		{
-			if (it->second->GetType() != Resource::ANIMATION) continue;
+			if (it->second->GetType() != ResourceType::ANIMATION) continue;
 
 			ImGui::Text("-- %s", it->second->GetName());
 			if (ImGui::IsItemHovered())
@@ -100,7 +100,7 @@ void W_Resources::DisplayResourceInfo(Resource* resource)
 {
 	ImGui::BeginTooltip();
 	ImGui::Text("UID: %llu", resource->GetID());
-	ImGui::Text("Source file: %s", resource->GetOriginalFile());
+	ImGui::Text("Source file: %s", resource->GetAssetsFile());
 	ImGui::Text("Instances: %i", resource->instances);
 	ImGui::EndTooltip();
 }

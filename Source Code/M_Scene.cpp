@@ -218,7 +218,7 @@ void M_Scene::LoadConfig(Config& config)
 
 uint64 M_Scene::LoadScene(const char* file)
 {
-	uint64 newID = Engine->moduleResources->GetResourceBase(file).ID;
+	uint64 newID = Engine->moduleResources->FindResourceBase(file)->ID;
 
 	if (newID != 0)
 	{

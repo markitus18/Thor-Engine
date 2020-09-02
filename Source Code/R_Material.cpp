@@ -8,7 +8,7 @@
 R_Material::R_Material() : Resource(ResourceType::MATERIAL)
 {
 	isInternal = true;
-	hShader.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Shaders/Default Shader_PlainLight.shader").ID);
+	hShader.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Shaders/Default Shader_PlainLight.shader")->ID);
 }
 
 R_Material::~R_Material()

@@ -22,23 +22,23 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWin
 	updateTimer.Start();
 	UpdateTree();
 
-	uint64 assetsID = Engine->moduleResources->GetResourceBase("Assets").ID;
+	uint64 assetsID = Engine->moduleResources->FindResourceBase("Assets")->ID;
 	hCurrentFolder.Set(assetsID);
 	hAssetsFolder.Set(assetsID);
 
-	hEngineAssetsFolder.Set(Engine->moduleResources->GetResourceBase("Engine/Assets").ID);
+	hEngineAssetsFolder.Set(Engine->moduleResources->FindResourceBase("Engine/Assets")->ID);
 
-	hResourceIcons[ResourceType::FOLDER].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/FolderIcon.png").ID);
-	hResourceIcons[ResourceType::MESH].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/FileIcon.png").ID);
+	hResourceIcons[ResourceType::FOLDER].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/FolderIcon.png")->ID);
+	hResourceIcons[ResourceType::MESH].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/FileIcon.png")->ID);
 	hResourceIcons[ResourceType::TEXTURE].Set(uint64(0));
-	hResourceIcons[ResourceType::MATERIAL].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/MaterialIcon.png").ID);
-	hResourceIcons[ResourceType::ANIMATION].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/AnimationIcon.png").ID);
-	hResourceIcons[ResourceType::ANIMATOR_CONTROLLER].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/AnimatorIcon.png").ID);
-	hResourceIcons[ResourceType::MODEL].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/SceneIcon.png").ID);
-	hResourceIcons[ResourceType::PARTICLESYSTEM].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/ParticlesIcon.png").ID);
-	hResourceIcons[ResourceType::SHADER].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/ShaderIcon.png").ID);
-	hResourceIcons[ResourceType::SCENE].Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/ThorIcon.png").ID);
-	hResourceHighlight.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/SelectedIcon.png").ID);
+	hResourceIcons[ResourceType::MATERIAL].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/MaterialIcon.png")->ID);
+	hResourceIcons[ResourceType::ANIMATION].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/AnimationIcon.png")->ID);
+	hResourceIcons[ResourceType::ANIMATOR_CONTROLLER].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/AnimatorIcon.png")->ID);
+	hResourceIcons[ResourceType::MODEL].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/SceneIcon.png")->ID);
+	hResourceIcons[ResourceType::PARTICLESYSTEM].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ParticlesIcon.png")->ID);
+	hResourceIcons[ResourceType::SHADER].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ShaderIcon.png")->ID);
+	hResourceIcons[ResourceType::SCENE].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ThorIcon.png")->ID);
+	hResourceHighlight.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/SelectedIcon.png")->ID);
 }
 
 void W_Explorer::Draw()
@@ -109,7 +109,7 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			hCurrentFolder.Set(Engine->moduleResources->GetResourceBase(node.path.c_str()).ID);
+			hCurrentFolder.Set(Engine->moduleResources->FindResourceBase(node.path.c_str())->ID);
 		}
 		if (open && !node.IsLastFolder())
 		{
@@ -161,7 +161,7 @@ void W_Explorer::DrawSelectedFolderContent()
 	R_Folder* currentFolder = hCurrentFolder.Get();
 	for (uint i = 0; i < currentFolder->baseData->containedResources.size(); ++i)
 	{
-		const ResourceBase& childBase = Engine->moduleResources->GetResourceBase(currentFolder->baseData->containedResources[i]);
+		const ResourceBase& childBase = *Engine->moduleResources->GetResourceBase(currentFolder->baseData->containedResources[i]);
 		DrawResourceItem(childBase, itemIndex, windowCursorPosition);
 		itemIndex++;
 	}
@@ -233,7 +233,7 @@ void W_Explorer::DrawResourceItem(const ResourceBase& base, uint& itemIndex, ImV
 			for (uint i = 0; i < base.containedResources.size(); ++i)
 			{
 				itemIndex++;
-				const ResourceBase& childBase = Engine->moduleResources->GetResourceBase(base.containedResources[i]);
+				const ResourceBase& childBase = *Engine->moduleResources->GetResourceBase(base.containedResources[i]);
 				DrawResourceItem(childBase, itemIndex, windowCursorPos);
 			}
 		}
@@ -314,7 +314,7 @@ void W_Explorer::SetCurrentFolder(uint64 folderID)
 	R_Folder* newFolder = hCurrentFolder.Get();
 	for (uint i = 0; i < newFolder->baseData->containedResources.size(); ++i)
 	{
-		const ResourceBase& base = Engine->moduleResources->GetResourceBase(newFolder->baseData->containedResources[i]);
+		const ResourceBase& base = *Engine->moduleResources->GetResourceBase(newFolder->baseData->containedResources[i]);
 		if (base.type == ResourceType::TEXTURE)
 		{
 			texturesInFolder[base.ID] = ResourceHandle<R_Texture>(base.ID);
@@ -332,10 +332,10 @@ void W_Explorer::SetOpenModel(uint64 modelID)
 	}
 	texturesInModel.clear();
 
-	const ResourceBase& base = Engine->moduleResources->GetResourceBase(modelID);
+	const ResourceBase& base = *Engine->moduleResources->GetResourceBase(modelID);
 	for (uint i = 0; i < base.containedResources.size(); ++i)
 	{
-		const ResourceBase& childBase = Engine->moduleResources->GetResourceBase(base.containedResources[i]);
+		const ResourceBase& childBase = *Engine->moduleResources->GetResourceBase(base.containedResources[i]);
 		if (childBase.type == ResourceType::TEXTURE)
 		{
 			texturesInModel[childBase.ID] = ResourceHandle<R_Texture>(childBase.ID);

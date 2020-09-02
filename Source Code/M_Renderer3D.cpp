@@ -157,7 +157,7 @@ bool M_Renderer3D::Init(Config& config)
 
 bool M_Renderer3D::Start()
 {
-	rDefaultTextureHandle.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Defaults/Default Texture.png").ID);
+	rDefaultTextureHandle.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Default Texture.png")->ID);
 	return true;
 }
 
@@ -206,7 +206,7 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 	
 	SDL_UnlockSurface(surface);
 
-	uint64 ret = Engine->moduleResources->ImportModelThumbnail(pixels, source_file, surface->w, surface->h);
+	//uint64 ret = Engine->moduleResources->ImportModelThumbnail(pixels, source_file, surface->w, surface->h);
 	/*
 	//Generating IL Texture
 	ILuint img;
@@ -221,7 +221,7 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 	
 	//ilDeleteImages(1, &img);
 	
-	return ret;
+	return 0;
 
 }
 

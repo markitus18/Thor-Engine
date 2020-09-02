@@ -17,7 +17,7 @@ ResourceHandle<R_Texture> WDetails::hPreviewTexture;
 
 WDetails::WDetails(M_Editor* editor, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(editor, name, windowClass, ID)
 {
-	hPreviewTexture.Set(Engine->moduleResources->GetResourceBase("Engine/Assets/Icons/PreviewIcon.png").ID);
+	hPreviewTexture.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/PreviewIcon.png")->ID);
 }
 
 void WDetails::BeginItemDraw(const char* name)

@@ -129,7 +129,7 @@ Config_Array::Config_Array(JSON_Array* arr) : arr(arr)
 }
 
 //Append attributes ------------
-void Config_Array::AddNumber(int number)
+void Config_Array::AddNumber(double number)
 {
 	json_array_append_number(arr, number);
 	size++;

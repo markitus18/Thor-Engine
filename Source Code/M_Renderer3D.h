@@ -18,6 +18,7 @@ class C_Mesh;
 class C_Material;
 
 class R_Mesh;
+class R_Shader;
 class R_Texture;
 class R_Material;
 
@@ -140,7 +141,9 @@ public:
 	bool depthEnabled = true;
 
 private:
-	ResourceHandle<R_Texture> rDefaultTextureHandle;
+	ResourceHandle<R_Texture> hDefaultTexture;
+	ResourceHandle<R_Material> hDefaultMaterial;
+	ResourceHandle<R_Shader> hDefaultShader;
 
 	std::vector<RenderMesh> meshes;
 	std::map<float, RenderParticle> particles;

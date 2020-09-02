@@ -69,7 +69,7 @@ public:
 	Config_Array(JSON_Array* arr);
 
 	//Append attributes ------------
-	void AddNumber(int number);
+	void AddNumber(double number);
 	void AddString(char* string);
 	void AddBool(bool boolean);
 	void AddFloat3(const float3& data);

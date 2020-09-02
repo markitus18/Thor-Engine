@@ -188,7 +188,7 @@ void Importer::Models::Load(const char* buffer, R_Model* model)
 
 		//Adding material component and assignint its resource (if any)
 		uint64 materialID = 0;
-		if ((materialID = modelNode.GetNumber("Mesh ID")) != 0)
+		if ((materialID = modelNode.GetNumber("Material ID")) != 0)
 		{
 			C_Material* materialComponent = (C_Material*)newGameObject->CreateComponent(Component::Type::Material);
 			materialComponent->SetResource(materialID);

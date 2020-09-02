@@ -171,10 +171,8 @@ void W_Explorer::DrawSelectedFolderContent()
 
 	if (nextCurrentFolderID != 0)
 	{
-		hCurrentFolder.Set(nextCurrentFolderID);
-		nextCurrentFolderID = 0;
+		SetCurrentFolder(nextCurrentFolderID);
 	}
-
 
 	ImGui::EndChild();
 }
@@ -332,15 +330,16 @@ void W_Explorer::SetOpenModel(uint64 modelID)
 	}
 	texturesInModel.clear();
 
-	const ResourceBase& base = *Engine->moduleResources->GetResourceBase(modelID);
-	for (uint i = 0; i < base.containedResources.size(); ++i)
+	if (const ResourceBase* base = Engine->moduleResources->GetResourceBase(modelID))
 	{
-		const ResourceBase& childBase = *Engine->moduleResources->GetResourceBase(base.containedResources[i]);
-		if (childBase.type == ResourceType::TEXTURE)
+		for (uint i = 0; i < base->containedResources.size(); ++i)
 		{
-			texturesInModel[childBase.ID] = ResourceHandle<R_Texture>(childBase.ID);
+			const ResourceBase& childBase = *Engine->moduleResources->GetResourceBase(base->containedResources[i]);
+			if (childBase.type == ResourceType::TEXTURE)
+			{
+				texturesInModel[childBase.ID] = ResourceHandle<R_Texture>(childBase.ID);
+			}
 		}
 	}
-
 	openModelID = modelID;
 }

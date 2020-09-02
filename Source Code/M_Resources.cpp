@@ -94,7 +94,7 @@ void M_Resources::LoadAllAssets()
 	LoadAssetBase(engineAssets, folderID);
 	hEngineAssetsFolder.Set(folderID);
 
-	PathNode assets = Engine->fileSystem->GetAllFiles("Assets", &ignore_ext);
+	PathNode assets = Engine->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
 	LoadAssetBase(assets, folderID);
 	hAssetsFolder.Set(folderID);
 }
@@ -188,11 +188,13 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 	Resource* resource = CreateNewResource(path, type);
 	uint64 resourceID = resource->GetID();
 
-	char* buffer = nullptr;
-	if (uint size = Engine->fileSystem->Load(path, &buffer))
+	if (type != ResourceType::FOLDER)
 	{
-		switch (type)
+		char* buffer = nullptr;
+		if (uint size = Engine->fileSystem->Load(path, &buffer))
 		{
+			switch (type)
+			{
 			case (ResourceType::TEXTURE):				Importer::Textures::Import(buffer, size, (R_Texture*)resource); break;
 			case (ResourceType::MODEL):					ImportModel(buffer, size, resource); break;
 			case (ResourceType::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break;
@@ -200,13 +202,13 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 			case (ResourceType::ANIMATION):				Importer::Animations::Load(buffer, (R_Animation*)resource); break;
 			case (ResourceType::ANIMATOR_CONTROLLER):	Importer::Animators::Load(buffer, (R_AnimatorController*)resource); break;
 			case (ResourceType::SCENE):					Importer::Scenes::Load(buffer, (R_Scene*)resource);
+			}
+			RELEASE_ARRAY(buffer);
 		}
-
-		SaveResource(resource);
-
-		RELEASE_ARRAY(buffer);
-		UnLoadResource(resource->GetID());
 	}
+
+	SaveResource(resource);
+	UnLoadResource(resource->GetID());
 
 	return resourceID;
 }

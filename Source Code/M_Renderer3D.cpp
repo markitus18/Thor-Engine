@@ -157,7 +157,9 @@ bool M_Renderer3D::Init(Config& config)
 
 bool M_Renderer3D::Start()
 {
-	rDefaultTextureHandle.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Default Texture.png")->ID);
+	hDefaultTexture.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Default Texture.png")->ID);
+	hDefaultShader.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Shaders/Default Shader_PlainLight.shader")->ID);
+
 	return true;
 }
 
@@ -411,24 +413,22 @@ void M_Renderer3D::DrawAllMeshes()
 
 void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 {
-	const R_Mesh* resMesh = (R_Mesh*)rMesh.mesh->rMeshHandle.Get();
+	const R_Mesh* resMesh = rMesh.mesh->rMeshHandle.Get();
 	if (resMesh == nullptr) return;
 	if (rMesh.material == nullptr) return;
 
-	R_Material* mat = (R_Material*)rMesh.material->rMaterialHandle.Get();
-	if (mat->hShader.GetID() == 0) return;
-	
-	R_Shader* shader = mat->hShader.Get();
+	const R_Material* mat = rMesh.material->rMaterialHandle.GetID() ? rMesh.material->rMaterialHandle.Get() : hDefaultMaterial.Get();
+	const R_Shader* shader = mat->hShader.GetID() ? mat->hShader.Get() : hDefaultShader.Get();
 	glUseProgram(shader->shaderProgram);
 
-	R_Texture* rTex = mat->hTexture.GetID() ? mat->hTexture.Get() : rDefaultTextureHandle.Get(); //TODO: Default texture is set manually from library ID
+	const R_Texture* rTex = mat->hTexture.GetID() ? mat->hTexture.Get() : hDefaultTexture.Get(); //TODO: Default texture is set manually from library ID
 	if (rTex && rTex->buffer != 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 	}
 
 	uint colorLoc = glGetUniformLocation(shader->shaderProgram, "baseColor");
-	glUniform4fv(colorLoc, 1, &mat->color);
+	glUniform4fv(colorLoc, 1, (GLfloat*)&mat->color);
 
 	//Sending prefab matrix
 	uint modelLoc = glGetUniformLocation(shader->shaderProgram, "model_matrix");

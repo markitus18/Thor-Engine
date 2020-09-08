@@ -188,27 +188,28 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 	Resource* resource = CreateNewResource(path, type);
 	uint64 resourceID = resource->GetID();
 
+	char* buffer = nullptr;
+	uint64 fileSize = 0;
 	if (type != ResourceType::FOLDER)
+		fileSize = Engine->fileSystem->Load(path, &buffer);
+	
+	if (resource->isExternal || type == ResourceType::SHADER) //TODO: Shader quite hardcoded here, try to clean
 	{
-		char* buffer = nullptr;
-		if (uint size = Engine->fileSystem->Load(path, &buffer))
+		switch (type)
 		{
-			switch (type)
-			{
-			case (ResourceType::TEXTURE):				Importer::Textures::Import(buffer, size, (R_Texture*)resource); break;
-			case (ResourceType::MODEL):					ImportModel(buffer, size, resource); break;
-			case (ResourceType::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break;
-			case (ResourceType::PARTICLESYSTEM):		Importer::Particles::Import(buffer, size, (R_ParticleSystem*)resource); break;
-			case (ResourceType::ANIMATION):				Importer::Animations::Load(buffer, (R_Animation*)resource); break;
-			case (ResourceType::ANIMATOR_CONTROLLER):	Importer::Animators::Load(buffer, (R_AnimatorController*)resource); break;
-			case (ResourceType::SCENE):					Importer::Scenes::Load(buffer, (R_Scene*)resource);
-			}
-			RELEASE_ARRAY(buffer);
+			case (ResourceType::TEXTURE):				Importer::Textures::Import(buffer, fileSize, (R_Texture*)resource); break;
+			case (ResourceType::MODEL):					ImportModel(buffer, fileSize, resource); break;
+			case (ResourceType::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break; //TODO: We sure...?
 		}
+		SaveResource(resource);
 	}
-
-	SaveResource(resource);
-	UnLoadResource(resource->GetID());
+	else //We skip import process as we only need to duplicate the file into library
+	{
+		Engine->fileSystem->Save(resource->GetLibraryFile(), buffer, fileSize);
+		SaveMetaInfo(*resource->baseData);
+	}		
+	RELEASE_ARRAY(buffer);
+	UnloadResource(resource->GetID());
 
 	return resourceID;
 }
@@ -252,6 +253,7 @@ uint64 M_Resources::ImportResourceFromModel(const char* file, const void* data, 
 {
 	Resource* resource = CreateNewResource(file, type, name);
 	uint64 resourceID = resource->GetID();
+	resource->isExternal = true;
 
 	switch (type)
 	{
@@ -261,7 +263,7 @@ uint64 M_Resources::ImportResourceFromModel(const char* file, const void* data, 
 	}
 
 	SaveResource(resource, false);
-	UnLoadResource(resource->GetID());
+	UnloadResource(resource->GetID());
 
 	return resourceID;
 }
@@ -417,7 +419,7 @@ void M_Resources::ReleaseResource(Resource* resource)
 	resource->instances--;
 	if (resource->instances < 0)
 	{
-		UnLoadResource(resource->GetID());
+		UnloadResource(resource->GetID());
 	}
 }
 
@@ -462,25 +464,25 @@ void M_Resources::SaveResource(Resource* resource, bool saveMeta)
 
 	switch (resource->GetType())
 	{
-	case(ResourceType::FOLDER): { size = Importer::Folders::Save((R_Folder*)resource, &buffer); break; }
-	case(ResourceType::MESH): { size = Importer::Meshes::Save((R_Mesh*)resource, &buffer); break; }
-	case(ResourceType::TEXTURE): { size = Importer::Textures::Save((R_Texture*)resource, &buffer); break; }
-	case(ResourceType::MATERIAL): { size = Importer::Materials::Save((R_Material*)resource, &buffer); break; }
-	case(ResourceType::ANIMATION): { size = Importer::Animations::Save((R_Animation*)resource, &buffer); break;	}
-	case(ResourceType::ANIMATOR_CONTROLLER): { size = Importer::Animators::Save((R_AnimatorController*)resource, &buffer);	break; }
-	case(ResourceType::MODEL): { size = Importer::Models::Save((R_Model*)resource, &buffer); break; }
-	case(ResourceType::PARTICLESYSTEM): { size = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); break; }
-	case(ResourceType::SHADER): { size = Importer::Shaders::Save((R_Shader*)resource, &buffer); break; }
-	case(ResourceType::SCENE): { size = Importer::Scenes::Save((R_Scene*)resource, &buffer); break; }
+		case(ResourceType::FOLDER): { size = Importer::Folders::Save((R_Folder*)resource, &buffer); break; }
+		case(ResourceType::MESH): { size = Importer::Meshes::Save((R_Mesh*)resource, &buffer); break; }
+		case(ResourceType::TEXTURE): { size = Importer::Textures::Save((R_Texture*)resource, &buffer); break; }
+		case(ResourceType::MATERIAL): { size = Importer::Materials::Save((R_Material*)resource, &buffer); break; }
+		case(ResourceType::ANIMATION): { size = Importer::Animations::Save((R_Animation*)resource, &buffer); break;	}
+		case(ResourceType::ANIMATOR_CONTROLLER): { size = Importer::Animators::Save((R_AnimatorController*)resource, &buffer);	break; }
+		case(ResourceType::MODEL): { size = Importer::Models::Save((R_Model*)resource, &buffer); break; }
+		case(ResourceType::PARTICLESYSTEM): { size = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); break; }
+		case(ResourceType::SHADER): { size = Importer::Shaders::Save((R_Shader*)resource, &buffer); break; }
+		case(ResourceType::SCENE): { size = Importer::Scenes::Save((R_Scene*)resource, &buffer); break; }
 	}
 
 	if (size > 0)
 	{
 		Engine->fileSystem->Save(resource->GetLibraryFile(), buffer, size);
 
-		if (IsModifiableResource(resource))
-			Engine->fileSystem->Save(resource->GetAssetsFile(), buffer, size);
-		if (saveMeta)
+		if (!resource->isExternal)
+			Engine->fileSystem->Save(resource->GetAssetsFile(), buffer, size); 
+		if (saveMeta) //Model internal resources should not override meta content
 			SaveMetaInfo(*resource->baseData);
 
 		RELEASE_ARRAY(buffer);
@@ -504,7 +506,7 @@ uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, co
 
 	//Load the newly saved data into the new resource
 	uint64 newID = newResource->GetID();
-	UnLoadResource(newID);
+	UnloadResource(newID);
 
 	//Restore the old resource data
 	resource->baseData = &oldBase;
@@ -554,7 +556,7 @@ void M_Resources::SaveChangedResources()
 uint M_Resources::DeleteResource(uint64 ID, bool deleteAsset)
 {
 	//TODO: update folder resource and remove this one from the contained list
-	uint instances = UnLoadResource(ID);
+	uint instances = UnloadResource(ID);
 
 	//Remove the resource from the database.
 	std::map<uint64, ResourceBase>::iterator libraryIt = resourceLibrary.find(ID);
@@ -572,7 +574,7 @@ uint M_Resources::DeleteResource(uint64 ID, bool deleteAsset)
 	return instances;
 }
 
-uint M_Resources::UnLoadResource(uint64 ID)
+uint M_Resources::UnloadResource(uint64 ID)
 {
 	uint64 instances = 0;
 
@@ -629,7 +631,7 @@ ResourceType M_Resources::GetTypeFromFileExtension(const char* path) const
 	Engine->fileSystem->SplitFilePath(path, nullptr, nullptr, &ext);
 
 	static_assert(static_cast<int>(ResourceType::UNKNOWN) == 10, "Code Needs Update");
-
+	
 	if (ext == "FBX" || ext == "fbx")
 		return ResourceType::MODEL;
 	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
@@ -646,10 +648,6 @@ ResourceType M_Resources::GetTypeFromFileExtension(const char* path) const
 		return ResourceType::ANIMATION;
 	if (ext == "animator")
 		return ResourceType::ANIMATOR_CONTROLLER;
-	return ResourceType::FOLDER;
-}
 
-bool M_Resources::IsModifiableResource(const Resource* resource) const
-{
-	return resource->isInternal == false;
+	return Engine->fileSystem->IsDirectory(path) ? ResourceType::FOLDER : ResourceType::UNKNOWN;
 }

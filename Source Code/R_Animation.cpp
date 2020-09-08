@@ -57,7 +57,7 @@ std::map<double, float3>::const_iterator Channel::GetNextScaleKey(double current
 
 R_Animation::R_Animation() : Resource(ResourceType::ANIMATION)
 {
-	isInternal = true;
+
 }
 
 R_Animation::~R_Animation()

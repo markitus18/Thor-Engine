@@ -3,7 +3,7 @@
 
 R_Mesh::R_Mesh() : Resource(ResourceType::MESH)
 {
-	isInternal = true; //TODO: Could be done in constructor initialization?
+	isExternal = true;
 	for (uint i = 0; i < max_buffer_type; i++)
 	{
 		buffers[i] = 0;

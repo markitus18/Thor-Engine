@@ -30,22 +30,7 @@ T* ResourceHandle<T>::RequestResource() const
 {
 	return dynamic_cast<T*>(Engine->moduleResources->RequestResource(ID));
 }
-/*
-//TODO: Is this valid? Might not compile due to .cpp templatization
-template <typename T>
-T* ResourceHandle<T>::Get()
-{
-	return resource ? resource : dynamic_cast<T*>(RequestResource());
-}
-*/
-//TODO: Is this valid? Might not compile due to .cpp templatization
-/*
-template <typename T>
-const T* ResourceHandle<T>::Get() const
-{
-	return resource ? resource : dynamic_cast<const T*>(RequestResource());
-}
-*/
+
 template <typename T>
 void ResourceHandle<T>::Free()
 {

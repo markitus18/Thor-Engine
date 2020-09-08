@@ -2,7 +2,7 @@
 
 R_Model::R_Model() : Resource(ResourceType::MODEL)
 {
-	isInternal = true;
+	isExternal = true;
 }
 
 R_Model::~R_Model()

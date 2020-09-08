@@ -40,7 +40,7 @@ public:
 public:
 	uint instances = 0;
 	bool needs_save = false;
-	bool isInternal = false;
+	bool isExternal = false;
 
 public: //TODO: Can be set to private? Importers need to modify its content
 	struct ResourceBase* baseData;

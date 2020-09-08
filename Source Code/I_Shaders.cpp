@@ -9,7 +9,6 @@ R_Shader* Importer::Shaders::Create()
 
 void Importer::Shaders::Import(const char* buffer, R_Shader* resShader)
 {
-	//TODO: in this case importing happens in the shader resource, should we adapt it to other resources?
 	resShader->LoadFromText(buffer);
 	resShader->Link();
 }

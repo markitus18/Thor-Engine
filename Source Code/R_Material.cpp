@@ -7,7 +7,6 @@
 
 R_Material::R_Material() : Resource(ResourceType::MATERIAL)
 {
-	isInternal = true;
 
 }
 

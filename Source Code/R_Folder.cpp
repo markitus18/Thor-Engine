@@ -2,7 +2,7 @@
 
 R_Folder::R_Folder() : Resource(ResourceType::FOLDER)
 {
-	isInternal = true;
+	isExternal = true;
 }
 
 R_Folder::~R_Folder()

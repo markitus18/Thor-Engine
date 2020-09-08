@@ -88,7 +88,7 @@ private:
 
 	//Deletes the memory from a loaded resource
 	//Returns the instances held by the resource
-	uint UnLoadResource(uint64 ID);
+	uint UnloadResource(uint64 ID);
 
 	//Remove all .meta files in assets
 	void ClearMetaData();
@@ -96,7 +96,6 @@ private:
 	//Remove all .meta files in a folder
 	void RemoveMetaFromFolder(PathNode node);
 
-	bool IsModifiableResource(const Resource* resource) const;
 	ResourceType GetTypeFromFileExtension(const char* path) const;
 	inline uint64 GetNewID() { return random.Int(); }
 

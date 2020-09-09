@@ -34,7 +34,7 @@ T* ResourceHandle<T>::RequestResource() const
 template <typename T>
 void ResourceHandle<T>::Free()
 {
-	if (Engine && resource != nullptr)
+	if (resource != nullptr)
 	{
 		Engine->moduleResources->ReleaseResource(resource);
 		resource = nullptr;

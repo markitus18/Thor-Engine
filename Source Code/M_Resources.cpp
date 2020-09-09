@@ -409,6 +409,7 @@ Resource* M_Resources::RequestResource(uint64 ID)
 		}
 		RELEASE_ARRAY(buffer);
 		resource->LoadOnMemory();
+		resource->instances++;
 	}
 
 	return resource;
@@ -417,7 +418,7 @@ Resource* M_Resources::RequestResource(uint64 ID)
 void M_Resources::ReleaseResource(Resource* resource)
 {
 	resource->instances--;
-	if (resource->instances < 0)
+	if (resource->instances <= 0)
 	{
 		UnloadResource(resource->GetID());
 	}

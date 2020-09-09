@@ -33,7 +33,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -124,7 +124,7 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 		else //Load resource base from the .meta content
 		{
 			ResourceBase base((ResourceType)(int)(metaData.GetNumber("Type")), node.path.c_str(), metaData.GetString("Name").c_str(), metaData.GetNumber("ID"));
-			base.libraryFile = metaData.GetString("Library File").c_str();
+			base.libraryFile = metaData.GetString("Library file").c_str();
 
 			if (base.type != ResourceType::FOLDER) //Folder's contained resources will be loaded later since they are existing files
 			{
@@ -134,7 +134,7 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 				{
 					Config contained = containedResources.GetNode(i);
 					ResourceBase containedBase((ResourceType)(int)(contained.GetNumber("Type")), base.assetsFile.c_str(), contained.GetString("Name").c_str(), contained.GetNumber("ID"));
-					containedBase.libraryFile = contained.GetString("Library File").c_str();
+					containedBase.libraryFile = contained.GetString("Library file").c_str();
 					resourceLibrary[containedBase.ID] = containedBase;
 				}
 			}

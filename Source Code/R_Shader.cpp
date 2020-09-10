@@ -7,6 +7,7 @@
 R_Shader::R_Shader() : Resource(ResourceType::SHADER)
 {
 	memset(shaderObjects, 0, (int)Object_Type::Unknown - 1);
+	isExternal = true;
 }
 
 R_Shader::~R_Shader()

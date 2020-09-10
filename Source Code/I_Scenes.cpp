@@ -153,7 +153,6 @@ void Importer::Models::Load(const char* buffer, R_Model* model)
 	Config_Array nodesArray = file.GetArray("Nodes");
 
 	//We create an empty GameObject that will hold all the model data and will be removed later
-	model->root = new GameObject();
 	std::map<uint64, GameObject*> createdGameObjects;
 
 	for (uint i = 0u; i < nodesArray.GetSize(); ++i)
@@ -161,7 +160,7 @@ void Importer::Models::Load(const char* buffer, R_Model* model)
 		Config modelNode = nodesArray.GetNode(i);
 
 		//Finding the proper parent for the new GameObject
-		GameObject* parent = model->root;
+		GameObject* parent = nullptr;
 		std::map<uint64, GameObject*>::iterator it = createdGameObjects.find(modelNode.GetNumber("Parent Node ID"));
 		if (it != createdGameObjects.end())
 			parent = it->second;
@@ -177,6 +176,7 @@ void Importer::Models::Load(const char* buffer, R_Model* model)
 		GameObject* newGameObject = new GameObject(parent, transform, modelNode.GetString("Name").c_str());
 		newGameObject->uid = randomID.Int(); //Warning: Do not confuse with Node IDs. Node IDs are ONLY for internal node relationships	
 		createdGameObjects[modelNode.GetNumber("Node ID")] = newGameObject; //Here we store Node ID as we only use it for building parentships
+		if (!parent) model->root = newGameObject;
 
 		//Adding mesh component and assignint its resource (if any)
 		uint64 meshID = 0;

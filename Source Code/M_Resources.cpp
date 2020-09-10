@@ -13,6 +13,7 @@
 
 #include "Resource.h"
 #include "ResourceHandle.h"
+#include "R_Model.h"
 
 #include "M_FileSystem.h"
 #include "PathNode.h"
@@ -33,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	//ClearMetaData();
+	ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -126,17 +127,25 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 			ResourceBase base((ResourceType)(int)(metaData.GetNumber("Type")), node.path.c_str(), metaData.GetString("Name").c_str(), metaData.GetNumber("ID"));
 			base.libraryFile = metaData.GetString("Library file").c_str();
 
-			if (base.type != ResourceType::FOLDER) //Folder's contained resources will be loaded later since they are existing files
+			//TODO: This should NOT be done for folders
+			//Add all contained resources saved in the meta file
+			Config_Array containedResources = metaData.GetArray("Contained Resources");
+			for (uint i = 0; i < containedResources.GetSize(); ++i)
 			{
-				//Add all contained resources saved in the meta file
-				Config_Array containedResources = metaData.GetArray("Contained Resources");
-				for (uint i = 0; i < containedResources.GetSize(); ++i)
+				Config contained = containedResources.GetNode(i);
+
+				//Adding the resource ID as a child
+				base.containedResources.push_back(contained.GetNumber("ID"));
+
+				if (base.type != ResourceType::FOLDER) //Folders' contained resources will be loaded as normal files
 				{
-					Config contained = containedResources.GetNode(i);
+					//Adding new library entry for the resource
 					ResourceBase containedBase((ResourceType)(int)(contained.GetNumber("Type")), base.assetsFile.c_str(), contained.GetString("Name").c_str(), contained.GetNumber("ID"));
 					containedBase.libraryFile = contained.GetString("Library file").c_str();
 					resourceLibrary[containedBase.ID] = containedBase;
 				}
+
+
 			}
 			resourceLibrary[base.ID] = base;
 			assetID = base.ID;
@@ -193,13 +202,13 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 	if (type != ResourceType::FOLDER)
 		fileSize = Engine->fileSystem->Load(path, &buffer);
 	
-	if (resource->isExternal || type == ResourceType::SHADER) //TODO: Shader quite hardcoded here, try to clean
+	if (resource->isExternal) //TODO: Shaders should not be external, keeping it by now
 	{
 		switch (type)
 		{
 			case (ResourceType::TEXTURE):				Importer::Textures::Import(buffer, fileSize, (R_Texture*)resource); break;
 			case (ResourceType::MODEL):					ImportModel(buffer, fileSize, resource); break;
-			case (ResourceType::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break; //TODO: We sure...?
+			case (ResourceType::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break;
 		}
 		SaveResource(resource);
 	}
@@ -216,16 +225,19 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 
 void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
 {
+	R_Model* rModel = (R_Model*)model;
 	const aiScene* scene = Importer::Models::ProcessAssimpScene(buffer, size);
-	Importer::Models::Import(scene, (R_Model*)model);
+	Importer::Models::Import(scene, rModel);
 	std::vector<uint64> meshes, materials, animations;
 
 	for (uint i = 0; i < scene->mNumMeshes; ++i)
 	{
-		//TODO: building a temporal mesh name. Assimp meshes have no name so they have conflict when importing multiple meshes
-		//Unity loads a mesh per each node, and assign the node's name to it
-		std::string meshName = model->GetName();
-		meshName.append("_mesh").append(std::to_string(i));
+		std::string meshName;
+		for (uint n = 0; n < rModel->nodes.size(); ++n)
+		{
+			if (rModel->nodes[n].meshID == i)
+				meshName = rModel->nodes[n].name;
+		}
 		scene->mMeshes[i]->mName = meshName;
 		meshes.push_back(ImportResourceFromModel(model->GetAssetsFile(), scene->mMeshes[i], meshName.c_str(), ResourceType::MESH));
 		model->AddContainedResource(meshes.back());

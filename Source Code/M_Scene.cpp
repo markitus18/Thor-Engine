@@ -252,20 +252,16 @@ void M_Scene::LoadModel(uint64 modelID)
 
 	if (model != nullptr)
 	{
-		while (model->root->childs.size() > 0)
-		{
-			//Port each model children into the current scene
-			GameObject* gameObject = model->root->childs[0];
-			gameObject->SetParent(GetRoot());
+		//Port each model children into the current scene
+		model->root->SetParent(GetRoot());
 
-			//Add all gameObject's children to the static vector
-			gameObject->CollectChilds(newGameObjects);
-			for (uint i = 0; i < newGameObjects.size(); i++)
-			{
-				nonStatic.push_back(newGameObjects[i]);
-			}
-			newGameObjects.clear();
+		//Add all gameObject's children to the static vector
+		model->root->CollectChilds(newGameObjects);
+		for (uint i = 0; i < newGameObjects.size(); i++)
+		{
+			nonStatic.push_back(newGameObjects[i]);
 		}
+		newGameObjects.clear();
 	}
 	else
 	{

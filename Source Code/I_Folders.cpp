@@ -21,9 +21,13 @@ uint64 Importer::Folders::Save(const R_Folder* rFolder, char** buffer)
 
 void Importer::Folders::Load(const char* buffer, R_Folder* rFolder)
 {
+	//By now, containing resources are already loaded from .meta file!
+
+	/*
 	Config file(buffer);
 	Config_Array resourcesNode = file.GetArray("Containing Resources");
 
 	for (uint i = 0; i < resourcesNode.GetSize(); ++i)
 		rFolder->AddContainedResource(resourcesNode.GetNumber(i));
+	*/
 }

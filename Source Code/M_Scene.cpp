@@ -219,12 +219,17 @@ void M_Scene::LoadConfig(Config& config)
 uint64 M_Scene::LoadScene(const char* file)
 {
 	uint64 newID = Engine->moduleResources->FindResourceBase(file)->ID;
+	LoadScene(newID);
+	return newID;
+}
 
-	if (newID != 0)
+void M_Scene::LoadScene(uint64 resourceID)
+{
+	if (resourceID != 0)
 	{
 		DeleteAllGameObjects();
 		quadtree->Clear();
-		hScene.Set(newID); hScene.Get(); //<-- So the resource gets loaded
+		hScene.Set(resourceID); hScene.Get(); //<-- So the resource gets loaded
 		std::vector<GameObject*> newGameObjects;
 		GetRoot()->CollectChilds(newGameObjects);
 
@@ -240,7 +245,6 @@ uint64 M_Scene::LoadScene(const char* file)
 			}
 		}
 	}
-	return hScene.GetID();
 }
 
 void M_Scene::LoadModel(uint64 modelID)

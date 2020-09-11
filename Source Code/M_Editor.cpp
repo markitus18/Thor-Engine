@@ -82,15 +82,12 @@ bool M_Editor::Start()
 
 	if (TryLoadEditorState() == false)
 	{
-		windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass, random.Int()));
-		LoadLayout_Default(windowFrames.back());
-
 		uint64 sceneID = Engine->scene->LoadScene("Engine/Assets/Defaults/Untitled.scene");
-		windowFrames[0]->SetResource(sceneID);
+		OpenWindowFromResource(sceneID);
 	}
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.IniFilename = "Imgui.ini";
+	io.IniFilename = "Engine/imgui.ini";
 	
 	return true;
 }
@@ -165,7 +162,7 @@ void M_Editor::SaveEditorState()
 	{
 		Config node = arr.AddNode();
 		node.SetNumber("ID", windowFrames[i]->GetID());
-		node.SetNumber("Resource ID", windowFrames[i]->GetID());
+		node.SetNumber("Resource ID", windowFrames[i]->GetResourceID());
 	}
 	char* buffer = nullptr;
 	if (uint size = file.Serialize(&buffer))
@@ -176,13 +173,12 @@ void M_Editor::SaveEditorState()
 
 bool M_Editor::TryLoadEditorState()
 {
-	return false;
 	char* buffer = nullptr;
 	if (uint size = Engine->fileSystem->Load("Engine/EditorState.json", &buffer))
 	{
 		Config file(buffer);
 		Config_Array arr = file.GetArray("Windows");
-		for (uint i = 0; i < windowFrames.size(); ++i)
+		for (uint i = 0; i < arr.GetSize(); ++i)
 		{
 			Config windowNode = arr.GetNode(i);
 			OpenWindowFromResource(windowNode.GetNumber("Resource ID"), windowNode.GetNumber("ID"));
@@ -194,6 +190,38 @@ bool M_Editor::TryLoadEditorState()
 
 bool M_Editor::IsWindowLayoutSaved(WindowFrame* windowFrame) const
 {
+	//Windows frames are saved as [Window][###<window_name>_<window_id>]]
+	std::string windowTabStr = std::string("[Window][###") + windowFrame->GetName() + "_" + std::to_string(windowFrame->GetID()) + "]";
+
+	//Parsing imgui.ini. We mimic ImGui's logic (function LoadIniSettingsFromMemory in imgui.cpp)
+	char* buffer = nullptr;
+	if (uint fileSize = Engine->fileSystem->Load("Engine/imgui.ini", &buffer))
+	{
+		char* buffer_end = buffer + fileSize;
+		buffer_end[0] = 0;
+
+		char* line_end = nullptr;
+		for (char* line = buffer; line < buffer_end; line = line_end + 1)
+		{
+			// Skip new lines markers, then find end of the line
+			while (*line == '\n' || *line == '\r')
+				line++;
+			line_end = line;
+			while (line_end < buffer_end && *line_end != '\n' && *line_end != '\r')
+				line_end++;
+			line_end[0] = 0;
+			if (line[0] == ';') //Not sure in which situation this would happen
+				continue;
+			if (line[0] == '[' && line_end > line&& line_end[-1] == ']') //<-- we found a tab entry (window or dock data)
+			{
+				if (strcmp(windowTabStr.c_str(), line) == 0) //<-- line is the beginning of the line, and line_end was set to '0'
+					return true;
+			}
+
+		}
+		RELEASE_ARRAY(buffer);
+	}
+
 	return false;
 }
 

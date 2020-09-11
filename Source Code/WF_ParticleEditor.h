@@ -16,7 +16,7 @@ public:
 	WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID);
 	~WF_ParticleEditor();
 
-	void SetParticleSystem(R_ParticleSystem* particleSystem);
+	void SetResource(uint64 resourceID) override;
 
 	void LoadLayout_Default(ImGuiID mainDockID) override;
 	static inline const char* GetName() { return "ParticleEditor"; };

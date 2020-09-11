@@ -25,10 +25,10 @@ WF_ParticleEditor::~WF_ParticleEditor()
 
 }
 
-void WF_ParticleEditor::SetParticleSystem(R_ParticleSystem* particleSystem)
+void WF_ParticleEditor::SetResource(uint64 resourceID)
 {
-	this->particleSystem = particleSystem;
-	displayName = particleSystem->GetName();
+	WindowFrame::SetResource(resourceID);
+	particleSystem = (R_ParticleSystem*)resourceHandle.Get();
 }
 
 void WF_ParticleEditor::MenuBar_Custom()

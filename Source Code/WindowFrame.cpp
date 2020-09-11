@@ -57,6 +57,7 @@ void WindowFrame::Draw()
 void WindowFrame::SetResource(uint64 resourceID)
 {
 	resourceHandle.Set(resourceID);
+	displayName = resourceHandle.Get()->GetName();
 }
 
 Window* WindowFrame::GetWindow(const char* name) const

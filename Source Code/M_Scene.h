@@ -40,7 +40,8 @@ public:
 	void SaveConfig(Config& config) const override;
 	void LoadConfig(Config& config) override;
 
-	uint64 LoadScene(const char* file); //Calls application and prepares to load
+	uint64 LoadScene(const char* file);
+	void LoadScene(uint64 resourceID);
 
 	void LoadModel(uint64 resourceID); //Calls module import to load a Game Object file
 	//Endof Scene and model save / load ------------------------------------------

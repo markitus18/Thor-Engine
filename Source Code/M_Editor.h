@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include "MathGeoLib\src\Algorithm\Random\LCG.h"
 
 class Config;
 class GameObject;
@@ -37,8 +38,8 @@ public:
 
 	void OnResize(int screen_width, int screen_height);
 
-	bool UsingKeyboard() const;
-	bool UsingMouse() const;
+	inline bool UsingKeyboard() const { return using_keyboard; }
+	inline bool UsingMouse() const { return using_mouse; }
 
 	bool OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID = 0);
 
@@ -107,7 +108,7 @@ private:
 	float mainWindowPositionY = 0;
 	float toolbarSizeY = 30;
 
-	int nextWindowID = 1;
+	LCG random;
 };
 
 #endif //!__M_EDITOR_H__

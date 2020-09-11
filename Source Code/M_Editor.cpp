@@ -82,7 +82,7 @@ bool M_Editor::Start()
 
 	if (TryLoadEditorState() == false)
 	{
-		windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass, nextWindowID++));
+		windowFrames.push_back(new WF_SceneEditor(this, frameWindowClass, normalWindowClass, random.Int()));
 		LoadLayout_Default(windowFrames.back());
 
 		uint64 sceneID = Engine->scene->LoadScene("Engine/Assets/Defaults/Untitled.scene");
@@ -105,6 +105,10 @@ update_status M_Editor::PreUpdate()
 			delete windowFrames[i];
 			windowFrames.erase(windowFrames.begin() + i);
 			--i;
+		}
+		else if (windowFrames[i]->pendingLoadLayout)
+		{
+			LoadLayout_Default(windowFrames[i]);
 		}
 	}
 
@@ -140,6 +144,7 @@ void M_Editor::LoadLayout_Default(WindowFrame* windowFrame)
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
 
 	windowFrame->LoadLayout_Default(dockspace_id);
+	windowFrame->pendingLoadLayout = false;
 
 	ImGui::End();
 	ImGui::DockBuilderFinish(dockspace_id);
@@ -149,7 +154,7 @@ void M_Editor::LoadLayout_Default(WindowFrame* windowFrame)
 
 void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
 {
-
+	//TODO: This is meant to be added when the user can generate new custom layouts
 }
 
 void M_Editor::SaveEditorState()
@@ -329,16 +334,6 @@ void M_Editor::OnResize(int screen_width, int screen_height)
 	float iconbar_size = 30.0f;
 }
 
-bool M_Editor::UsingKeyboard() const
-{
-	return using_keyboard;
-}
-
-bool M_Editor::UsingMouse() const
-{
-	return using_mouse;
-}
-
 bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 {
 	ResourceHandle<Resource> newResourceHandle(resourceID);
@@ -354,7 +349,7 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 			if (windowFrame = GetWindowFrame(WF_SceneEditor::GetName()))
 				{ windowFrame->SetResource(resourceID); return true; }
 			else
-				windowFrame = new WF_SceneEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : nextWindowID++);
+				windowFrame = new WF_SceneEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : random.Int());
 		}
 		case (ResourceType::MATERIAL):
 		{
@@ -363,7 +358,7 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 		}
 		case(ResourceType::PARTICLESYSTEM):
 		{
-			windowFrame = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : nextWindowID++);
+			windowFrame = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : random.Int());
 			break;
 		}
 	}
@@ -372,11 +367,9 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 		windowFrame->SetResource(resourceID);
 		windowFrames.push_back(windowFrame);
 
-		//If the window layout is not saved in ImGui.ini file, generate the default layout
-		if (forceWindowID == 0)
-		{
-			LoadLayout_Default(windowFrame);
-		}
+		//If the window layout is not saved in ImGui.ini file, we will load the default layout in the next frame
+		if (forceWindowID == 0 || !IsWindowLayoutSaved(windowFrame))
+			windowFrame->pendingLoadLayout = true;
 	}
 }
 

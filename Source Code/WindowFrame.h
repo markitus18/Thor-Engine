@@ -82,6 +82,9 @@ protected:
 
 	//Most if not all windows will have a resource assigned to them (scene, particle editor, material editor,...)
 	ResourceHandle<Resource> resourceHandle;
+
+public:
+	bool pendingLoadLayout = false;
 };
 
 #endif //__WINDOW_FRAME_H__

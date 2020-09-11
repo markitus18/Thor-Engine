@@ -34,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -59,7 +59,7 @@ update_status M_Resources::Update()
 
 	if (updateAssets_timer.ReadSec() > 5)
 	{
-		//LoadAllAssets(); //TODO: Add to update in
+		//LoadAllAssets(); //TODO: Add to update in several frames
 		updateAssets_timer.Start();
 	}
 

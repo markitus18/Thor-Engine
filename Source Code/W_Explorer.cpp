@@ -109,7 +109,7 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			hCurrentFolder.Set(Engine->moduleResources->FindResourceBase(node.path.c_str())->ID);
+			SetCurrentFolder(Engine->moduleResources->FindResourceBase(node.path.c_str())->ID);
 		}
 		if (open && !node.IsLastFolder())
 		{

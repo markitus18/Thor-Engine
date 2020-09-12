@@ -47,6 +47,8 @@ bool M_Editor::Init(Config& config)
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.ConfigViewportsNoDecoration = false;
 	io.ConfigViewportsNoAutoMerge = true;
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
+	io.ConfigDockingTransparentPayload = true;
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -60,7 +62,7 @@ bool M_Editor::Init(Config& config)
 	ImGui_ImplSDL2_InitForOpenGL(Engine->window->window, Engine->renderer3D->context);
 	ImGui_ImplOpenGL3_Init();
 
-	io.IniFilename = nullptr;
+	io.IniFilename = "Engine/imgui.ini";
 	io.MouseDrawCursor = false;
 	
 	int screen_width = GetSystemMetrics(SM_CXSCREEN);
@@ -76,18 +78,19 @@ bool M_Editor::Start()
 {
 	frameWindowClass = new ImGuiWindowClass();
 	frameWindowClass->ClassId = 1;
+	frameWindowClass->DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoSplit;
 
 	normalWindowClass = new ImGuiWindowClass();
 	normalWindowClass->ClassId = 2;
 
 	if (TryLoadEditorState() == false)
 	{
-		uint64 sceneID = Engine->scene->LoadScene("Engine/Assets/Defaults/Untitled.scene");
+		uint64 sceneID = Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Untitled.scene")->ID;
 		OpenWindowFromResource(sceneID);
 	}
 
+	
 	ImGuiIO& io = ImGui::GetIO();
-	io.IniFilename = "Engine/imgui.ini";
 	
 	return true;
 }
@@ -102,10 +105,6 @@ update_status M_Editor::PreUpdate()
 			delete windowFrames[i];
 			windowFrames.erase(windowFrames.begin() + i);
 			--i;
-		}
-		else if (windowFrames[i]->pendingLoadLayout)
-		{
-			LoadLayout_Default(windowFrames[i]);
 		}
 	}
 
@@ -125,28 +124,9 @@ update_status M_Editor::PreUpdate()
 
 void M_Editor::LoadLayout_Default(WindowFrame* windowFrame)
 {
-	//We generate a fake ImGui frame in order to load the layout correctly and set up all docking data
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(Engine->window->window);
-	ImGui::NewFrame();
-
-	//Create a main window and attach a dock space to it
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowSize(viewport->GetWorkSize());
-	ImGui::SetNextWindowViewport(viewport->ID);
-	ImGui::SetNextWindowClass(frameWindowClass);
-	ImGui::Begin("Main Window");
-
 	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
-
 	windowFrame->LoadLayout_Default(dockspace_id);
 	windowFrame->pendingLoadLayout = false;
-
-	ImGui::End();
-	ImGui::DockBuilderFinish(dockspace_id);
-	ImGui::EndFrame();
-	ImGui::UpdatePlatformWindows();
 }
 
 void M_Editor::LoadLayout(WindowFrame* windowFrame, const char* layout)
@@ -214,7 +194,7 @@ bool M_Editor::IsWindowLayoutSaved(WindowFrame* windowFrame) const
 				continue;
 			if (line[0] == '[' && line_end > line&& line_end[-1] == ']') //<-- we found a tab entry (window or dock data)
 			{
-				if (strcmp(windowTabStr.c_str(), line) == 0) //<-- line is the beginning of the line, and line_end was set to '0'
+				if (strcmp(windowTabStr.c_str(), line) == 0) //<-- 'line' is the beginning of the line, and 'line_end' was set to '0'
 					return true;
 			}
 
@@ -259,6 +239,11 @@ void M_Editor::Draw()
 
 	for (uint i = 0; i < windowFrames.size(); ++i)
 		windowFrames[i]->Draw();
+
+	//Layouts are loaded after draw so the draw call on docks does not happen twice in the same frame
+	for (uint i = 0; i < windowFrames.size(); ++i)
+		if (windowFrames[i]->pendingLoadLayout)
+			LoadLayout_Default(windowFrames[i]);
 
 	ImGui::End();
 
@@ -357,7 +342,6 @@ void M_Editor::UpdateFPSData(int fps, int ms)
 
 void M_Editor::OnResize(int screen_width, int screen_height)
 {
-	
 	ImGuiContext& g = *ImGui::GetCurrentContext();
 	float iconbar_size = 30.0f;
 }
@@ -378,6 +362,7 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 				{ windowFrame->SetResource(resourceID); return true; }
 			else
 				windowFrame = new WF_SceneEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : random.Int());
+			break;
 		}
 		case (ResourceType::MATERIAL):
 		{
@@ -399,6 +384,12 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 		if (forceWindowID == 0 || !IsWindowLayoutSaved(windowFrame))
 			windowFrame->pendingLoadLayout = true;
 	}
+}
+
+void M_Editor::CloseWindow(WindowFrame* windowFrame)
+{
+	windowFrames.erase(std::find(windowFrames.begin(), windowFrames.end(), windowFrame));
+	RELEASE(windowFrame);
 }
 
 //Selection----------------------------
@@ -499,11 +490,10 @@ void M_Editor::DeleteSelected()
 		else
 		{
 			//TODO: delete resource
+			//Engine->moduleResources->
 		}
 	}
 	selectedGameObjects.clear();
-
-	//TODO: Delete resources
 	UnselectResources();
 }
 //Endof Selection -----------------------
@@ -600,4 +590,22 @@ void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 	}
 	if (lastSelected == gameObject) lastSelected = nullptr;
 }
+
+void M_Editor::OnViewportClosed(uint32_t SDLWindowID)
+{
+	ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle((void*)SDL_GetWindowFromID(SDLWindowID));
+	
+	for (uint i = 0u; i < windowFrames.size(); ++i)
+	{
+		ImGuiWindow* window = ImGui::FindWindowByName(windowFrames[i]->GetWindowStrID());
+		if (window->Viewport == viewport)
+		{
+			//This function will be called from Input's PreUpdate so it's safe to destroy the windows here
+			CloseWindow(windowFrames[i]);
+			--i;
+		}
+	}
+
+}
+
 //------------------------------------

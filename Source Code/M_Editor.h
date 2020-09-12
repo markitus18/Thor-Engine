@@ -63,6 +63,7 @@ public:
 	void ResetScene();
 
 	void OnRemoveGameObject(GameObject* gameObject) override;
+	void OnViewportClosed(uint32_t SDLWindowID);
 
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();

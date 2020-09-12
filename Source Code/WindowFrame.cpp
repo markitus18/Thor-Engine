@@ -27,13 +27,14 @@ WindowFrame::~WindowFrame()
 
 void WindowFrame::Draw()
 {
+	if (pendingLoadLayout) return;
+
 	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 	if (!isDockable)
 		frameWindow_flags |= ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
 	//Window settings and display
 	ImGui::SetNextWindowClass(frameWindowClass);
-	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin(windowStrID.c_str(), isDockable ? &active : nullptr, frameWindow_flags);
 	ImGui::PopStyleVar();
@@ -58,6 +59,7 @@ void WindowFrame::SetResource(uint64 resourceID)
 {
 	resourceHandle.Set(resourceID);
 	displayName = resourceHandle.Get()->GetName();
+	windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 }
 
 Window* WindowFrame::GetWindow(const char* name) const

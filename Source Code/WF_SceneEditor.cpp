@@ -178,7 +178,6 @@ void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 {
 	// Generate a new window docked into the previous dock space.
 	// And attach a new dock space to it
-	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);
 	ImGui::Begin(windowStrID.c_str());
 

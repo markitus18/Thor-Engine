@@ -152,30 +152,26 @@ update_status M_Input::PreUpdate()
 			break;
 
 			case SDL_QUIT:
-			quit = true;
-			break;
+				quit = true;
+				break;
 
 			case SDL_WINDOWEVENT:
 			{        
-				Uint8 window_event = event.window.event;
-				if (window_event == SDL_WINDOWEVENT_CLOSE || window_event == SDL_WINDOWEVENT_MOVED || window_event == SDL_WINDOWEVENT_RESIZED)
-				if (ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle((void*)SDL_GetWindowFromID(event.window.windowID)))
-				{
-					if (window_event == SDL_WINDOWEVENT_CLOSE)
-						viewport->PlatformRequestClose = true;
-					if (window_event == SDL_WINDOWEVENT_MOVED)
-						viewport->PlatformRequestMove = true;
-					if (window_event == SDL_WINDOWEVENT_RESIZED)
+				if (event.window.event == SDL_WINDOWEVENT_CLOSE)
+					if(event.window.windowID == SDL_GetWindowID(Engine->window->window))
 					{
-						viewport->PlatformRequestResize = true;
-						
-						if (event.window.windowID == SDL_GetWindowID(Engine->window->window))
-						{
-							Engine->window->windowSize = Vec2(event.window.data1, event.window.data2);
-							Engine->renderer3D->OnResize();
-							Engine->moduleEditor->OnResize(event.window.data1, event.window.data2);
-						}
+						quit = true;
 					}
+					else
+					{
+						Engine->moduleEditor->OnViewportClosed(event.window.windowID);
+					}
+				if (event.window.event == SDL_WINDOWEVENT_RESIZED && event.window.windowID == SDL_GetWindowID(Engine->window->window))
+				{				
+					//TODO: We should not be resizing scene camera depending on window size
+					Engine->window->windowSize = Vec2(event.window.data1, event.window.data2);
+					Engine->renderer3D->OnResize();
+					Engine->moduleEditor->OnResize(event.window.data1, event.window.data2);
 				}
 				break;
 			}

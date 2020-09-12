@@ -49,7 +49,6 @@ void WF_ParticleEditor::MenuBar_Development()
 
 void WF_ParticleEditor::LoadLayout_Default(ImGuiID mainDockID)
 {
-	std::string windowStrID = displayName + std::string("###") + name + ("_") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowStrID.c_str(), mainDockID);
 	ImGui::Begin(windowStrID.c_str());
 
@@ -84,5 +83,8 @@ void WF_ParticleEditor::LoadLayout_Default(ImGuiID mainDockID)
 	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomRightBottomSpace_id);
 	
 	ImGui::DockBuilderFinish(dockspace_id);
+
+	ImGuiDockNode* mainDock = ImGui::DockBuilderGetNode(mainDockID);
+	mainDock->TabBar->SelectedTabId = mainDock->TabBar->NextSelectedTabId = mainDock->TabBar->Tabs.back().ID;
 	ImGui::End();
 }

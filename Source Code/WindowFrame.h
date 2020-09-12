@@ -26,11 +26,12 @@ public:
 
 	virtual void LoadLayout_Default(ImGuiID mainDockID) = 0;
 
-	inline const char* GetName() { return name.c_str(); };
+	inline const char* GetName() { return name.c_str(); }
+	inline const char* GetWindowStrID() { return windowStrID.c_str(); }
 	inline bool IsActive() { return active; };
 
 	virtual void SetResource(uint64 resourceID);
-	inline uint64 GetResourceID() const { return resourceHandle.GetID(); };
+	inline uint64 GetResourceID() const { return resourceHandle.GetID(); }
 	inline uint GetID() const { return ID; };
 	Window* GetWindow(const char* name) const;
 
@@ -63,6 +64,9 @@ protected:
 	//The name that will be displayed in the window tab. Some windows will change names depending on the content
 	//i.e: scene will display the name of the currently open scene
 	std::string displayName;
+
+	//The string used as ID for ImGui's window call. It is a combination of the displayName, the name and the ID
+	std::string windowStrID;
 
 	//Windows belonging in this particular window frame. All windows are added in the constructor, even if not active
 	std::vector<Window*> windows;

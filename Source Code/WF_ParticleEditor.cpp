@@ -84,7 +84,5 @@ void WF_ParticleEditor::LoadLayout_Default(ImGuiID mainDockID)
 	
 	ImGui::DockBuilderFinish(dockspace_id);
 
-	ImGuiDockNode* mainDock = ImGui::DockBuilderGetNode(mainDockID);
-	mainDock->TabBar->SelectedTabId = mainDock->TabBar->NextSelectedTabId = mainDock->TabBar->Tabs.back().ID;
 	ImGui::End();
 }

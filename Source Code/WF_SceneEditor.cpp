@@ -192,7 +192,6 @@ void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 	ImGuiID dock_space_B_TopLeft, dock_space_B_BottomLeft;
 	ImGui::DockBuilderSplitNode(dock_space_B_Left, ImGuiDir_Up, 0.7f, &dock_space_B_TopLeft, &dock_space_B_BottomLeft);
 
-	// Dock new window to one of the newly generated docks (the issue begins here)
 	// Attach a new dock space to it
 	std::string windowName = std::string("Explorer") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), dock_space_B_BottomLeft);
@@ -209,7 +208,6 @@ void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 	windowName = std::string("Explorer_Toolbar") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), dock_space_C_Top);
 	ImGui::DockBuilderGetNode(dock_space_C_Top)->WantHiddenTabBarToggle = true;
-	//ImGui::DockBuilderGetNode(dock_space_C_Top)->LocalFlags |= ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_AutoHideTabBar;
 
 	// Split the bottom dock in two more pieces (left and right)
 	ImGuiID leftExplorerSpace_id, rightExplorerSpace_id;
@@ -229,6 +227,9 @@ void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 
 	windowName = std::string("Console") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), dock_space_B_BottomLeft);
+	ImGui::Begin(windowName.c_str()); ImGui::End(); //<--By flashing the window, it gets added to the node and we can change the selected tab
+	ImGuiDockNode* node = ImGui::DockBuilderGetNode(dock_space_B_BottomLeft);
+	node->TabBar->NextSelectedTabId = node->TabBar->Tabs.begin()->ID;
 
 	ImGuiID leftTopLeftSpace_id, rightTopLeftSpace_id;
 	ImGui::DockBuilderSplitNode(dock_space_B_TopLeft, ImGuiDir_Left, 0.2f, &leftTopLeftSpace_id, &rightTopLeftSpace_id);
@@ -241,8 +242,7 @@ void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 
 	windowName = std::string("Toolbar") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), topCenterSpace_id);
-	ImGuiDockNode* node = ImGui::DockBuilderGetNode(topCenterSpace_id);
-	node->WantHiddenTabBarToggle = true;
+	ImGui::DockBuilderGetNode(topCenterSpace_id)->WantHiddenTabBarToggle = true;
 
 	windowName = std::string("Scene") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomCenterSpace_id);
@@ -257,6 +257,8 @@ void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomRightSpace_id);
 	windowName = std::string("Resources") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomRightSpace_id);
+
+	ImGui::DockBuilderFinish(dock_space_B);
 
 	ImGui::End();
 }

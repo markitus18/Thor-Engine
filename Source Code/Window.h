@@ -25,7 +25,8 @@ public:
 	virtual void SaveConfig(Config& config);
 	virtual void LoadConfig(Config& config);
 
-	inline bool IsActive() const { return active; };
+	inline bool IsActive() const { return active; }
+	inline const char* GetWindowStrID() { return windowStrID.c_str(); }
 
 public:
 	std::string name;

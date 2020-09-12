@@ -34,6 +34,7 @@ public:
 	inline uint64 GetResourceID() const { return resourceHandle.GetID(); }
 	inline uint GetID() const { return ID; };
 	Window* GetWindow(const char* name) const;
+	inline const std::vector<Window*> GetWindows() const { return windows; }
 
 private:
 	//Performs the entire management of drawing the menu bar

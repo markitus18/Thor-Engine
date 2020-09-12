@@ -102,8 +102,7 @@ update_status M_Editor::PreUpdate()
 		//Handle any window frame close requests
 		if (!windowFrames[i]->IsActive())
 		{
-			delete windowFrames[i];
-			windowFrames.erase(windowFrames.begin() + i);
+			CloseWindow(windowFrames[i]);
 			--i;
 		}
 	}
@@ -171,37 +170,173 @@ bool M_Editor::TryLoadEditorState()
 bool M_Editor::IsWindowLayoutSaved(WindowFrame* windowFrame) const
 {
 	//Windows frames are saved as [Window][###<window_name>_<window_id>]]
-	std::string windowTabStr = std::string("[Window][###") + windowFrame->GetName() + "_" + std::to_string(windowFrame->GetID()) + "]";
+	std::string windowStrID = std::string("[Window][###") + windowFrame->GetName() + ("_") + std::to_string(windowFrame->GetID());
+
+	if (!Engine->fileSystem->Exists("Engine/imgui.ini")) return false;
 
 	//Parsing imgui.ini. We mimic ImGui's logic (function LoadIniSettingsFromMemory in imgui.cpp)
 	char* buffer = nullptr;
 	if (uint fileSize = Engine->fileSystem->Load("Engine/imgui.ini", &buffer))
 	{
-		char* buffer_end = buffer + fileSize;
-		buffer_end[0] = 0;
+		char* buffer_end = buffer + fileSize - 1;
 
+		char* line = buffer;
 		char* line_end = nullptr;
-		for (char* line = buffer; line < buffer_end; line = line_end + 1)
+		while (Ini_FindNextEntry(line, line_end, buffer_end))
 		{
-			// Skip new lines markers, then find end of the line
-			while (*line == '\n' || *line == '\r')
-				line++;
-			line_end = line;
-			while (line_end < buffer_end && *line_end != '\n' && *line_end != '\r')
-				line_end++;
-			line_end[0] = 0;
-			if (line[0] == ';') //Not sure in which situation this would happen
-				continue;
-			if (line[0] == '[' && line_end > line&& line_end[-1] == ']') //<-- we found a tab entry (window or dock data)
-			{
-				if (strcmp(windowTabStr.c_str(), line) == 0) //<-- 'line' is the beginning of the line, and 'line_end' was set to '0'
-					return true;
-			}
-
+			if (strncmp(windowStrID.c_str(), line, windowStrID.size()) == 0) //<-- 'line' is the beginning of the line, and 'line_end' was set to '0'
+				return true;
+			line = line_end + 1;
 		}
 		RELEASE_ARRAY(buffer);
 	}
 
+	return false;
+}
+
+void M_Editor::ClearWindowFromIni(WindowFrame* windowFrame)
+{
+	const std::vector<Window*> childWindows = windowFrame->GetWindows();
+	std::string winStrID = std::string("###") + windowFrame->GetName() + ("_") + std::to_string(windowFrame->GetID());
+
+	//Remove window and dock data from imgui.ini file
+	if (!Engine->fileSystem->Exists("Engine/imgui.ini")) return;
+
+	char* buffer = nullptr;
+	uint64 fileSize = Engine->fileSystem->Load("Engine/imgui.ini", &buffer);
+
+	//Parsing imgui.ini. We mimic ImGui's logic (function LoadIniSettingsFromMemory in imgui.cpp)
+	char* buffer_end = buffer + fileSize - 1;
+
+	char* line_end = nullptr;
+	char* line = buffer;
+
+	while (Ini_FindNextEntry(line, line_end, buffer_end))
+	{
+		if (strncmp(line, "[Window]", 8) == 0) //Found a window entry! Iterate all windows to find a matching ID
+		{
+			//TODO: This could be simplified by checking only for ID!
+			bool matchingEntry = false;
+			if (strncmp(line + 9, winStrID.c_str(), (line_end - 1) - (line + 9)) == 0)
+				matchingEntry = true;
+			for (uint i = 0u; i < childWindows.size() && !matchingEntry; ++i)
+			{
+				if (strncmp(line + 9, childWindows[i]->GetWindowStrID(), (line_end - 1) - (line + 9)) == 0)
+					matchingEntry = true;
+			}
+			if (matchingEntry)
+			{
+				char* next_line = line_end + 1;
+				char* next_line_end = line_end;
+
+				Ini_FindNextEntry(next_line, next_line_end, buffer_end); //<-- no need to check return as dock entry will always be after windows
+				//Remove from current entry until next entry
+				uint removeSize = next_line - line;
+				for (uint i = 0u; next_line + i <= buffer_end; ++i)
+					line[i] = next_line[i];
+
+				fileSize -= removeSize;
+				buffer_end -= removeSize;
+				buffer_end[1] = '\0';
+			}
+			else
+				line = line_end + 1;
+		}
+		else if (strncmp(line, "[Docking]", 9) == 0) //Found the docking entry
+		{
+			while (Ini_FindNextDockEntry(line, line_end, buffer_end))
+			{
+				char* cursor = line + strlen("DockSpace");
+				while (*cursor == ' ' || *cursor == '\t')
+					cursor++;
+
+				uint ID, windowID;
+				int r;
+				if (sscanf(cursor, "ID=0x%08X Window=0x%08X%n", &ID, &windowID, &r) != 2) { line = line_end + 1; continue; }
+
+				bool matchingEntry = false;
+				if (strcmp(ImGui::FindWindowByID(windowID)->Name, windowFrame->GetWindowStrID()) == 0)
+					matchingEntry = true;
+
+				for (uint i = 0u; i < childWindows.size() && !matchingEntry; ++i)
+				{
+					if (strcmp(ImGui::FindWindowByID(windowID)->Name, childWindows[i]->GetWindowStrID()) == 0)
+						matchingEntry = true;
+				}
+				if (matchingEntry)
+				{
+					char* next_line = line_end + 1;
+					char* next_line_end = line_end;
+
+					if (Ini_FindNextDockEntry(next_line, next_line_end, buffer_end))
+					{
+
+						//Remove from current entry until next entry
+						uint removeSize = next_line - line;
+						for (uint i = 0u; next_line + i <= buffer_end; ++i)
+							line[i] = next_line[i];
+
+						fileSize -= removeSize;
+						buffer_end -= removeSize;
+						buffer_end[1] = '\0';
+					}
+					else //End of file!
+					{
+						line[0] = '\n';
+						line[1] = '\n';
+						line[2] = '\0';
+
+						uint removeSize = (buffer_end - line);
+						fileSize -= removeSize;
+						buffer_end -= removeSize;
+					}
+				}
+				else
+					line = line_end + 1;
+			}
+		}
+		else
+			line = line_end + 1;
+	}
+
+	Engine->fileSystem->Save("Engine/imgui.ini", buffer, fileSize);
+	RELEASE_ARRAY(buffer);
+}
+
+bool M_Editor::Ini_FindNextEntry(char*& line, char*& line_end, char*& buffer_end) const
+{
+	while (line_end < buffer_end)
+	{
+		// Skip new lines markers, then find end of the line
+		while (*line == '\n' || *line == '\r')
+			line++;
+		line_end = line;
+		while (line_end < buffer_end && *line_end != '\n' && *line_end != '\r')
+			line_end++;
+
+		if (line[0] == '[' && line_end > line && line_end[-1] == ']')
+			return true;
+		else
+			line = line_end + 1;
+	}
+	return false;
+}
+
+bool M_Editor::Ini_FindNextDockEntry(char*& line, char*& line_end, char*& buffer_end) const
+{
+	// Skip new lines markers, then find end of the line
+	while (line_end < buffer_end)
+	{
+		while (*line == '\n' || *line == '\r' || *line == ' ' || *line == '\t') //<-- here we also skip blanks
+			line++;
+		line_end = line;
+		while (line_end < buffer_end && *line_end != '\n' && *line_end != '\r')
+			line_end++;
+		if (strncmp(line, "DockSpace", 9) == 0)
+			return true;
+		else
+			line = line_end + 1;
+	}	
 	return false;
 }
 
@@ -388,6 +523,8 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 
 void M_Editor::CloseWindow(WindowFrame* windowFrame)
 {
+	//TODO: Remove data from ImGui's memory
+	ClearWindowFromIni(windowFrame);
 	windowFrames.erase(std::find(windowFrames.begin(), windowFrames.end(), windowFrame));
 	RELEASE(windowFrame);
 }
@@ -406,7 +543,7 @@ void M_Editor::SelectSingle(TreeNode* node, bool openTree)
 		if (openTree)
 		{
 			//Opening tree hierarchy node
-			TreeNode* it = node->GetParentNode();
+			TreeNode* it = node->GetParentNode(); 
 			while (it != nullptr)
 			{
 				it->beenSelected = true;

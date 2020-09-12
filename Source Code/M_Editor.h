@@ -42,6 +42,7 @@ public:
 	inline bool UsingMouse() const { return using_mouse; }
 
 	bool OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID = 0);
+	void CloseWindow(WindowFrame* windowFrame); //Warning: do not call in the middle of the editor drawing frame!
 
 	//Selection --------------------
 	void SelectSingle(TreeNode* node, bool openTree = true);
@@ -77,6 +78,11 @@ private:
 	bool TryLoadEditorState();
 	bool IsWindowLayoutSaved(WindowFrame* windowFrame) const;
 
+	//imgui.ini parsing functions
+	void ClearWindowFromIni(WindowFrame* windowFrame);
+	bool Ini_FindNextEntry(char*& line, char*& line_end, char*& buffer_end) const;
+	bool Ini_FindNextDockEntry(char*& line, char*& line_end, char*& buffer_end) const;
+	
 public:
 
 	std::vector<TreeNode*> selectedGameObjects;

@@ -117,7 +117,7 @@ void W_Explorer::LoadLayout_Default()
 
 	windowName = std::string("Explorer_Folder") + ("##") + std::to_string(ID);
 	ImGui::DockBuilderDockWindow(windowName.c_str(), rightExplorerSpace_id);
-	ImGui::DockBuilderGetNode(leftExplorerSpace_id)->LocalFlags |= ImGuiDockNodeFlags_AutoHideTabBar;
+	ImGui::DockBuilderGetNode(rightExplorerSpace_id)->LocalFlags |= ImGuiDockNodeFlags_AutoHideTabBar;
 
 	ImGui::End();
 }

@@ -28,6 +28,7 @@ public:
 
 	void Draw() override;
 	void OnResize(Vec2 newSize) override;
+	void LoadLayout_Default();
 
 	inline const Resource* GetCurrentFolder() const { return (Resource*)hCurrentFolder.Get(); }
 	static inline const char* GetName() { return "Explorer"; }

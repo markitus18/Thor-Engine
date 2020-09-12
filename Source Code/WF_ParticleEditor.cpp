@@ -59,8 +59,8 @@ void WF_ParticleEditor::LoadLayout_Default(ImGuiID mainDockID)
 	ImGuiID topSpace_id, bottomSpace_id;
 	ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Up, 0.08f, &topSpace_id, &bottomSpace_id);
 	
-	std::string windowName = std::string("Toolbar") + ("##") + std::to_string(ID);
-	ImGui::DockBuilderDockWindow(windowName.c_str(), topSpace_id);
+	const char* windowName = GetWindow(W_ParticleToolbar::GetName())->GetWindowStrID();
+	ImGui::DockBuilderDockWindow(windowName, topSpace_id);
 
 	ImGuiID leftBottomSpace_id, rightBottomSpace_id;
 	ImGui::DockBuilderSplitNode(bottomSpace_id, ImGuiDir_Left, 0.24f, &leftBottomSpace_id, &rightBottomSpace_id);
@@ -68,21 +68,20 @@ void WF_ParticleEditor::LoadLayout_Default(ImGuiID mainDockID)
 	ImGuiID upLeftBottomSpace_id, bottomLeftBottomSpace_id;
 	ImGui::DockBuilderSplitNode(leftBottomSpace_id, ImGuiDir_Up, 0.54f, &upLeftBottomSpace_id, &bottomLeftBottomSpace_id);
 
-	windowName = std::string("Viewport") + ("##") + std::to_string(ID);
-	ImGui::DockBuilderDockWindow(windowName.c_str(), upLeftBottomSpace_id);
+	windowName = GetWindow(W_ParticleViewport::GetName())->GetWindowStrID();
+	ImGui::DockBuilderDockWindow(windowName, upLeftBottomSpace_id);
 
-	windowName = std::string("Details") + ("##") + std::to_string(ID);
-	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomLeftBottomSpace_id);
+	windowName = GetWindow(W_ParticleDetails::GetName())->GetWindowStrID();
+	ImGui::DockBuilderDockWindow(windowName, bottomLeftBottomSpace_id);
 
 	ImGuiID upRightBottomSpace_id, bottomRightBottomSpace_id;
 	ImGui::DockBuilderSplitNode(rightBottomSpace_id, ImGuiDir_Up, 0.7f, &upRightBottomSpace_id, &bottomRightBottomSpace_id);
 
-	windowName = std::string("Emitters") + ("##") + std::to_string(ID);
-	ImGui::DockBuilderDockWindow(windowName.c_str(), upRightBottomSpace_id);
-	windowName = std::string("Curve Editor") + ("##") + std::to_string(ID);
-	ImGui::DockBuilderDockWindow(windowName.c_str(), bottomRightBottomSpace_id);
+	windowName = GetWindow(W_Emitters::GetName())->GetWindowStrID();
+	ImGui::DockBuilderDockWindow(windowName, upRightBottomSpace_id);
+	windowName = GetWindow(W_ParticleCurves::GetName())->GetWindowStrID();
+	ImGui::DockBuilderDockWindow(windowName, bottomRightBottomSpace_id);
 	
 	ImGui::DockBuilderFinish(dockspace_id);
-
 	ImGui::End();
 }

@@ -89,6 +89,38 @@ void W_Explorer::OnResize(Vec2 newSize)
 	columnsNumber = ((newSize.x * 0.8f ) * 10) / 1152;
 }
 
+void W_Explorer::LoadLayout_Default()
+{
+	ImGui::Begin(windowStrID.c_str());
+
+	std::string dockStrID = windowStrID + "_DockSpace";
+	ImGuiID dock_space_C = ImGui::GetID(dockStrID.c_str());
+	ImGui::DockSpace(dock_space_C, ImVec2(0.0f, 0.0f), 0, explorerWindowClass);
+
+	// Split the new dock in two pieces (top and bottom)
+	ImGuiID dock_space_C_Top, dock_space_C_Bottom;
+	ImGui::DockBuilderSplitNode(dock_space_C, ImGuiDir_Up, 0.10f, &dock_space_C_Top, &dock_space_C_Bottom);
+
+	std::string windowName;
+	windowName = std::string("Explorer_Toolbar") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), dock_space_C_Top);
+	ImGui::DockBuilderGetNode(dock_space_C_Top)->WantHiddenTabBarToggle = true;
+
+	// Split the bottom dock in two more pieces (left and right)
+	ImGuiID leftExplorerSpace_id, rightExplorerSpace_id;
+	ImGui::DockBuilderSplitNode(dock_space_C_Bottom, ImGuiDir_Left, 0.15f, &leftExplorerSpace_id, &rightExplorerSpace_id);
+
+	// Attach windows to the different nodes (code irrelevant from this point)
+	windowName = std::string("Explorer_Tree") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), leftExplorerSpace_id);
+	ImGui::DockBuilderGetNode(leftExplorerSpace_id)->LocalFlags |= ImGuiDockNodeFlags_AutoHideTabBar;
+
+	windowName = std::string("Explorer_Folder") + ("##") + std::to_string(ID);
+	ImGui::DockBuilderDockWindow(windowName.c_str(), rightExplorerSpace_id);
+	ImGui::DockBuilderGetNode(leftExplorerSpace_id)->LocalFlags |= ImGuiDockNodeFlags_AutoHideTabBar;
+
+	ImGui::End();
+}
 void W_Explorer::DrawFolderNode(PathNode& node)
 {
 	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;

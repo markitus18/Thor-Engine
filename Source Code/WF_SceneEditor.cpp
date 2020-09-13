@@ -55,7 +55,8 @@ WF_SceneEditor::~WF_SceneEditor()
 void WF_SceneEditor::SetResource(uint64 resourceID)
 {
 	WindowFrame::SetResource(resourceID);
-	Engine->scene->LoadScene(resourceID);
+	if (resourceID != Engine->scene->hScene.GetID())
+		Engine->scene->LoadScene(resourceID);
 }
 
 void WF_SceneEditor::MenuBar_File()

@@ -66,6 +66,7 @@ void W_Explorer::Draw()
 	std::string childWindowName = std::string("Explorer_Tree") + ("##") + std::to_string(ID);
 	ImGui::Begin(childWindowName.c_str(), nullptr, windowFlags);
 	DrawFolderNode(assets);
+	DrawFolderNode(engineAssets);
 	ImGui::End();
 
 	ImGui::SetNextWindowClass(explorerWindowClass);
@@ -176,7 +177,6 @@ void W_Explorer::DrawResourceImage(const ResourceBase& base)
 	glBindTexture(GL_TEXTURE_2D, 0); //Soo... this needs to be done in order to reset the texture buffer
 }
 
-//FIXME: function needs some cleaning. Pathnodes force GetResource constantly which means can't free resource memory properly
 void W_Explorer::DrawSelectedFolderContent()
 {
 	ImGui::BeginChild("ExplorerFolder", ImVec2(0.0f, 0.0f), false, ImGuiWindowFlags_NoScrollbar);
@@ -277,6 +277,7 @@ void W_Explorer::UpdateTree()
 	std::vector<std::string> ignore_ext;
 	ignore_ext.push_back("meta");
 	assets = Engine->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
+	engineAssets = Engine->fileSystem->GetAllFiles("Engine/Assets", nullptr, &ignore_ext);
 }
 
 std::string W_Explorer::GetTextAdjusted(const char* text) const

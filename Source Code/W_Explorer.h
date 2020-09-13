@@ -65,6 +65,7 @@ private:
 	ImGuiWindowClass* explorerWindowClass = nullptr;
 
 	PathNode assets;
+	PathNode engineAssets;
 
 	ResourceHandle<R_Folder> hAssetsFolder;
 	ResourceHandle<R_Folder> hEngineAssetsFolder;

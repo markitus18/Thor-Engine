@@ -14,7 +14,7 @@ class GameObject;
 struct ModelNode
 {
 	ModelNode(uint64 ID, const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity, uint64 parentID = 0) :
-	ID(ID), name(name), parentID(parentID), materialID(0), meshID(0)
+	ID(ID), name(name), parentID(parentID), materialID(-1), meshID(-1)
 	{
 		transform = float4x4::FromTRS(translation, rotation, scale);
 	}
@@ -24,8 +24,8 @@ struct ModelNode
 	float4x4 transform;
 
 	uint parentID;
-	uint meshID;
-	uint materialID;
+	int meshID;
+	int materialID;
 };
 
 class R_Model : public Resource

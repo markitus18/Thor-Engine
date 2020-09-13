@@ -110,9 +110,10 @@ void Importer::Models::LinkModelResources(R_Model* model, const std::vector<uint
 {
 	for (uint i = 0u; i < model->nodes.size(); ++i)
 	{
-		//TODO: We need to check what happens when we import a node that has no mesh or material. ID = -1?
-		model->nodes[i].meshID = meshes[model->nodes[i].meshID];
-		model->nodes[i].materialID = materials[model->nodes[i].materialID];
+		if (model->nodes[i].meshID != -1)
+			model->nodes[i].meshID = meshes[model->nodes[i].meshID];
+		if (model->nodes[i].materialID != -1)
+			model->nodes[i].materialID = materials[model->nodes[i].materialID];
 	}
 }
 

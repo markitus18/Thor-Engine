@@ -618,6 +618,9 @@ void M_Resources::ClearMetaData()
 	if (Engine->fileSystem->Exists("Assets.meta"))
 		Engine->fileSystem->Remove("Assets.meta");
 	Engine->fileSystem->Remove("Library/");
+	Engine->fileSystem->Remove("Engine/EditorState.json");
+	Engine->fileSystem->Remove("Engine/imgui.ini");
+
 	Engine->fileSystem->CreateLibraryDirectories();
 }
 

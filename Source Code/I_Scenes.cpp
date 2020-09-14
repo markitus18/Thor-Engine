@@ -110,10 +110,8 @@ void Importer::Models::LinkModelResources(R_Model* model, const std::vector<uint
 {
 	for (uint i = 0u; i < model->nodes.size(); ++i)
 	{
-		if (model->nodes[i].meshID != -1)
-			model->nodes[i].meshID = meshes[model->nodes[i].meshID];
-		if (model->nodes[i].materialID != -1)
-			model->nodes[i].materialID = materials[model->nodes[i].materialID];
+		model->nodes[i].meshID = (model->nodes[i].meshID != -1 ? meshes[model->nodes[i].meshID] : 0);
+		model->nodes[i].materialID = (model->nodes[i].materialID != -1 ? materials[model->nodes[i].materialID] : 0);
 	}
 }
 

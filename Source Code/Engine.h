@@ -11,7 +11,7 @@ class Module;
 class M_FileSystem;
 class M_Window;
 class M_Input;
-class M_Scene;
+class M_SceneManager;
 
 class M_Renderer3D;
 class M_Camera3D;
@@ -27,7 +27,7 @@ public:
 	M_FileSystem* fileSystem = nullptr;
 	M_Window* window = nullptr;
 	M_Input* input = nullptr;
-	M_Scene* scene = nullptr;
+	M_SceneManager* sceneManager = nullptr;
 
 	M_Renderer3D* renderer3D = nullptr;
 	M_Camera3D* camera = nullptr;

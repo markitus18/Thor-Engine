@@ -6,10 +6,8 @@
 #include "C_Camera.h"
 #include "M_Renderer3D.h"
 #include "GameObject.h"
-#include "Config.h"
 #include "OpenGL.h"
-#include "Quadtree.h"
-#include "M_Scene.h"
+#include "M_SceneManager.h"
 #include "Vec2.h"
 #include "Time.h"
 
@@ -212,5 +210,5 @@ void M_Camera3D::OnClick(const Vec2& mousePos)
 
 	lastRay = Engine->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 
- 	Engine->scene->OnClickSelection(lastRay);
+ 	Engine->sceneManager->OnClickSelection(lastRay);
 }

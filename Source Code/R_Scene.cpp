@@ -13,3 +13,8 @@ R_Scene::~R_Scene()
 {
 
 }
+
+void R_Scene::Update(float dt)
+{
+
+}

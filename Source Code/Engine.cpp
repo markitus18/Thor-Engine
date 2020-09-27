@@ -4,7 +4,7 @@
 #include "M_FileSystem.h"
 #include "M_Window.h"
 #include "M_Input.h"
-#include "M_Scene.h"
+#include "M_SceneManager.h"
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 #include "M_Editor.h"
@@ -23,7 +23,7 @@ TEngine::TEngine()
 	window = new M_Window();
 	input = new M_Input();
 
-	scene = new M_Scene();
+	sceneManager = new M_SceneManager();
 
 	renderer3D = new M_Renderer3D();
 	camera = new M_Camera3D();
@@ -37,7 +37,7 @@ TEngine::TEngine()
 	AddModule(input);
 
 	AddModule(camera);
-	AddModule(scene);
+	AddModule(sceneManager);
 
 	AddModule(moduleResources);
 
@@ -194,7 +194,7 @@ void TEngine::UpdateSceneName()
 {
 	std::string windowTitle = title;
 	std::string sceneName = "", sceneExtension = "";
-	Engine->fileSystem->SplitFilePath(scene->hScene.Get()->GetAssetsFile(), nullptr, &sceneName, &sceneExtension); //TODO: avoid accessing a resource
+	Engine->fileSystem->SplitFilePath(sceneManager->hCurrentScene.Get()->GetAssetsFile(), nullptr, &sceneName, &sceneExtension); //TODO: avoid accessing a resource
 	windowTitle.append(" - ").append(sceneName);
 	if (sceneExtension != "")
 	{

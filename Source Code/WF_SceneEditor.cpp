@@ -3,7 +3,7 @@
 #include "Engine.h"
 #include "Globals.h"
 
-#include "M_Scene.h"
+#include "M_SceneManager.h"
 #include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_Resources.h"
@@ -55,8 +55,8 @@ WF_SceneEditor::~WF_SceneEditor()
 void WF_SceneEditor::SetResource(uint64 resourceID)
 {
 	WindowFrame::SetResource(resourceID);
-	if (resourceID != Engine->scene->hScene.GetID())
-		Engine->scene->LoadScene(resourceID);
+	if (resourceID != Engine->sceneManager->hCurrentScene.GetID())
+		Engine->sceneManager->LoadScene(resourceID);
 }
 
 void WF_SceneEditor::MenuBar_File()
@@ -79,7 +79,7 @@ void WF_SceneEditor::MenuBar_File()
 			{
 				if (ImGui::MenuItem(sceneList[i].c_str()))
 				{
-					Engine->scene->LoadScene(sceneList[i].c_str());
+					Engine->sceneManager->LoadScene(sceneList[i].c_str());
 				}
 			}
 			ImGui::EndMenu();
@@ -87,13 +87,13 @@ void WF_SceneEditor::MenuBar_File()
 
 		if (ImGui::MenuItem("Save Scene"))
 		{
-			if (Engine->scene->hScene.Get()->GetAssetsFile() == "Engine/Assets/Defaults/Untitled.scene")
+			if (Engine->sceneManager->hCurrentScene.Get()->GetAssetsFile() == "Engine/Assets/Defaults/Untitled.scene")
 			{
 				Engine->moduleEditor->OpenFileNameWindow();
 			}
 			else
 			{
-				Engine->moduleResources->SaveResource(Engine->scene->hScene.Get());
+				Engine->moduleResources->SaveResource(Engine->sceneManager->hCurrentScene.Get());
 			}
 		}
 
@@ -117,16 +117,16 @@ void WF_SceneEditor::MenuBar_Custom()
 	{
 		if (ImGui::MenuItem("Empty"))
 		{
-			std::string name(Engine->scene->GetNewGameObjectName("GameObject"));
-			GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str());
+			std::string name(Engine->sceneManager->GetNewGameObjectName("GameObject"));
+			GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str());
 			Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 		}
 
 		if (ImGui::MenuItem("Empty Child"))
 		{
 			GameObject* parent = (GameObject*)(Engine->moduleEditor->selectedGameObjects.size() > 0 ? Engine->moduleEditor->selectedGameObjects[0] : nullptr);
-			std::string name(Engine->scene->GetNewGameObjectName("GameObject", parent));
-			GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str(), parent);
+			std::string name(Engine->sceneManager->GetNewGameObjectName("GameObject", parent));
+			GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str(), parent);
 			Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 		}
 
@@ -134,8 +134,8 @@ void WF_SceneEditor::MenuBar_Custom()
 		{
 			for (uint i = 0; i < 10; i++)
 			{
-				std::string name(Engine->scene->GetNewGameObjectName("GameObject"));
-				GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str());
+				std::string name(Engine->sceneManager->GetNewGameObjectName("GameObject"));
+				GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str());
 				Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 			}
 		}
@@ -143,8 +143,8 @@ void WF_SceneEditor::MenuBar_Custom()
 		{
 			if (ImGui::MenuItem("Cube"))
 			{
-				std::string name(Engine->scene->GetNewGameObjectName("Cube"));
-				GameObject* newGameObject = Engine->scene->CreateGameObject(name.c_str());
+				std::string name(Engine->sceneManager->GetNewGameObjectName("Cube"));
+				GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str());
 				Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 
 			}
@@ -152,7 +152,7 @@ void WF_SceneEditor::MenuBar_Custom()
 		}
 		if (ImGui::MenuItem("Camera"))
 		{
-			Engine->scene->CreateCamera();
+			Engine->sceneManager->CreateCamera();
 		}
 		ImGui::EndMenu();
 	}
@@ -165,10 +165,10 @@ void WF_SceneEditor::MenuBar_Development()
 		ImGui::MenuItem("ImGui Demo", nullptr, &Engine->moduleEditor->show_Demo_window);
 		if (ImGui::BeginMenu("Display"))
 		{
-			ImGui::MenuItem("Quadtree", nullptr, &Engine->scene->drawQuadtree);
+			ImGui::MenuItem("Quadtree", nullptr, &Engine->sceneManager->drawQuadtree);
 			ImGui::MenuItem("Ray picking", nullptr, &Engine->camera->drawRay);
-			ImGui::MenuItem("GameObjects box", nullptr, &Engine->scene->drawBounds);
-			ImGui::MenuItem("GameObjects box (selected)", nullptr, &Engine->scene->drawBoundsSelected);
+			ImGui::MenuItem("GameObjects box", nullptr, &Engine->sceneManager->drawBounds);
+			ImGui::MenuItem("GameObjects box (selected)", nullptr, &Engine->sceneManager->drawBoundsSelected);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();

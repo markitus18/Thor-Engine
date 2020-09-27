@@ -10,7 +10,7 @@
 #include "M_Input.h"
 #include "M_Editor.h"
 #include "M_Resources.h"
-#include "M_Scene.h"
+#include "M_SceneManager.h"
 
 #include "C_Camera.h"
 #include "TreeNode.h"
@@ -52,7 +52,7 @@ void W_Scene::Draw()
 
 				if (base.type == ResourceType::MODEL)
 				{
-					Engine->scene->LoadModel(resourceID);
+					Engine->sceneManager->LoadModel(resourceID);
 				}
 			}
 		}

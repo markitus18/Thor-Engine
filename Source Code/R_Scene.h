@@ -12,13 +12,14 @@ public:
 	R_Scene();
 	~R_Scene();
 
+	void Update(float dt);
+
 public:
 	GameObject* root = nullptr;
 
-	C_Camera* editorCamera = nullptr;
+	C_Camera* editorPerspCamera = nullptr;
+	C_Camera* editorOrthoCamera = nullptr;
 	C_Camera* mainCamera = nullptr;
-
-	uint64 thumbnailID = 0;
 };
 
 #endif //!__R_SCENE_H__

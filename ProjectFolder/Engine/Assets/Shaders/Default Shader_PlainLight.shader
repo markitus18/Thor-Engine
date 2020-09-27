@@ -33,7 +33,7 @@ out vec4 color;
 
 uniform sampler2D ourTexture;
 
-vec3 lightColor = vec3(0.88, 0.85, 0.08);
+vec3 lightColor = vec3(0.88, 0.85, 0.88);
 
 void main()
 {

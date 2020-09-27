@@ -4,7 +4,7 @@
 
 #include "M_Editor.h"
 #include "Engine.h"
-#include "M_Scene.h" //Included for static changes
+#include "M_SceneManager.h" //Included for static changes
 #include "M_Resources.h"
 #include "M_Camera3D.h" //Included for camera editor matching
 #include "M_Renderer3D.h" //Included for camera editor matching
@@ -73,7 +73,7 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	bool gameObject_static = gameObject->isStatic;
 	if (ImGui::Checkbox("static", &gameObject_static))
 	{
-		Engine->scene->SetStaticGameObject(gameObject, gameObject_static, true);
+		Engine->sceneManager->SetStaticGameObject(gameObject, gameObject_static, true);
 	}
 
 	ImGui::Unindent();

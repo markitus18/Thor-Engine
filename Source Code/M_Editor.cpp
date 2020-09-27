@@ -11,7 +11,7 @@
 #include "W_Console.h"
 #include "W_EngineConfig.h"
 
-#include "M_Scene.h"
+#include "M_SceneManager.h"
 #include "M_FileSystem.h"
 #include "M_Resources.h"
 #include "M_Renderer3D.h"
@@ -428,13 +428,13 @@ void M_Editor::ShowFileNameWindow()
 
 	if (ImGui::InputText("", fileName, 50, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 	{
-		Engine->moduleResources->SaveResourceAs(Engine->scene->hScene.Get(), "Assets/Scenes", fileName);
+		Engine->moduleResources->SaveResourceAs(Engine->sceneManager->hCurrentScene.Get(), "Assets/Scenes", fileName);
 		show_fileName_window = false;
 	}
 
 	if (ImGui::Button("Accept"))
 	{
-		Engine->moduleResources->SaveResourceAs(Engine->scene->hScene.Get(), "Assets/Scenes", fileName);
+		Engine->moduleResources->SaveResourceAs(Engine->sceneManager->hCurrentScene.Get(), "Assets/Scenes", fileName);
 		show_fileName_window = false;
 	}
 
@@ -450,7 +450,7 @@ void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
 	std::string file, extension;
-	Engine->fileSystem->SplitFilePath(Engine->scene->hScene.Get()->GetAssetsFile(), nullptr, &file, &extension);
+	Engine->fileSystem->SplitFilePath(Engine->sceneManager->hCurrentScene.Get()->GetAssetsFile(), nullptr, &file, &extension);
 	std::string str = file;
 	if (extension != "")
 		file.append("." + extension);
@@ -622,7 +622,7 @@ void M_Editor::DeleteSelected()
 		selectedGameObjects[i]->Unselect();
 		if (selectedGameObjects[i]->GetType() == GAMEOBJECT)
 		{
-			Engine->scene->DeleteGameObject((GameObject*)selectedGameObjects[i]);
+			Engine->sceneManager->DeleteGameObject((GameObject*)selectedGameObjects[i]);
 		}
 		else
 		{
@@ -696,7 +696,7 @@ void M_Editor::LoadScene(const char* path, bool tmp)
 {
 	ResetScene();
 
-	uint64 sceneID = Engine->scene->LoadScene(path);
+	uint64 sceneID = Engine->sceneManager->LoadScene(path);
 
 	WF_SceneEditor* sceneEditor = (WF_SceneEditor*)GetWindowFrame(WF_SceneEditor::GetName());
 	sceneEditor->SetResource(sceneID);

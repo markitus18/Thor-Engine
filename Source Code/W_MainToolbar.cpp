@@ -1,7 +1,7 @@
 #include "W_MainToolbar.h"
 
 #include "Engine.h"
-#include "M_Scene.h"
+#include "M_SceneManager.h"
 
 #include "Time.h"
 
@@ -21,7 +21,7 @@ void W_MainToolbar::Draw()
 	std::string name = Time::running ? "Stop" : "Play";
 	if (ImGui::Button(name.c_str()))
 	{
-		Time::running ? Engine->scene->Stop() : Engine->scene->Play();
+		Time::running ? Engine->sceneManager->Stop() : Engine->sceneManager->Play();
 	}
 	ImGui::SameLine();
 	std::string name2 = Time::paused ? "Resmue" : "Pause";

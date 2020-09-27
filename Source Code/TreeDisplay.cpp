@@ -5,7 +5,7 @@
 #include "M_Editor.h" //TODO: necessary?
 #include "M_Camera3D.h"
 #include "M_Input.h"
-#include "M_Scene.h"
+#include "M_SceneManager.h"
 
 #include "GameObject.h"
 
@@ -58,7 +58,7 @@ void TreeDisplay::DrawNode(TreeNode* node)
 	{
 		if (ImGui::Button("delete"))
 		{
-			Engine->scene->DeleteGameObject((GameObject*)node); //TODO
+			Engine->sceneManager->DeleteGameObject((GameObject*)node); //TODO
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();
@@ -239,7 +239,7 @@ void TreeDisplay::HandleArrows()
 		}
 		else
 		{
-			next = Engine->scene->GetRoot()->GetNextOpenNode();
+			next = Engine->sceneManager->GetRoot()->GetNextOpenNode();
 		}
 		if (next != nullptr)
 		{
@@ -307,7 +307,7 @@ void TreeDisplay::DoShiftSelection(TreeNode* selected, bool selects)
 {
 	if (Engine->moduleEditor->lastSelected != selected)
 	{
-		TreeNode* next = TreeNode::GetFirstOpenNode(Engine->scene->GetRoot(), Engine->moduleEditor->lastSelected, selected);
+		TreeNode* next = TreeNode::GetFirstOpenNode(Engine->sceneManager->GetRoot(), Engine->moduleEditor->lastSelected, selected);
 		TreeNode* second = selected == next ? Engine->moduleEditor->lastSelected : selected;
 
 		while (next != nullptr)
@@ -363,7 +363,7 @@ bool TreeDisplay::SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> chil
 	bool previousParentHierarchyOpen = parent->hierarchyOpen;
 	bool ret = false;
 	parent->hierarchyOpen = true; //Little trick, in case the parent needs to add multiple childs
-	std::vector<TreeNode*>::const_iterator it = TreeNode::GetFirstOpenNode(Engine->scene->GetRoot(), childs);
+	std::vector<TreeNode*>::const_iterator it = TreeNode::GetFirstOpenNode(Engine->sceneManager->GetRoot(), childs);
 	while (it != childs.end())
 	{
 		if ((*it)->HasChildNodeInTree(parent) == false && next != *it && *it != parent)
@@ -372,7 +372,7 @@ bool TreeDisplay::SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> chil
 			ret = true;
 		}
 		childs.erase(it);
-		it = TreeNode::GetFirstOpenNode(Engine->scene->GetRoot(), childs);
+		it = TreeNode::GetFirstOpenNode(Engine->sceneManager->GetRoot(), childs);
 	}
 	parent->hierarchyOpen = previousParentHierarchyOpen;
 	parent->RecalculateOpenNodes();

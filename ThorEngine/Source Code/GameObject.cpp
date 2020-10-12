@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Engine.h"
 #include "M_Renderer3D.h"
+#include "Scene.h"
 
 #include "C_Transform.h"
 #include "C_Mesh.h"
@@ -49,6 +50,25 @@ GameObject::~GameObject()
 	{
 		delete components[i];
 		components[i] = nullptr;
+	}
+}
+
+void GameObject::Destroy()
+{
+	if (parent)
+	{
+		parent->RemoveChild(this);
+		parent = nullptr;
+	}
+	
+	//Notify destroy. Done before children so parents stack first
+	if (sceneOwner)
+		sceneOwner->OnDestroyGameObject(this);
+
+	//Destroy all children
+	for (uint i = 0; i < childs.size(); ++i)
+	{
+		childs[i]->Destroy();
 	}
 }
 
@@ -300,9 +320,28 @@ unsigned long long GameObject::GetID() const
 	return uid;
 }
 
-void GameObject::SetStatic(bool isStatic)
+void GameObject::SetStatic(bool isStatic, bool setChildren)
 {
-	this->isStatic = isStatic;
+	if (this->isStatic != isStatic)
+	{
+		this->isStatic = isStatic;
+
+		//Iterate up through all parents since they must also be static
+		GameObject* it = parent;
+		while (it != nullptr && it->uid != 0)
+		{
+			it->SetStatic(isStatic, false);
+			it = it->parent;
+		}
+
+		//Iterate down the hierarchy tree
+		if (setChildren)
+			for (uint i = 0; i < childs.size(); ++i)
+				childs[i]->SetStatic(isStatic, setChildren);
+
+		if (sceneOwner)
+			sceneOwner->OnGameObjectStaticChanged(this);
+	}
 }
 
 Component* GameObject::CreateComponent(Component::Type type)

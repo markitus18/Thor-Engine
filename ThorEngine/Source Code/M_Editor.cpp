@@ -65,9 +65,6 @@ bool M_Editor::Init(Config& config)
 	io.IniFilename = "Engine/imgui.ini";
 	io.MouseDrawCursor = false;
 	
-	int screen_width = GetSystemMetrics(SM_CXSCREEN);
-	int screen_height = GetSystemMetrics(SM_CYSCREEN);
-
 	//TODO: not sure if this should be done here too, but it's kinda valid
 	LoadConfig(config);
 
@@ -76,6 +73,8 @@ bool M_Editor::Init(Config& config)
 
 bool M_Editor::Start()
 {
+	//TODO: Add different windowClasses for every windowFrame.
+	//This way only windos belonging to the same windowFrame can dock into it  
 	frameWindowClass = new ImGuiWindowClass();
 	frameWindowClass->ClassId = 1;
 	frameWindowClass->DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoSplit;
@@ -523,7 +522,7 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 
 void M_Editor::CloseWindow(WindowFrame* windowFrame)
 {
-	//TODO: Remove data from ImGui's memory
+	//TODO: Remove data from ImGui's memory. The library will later override the file.
 	ClearWindowFromIni(windowFrame);
 	windowFrames.erase(std::find(windowFrames.begin(), windowFrames.end(), windowFrame));
 	RELEASE(windowFrame);

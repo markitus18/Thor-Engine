@@ -13,6 +13,7 @@ class GameObject;
 
 struct ModelNode
 {
+	ModelNode() {}
 	ModelNode(uint64 ID, const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity, uint64 parentID = 0) :
 	ID(ID), name(name), parentID(parentID), materialID(-1), meshID(-1)
 	{
@@ -34,11 +35,8 @@ public:
 	R_Model();
 	~R_Model();
 
-	GameObject* root = nullptr; //By now, just to compile. Should be erased with new structure
-
 	uint64 thumbnailID = 0;
 	std::vector<ModelNode> nodes;
-	std::vector<uint> animationIDs;
 };
 
 #endif //__R_MODEL_H__

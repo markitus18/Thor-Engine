@@ -1,9 +1,5 @@
 #include "I_Scenes.h"
 
-//TODO: Temporal engine include. Workaround until scene owns resources
-#include "Engine.h"
-#include "M_Resources.h"
-
 #include "GameObject.h"
 
 #include "Component.h"
@@ -16,7 +12,7 @@
 
 #include "Resource.h"
 #include "R_Model.h"
-#include "R_Scene.h"
+#include "R_Map.h"
 
 #include "Config.h"
 
@@ -25,9 +21,8 @@
 #include "Assimp/include/postprocess.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-#include "MathGeoLib\src\MathGeoLib.h"
+#include "MathGeoLib\src\MathGeoLib.h" //TODO: Include ONLY the necessary structures
 
-//TODO: kind of a dirty method to have a private variable in the namespace
 namespace Importer { namespace Models { LCG randomID; } }
 
 R_Model* Importer::Models::Create()
@@ -151,74 +146,97 @@ void Importer::Models::Load(const char* buffer, R_Model* model)
 	Config file(buffer);
 	Config_Array nodesArray = file.GetArray("Nodes");
 
+	for (uint i = 0; i < nodesArray.GetSize(); ++i)
+	{
+		Config node = nodesArray.GetNode(i);
+		model->nodes.push_back(ModelNode());
+		ModelNode& modelNode = (*model->nodes.rend());
+
+		modelNode.ID = node.GetNumber("Node ID");
+		modelNode.name = node.GetString("Name");
+
+		modelNode.parentID = node.GetNumber("Parent Node ID");
+
+		Config_Array transformArray = node.GetArray("Transform");
+		for (uint i = 0u; i < 16; ++i)
+		{
+			modelNode.transform.ptr()[i] = transformArray.GetNumber(i);
+		}
+
+		modelNode.meshID = node.GetNumber("Mesh ID");
+		modelNode.materialID = node.GetNumber("Material ID");
+	}
+}
+
+//Process an json model buffer and loads all the GameObject hierarchy
+GameObject* Importer::Models::LoadNewRoot(const R_Model* model)
+{
 	//We create an empty GameObject that will hold all the model data and will be removed later
+	GameObject* root = nullptr;
 	std::map<uint64, GameObject*> createdGameObjects;
 
-	for (uint i = 0u; i < nodesArray.GetSize(); ++i)
+	for (uint i = 0u; i < model->nodes.size(); ++i)
 	{
-		Config modelNode = nodesArray.GetNode(i);
+		const ModelNode& node = model->nodes[i];
 
 		//Finding the proper parent for the new GameObject
 		GameObject* parent = nullptr;
-		std::map<uint64, GameObject*>::iterator it = createdGameObjects.find(modelNode.GetNumber("Parent Node ID"));
+		std::map<uint64, GameObject*>::iterator it = createdGameObjects.find(node.parentID);
 		if (it != createdGameObjects.end())
 			parent = it->second;
-
-		//Gathering all transform data
-		float4x4 transform;
-		Config_Array transformArray = modelNode.GetArray("Transform");
-		for (uint i = 0u; i < 16; ++i)
-		{
-			transform.ptr()[i] = transformArray.GetNumber(i);
-		}
-
-		GameObject* newGameObject = new GameObject(parent, transform, modelNode.GetString("Name").c_str());
+		
+		GameObject* newGameObject = new GameObject(parent, node.transform, node.name.c_str());
 		newGameObject->uid = randomID.Int(); //Warning: Do not confuse with Node IDs. Node IDs are ONLY for internal node relationships	
-		createdGameObjects[modelNode.GetNumber("Node ID")] = newGameObject; //Here we store Node ID as we only use it for building parentships
-		if (!parent) model->root = newGameObject;
+		createdGameObjects[node.ID] = newGameObject; //Here we store Node ID as we only use it for building parentships
+		if (!parent) root = newGameObject;
 
 		//Adding mesh component and assignint its resource (if any)
-		uint64 meshID = 0;
-		if ((meshID = modelNode.GetNumber("Mesh ID")) != 0)
+		if (node.meshID != 0)
 		{
 			C_Mesh* meshComponent = (C_Mesh*)newGameObject->CreateComponent(Component::Type::Mesh);
-			meshComponent->SetResource(meshID);
+			meshComponent->SetResource(node.meshID);
 		}
 
 		//Adding material component and assignint its resource (if any)
-		uint64 materialID = 0;
-		if ((materialID = modelNode.GetNumber("Material ID")) != 0)
+		if (node.materialID != 0)
 		{
 			C_Material* materialComponent = (C_Material*)newGameObject->CreateComponent(Component::Type::Material);
-			materialComponent->SetResource(materialID);
+			materialComponent->SetResource(node.materialID);
 		}
 	}
 }
 
-R_Scene* Importer::Scenes::Create()
+R_Map* Importer::Maps::Create()
 {
-	return new R_Scene();
+	return new R_Map();
 }
 
-uint64 Importer::Scenes::Save(const R_Scene* scene, char** buffer)
+uint64 Importer::Maps::Save(const R_Map* map, char** buffer)
 {
-	Config file;
-	Config_Array goArray = file.SetArray("GameObjects");
+	uint size = map->config.Serialize(buffer);
+	return size;
+}
+
+void Importer::Maps::Load(const char* buffer, R_Map* scene)
+{
+	scene->config = Config(buffer);
+}
+
+void Importer::Maps::SaveRootToMap(const GameObject* root, R_Map* map)
+{
+	Config_Array goArray = map->config.SetArray("GameObjects");
 
 	std::vector<const GameObject*> gameObjects;
-	scene->root->CollectChilds(gameObjects);
+	root->CollectChilds(gameObjects);
 	gameObjects.erase(gameObjects.begin());
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		Private::SaveGameObject(goArray.AddNode(), gameObjects[i]);
 	}
-
-	uint size = file.Serialize(buffer);
-	return size;
 }
 
-void Importer::Scenes::Private::SaveGameObject(Config& config, const GameObject* gameObject)
+void Importer::Maps::Private::SaveGameObject(Config& config, const GameObject* gameObject)
 {
 	config.SetNumber("UID", gameObject->uid);
 
@@ -250,7 +268,7 @@ void Importer::Scenes::Private::SaveGameObject(Config& config, const GameObject*
 	}
 }
 
-void Importer::Scenes::Private::SaveComponentBase(Config& config, const Component* component)
+void Importer::Maps::Private::SaveComponentBase(Config& config, const Component* component)
 {
 	config.SetNumber("ComponentType", (int)component->GetType());
 	Private::SaveComponent(config, component);
@@ -262,44 +280,43 @@ void Importer::Scenes::Private::SaveComponentBase(Config& config, const Componen
 	}
 }
 
-void Importer::Scenes::Private::SaveComponent(Config& config, const Component* component)
+void Importer::Maps::Private::SaveComponent(Config& config, const Component* component)
 {
 	switch (component->GetType())
 	{
-		case(Component::Camera):
-			Private::SaveComponent(config, (C_Camera*)component);
-			break;
-		case(Component::Animator):
-			Private::SaveComponent(config, (C_Animator*)component);
-			break;
+	case(Component::Camera):
+		Private::SaveComponent(config, (C_Camera*)component);
+		break;
+	case(Component::Animator):
+		Private::SaveComponent(config, (C_Animator*)component);
+		break;
 	}
 }
 
-void Importer::Scenes::Private::SaveComponent(Config& config, const C_Camera* camera)
+void Importer::Maps::Private::SaveComponent(Config& config, const C_Camera* camera)
 {
 	config.SetNumber("FOV", camera->frustum.VerticalFov() * RADTODEG);
 	config.SetNumber("NearPlane", camera->frustum.NearPlaneDistance());
 	config.SetNumber("FarPlane", camera->frustum.FarPlaneDistance());
 }
 
-void Importer::Scenes::Private::SaveComponent(Config& config, const C_Animator* animator)
+void Importer::Maps::Private::SaveComponent(Config& config, const C_Animator* animator)
 {
 	config.SetBool("Playing", animator->playing);
 	config.SetNumber("Current Animation", animator->current_animation);
 }
 
 //TODO: Do we need to fill this function ??
-void Importer::Scenes::Private::SaveComponent(Config& config, const C_ParticleSystem* component)
+void Importer::Maps::Private::SaveComponent(Config& config, const C_ParticleSystem* component)
 {
 
 }
 
-void Importer::Scenes::Load(const char* buffer, R_Scene* scene)
+GameObject* Importer::Maps::LoadRootFromMap(const R_Map* scene)
 {
-	Config file(buffer);
-	scene->root = new GameObject();
+	GameObject* root = new GameObject();
 	std::map<uint64, GameObject*> createdGameObjects;
-	Config_Array gameObjects_array = file.GetArray("GameObjects");
+	Config_Array gameObjects_array = scene->config.GetArray("GameObjects");
 
 	for (uint i = 0; i < gameObjects_array.GetSize(); ++i)
 	{
@@ -316,13 +333,13 @@ void Importer::Scenes::Load(const char* buffer, R_Scene* scene)
 		if (it != createdGameObjects.end())
 			parent = it->second;
 
-		GameObject* gameObject = new GameObject(parent ? parent : scene->root, gameObject_node.GetString("Name").c_str(), position, rotation, scale);
+		GameObject* gameObject = new GameObject(parent ? parent : root, gameObject_node.GetString("Name").c_str(), position, rotation, scale);
 		gameObject->uid = gameObject_node.GetNumber("UID");
 		createdGameObjects[gameObject->uid] = gameObject;
 
 		gameObject->active = gameObject_node.GetBool("Active");
 		gameObject->isStatic = gameObject_node.GetBool("Static");
-		
+
 		//if (gameObject_node.GetBool("Selected", false))
 		//	Engine->moduleEditor->AddSelect(gameObject);
 
@@ -351,7 +368,7 @@ void Importer::Scenes::Load(const char* buffer, R_Scene* scene)
 	}
 }
 
-void Importer::Scenes::Private::LoadComponent(Config& config, Component* component)
+void Importer::Maps::Private::LoadComponent(Config& config, Component* component)
 {
 	switch (component->GetType())
 	{
@@ -368,21 +385,21 @@ void Importer::Scenes::Private::LoadComponent(Config& config, Component* compone
 	}
 }
 
-void Importer::Scenes::Private::LoadComponent(Config& config, C_Camera* camera)
+void Importer::Maps::Private::LoadComponent(Config& config, C_Camera* camera)
 {
 	camera->SetFOV(config.GetNumber("FOV"));
 	camera->SetNearPlane(config.GetNumber("NearPlane"));
 	camera->SetFarPlane(config.GetNumber("FarPlane"));
 }
 
-void Importer::Scenes::Private::LoadComponent(Config& config, C_Animator* animator)
+void Importer::Maps::Private::LoadComponent(Config& config, C_Animator* animator)
 {
 	animator->playing = config.GetBool("Playing");
 	uint currentAnimation = config.GetNumber("Current Animation");
 	animator->SetAnimation(currentAnimation);
 }
 
-void Importer::Scenes::Private::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
+void Importer::Maps::Private::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
 {
 
 }

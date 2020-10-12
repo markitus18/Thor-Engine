@@ -194,6 +194,8 @@ void M_Resources::ImportFileFromExplorer(const char* path, const char* dstDir)
 uint64 M_Resources::ImportFileFromAssets(const char* path)
 {
 	ResourceType type = GetTypeFromFileExtension(path);
+	if (type == ResourceType::UNKNOWN) return 0;
+
 	Resource* resource = CreateNewResource(path, type);
 	uint64 resourceID = resource->GetID();
 

@@ -340,9 +340,6 @@
     <ClCompile Include="Source Code\W_ParticleViewport.cpp">
       <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\R_Scene.cpp">
-      <Filter>Source Code\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\R_Model.cpp">
       <Filter>Source Code\Resources</Filter>
     </ClCompile>
@@ -355,17 +352,14 @@
     <ClCompile Include="Source Code\M_SceneManager.cpp">
       <Filter>Source Code\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\R_Map.cpp">
+      <Filter>Source Code\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\Scene.cpp">
+      <Filter>Source Code\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h">
-      <Filter>External Libraries\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLib.h">
-      <Filter>External Libraries\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLibFwd.h">
-      <Filter>External Libraries\MathGeoLib</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Geometry\AABB.h">
       <Filter>External Libraries\MathGeoLib\Geometry</Filter>
     </ClInclude>
@@ -814,9 +808,6 @@
     <ClInclude Include="Source Code\W_ParticleViewport.h">
       <Filter>Source Code\Editor\Windows\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\R_Scene.h">
-      <Filter>Source Code\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\R_Model.h">
       <Filter>Source Code\Resources</Filter>
     </ClInclude>
@@ -831,6 +822,21 @@
     </ClInclude>
     <ClInclude Include="Source Code\M_SceneManager.h">
       <Filter>Source Code\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathBuildConfig.h">
+      <Filter>External Libraries\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathGeoLib.h">
+      <Filter>External Libraries\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathGeoLibFwd.h">
+      <Filter>External Libraries\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\R_Map.h">
+      <Filter>Source Code\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\Scene.h">
+      <Filter>Source Code\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

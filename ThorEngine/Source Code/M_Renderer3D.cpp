@@ -27,16 +27,6 @@
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
 
 
-//TMP TESTING  TODO: what is this?
-
-#include "Devil\include\ilu.h"
-#include "Devil\include\ilut.h"
-
-#pragma comment( lib, "Devil/libx86/DevIL.lib" )
-#pragma comment( lib, "Devil/libx86/ILU.lib" )
-#pragma comment( lib, "Devil/libx86/ILUT.lib" )
-
-
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module("Renderer", start_enabled)
 {
@@ -207,6 +197,8 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 	glReadPixels(0, 0, surface->w, surface->h, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 	
 	SDL_UnlockSurface(surface);
+
+	//WARNING: DevIL was included here to save the thumbnail image. It should be moved to texture importer
 
 	//uint64 ret = Engine->moduleResources->ImportModelThumbnail(pixels, source_file, surface->w, surface->h);
 	/*

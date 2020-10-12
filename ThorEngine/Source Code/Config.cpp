@@ -28,7 +28,7 @@ Config::~Config()
 }
 
 //Fills a buffer, returns its size
-uint Config::Serialize(char** buffer)
+uint Config::Serialize(char** buffer) const
 {
 	size_t size = json_serialization_size_pretty(root_value);
 	*buffer = new char[size];

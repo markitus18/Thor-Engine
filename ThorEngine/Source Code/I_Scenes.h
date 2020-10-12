@@ -16,7 +16,7 @@ class C_Camera;
 class C_Transform;
 class C_ParticleSystem;
 class R_Model;
-class R_Scene;
+class R_Map;
 struct ModelNode;
 class Component;
 class GameObject;
@@ -48,8 +48,11 @@ namespace Importer
 		//Warning: buffer memory needs to be released after the function call
 		uint64 Save(const R_Model* model, char** buffer);
 
-		//Process an json model buffer and loads all the GameObject hierarchy
+		//Process an json model buffer and loads all the Model nodes
 		void Load(const char* buffer, R_Model* model);
+
+		//Process an json model buffer and loads all the GameObject hierarchy
+		GameObject* LoadNewRoot(const R_Model* model);
 
 		namespace Private
 		{
@@ -64,18 +67,22 @@ namespace Importer
 
 	}
 
-	namespace Scenes
+	namespace Maps
 	{
 		//Creates an empty scene resource using default constructor
-		R_Scene* Create();
+		R_Map* Create();
 
-		//Process a GameObject data with its hierarchy into a buffer file saved as json
-		//Returns the size of the buffer file (0 if any errors)
-		//Warning: buffer memory needs to be released after the function call
-		uint64 Save(const R_Scene* scene, char** buffer);
+		//Stores R_Map json config into a file buffer
+		uint64 Save(const R_Map* scene, char** buffer);
 			   
-		//Process an json scene buffer and loads all the GameObject hierarchy
-		void Load(const char* buffer, R_Scene* scene);
+		//Generates R_Map json config from a file buffer
+		void Load(const char* buffer, R_Map* scene);
+
+		//Process a GameObject data with its hierarchy into a json config in R_Map
+		void SaveRootToMap(const GameObject* root, R_Map* map);
+
+		//Generates a new root which holds all GameObject hierarchy loaded from R_Map
+		GameObject* LoadRootFromMap(const R_Map* map);
 
 		namespace Private
 		{

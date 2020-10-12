@@ -98,9 +98,13 @@
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
+    <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
+    <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathGeoLib.h" />
+    <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathGeoLibFwd.h" />
     <ClInclude Include="Source Code\ResourceBase.h" />
     <ClInclude Include="Source Code\ResourceHandle.h" />
-    <ClInclude Include="Source Code\R_Scene.h" />
+    <ClInclude Include="Source Code\R_Map.h" />
+    <ClInclude Include="Source Code\Scene.h" />
     <ClInclude Include="Source Code\WF_ParticleEditor.h" />
     <ClInclude Include="Source Code\Window.h" />
     <ClInclude Include="Source Code\Emitter.h" />
@@ -244,9 +248,6 @@
     <ClInclude Include="Source Code\W_ParticleToolbar.h" />
     <ClInclude Include="Source Code\W_Resources.h" />
     <ClInclude Include="Source Code\W_Scene.h" />
-    <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
-    <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLib.h" />
-    <ClInclude Include="Source\External Libraries\MathGeoLib\src\MathGeoLibFwd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source Code\Engine.cpp" />
@@ -259,7 +260,8 @@
     <ClCompile Include="Source Code\C_ParticleSystem.cpp" />
     <ClCompile Include="Source Code\C_Transform.cpp" />
     <ClCompile Include="Source Code\ResourceHandle.cpp" />
-    <ClCompile Include="Source Code\R_Scene.cpp" />
+    <ClCompile Include="Source Code\R_Map.cpp" />
+    <ClCompile Include="Source Code\Scene.cpp" />
     <ClCompile Include="Source Code\WF_ParticleEditor.cpp" />
     <ClCompile Include="Source Code\Window.cpp" />
     <ClCompile Include="Source Code\Emitter.cpp" />

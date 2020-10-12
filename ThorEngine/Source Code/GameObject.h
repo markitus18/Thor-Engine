@@ -14,6 +14,7 @@
 
 class C_Transform;
 class Config;
+class Scene;
 
 class GameObject : public TreeNode
 {
@@ -24,6 +25,7 @@ public:
 
 	~GameObject();
 
+	void Destroy();
 	void Update(float dt);
 	void Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected);
 	void DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBosSelected);
@@ -53,7 +55,7 @@ public:
 	const char* GetName() const;
 	unsigned long long GetID() const;
 
-	void SetStatic(bool isStatic);
+	void SetStatic(bool isStatic, bool setChildren = false);
 
 	//Component management --------------------------------
 	Component* CreateComponent(Component::Type type);
@@ -118,6 +120,8 @@ public:
 
 	GameObject*					parent = nullptr;
 	std::vector<GameObject*>	childs;
+
+	Scene*						sceneOwner = nullptr;
 
 	//TODO: this for when models (apply / revert) get implemented
 	Resource*					link = nullptr;

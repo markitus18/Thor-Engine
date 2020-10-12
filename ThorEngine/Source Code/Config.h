@@ -36,7 +36,7 @@ public:
 	Config(JSON_Object* obj);		//Constructor used for node append
 	~Config();						//Free data if initialized
 
-	uint Serialize(char** buffer);	//Returns a filled buffer
+	uint Serialize(char** buffer) const;	//Returns a filled buffer
 	bool NodeExists();
 	void Release();
 

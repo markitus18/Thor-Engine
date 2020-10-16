@@ -18,7 +18,7 @@ enum class ResourceType
 	MODEL,
 	PARTICLESYSTEM,
 	SHADER,
-	SCENE,
+	MAP,
 	UNKNOWN,
 };
 

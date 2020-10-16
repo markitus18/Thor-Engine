@@ -14,7 +14,7 @@
 #define BONES_PATH "Library/Bones/"
 #define PARTICLES_PATH "Library/ParticleSystems/"
 #define SHADERS_PATH "Library/Shaders/"
-#define SCENES_PATH "Library/Scenes/"
+#define MAPS_PATH "Library/Maps/"
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__)
 

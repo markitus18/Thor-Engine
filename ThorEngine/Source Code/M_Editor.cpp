@@ -16,7 +16,9 @@
 #include "M_Resources.h"
 #include "M_Renderer3D.h"
 
-#include "R_Scene.h"
+#include "I_Scenes.h"
+#include "R_Map.h"
+#include "Scene.h"
 
 #include "GameObject.h"
 #include "Resource.h"
@@ -84,7 +86,7 @@ bool M_Editor::Start()
 
 	if (TryLoadEditorState() == false)
 	{
-		uint64 sceneID = Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Untitled.scene")->ID;
+		uint64 sceneID = Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Untitled.map")->ID;
 		OpenWindowFromResource(sceneID);
 	}
 
@@ -425,21 +427,28 @@ void M_Editor::ShowFileNameWindow()
 	ImGui::SetNextWindowSize(ImVec2(400, 100));
 	ImGui::Begin("File Name", &show_fileName_window, ImGuiWindowFlags_NoResize);
 
+	bool saveFile = false;
 	if (ImGui::InputText("", fileName, 50, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
-	{
-		Engine->moduleResources->SaveResourceAs(Engine->sceneManager->hCurrentScene.Get(), "Assets/Scenes", fileName);
-		show_fileName_window = false;
-	}
+		saveFile = true;
 
 	if (ImGui::Button("Accept"))
-	{
-		Engine->moduleResources->SaveResourceAs(Engine->sceneManager->hCurrentScene.Get(), "Assets/Scenes", fileName);
-		show_fileName_window = false;
-	}
+		saveFile = true;
 
 	ImGui::SameLine();
 	if (ImGui::Button("Cancel"))
 	{
+		show_fileName_window = false;
+	}
+
+	if (saveFile)
+	{
+		//TODO: Call scene manager, clean extra dependencies
+		Scene* currentScene = Engine->sceneManager->gameScene;
+		ResourceHandle<R_Map> map(currentScene->ID);
+
+		Importer::Maps::SaveRootToMap(currentScene->root, map.Get());
+		Engine->moduleResources->SaveResourceAs(map.Get(), "Assets/Scenes", fileName);
+
 		show_fileName_window = false;
 	}
 	ImGui::End();
@@ -448,12 +457,7 @@ void M_Editor::ShowFileNameWindow()
 void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
-	std::string file, extension;
-	Engine->fileSystem->SplitFilePath(Engine->sceneManager->hCurrentScene.Get()->GetAssetsFile(), nullptr, &file, &extension);
-	std::string str = file;
-	if (extension != "")
-		file.append("." + extension);
-	strcpy_s(fileName, 50, str.c_str());
+	strcpy_s(fileName, 50, Engine->sceneManager->gameScene->name.c_str());
 }
 
 WindowFrame* M_Editor::GetWindowFrame(const char* name)
@@ -490,7 +494,7 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 
 	switch (resource->GetType())
 	{
-		case(ResourceType::SCENE):
+		case(ResourceType::MAP):
 		{
 			if (windowFrame = GetWindowFrame(WF_SceneEditor::GetName()))
 				{ windowFrame->SetResource(resourceID); return true; }
@@ -621,7 +625,7 @@ void M_Editor::DeleteSelected()
 		selectedGameObjects[i]->Unselect();
 		if (selectedGameObjects[i]->GetType() == GAMEOBJECT)
 		{
-			Engine->sceneManager->DeleteGameObject((GameObject*)selectedGameObjects[i]);
+			((GameObject*)selectedGameObjects[i])->Destroy();
 		}
 		else
 		{
@@ -695,10 +699,10 @@ void M_Editor::LoadScene(const char* path, bool tmp)
 {
 	ResetScene();
 
-	uint64 sceneID = Engine->sceneManager->LoadScene(path);
+	Scene* scene = Engine->sceneManager->LoadScene(path);
 
 	WF_SceneEditor* sceneEditor = (WF_SceneEditor*)GetWindowFrame(WF_SceneEditor::GetName());
-	sceneEditor->SetResource(sceneID);
+	sceneEditor->SetResource(scene->ID);
 }
 
 void M_Editor::ResetScene()

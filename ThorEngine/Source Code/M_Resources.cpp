@@ -327,7 +327,7 @@ Resource* M_Resources::CreateNewResource(const char* assetsPath, ResourceType ty
 		case ResourceType::MODEL:				base.libraryFile = MODELS_PATH;	break;
 		case ResourceType::PARTICLESYSTEM:		base.libraryFile = PARTICLES_PATH; break;
 		case ResourceType::SHADER:				base.libraryFile = SHADERS_PATH; break;
-		case ResourceType::SCENE:				base.libraryFile = SCENES_PATH;	break;
+		case ResourceType::MAP:					base.libraryFile = MAPS_PATH;	break;
 	}
 	base.libraryFile.append(std::to_string(base.ID));
 	resourceLibrary[base.ID] = base;
@@ -354,7 +354,7 @@ Resource* M_Resources::CreateResourceFromBase(ResourceBase& base)
 		case ResourceType::MODEL:				resource = (Resource*)Importer::Models::Create(); break;
 		case ResourceType::PARTICLESYSTEM:		resource = (Resource*)Importer::Particles::Create(); break;
 		case ResourceType::SHADER:				resource = (Resource*)Importer::Shaders::Create(); break;
-		case ResourceType::SCENE:				resource = (Resource*)Importer::Scenes::Create(); break;
+		case ResourceType::MAP:					resource = (Resource*)Importer::Maps::Create(); break;
 	}
 
 	resource->baseData = &base;
@@ -419,7 +419,7 @@ Resource* M_Resources::RequestResource(uint64 ID)
 			case (ResourceType::ANIMATOR_CONTROLLER):	{ Importer::Animators::Load(buffer, (R_AnimatorController*)resource); break; }
 			case (ResourceType::PARTICLESYSTEM):		{ Importer::Particles::Load(buffer, size, (R_ParticleSystem*)resource); break; }
 			case (ResourceType::SHADER):				{ Importer::Shaders::Load(buffer, size, (R_Shader*)resource); break; }
-			case (ResourceType::SCENE):					{ Importer::Scenes::Load(buffer, (R_Scene*)resource); break; }
+			case (ResourceType::MAP):					{ Importer::Maps::Load(buffer, (R_Map*)resource); break; }
 		}
 		RELEASE_ARRAY(buffer);
 		resource->LoadOnMemory();
@@ -488,7 +488,7 @@ void M_Resources::SaveResource(Resource* resource, bool saveMeta)
 		case(ResourceType::MODEL): { size = Importer::Models::Save((R_Model*)resource, &buffer); break; }
 		case(ResourceType::PARTICLESYSTEM): { size = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); break; }
 		case(ResourceType::SHADER): { size = Importer::Shaders::Save((R_Shader*)resource, &buffer); break; }
-		case(ResourceType::SCENE): { size = Importer::Scenes::Save((R_Scene*)resource, &buffer); break; }
+		case(ResourceType::MAP): { size = Importer::Maps::Save((R_Map*)resource, &buffer); break; }
 	}
 
 	if (size > 0)
@@ -506,7 +506,7 @@ void M_Resources::SaveResource(Resource* resource, bool saveMeta)
 
 uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, const char* fileName)
 {
-	//TODO:   SaveResourceAs would override any existing resource with that name, and not remove its library content.
+	//TODO:   SaveResourceAs would override any existing resource with that name and not remove its library content.
 
 	//Creating a new empty resource just to add it into the database
 	std::string path = directory + std::string("/").append(name); //TODO: Append extension...?
@@ -517,7 +517,6 @@ uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, co
 	resource->baseData = newResource->baseData;
 
 	SaveResource(resource);
-	//TODO: Save meta data
 
 	//Load the newly saved data into the new resource
 	uint64 newID = newResource->GetID();
@@ -660,8 +659,8 @@ ResourceType M_Resources::GetTypeFromFileExtension(const char* path) const
 		return ResourceType::PARTICLESYSTEM;
 	if (ext == "shader")
 		return ResourceType::SHADER;
-	if (ext == "scene")
-		return ResourceType::SCENE;
+	if (ext == "map")
+		return ResourceType::MAP;
 	if (ext == "anim")
 		return ResourceType::ANIMATION;
 	if (ext == "animator")

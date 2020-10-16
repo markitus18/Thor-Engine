@@ -73,7 +73,8 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	bool gameObject_static = gameObject->isStatic;
 	if (ImGui::Checkbox("static", &gameObject_static))
 	{
-		Engine->sceneManager->SetStaticGameObject(gameObject, gameObject_static, true);
+		//TODO: Open Popup: Warning parent change, asking children
+		gameObject->SetStatic(gameObject_static, false);
 	}
 
 	ImGui::Unindent();

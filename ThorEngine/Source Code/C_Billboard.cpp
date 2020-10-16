@@ -1,9 +1,7 @@
 #include "C_Billboard.h"
 
-#include "Engine.h"
-#include "M_SceneManager.h"
-
 #include "GameObject.h"
+#include "Scene.h"
 
 #include "C_Transform.h"
 #include "C_Camera.h"
@@ -23,7 +21,7 @@ void C_Billboard::Update(float dt)
 	//TODO: enough for now, change it to assign a camera in the inspector
 	if (cameraRef == nullptr)
 	{
-		cameraRef = Engine->sceneManager->GetMainCamera();
+		gameObject->sceneOwner->GetMainCamera();
 	}
 	if (cameraRef == nullptr) return;
 	

@@ -15,10 +15,12 @@
 Scene::Scene()
 {
 	quadtree = new Quadtree(AABB(vec(-80, -30, -80), vec(80, 30, 80)));
+	root = new GameObject(nullptr, float4x4::identity, "Root");
 }
 
 Scene::~Scene()
 {
+
 }
 
 void Scene::AddGameObject(GameObject* newGameObject, GameObject* parent)
@@ -189,6 +191,8 @@ void Scene::Stop()
 
 void Scene::ClearScene()
 {
+	if (!root) return; //Scene has not been initialized yet
+
 	for (uint i = 0; i < root->childs.size(); ++i)
 	{
 		root->childs[i]->Destroy();

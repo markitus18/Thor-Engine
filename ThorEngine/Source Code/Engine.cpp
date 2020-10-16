@@ -10,7 +10,7 @@
 #include "M_Editor.h"
 #include "M_Resources.h"
 
-#include "R_Scene.h"
+#include "Scene.h"
 
 #include "Config.h"
 #include "Time.h"
@@ -193,13 +193,7 @@ const char* TEngine::GetOrganizationName() const
 void TEngine::UpdateSceneName()
 {
 	std::string windowTitle = title;
-	std::string sceneName = "", sceneExtension = "";
-	Engine->fileSystem->SplitFilePath(sceneManager->hCurrentScene.Get()->GetAssetsFile(), nullptr, &sceneName, &sceneExtension); //TODO: avoid accessing a resource
-	windowTitle.append(" - ").append(sceneName);
-	if (sceneExtension != "")
-	{
-		windowTitle.append((".") + sceneExtension);
-	}
+	windowTitle.append(" - ").append(sceneManager->gameScene->name.c_str());
 	window->SetTitle(windowTitle.c_str());
 }
 

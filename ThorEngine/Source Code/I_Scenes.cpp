@@ -204,6 +204,8 @@ GameObject* Importer::Models::LoadNewRoot(const R_Model* model)
 			materialComponent->SetResource(node.materialID);
 		}
 	}
+
+	return root;
 }
 
 R_Map* Importer::Maps::Create()
@@ -219,7 +221,8 @@ uint64 Importer::Maps::Save(const R_Map* map, char** buffer)
 
 void Importer::Maps::Load(const char* buffer, R_Map* scene)
 {
-	scene->config = Config(buffer);
+	scene->config.Set(buffer);
+	int k = 3;
 }
 
 void Importer::Maps::SaveRootToMap(const GameObject* root, R_Map* map)
@@ -366,6 +369,8 @@ GameObject* Importer::Maps::LoadRootFromMap(const R_Map* scene)
 		//Call OnUpdateTransform() to init all components according to the GameObject
 		gameObject->OnUpdateTransform();
 	}
+
+	return root;
 }
 
 void Importer::Maps::Private::LoadComponent(Config& config, Component* component)

@@ -71,7 +71,7 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(ANIMATIONS_PATH);
 	CreateDir(PARTICLES_PATH);
 	CreateDir(SHADERS_PATH);
-	CreateDir(SCENES_PATH);
+	CreateDir(MAPS_PATH);
 }
 
 // Add a new zip file or folder

@@ -13,7 +13,7 @@ void W_About::Draw()
 	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin("About Thor Engine", &active, ImGuiWindowFlags_NoResize)) { ImGui::End(); return; }
 
-	ImGui::Text("v0.4-alpha");
+	ImGui::Text("v0.2");
 	ImGui::Separator();
 	ImGui::Text("By Marc Garrigo for educational purposes.");
 	ImGui::Text("Thor Engine is licensed under Public Domain, see LICENSE for more information.");

@@ -58,7 +58,7 @@ void TreeDisplay::DrawNode(TreeNode* node)
 	{
 		if (ImGui::Button("delete"))
 		{
-			Engine->sceneManager->DeleteGameObject((GameObject*)node); //TODO
+			((GameObject*)node)->Destroy();
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::EndPopup();

@@ -37,7 +37,7 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWin
 	hResourceIcons[ResourceType::MODEL].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/SceneIcon.png")->ID);
 	hResourceIcons[ResourceType::PARTICLESYSTEM].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ParticlesIcon.png")->ID);
 	hResourceIcons[ResourceType::SHADER].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ShaderIcon.png")->ID);
-	hResourceIcons[ResourceType::SCENE].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ThorIcon.png")->ID);
+	hResourceIcons[ResourceType::MAP].Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ThorIcon.png")->ID);
 	hResourceHighlight.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/SelectedIcon.png")->ID);
 }
 

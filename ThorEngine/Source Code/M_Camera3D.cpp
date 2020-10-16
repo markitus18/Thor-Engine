@@ -8,13 +8,14 @@
 #include "GameObject.h"
 #include "OpenGL.h"
 #include "M_SceneManager.h"
+#include "Scene.h"
 #include "Vec2.h"
 #include "Time.h"
 
 #include <vector>
 #include <map>
 
-
+//TODO: Camera editor movement should NOT be in a module! Viewport window will handle this
 
 M_Camera3D::M_Camera3D(bool start_enabled) : Module("Camera", start_enabled)
 {
@@ -210,5 +211,5 @@ void M_Camera3D::OnClick(const Vec2& mousePos)
 
 	lastRay = Engine->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 
- 	Engine->sceneManager->OnClickSelection(lastRay);
+ 	Engine->sceneManager->gameScene->PerformMousePick(lastRay);
 }

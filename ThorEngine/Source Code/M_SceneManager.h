@@ -34,8 +34,8 @@ public:
 	void SaveConfig(Config& config) const override;
 	void LoadConfig(Config& config) override;
 
-	uint64 LoadScene(const char* file, bool append = false);
-	void LoadScene(uint64 resourceID, bool append = false);
+	Scene* LoadScene(const char* file, bool append = false);
+	Scene* LoadScene(uint64 resourceID, bool append = false);
 	void LoadModel(uint64 resourceID); //Calls module import to load a Game Object file
 	//Endof Scene and model save / load ------------------------------------------
 

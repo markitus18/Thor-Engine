@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "M_SceneManager.h"
+#include "Scene.h"
 
 #include "Time.h"
 
@@ -21,8 +22,14 @@ void W_MainToolbar::Draw()
 	std::string name = Time::running ? "Stop" : "Play";
 	if (ImGui::Button(name.c_str()))
 	{
-		Time::running ? Engine->sceneManager->Stop() : Engine->sceneManager->Play();
+		//TODO: This should be handled through windowOwner->GetScene()
+		Scene* currentScene = Engine->sceneManager->gameScene;
+		if (Time::running) //TODO: Define a Time for each scene
+			Engine->sceneManager->StopSceneSimulation(currentScene);
+		else
+			Engine->sceneManager->StartSceneSimulation(currentScene);
 	}
+
 	ImGui::SameLine();
 	std::string name2 = Time::paused ? "Resmue" : "Pause";
 	if (ImGui::Button(name2.c_str()))

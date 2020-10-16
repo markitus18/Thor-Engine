@@ -8,6 +8,7 @@
 #include "M_Camera3D.h"
 #include "M_Resources.h"
 #include "M_FileSystem.h"
+#include "I_Scenes.h"
 
 #include "Window.h"
 
@@ -24,7 +25,8 @@
 #include "W_About.h"
 #include "W_MainToolbar.h"
 
-#include "R_Scene.h"
+#include "Scene.h"
+#include "R_Map.h"
 
 WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID) : WindowFrame(GetName(), frameWindowClass, windowClass, ID)
 {
@@ -55,7 +57,7 @@ WF_SceneEditor::~WF_SceneEditor()
 void WF_SceneEditor::SetResource(uint64 resourceID)
 {
 	WindowFrame::SetResource(resourceID);
-	if (resourceID != Engine->sceneManager->hCurrentScene.GetID())
+	if (!scene || scene->ID != resourceID) 
 		Engine->sceneManager->LoadScene(resourceID);
 }
 
@@ -87,13 +89,16 @@ void WF_SceneEditor::MenuBar_File()
 
 		if (ImGui::MenuItem("Save Scene"))
 		{
-			if (Engine->sceneManager->hCurrentScene.Get()->GetAssetsFile() == "Engine/Assets/Defaults/Untitled.scene")
+			if (scene->file_path == "Engine/Assets/Defaults/Untitled.scene")
 			{
 				Engine->moduleEditor->OpenFileNameWindow();
 			}
 			else
 			{
-				Engine->moduleResources->SaveResource(Engine->sceneManager->hCurrentScene.Get());
+				//TODO: Call scene manager to avoid importer dependeny
+				ResourceHandle<R_Map> map(scene->ID);
+				Importer::Maps::SaveRootToMap(scene->root, map.Get());
+				Engine->moduleResources->SaveResource(map.Get());
 			}
 		}
 
@@ -117,16 +122,16 @@ void WF_SceneEditor::MenuBar_Custom()
 	{
 		if (ImGui::MenuItem("Empty"))
 		{
-			std::string name(Engine->sceneManager->GetNewGameObjectName("GameObject"));
-			GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str());
+			std::string name(scene->GetNewGameObjectName("GameObject"));
+			GameObject* newGameObject = scene->CreateNewGameObject(name.c_str());
 			Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 		}
 
 		if (ImGui::MenuItem("Empty Child"))
 		{
 			GameObject* parent = (GameObject*)(Engine->moduleEditor->selectedGameObjects.size() > 0 ? Engine->moduleEditor->selectedGameObjects[0] : nullptr);
-			std::string name(Engine->sceneManager->GetNewGameObjectName("GameObject", parent));
-			GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str(), parent);
+			std::string name(scene->GetNewGameObjectName("GameObject", parent));
+			GameObject* newGameObject = scene->CreateNewGameObject(name.c_str(), parent);
 			Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 		}
 
@@ -134,8 +139,8 @@ void WF_SceneEditor::MenuBar_Custom()
 		{
 			for (uint i = 0; i < 10; i++)
 			{
-				std::string name(Engine->sceneManager->GetNewGameObjectName("GameObject"));
-				GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str());
+				std::string name(scene->GetNewGameObjectName("GameObject"));
+				GameObject* newGameObject = scene->CreateNewGameObject(name.c_str());
 				Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 			}
 		}
@@ -143,8 +148,8 @@ void WF_SceneEditor::MenuBar_Custom()
 		{
 			if (ImGui::MenuItem("Cube"))
 			{
-				std::string name(Engine->sceneManager->GetNewGameObjectName("Cube"));
-				GameObject* newGameObject = Engine->sceneManager->CreateGameObject(name.c_str());
+				std::string name(scene->GetNewGameObjectName("Cube"));
+				GameObject* newGameObject = scene->CreateNewGameObject(name.c_str());
 				Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 
 			}
@@ -152,7 +157,7 @@ void WF_SceneEditor::MenuBar_Custom()
 		}
 		if (ImGui::MenuItem("Camera"))
 		{
-			Engine->sceneManager->CreateCamera();
+			scene->CreateCamera();
 		}
 		ImGui::EndMenu();
 	}

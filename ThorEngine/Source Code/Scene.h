@@ -22,7 +22,7 @@ public:
 	~Scene();
 
 	void AddGameObject(GameObject* newGameObject, GameObject* parent = nullptr);
-	GameObject* CreateNewGameObject(const char* name, GameObject* parent);
+	GameObject* CreateNewGameObject(const char* name, GameObject* parent = nullptr);
 
 	std::string GetNewGameObjectName(const char* name, const GameObject* parent = nullptr);
 	int GetGameObjectNameCount(const char* name, const GameObject* parent = nullptr);
@@ -56,8 +56,8 @@ public:
 	std::string name;
 	uint64 ID;
 
+	GameObject* root = nullptr; //TODO: Move to private. Access in M_Editor save scene
 private:
-	GameObject* root = nullptr;
 	C_Camera* mainCamera = nullptr;
 
 	M_SceneManager* managerOwner = nullptr;

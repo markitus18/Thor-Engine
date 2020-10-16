@@ -5,7 +5,7 @@
 
 #include "R_Mesh.h"
 #include "R_Model.h"
-#include "R_Scene.h"
+#include "R_Map.h"
 #include "R_Shader.h"
 #include "R_Folder.h"
 #include "R_Texture.h"
@@ -17,7 +17,7 @@
 template class ResourceHandle<Resource>;
 template class ResourceHandle<R_Mesh>;
 template class ResourceHandle<R_Model>;
-template class ResourceHandle<R_Scene>;
+template class ResourceHandle<R_Map>;
 template class ResourceHandle<R_Folder>;
 template class ResourceHandle<R_Shader>;
 template class ResourceHandle<R_Texture>;

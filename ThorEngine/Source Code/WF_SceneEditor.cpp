@@ -57,20 +57,23 @@ WF_SceneEditor::~WF_SceneEditor()
 void WF_SceneEditor::SetResource(uint64 resourceID)
 {
 	WindowFrame::SetResource(resourceID);
-	if (!scene || scene->ID != resourceID) 
-		Engine->sceneManager->LoadScene(resourceID);
+	if (!scene || scene->ID != resourceID)
+	{
+		Engine->sceneManager->LoadMap(resourceID);
+		scene = Engine->sceneManager->gameScene;
+	}
 }
 
 void WF_SceneEditor::MenuBar_File()
 {
 	if (ImGui::BeginMenu("File"))
 	{
-		if (ImGui::MenuItem("New Scene"))
+		if (ImGui::MenuItem("New Map"))
 		{
-			Engine->moduleEditor->LoadScene("Engine/Assets/Defaults/Untitled.scene");
+			Engine->moduleEditor->LoadMap("Engine/Assets/Defaults/Untitled.map");
 		}
 
-		if (ImGui::BeginMenu("Open Scene"))
+		if (ImGui::BeginMenu("Open Map"))
 		{
 			//FIXME: avoid doing this every frame
 			std::vector<std::string> sceneList;
@@ -81,15 +84,15 @@ void WF_SceneEditor::MenuBar_File()
 			{
 				if (ImGui::MenuItem(sceneList[i].c_str()))
 				{
-					Engine->sceneManager->LoadScene(sceneList[i].c_str());
+					Engine->sceneManager->LoadMap(sceneList[i].c_str());
 				}
 			}
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::MenuItem("Save Scene"))
+		if (ImGui::MenuItem("Save Map"))
 		{
-			if (scene->file_path == "Engine/Assets/Defaults/Untitled.scene")
+			if (scene->file_path == "Engine/Assets/Defaults/Untitled.map")
 			{
 				Engine->moduleEditor->OpenFileNameWindow();
 			}

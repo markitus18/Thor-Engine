@@ -34,10 +34,19 @@ public:
 	void SaveConfig(Config& config) const override;
 	void LoadConfig(Config& config) override;
 
-	Scene* LoadScene(const char* file, bool append = false);
-	Scene* LoadScene(uint64 resourceID, bool append = false);
-	void LoadModel(uint64 resourceID); //Calls module import to load a Game Object file
-	//Endof Scene and model save / load ------------------------------------------
+	//Generates a new scene and adds it to the list of active scenes
+	//The scene can be loaded from a resource or start as an empty scene
+	Scene* CreateNewScene(uint64 resourceID = 0);
+
+	//Loads the current game scene with the specified map
+	//'append' to merge the new map file with the current scene
+	void LoadMap(const char* file, bool append = false);
+	void LoadMap(uint64 resourceID, bool append = false);
+
+	//Opens a model resource and adds it to the targetScene.
+	//targetScene defaults to gameScene if not specified
+	void LoadModel(uint64 resourceID, Scene* targetScene = nullptr);
+
 
 	void StartSceneSimulation(Scene* scene);
 	void StopSceneSimulation(Scene* scene);
@@ -46,11 +55,14 @@ public:
 	//Removes a scene from the active scenes vector
 	void RemoveScene(Scene* scene);
 
+private:
+	void AddRootToScene(GameObject* root, Scene* target);
+
 public:
 	bool drawQuadtree = false;
 	bool drawBounds = false;
 	bool drawBoundsSelected = false;
-
+	  
 	Scene* gameScene = nullptr;
 	std::vector<Scene*> activeScenes;
 };

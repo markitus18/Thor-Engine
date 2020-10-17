@@ -305,7 +305,7 @@ Resource* M_Resources::CreateNewResource(const char* assetsPath, ResourceType ty
 	{
 		std::string extension;
 		Engine->fileSystem->SplitFilePath(assetsPath, nullptr, &base.name, &extension);
-		if (type == ResourceType::TEXTURE) base.name.append(".").append(extension);
+		if (type == ResourceType::TEXTURE || type == ResourceType::MAP) base.name.append(".").append(extension);
 	}
 
 	uint oldInstances = 0;
@@ -509,7 +509,7 @@ uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, co
 	//TODO:   SaveResourceAs would override any existing resource with that name and not remove its library content.
 
 	//Creating a new empty resource just to add it into the database
-	std::string path = directory + std::string("/").append(name); //TODO: Append extension...?
+	std::string path = directory + std::string("/").append(fileName); //TODO: Append extension...?
 	Resource* newResource = CreateNewResource(path.c_str(), resource->GetType(), fileName);
 
 	//We save the content of the old resource with the baseData of the new resource and restore it later

@@ -11,6 +11,7 @@
 class Quadtree;
 class C_Camera;
 class GameObject;
+struct ResourceBase;
 class M_SceneManager;
 
 class Scene
@@ -21,6 +22,8 @@ public:
 	Scene();
 	~Scene();
 
+	void InitFromResourceData(const ResourceBase* data);
+	
 	void AddGameObject(GameObject* newGameObject, GameObject* parent = nullptr);
 	GameObject* CreateNewGameObject(const char* name, GameObject* parent = nullptr);
 

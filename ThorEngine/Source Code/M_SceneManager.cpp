@@ -20,7 +20,7 @@
 
 M_SceneManager::M_SceneManager(bool start_enabled) : Module("Scene", start_enabled)
 {
-
+	gameScene = CreateNewScene();
 }
 
 M_SceneManager::~M_SceneManager()
@@ -102,60 +102,60 @@ void M_SceneManager::LoadConfig(Config& config)
 
 }
 
-Scene* M_SceneManager::LoadScene(const char* file, bool append)
+Scene* M_SceneManager::CreateNewScene(uint64 resourceID)
 {
-	uint64 newID = Engine->moduleResources->FindResourceBase(file)->ID;
-	return LoadScene(newID);
-}
-
-Scene* M_SceneManager::LoadScene(uint64 resourceID, bool append)
-{
+	Scene* newScene = new Scene();
 	if (resourceID != 0)
 	{
-		if (!append && gameScene)
-		{
-			gameScene->ClearScene();
-		}
-
 		ResourceHandle<R_Map> rMapHandle(resourceID);
 		GameObject* root = Importer::Maps::LoadRootFromMap(rMapHandle.Get());
 
-		if (!gameScene)
-		{
-			gameScene = new Scene();
-			activeScenes.push_back(gameScene);
-		}
-
-		gameScene->ID = resourceID;
-		gameScene->file_path = rMapHandle.Get()->baseData->assetsFile;
-		gameScene->name = rMapHandle.Get()->baseData->name;
-
-		std::vector<GameObject*> newGameObjects;
-		root->CollectChilds(newGameObjects);
-		newGameObjects.erase(newGameObjects.begin());
-
-		for (uint i = 0; i < newGameObjects.size(); ++i)
-			gameScene->AddGameObject(newGameObjects[i]);
-
-		RELEASE(root);
-		return gameScene;
+		gameScene->InitFromResourceData(rMapHandle.Get()->baseData);
+		AddRootToScene(root, gameScene);
 	}
-	return nullptr;
+
+	activeScenes.push_back(newScene);
+	return newScene;
 }
 
-void M_SceneManager::LoadModel(uint64 modelID)
+void M_SceneManager::LoadMap(const char* file, bool append)
 {
-	//TODO: Almost the same as LoadScene. Can we compress the structure?
+	uint64 newID = Engine->moduleResources->FindResourceBase(file)->ID;
+	return LoadMap(newID);
+}
+
+void M_SceneManager::LoadMap(uint64 resourceID, bool append)
+{
+	if (resourceID == 0) return;
+
+	if (!append)
+		gameScene->ClearScene();
+
+	ResourceHandle<R_Map> rMapHandle(resourceID);
+	GameObject* root = Importer::Maps::LoadRootFromMap(rMapHandle.Get());
+
+	gameScene->InitFromResourceData(rMapHandle.Get()->baseData);
+	AddRootToScene(root, gameScene);
+
+	RELEASE(root);
+}
+
+void M_SceneManager::LoadModel(uint64 modelID, Scene* targetScene)
+{
 	ResourceHandle<R_Model> rModelHandle(modelID);
 	GameObject* root = Importer::Models::LoadNewRoot(rModelHandle.Get());
+	AddRootToScene(root, targetScene ? targetScene : gameScene);
+	RELEASE(root);
+}
 
+void M_SceneManager::AddRootToScene(GameObject* root, Scene* target)
+{
 	std::vector<GameObject*> newGameObjects;
-	GetRoot()->CollectChilds(newGameObjects);
+	root->CollectChilds(newGameObjects);
+	newGameObjects.erase(newGameObjects.begin());
 
 	for (uint i = 0; i < newGameObjects.size(); ++i)
-		gameScene->AddGameObject(newGameObjects[i]);
-	
-	RELEASE(root);
+		target->AddGameObject(newGameObjects[i]);
 }
 
 void M_SceneManager::StartSceneSimulation(Scene* scene)

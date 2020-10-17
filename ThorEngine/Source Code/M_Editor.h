@@ -60,7 +60,7 @@ public:
 	void SaveConfig(Config& config) const override;
 	void LoadConfig(Config& config) override;
 
-	void LoadScene(const char* path, bool tmp = false);
+	void LoadMap(const char* path, bool tmp = false);
 	void ResetScene();
 
 	void OnRemoveGameObject(GameObject* gameObject) override;

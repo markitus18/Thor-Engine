@@ -7,6 +7,7 @@
 
 #include "GameObject.h"
 #include "Quadtree.h"
+#include "ResourceBase.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
 #include "C_Mesh.h"
@@ -21,6 +22,13 @@ Scene::Scene()
 Scene::~Scene()
 {
 
+}
+
+void Scene::InitFromResourceData(const ResourceBase* data)
+{
+	ID = data->ID;
+	file_path = data->assetsFile;
+	name = data->name;
 }
 
 void Scene::AddGameObject(GameObject* newGameObject, GameObject* parent)

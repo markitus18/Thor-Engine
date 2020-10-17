@@ -376,6 +376,9 @@ void M_Editor::Draw()
 	for (uint i = 0; i < windowFrames.size(); ++i)
 		windowFrames[i]->Draw();
 
+	if (show_fileName_window)
+		ShowFileNameWindow();
+
 	//Layouts are loaded after draw so the draw call on docks does not happen twice in the same frame
 	for (uint i = 0; i < windowFrames.size(); ++i)
 		if (windowFrames[i]->pendingLoadLayout)
@@ -695,14 +698,14 @@ void M_Editor::LoadConfig(Config& config)
 	*/
 }
 
-void M_Editor::LoadScene(const char* path, bool tmp)
+void M_Editor::LoadMap(const char* path, bool tmp)
 {
 	ResetScene();
 
-	Scene* scene = Engine->sceneManager->LoadScene(path);
+	Engine->sceneManager->LoadMap(path);
 
 	WF_SceneEditor* sceneEditor = (WF_SceneEditor*)GetWindowFrame(WF_SceneEditor::GetName());
-	sceneEditor->SetResource(scene->ID);
+	sceneEditor->SetResource(Engine->sceneManager->gameScene->ID);
 }
 
 void M_Editor::ResetScene()

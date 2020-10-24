@@ -17,6 +17,7 @@
 #include "M_Renderer3D.h"
 
 #include "I_Scenes.h"
+#include "R_Folder.h"
 #include "R_Map.h"
 #include "Scene.h"
 
@@ -445,13 +446,7 @@ void M_Editor::ShowFileNameWindow()
 
 	if (saveFile)
 	{
-		//TODO: Call scene manager, clean extra dependencies
-		Scene* currentScene = Engine->sceneManager->gameScene;
-		ResourceHandle<R_Map> map(currentScene->ID);
-
-		Importer::Maps::SaveRootToMap(currentScene->root, map.Get());
-		Engine->moduleResources->SaveResourceAs(map.Get(), "Assets/Scenes", fileName);
-
+		Engine->sceneManager->SaveCurrentScene(fileName);
 		show_fileName_window = false;
 	}
 	ImGui::End();
@@ -460,15 +455,20 @@ void M_Editor::ShowFileNameWindow()
 void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
-	strcpy_s(fileName, 50, Engine->sceneManager->gameScene->name.c_str());
+	strcpy_s(fileName, 50, Engine->sceneManager->mainScene->name.c_str());
 }
 
-WindowFrame* M_Editor::GetWindowFrame(const char* name)
+WindowFrame* M_Editor::GetWindowFrame(const char* name) const
 {
 	for (uint i = 0; i < windowFrames.size(); ++i)
 		if (strcmp(windowFrames[i]->GetName(), name) == 0) return windowFrames[i];
 
 	return nullptr;
+}
+
+const char* M_Editor::GetCurrentExplorerDirectory()
+{
+	return hExplorerFolder.Get()->GetAssetsFile();
 }
 
 void M_Editor::UpdateFPSData(int fps, int ms)
@@ -623,7 +623,7 @@ void M_Editor::UnselectResources()
 void M_Editor::DeleteSelected()
 {
 	//Warning: iterator is not moved because GameObject will be erased from vector on "OnRemove" call
-	for (uint i = 0; i < selectedGameObjects.size(); )
+	for (uint i = 0; i < selectedGameObjects.size(); /**/)
 	{
 		selectedGameObjects[i]->Unselect();
 		if (selectedGameObjects[i]->GetType() == GAMEOBJECT)
@@ -705,7 +705,7 @@ void M_Editor::LoadMap(const char* path, bool tmp)
 	Engine->sceneManager->LoadMap(path);
 
 	WF_SceneEditor* sceneEditor = (WF_SceneEditor*)GetWindowFrame(WF_SceneEditor::GetName());
-	sceneEditor->SetResource(Engine->sceneManager->gameScene->ID);
+	sceneEditor->SetResource(Engine->sceneManager->mainScene->ID);
 }
 
 void M_Editor::ResetScene()

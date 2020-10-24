@@ -4,12 +4,6 @@
 #include "Module.h"
 #include <vector>
 
-struct SDL_RWops;
-int close_sdl_rwops(SDL_RWops *rw);
-
-struct aiFileIO;
-
-//struct BASS_FILEPROCS;
 class Config;
 struct PathNode;
 

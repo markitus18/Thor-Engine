@@ -8,6 +8,7 @@
 #include "M_Input.h" //TODO: Temporal usage for testing purposes
 #include "I_Scenes.h"
 #include "M_Resources.h"
+#include "M_Editor.h"
 
 #include "GameObject.h"
 
@@ -20,7 +21,7 @@
 
 M_SceneManager::M_SceneManager(bool start_enabled) : Module("Scene", start_enabled)
 {
-	gameScene = CreateNewScene();
+	mainScene = CreateNewScene();
 }
 
 M_SceneManager::~M_SceneManager()
@@ -38,12 +39,12 @@ bool M_SceneManager::CleanUp()
 
 GameObject* M_SceneManager::GetRoot()
 {
-	return gameScene->root;
+	return mainScene->root;
 }
 
 const GameObject* M_SceneManager::GetRoot() const
 {
-	return gameScene->root;
+	return mainScene->root;
 }
 
 // Update
@@ -110,8 +111,8 @@ Scene* M_SceneManager::CreateNewScene(uint64 resourceID)
 		ResourceHandle<R_Map> rMapHandle(resourceID);
 		GameObject* root = Importer::Maps::LoadRootFromMap(rMapHandle.Get());
 
-		gameScene->InitFromResourceData(rMapHandle.Get()->baseData);
-		AddRootToScene(root, gameScene);
+		mainScene->InitFromResourceData(rMapHandle.Get()->baseData);
+		AddRootToScene(root, mainScene);
 	}
 
 	activeScenes.push_back(newScene);
@@ -129,13 +130,13 @@ void M_SceneManager::LoadMap(uint64 resourceID, bool append)
 	if (resourceID == 0) return;
 
 	if (!append)
-		gameScene->ClearScene();
+		mainScene->ClearScene();
 
 	ResourceHandle<R_Map> rMapHandle(resourceID);
 	GameObject* root = Importer::Maps::LoadRootFromMap(rMapHandle.Get());
 
-	gameScene->InitFromResourceData(rMapHandle.Get()->baseData);
-	AddRootToScene(root, gameScene);
+	mainScene->InitFromResourceData(rMapHandle.Get()->baseData);
+	AddRootToScene(root, mainScene);
 
 	RELEASE(root);
 }
@@ -144,8 +145,28 @@ void M_SceneManager::LoadModel(uint64 modelID, Scene* targetScene)
 {
 	ResourceHandle<R_Model> rModelHandle(modelID);
 	GameObject* root = Importer::Models::LoadNewRoot(rModelHandle.Get());
-	AddRootToScene(root, targetScene ? targetScene : gameScene);
+	AddRootToScene(root, targetScene ? targetScene : mainScene);
 	RELEASE(root);
+}
+
+//TODO: Current folder directory access is not clean. Check other engines and adapt the code
+void M_SceneManager::SaveCurrentScene(const char* saveAsNewPath)
+{
+	ResourceHandle<R_Map> map(mainScene->ID);
+	Importer::Maps::SaveRootToMap(mainScene->root, map.Get());
+
+	//Save as a new resource and override current resource data
+	if (mainScene->file_path != saveAsNewPath)
+	{
+		const  char* targetDir = Engine->moduleEditor->GetCurrentExplorerDirectory();
+		uint64 newResourceID = Engine->moduleResources->SaveResourceAs(map.Get(), targetDir, saveAsNewPath);
+		map.Set(newResourceID);
+		mainScene->InitFromResourceData(map.Get()->baseData);
+	}
+	else
+	{
+		Engine->moduleResources->SaveResource(map.Get());
+	}
 }
 
 void M_SceneManager::AddRootToScene(GameObject* root, Scene* target)
@@ -155,7 +176,10 @@ void M_SceneManager::AddRootToScene(GameObject* root, Scene* target)
 	newGameObjects.erase(newGameObjects.begin());
 
 	for (uint i = 0; i < newGameObjects.size(); ++i)
-		target->AddGameObject(newGameObjects[i]);
+	{
+		GameObject* parent = newGameObjects[i]->parent == root ? nullptr : newGameObjects[i]->parent;
+		target->AddGameObject(newGameObjects[i], parent); //TODO: calling set parent on the same parent for most gameObjects
+	}
 }
 
 void M_SceneManager::StartSceneSimulation(Scene* scene)
@@ -179,7 +203,7 @@ void M_SceneManager::PauseSceneSimulation(Scene* scene)
 
 void M_SceneManager::RemoveScene(Scene* scene)
 {
-	if (scene == gameScene)
+	if (scene == mainScene)
 	{
 		LOG("[Error]: Trying to remove current game scene");
 		return;

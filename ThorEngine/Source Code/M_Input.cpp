@@ -5,14 +5,8 @@
 #include "M_Editor.h"
 #include "M_Window.h"
 #include "M_Resources.h"
-#include "W_Explorer.h"
-#include "WF_SceneEditor.h"
-
-#include "WindowFrame.h" //TODO: Remove as the code gets cleaner. Acess in PreUpdate -> DROPFILE
 
 #include "SDL/include/SDL_mouse.h"
-#include "Assimp/include/cfileio.h"
-#include "Assimp/include/types.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
@@ -181,9 +175,8 @@ update_status M_Input::PreUpdate()
 				LOG("[error] Dropped file: %s", event.drop.file);
 				LOG("[warning] Dropped file: %s", event.drop.file);
 				
-				//FIXME: Current folder should be stored in editor rather than window explorer
-				W_Explorer* w_explorer = (W_Explorer*)Engine->moduleEditor->GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_Explorer::GetName());
-				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, w_explorer->GetCurrentFolder()->GetAssetsFile());
+				const char* targetDir = Engine->moduleEditor->GetCurrentExplorerDirectory();
+				Engine->moduleResources->ImportFileFromExplorer(event.drop.file, targetDir);
 
 				SDL_free(event.drop.file);
 				break;

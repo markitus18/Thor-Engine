@@ -6,6 +6,7 @@
 class M_Editor;
 
 class Scene;
+class R_Folder;
 class W_Scene;
 class W_Console;
 class W_Explorer;

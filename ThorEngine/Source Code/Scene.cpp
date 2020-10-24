@@ -34,6 +34,7 @@ void Scene::InitFromResourceData(const ResourceBase* data)
 void Scene::AddGameObject(GameObject* newGameObject, GameObject* parent)
 {
 	newGameObject->SetParent(parent ? parent : root);
+	newGameObject->sceneOwner = this;
 
 	std::vector<GameObject*> newGameObjects;
 	newGameObject->CollectChilds(newGameObjects);
@@ -201,9 +202,9 @@ void Scene::ClearScene()
 {
 	if (!root) return; //Scene has not been initialized yet
 
-	for (uint i = 0; i < root->childs.size(); ++i)
+	while(root->childs.size() > 0) 
 	{
-		root->childs[i]->Destroy();
+		root->childs[0]->Destroy(); //Is this clean procedure? Feels kind of dirty
 	}
 }
 

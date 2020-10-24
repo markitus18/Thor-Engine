@@ -23,7 +23,7 @@ void W_MainToolbar::Draw()
 	if (ImGui::Button(name.c_str()))
 	{
 		//TODO: This should be handled through windowOwner->GetScene()
-		Scene* currentScene = Engine->sceneManager->gameScene;
+		Scene* currentScene = Engine->sceneManager->mainScene;
 		if (Time::running) //TODO: Define a Time for each scene
 			Engine->sceneManager->StopSceneSimulation(currentScene);
 		else

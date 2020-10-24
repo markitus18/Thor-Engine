@@ -23,7 +23,7 @@ W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWin
 	UpdateTree();
 
 	uint64 assetsID = Engine->moduleResources->FindResourceBase("Assets")->ID;
-	hCurrentFolder.Set(assetsID);
+	Engine->moduleEditor->hExplorerFolder.Set(assetsID);
 	hAssetsFolder.Set(assetsID);
 
 	hEngineAssetsFolder.Set(Engine->moduleResources->FindResourceBase("Engine/Assets")->ID);
@@ -131,7 +131,7 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 		nodeFlags |= ImGuiTreeNodeFlags_NoTreePushOnOpen;
 	}
 
-	if (hCurrentFolder.GetID() != 0 && node.path == hCurrentFolder.Get()->GetAssetsFile())
+	if (Engine->moduleEditor->hExplorerFolder.GetID() != 0 && node.path == Engine->moduleEditor->GetCurrentExplorerDirectory())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -181,7 +181,7 @@ void W_Explorer::DrawSelectedFolderContent()
 {
 	ImGui::BeginChild("ExplorerFolder", ImVec2(0.0f, 0.0f), false, ImGuiWindowFlags_NoScrollbar);
 
-	ImGui::Text(hCurrentFolder.Get()->GetAssetsFile());
+	ImGui::Text(Engine->moduleEditor->GetCurrentExplorerDirectory());
 	ImGui::Separator();
 
 	ImGui::BeginChild("ImagesChild");
@@ -190,7 +190,7 @@ void W_Explorer::DrawSelectedFolderContent()
 	ImVec2 windowCursorPosition = ImGui::GetCursorPos();
 	uint itemIndex = 0;
 
-	R_Folder* currentFolder = hCurrentFolder.Get();
+	R_Folder* currentFolder = Engine->moduleEditor->hExplorerFolder.Get();
 	for (uint i = 0; i < currentFolder->baseData->containedResources.size(); ++i)
 	{
 		const ResourceBase& childBase = *Engine->moduleResources->GetResourceBase(currentFolder->baseData->containedResources[i]);
@@ -341,8 +341,8 @@ void W_Explorer::SetCurrentFolder(uint64 folderID)
 	SetOpenModel(0);
 
 	//Adding textures from the new folder
-	hCurrentFolder.Set(folderID);
-	R_Folder* newFolder = hCurrentFolder.Get();
+	Engine->moduleEditor->hExplorerFolder.Set(folderID);
+	R_Folder* newFolder = Engine->moduleEditor->hExplorerFolder.Get();
 	for (uint i = 0; i < newFolder->baseData->containedResources.size(); ++i)
 	{
 		const ResourceBase& base = *Engine->moduleResources->GetResourceBase(newFolder->baseData->containedResources[i]);

@@ -4,7 +4,7 @@
 #include "Component.h"
 
 #include "Globals.h"
-#include "MathGeoLib\src\MathGeoLib.h"
+#include "MathGeoLib\src\MathGeoLib.h" //TODO: include only the used structures
 
 #include <vector>
 #include <list>

@@ -29,3 +29,18 @@ bool Resource::HasResource(uint64 ID) const
 	}
 	return false;
 }
+
+void Resource::AddContainedResource(uint64 ID)
+{
+	if (!HasResource(ID))
+		baseData->containedResources.push_back(ID);
+}
+
+void Resource::RemoveContainedResource(uint64 ID)
+{
+	for (uint i = 0; i < baseData->containedResources.size(); ++i)
+	{
+		if (baseData->containedResources[i] == ID)
+			baseData->containedResources.erase(baseData->containedResources.begin() + i);
+	}
+}

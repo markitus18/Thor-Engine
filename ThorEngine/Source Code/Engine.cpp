@@ -193,7 +193,7 @@ const char* TEngine::GetOrganizationName() const
 void TEngine::UpdateSceneName()
 {
 	std::string windowTitle = title;
-	windowTitle.append(" - ").append(sceneManager->gameScene->name.c_str());
+	windowTitle.append(" - ").append(sceneManager->mainScene->name.c_str());
 	window->SetTitle(windowTitle.c_str());
 }
 

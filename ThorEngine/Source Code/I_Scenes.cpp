@@ -150,7 +150,7 @@ void Importer::Models::Load(const char* buffer, R_Model* model)
 	{
 		Config node = nodesArray.GetNode(i);
 		model->nodes.push_back(ModelNode());
-		ModelNode& modelNode = (*model->nodes.rend());
+		ModelNode& modelNode = (model->nodes.back());
 
 		modelNode.ID = node.GetNumber("Node ID");
 		modelNode.name = node.GetString("Name");

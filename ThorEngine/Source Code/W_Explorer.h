@@ -30,7 +30,6 @@ public:
 	void OnResize(Vec2 newSize) override;
 	void LoadLayout_Default();
 
-	inline const Resource* GetCurrentFolder() const { return (Resource*)hCurrentFolder.Get(); }
 	static inline const char* GetName() { return "Explorer"; }
 
 private:
@@ -69,7 +68,6 @@ private:
 
 	ResourceHandle<R_Folder> hAssetsFolder;
 	ResourceHandle<R_Folder> hEngineAssetsFolder;
-	ResourceHandle<R_Folder> hCurrentFolder;
 
 	uint64 openModelID = 0;
 

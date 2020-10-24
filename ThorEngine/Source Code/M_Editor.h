@@ -15,6 +15,7 @@ class TreeNode;
 
 class WindowFrame;
 class Window;
+class R_Folder;
 
 union SDL_Event;
 struct ImGuiWindowClass;
@@ -69,8 +70,8 @@ public:
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();
 
-	WindowFrame* GetWindowFrame(const char* name);
-
+	WindowFrame* GetWindowFrame(const char* name) const;
+	const char* GetCurrentExplorerDirectory();
 private:
 	void LoadLayout_Default(WindowFrame* windowFrame);
 	void LoadLayout(WindowFrame* windowFrame, const char* layout = "Default");
@@ -91,6 +92,7 @@ public:
 	std::vector<TreeNode*> toUnselectGOs;
 
 	ResourceHandle<Resource> hSelectedResource;
+	ResourceHandle<R_Folder> hExplorerFolder;
 
 	TreeNode* lastSelected = nullptr;
 	bool dragging = false;

@@ -211,5 +211,5 @@ void M_Camera3D::OnClick(const Vec2& mousePos)
 
 	lastRay = Engine->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
 
- 	Engine->sceneManager->gameScene->PerformMousePick(lastRay);
+ 	Engine->sceneManager->mainScene->PerformMousePick(lastRay);
 }

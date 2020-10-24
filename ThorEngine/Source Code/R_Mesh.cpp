@@ -45,8 +45,8 @@ void R_Mesh::LoadOnMemory()
 	//Create the array buffer for tex coords and enable attrib pointer
 	if (buffersSize[b_tex_coords] > 0)
 	{
-		glGenBuffers(1, &buffers[b_normals]);
-		glBindBuffer(GL_ARRAY_BUFFER, buffers[b_normals]);
+		glGenBuffers(1, &buffers[b_tex_coords]);
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[b_tex_coords]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffersSize[b_tex_coords] * 2, tex_coords, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);

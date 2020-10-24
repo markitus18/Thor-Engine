@@ -35,11 +35,11 @@ public:
 	Resource* RequestResource(uint64 ID);
 	void ReleaseResource(Resource* resource);
 
-	//Used for internal resources (external referring to fbx, textures,...)
+	//Used only for internal resources (external referring to DCC tools)
 	uint64 CreateNewCopyResource(const char* srcFile, const char* dstDir);
 
 	//Calls importers to generate a filled binary file and saves it into Library
-	//If the resource can be modified in Assets, it is saved there aswell
+	//If the resource can be modified in Assets, it is saved there as well
 	void SaveResource(Resource* resource, bool saveMeta = true);
 
 	//Saves the current resource as a new resource located at 'newPath'
@@ -58,7 +58,7 @@ private:
 	void LoadAllAssets();
 
 	//Loads the base data from the resource in 'node.path' and all its children
-	//Returns wether the resource was imported as new or not
+	//Returns whether the resource was imported as new or not
 	bool LoadAssetBase(PathNode node, uint64& assetID);
 
 	//Import a 3D scene file

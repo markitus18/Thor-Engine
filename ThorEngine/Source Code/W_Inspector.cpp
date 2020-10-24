@@ -385,8 +385,8 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 			if (ImGui::MenuItem("Create New"))
 			{
 				W_Explorer* w_explorer = (W_Explorer*)editor->GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_Explorer::GetName());
-				const char* dir = w_explorer->GetCurrentFolder()->GetAssetsFile();
-				if (uint64 resourceID = Engine->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", dir))
+				const char* targetDir = Engine->moduleEditor->GetCurrentExplorerDirectory();
+				if (uint64 resourceID = Engine->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", targetDir))
 				{
 					particleSystem->SetResource(resourceID);
 				}

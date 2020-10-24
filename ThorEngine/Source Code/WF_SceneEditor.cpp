@@ -60,7 +60,7 @@ void WF_SceneEditor::SetResource(uint64 resourceID)
 	if (!scene || scene->ID != resourceID)
 	{
 		Engine->sceneManager->LoadMap(resourceID);
-		scene = Engine->sceneManager->gameScene;
+		scene = Engine->sceneManager->mainScene;
 	}
 }
 

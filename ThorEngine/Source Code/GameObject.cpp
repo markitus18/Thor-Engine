@@ -176,7 +176,7 @@ bool GameObject::HasFlippedNormals() const
 
 void GameObject::SetParent(GameObject* gameObject, GameObject* next, bool worldPositionStays)
 {
-	if (this != gameObject && gameObject != nullptr)
+	if (this != gameObject && gameObject != nullptr && parent != gameObject)
 	{
 		float4x4 global = transform->GetTransform();
 		if (parent != nullptr)

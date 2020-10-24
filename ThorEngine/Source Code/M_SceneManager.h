@@ -47,6 +47,7 @@ public:
 	//targetScene defaults to gameScene if not specified
 	void LoadModel(uint64 resourceID, Scene* targetScene = nullptr);
 
+	void SaveCurrentScene(const char* saveAsNewPath = nullptr);
 
 	void StartSceneSimulation(Scene* scene);
 	void StopSceneSimulation(Scene* scene);
@@ -63,7 +64,7 @@ public:
 	bool drawBounds = false;
 	bool drawBoundsSelected = false;
 	  
-	Scene* gameScene = nullptr;
+	Scene* mainScene = nullptr;
 	std::vector<Scene*> activeScenes;
 };
 

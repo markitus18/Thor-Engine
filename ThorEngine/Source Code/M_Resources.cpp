@@ -75,6 +75,10 @@ update_status M_Resources::Update()
 bool M_Resources::CleanUp()
 {
 	SaveChangedResources();
+
+	hAssetsFolder.Free();
+	hEngineAssetsFolder.Free();
+
 	for (std::map<unsigned long long, Resource*>::iterator it = resources.begin(); it != resources.end(); )
 	{
 		it->second->FreeMemory();
@@ -127,7 +131,6 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 			ResourceBase base((ResourceType)(int)(metaData.GetNumber("Type")), node.path.c_str(), metaData.GetString("Name").c_str(), metaData.GetNumber("ID"));
 			base.libraryFile = metaData.GetString("Library file").c_str();
 
-			//TODO: This should NOT be done for folders
 			//Add all contained resources saved in the meta file
 			Config_Array containedResources = metaData.GetArray("Contained Resources");
 			for (uint i = 0; i < containedResources.GetSize(); ++i)
@@ -187,7 +190,15 @@ void M_Resources::ImportFileFromExplorer(const char* path, const char* dstDir)
 	std::string finalPath;
 	if (Engine->fileSystem->DuplicateFile(normalizedPath.c_str(), dstDir, finalPath))
 	{
-		ImportFileFromAssets(finalPath.c_str());
+		uint64 newResourceID = ImportFileFromAssets(finalPath.c_str());
+	
+		//Find parent folder, add child resource and save folder content
+		if (const ResourceBase* folderBase = FindResourceBase(dstDir, nullptr, ResourceType::FOLDER))
+		{
+			ResourceHandle<Resource> hFolder(folderBase->ID);
+			hFolder.Get()->AddContainedResource(newResourceID);
+			SaveResource(hFolder.Get());
+		}
 	}
 }
 
@@ -506,7 +517,7 @@ void M_Resources::SaveResource(Resource* resource, bool saveMeta)
 
 uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, const char* fileName)
 {
-	//TODO:   SaveResourceAs would override any existing resource with that name and not remove its library content.
+	//TODO:   SaveResourceAs would override any existing resource. Pop modal window asking for overriding new file
 
 	//Creating a new empty resource just to add it into the database
 	std::string path = directory + std::string("/").append(fileName); //TODO: Append extension...?
@@ -525,6 +536,14 @@ uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, co
 	//Restore the old resource data
 	resource->baseData = &oldBase;
 
+	//Find parent folder, add child resource and save folder content
+	if (const ResourceBase* folderBase = FindResourceBase(directory, nullptr, ResourceType::FOLDER))
+	{
+		ResourceHandle<Resource> hFolder(folderBase->ID);
+		hFolder.Get()->AddContainedResource(newID);
+		SaveResource(hFolder.Get());
+	}
+	
 	return newID;
 }
 
@@ -576,6 +595,16 @@ uint M_Resources::DeleteResource(uint64 ID, bool deleteAsset)
 	std::map<uint64, ResourceBase>::iterator libraryIt = resourceLibrary.find(ID);
 	if (libraryIt != resourceLibrary.end())
 	{
+		//Find parent folder and remove from child
+		std::string directory;
+		Engine->fileSystem->SplitFilePath(libraryIt->second.assetsFile.c_str(), &directory);
+		if (const ResourceBase* folderBase = FindResourceBase(directory.c_str(), nullptr, ResourceType::FOLDER))
+		{
+			ResourceHandle<Resource> hFolder(folderBase->ID);
+			hFolder.Get()->RemoveContainedResource(ID);
+			SaveResource(hFolder.Get());
+		}
+
 		if (deleteAsset)
 		{
 			Engine->fileSystem->Remove(libraryIt->second.assetsFile.c_str());

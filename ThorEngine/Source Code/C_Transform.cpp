@@ -1,6 +1,6 @@
 #include "C_Transform.h"
 #include "Component.h"
-#include "GameObject.h" //TODO 1*: no need to include
+#include "GameObject.h"
 
 C_Transform::C_Transform(GameObject* new_GameObject, float3 position, Quat rotation, float3 scale) : Component(Component::Type::Transform, gameObject, false), position(position), rotation(rotation), scale(scale)
 {

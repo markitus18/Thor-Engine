@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "ResourceHandle.h"
+#include "ERenderingFlagsh.h"
 
 //TODO: move into .cpp?
 #include "MathGeoLib/src/Math/float4x4.h"
@@ -36,6 +37,8 @@ public:
 
 	virtual void Update(float dt) {}; //TODO: should return bool?
 	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+
+	virtual void Draw(RenderingFlags flags) { }
 
 	//Resource handling
 	virtual void SetResource(Resource* resource) { }

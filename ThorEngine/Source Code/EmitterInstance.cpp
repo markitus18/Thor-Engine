@@ -34,10 +34,9 @@ void EmitterInstance::Update(float dt)
 
 	KillDeadParticles();
 	UpdateModules(dt);
-	DrawParticles();
 }
 
-void EmitterInstance::DrawParticles()
+void EmitterInstance::DrawParticles(RenderingFlags flags)
 {
 	for (unsigned int i = 0; i < activeParticles; ++i)
 	{

@@ -5,8 +5,7 @@
 
 #include "ResourceHandle.h"
 
-#include "MathGeoLib/src/Math/float3.h"
-#include "ImGui/imgui.h"
+#include "ImGui/imgui.h" //Can we avoid including all ImGui just for Vec2?
 
 class Resource;
 class R_Texture;

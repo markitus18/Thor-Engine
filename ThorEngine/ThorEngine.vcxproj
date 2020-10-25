@@ -98,6 +98,7 @@
     <ClInclude Include="Source Code\C_Camera.h" />
     <ClInclude Include="Source Code\C_ParticleSystem.h" />
     <ClInclude Include="Source Code\C_Transform.h" />
+    <ClInclude Include="Source Code\ERenderingFlagsh.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathBuildConfig.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathGeoLib.h" />
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\MathGeoLibFwd.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="Source Code\WDetails.h" />
     <ClInclude Include="Source Code\WF_SceneEditor.h" />
     <ClInclude Include="Source Code\WindowFrame.h" />
+    <ClInclude Include="Source Code\WViewport.h" />
     <ClInclude Include="Source Code\W_About.h" />
     <ClInclude Include="Source Code\W_Console.h" />
     <ClInclude Include="Source Code\W_Emitters.h" />
@@ -355,6 +357,7 @@
     <ClCompile Include="Source Code\WDetails.cpp" />
     <ClCompile Include="Source Code\WF_SceneEditor.cpp" />
     <ClCompile Include="Source Code\WindowFrame.cpp" />
+    <ClCompile Include="Source Code\WViewport.cpp" />
     <ClCompile Include="Source Code\W_About.cpp" />
     <ClCompile Include="Source Code\W_Console.cpp" />
     <ClCompile Include="Source Code\W_Emitters.cpp" />

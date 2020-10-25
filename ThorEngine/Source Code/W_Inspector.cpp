@@ -280,11 +280,6 @@ void W_Inspector::DrawCamera(GameObject* gameObject, C_Camera* camera)
 			Engine->camera->Match(camera);
 		}
 
-		if (DrawDetails_CheckBox("Set View Camera", camera->active_camera))
-		{
-			camera->active_camera ? Engine->renderer3D->SetActiveCamera(camera) : Engine->renderer3D->SetActiveCamera(nullptr);
-		}
-
 		if (DrawDetails_CheckBox("Camera Culling", camera->culling))
 		{
 			camera->culling ? Engine->renderer3D->SetCullingCamera(camera) : Engine->renderer3D->SetCullingCamera(nullptr);

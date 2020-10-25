@@ -520,7 +520,7 @@ uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, co
 	//TODO:   SaveResourceAs would override any existing resource. Pop modal window asking for overriding new file
 
 	//Creating a new empty resource just to add it into the database
-	std::string path = directory + std::string("/").append(fileName); //TODO: Append extension...?
+	std::string path = directory + std::string("/").append(fileName);
 	Resource* newResource = CreateNewResource(path.c_str(), resource->GetType(), fileName);
 
 	//We save the content of the old resource with the baseData of the new resource and restore it later

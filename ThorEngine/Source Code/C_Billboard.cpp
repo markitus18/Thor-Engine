@@ -30,6 +30,7 @@ void C_Billboard::Update(float dt)
 	C_Transform& cameraTransform = *cameraRef->gameObject->GetComponent<C_Transform>();
 	GetVectorsFromAlignment(transform, cameraTransform, right, up, fwd);
 
+	//TODO: Send transform to shader, calculate there based on view matrix
 	/* Read line 140 from float4x4 to understand function usage */
 	float4x4 resultMatrix(right.ToDir4(), up.ToDir4(), fwd.ToDir4(), transform.GetGlobalPosition().ToPos4());
 	transform.SetGlobalTransform(resultMatrix);

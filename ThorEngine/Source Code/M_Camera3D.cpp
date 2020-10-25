@@ -28,7 +28,6 @@ M_Camera3D::M_Camera3D(bool start_enabled) : Module("Camera", start_enabled)
 	camera->frustum.SetFront(float3::unitZ);
 	camera->frustum.SetUp(float3::unitY);
 	Look(float3(0, 0, 0));
-	camera->update_projection = true;
 }
 
 M_Camera3D::~M_Camera3D()

@@ -26,19 +26,11 @@ class Config;
 
 struct RenderMesh
 {
-	RenderMesh(const float4x4& trans, const C_Mesh* m, const C_Material* mat, bool sh, bool wire, bool selected, bool parentSelected, bool flippedNormals) : transform(trans), mesh(m), material(mat),
-		shaded(sh), wireframe(wire), selected(selected), parentSelected(parentSelected), flippedNormals(flippedNormals)
-	{}
+	RenderMesh(const float4x4& trans, const C_Mesh* m, const C_Material* mat) : transform(trans), mesh(m), material(mat) {}
 
 	float4x4 transform;
 	const C_Mesh* mesh;
 	const C_Material* material;
-	bool shaded;
-	bool wireframe;
-	bool selected;
-	bool parentSelected;
-	bool flippedNormals;
-
 };
 
 template <typename Box>
@@ -53,9 +45,9 @@ struct RenderBox
 
 struct RenderLine
 {
-	RenderLine(const float3& a, const float3& b, const Color& color) : start(a), end(b), color(color) {}
-	float3 start;
-	float3 end;
+	RenderLine(const float3& a, const float3& b, const Color& color) : startPoint(a), endPoint(b), color(color) {}
+	float3 startPoint;
+	float3 endPoint;
 	Color color;
 };
 
@@ -66,6 +58,23 @@ struct RenderParticle
 	float4x4 transform;
 	R_Material* mat;
 	float4 color;
+};
+
+enum class EViewportViewMode;
+struct CameraTarget
+{
+	CameraTarget(const C_Camera* camera, EViewportViewMode viewMode) : camera(camera), viewMode(viewMode){};
+
+	const C_Camera* camera = nullptr;
+	EViewportViewMode viewMode;
+
+	std::vector<RenderMesh> meshes;
+	std::map<float, RenderParticle> particles;
+
+	std::vector<RenderBox<AABB>> aabb;
+	std::vector<RenderBox<OBB>> obb;
+	std::vector<RenderBox<Frustum>> frustum;
+	std::vector<RenderLine> lines;
 };
 
 class M_Renderer3D : public Module
@@ -84,27 +93,28 @@ public:
 	void OnResize();
 	void UpdateProjectionMatrix();
 
-	void SetActiveCamera(C_Camera* camera);
-	void SetCullingCamera(C_Camera* camera);
-	void DrawAllScene();
+	void SetCullingCamera(C_Camera* camcameraTarget);
+	void DrawTargetCamera(CameraTarget& camera);
 
-	C_Camera* GetActiveCamera();
+	void BeginTargetCamera(const C_Camera* camera, EViewportViewMode viewMode);
+	void EndTargetCamera();
 
-	void AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals);
-	void DrawAllMeshes();
-	void DrawMesh(RenderMesh& mesh);
-
+	void AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material);
 	void AddParticle(const float4x4& transform, R_Material* mat, float4 color, float distanceToCamera);
-	void DrawAllParticles();
-	void DrawParticle(RenderParticle& particle);
-
 	void AddAABB(const AABB& box, const Color& color);
 	void AddOBB(const OBB& box, const Color& color);
 	void AddFrustum(const Frustum& box, const Color& color);
-	void DrawAllBox();
-
 	void AddLine(const float3 a, const float3 b, const Color& color);
-	void DrawAllLines();
+
+
+	void DrawAllMeshes(CameraTarget& cameraTarget);
+	void DrawMesh(RenderMesh& mesh);
+
+	void DrawAllParticles(CameraTarget& cameraTarget);
+	void DrawParticle(RenderParticle& particle);
+
+	void DrawAllBox(CameraTarget& cameraTarget);
+	void DrawAllLines(CameraTarget& cameraTarget);
 
 	//Component buffers management -----------------
 	void LoadBuffers(R_Mesh* mesh);
@@ -113,8 +123,6 @@ public:
 	void ReleaseBuffers(R_Mesh* mesh);
 	void ReleaseBuffers(R_Texture* texture);
 	//----------------------------------------------
-
-	void OnRemoveGameObject(GameObject* gameObject) override;
 
 	uint SaveImage(const char* pathr);
 	uint SaveModelThumbnail(GameObject* gameObject);
@@ -145,13 +153,8 @@ private:
 	ResourceHandle<R_Material> hDefaultMaterial;
 	ResourceHandle<R_Shader> hDefaultShader;
 
-	std::vector<RenderMesh> meshes;
-	std::map<float, RenderParticle> particles;
-
-	std::vector<RenderBox<AABB>> aabb;
-	std::vector<RenderBox<OBB>> obb;
-	std::vector<RenderBox<Frustum>> frustum;
-	std::vector<RenderLine> lines;
+	std::vector<CameraTarget> cameraRenderingTargets;
+	CameraTarget* currentCameraTarget = nullptr;
 };
 
 #endif //__M_RENDERER_H__

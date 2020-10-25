@@ -2,7 +2,10 @@
 
 #include "Engine.h"
 #include "M_Editor.h"
+
+#include "WViewport.h" //There should be a more polite way than accessing viewports from scene
 #include "M_Renderer3D.h"
+
 #include "Time.h"
 
 #include "GameObject.h"
@@ -116,6 +119,26 @@ void Scene::OnGameObjectStaticChanged(GameObject* gameObject)
 	}
 }
 
+void Scene::OnCameraEnabledChanged(C_Camera* camera)
+{
+	if (camera->renderingEnabled)
+	{
+		enabledRenderingCameras.push_back(camera);
+	}
+	else
+	{
+		std::vector<C_Camera*>::iterator it;
+		for (it = enabledRenderingCameras.begin(); it != enabledRenderingCameras.end(); ++it)
+		{
+			if (*it == camera)
+			{
+				enabledRenderingCameras.erase(it);
+				break;
+			}
+		}
+	}
+}
+
 void Scene::PerformMousePick(const LineSegment& segment)
 {
 	//Collect quadtree GameObjects
@@ -222,14 +245,28 @@ void Scene::UpdateAllGameObjects(float dt)
 	root->Update(dt);
 }
 
-void Scene::DrawAllChildren(GameObject* gameObject)
+void Scene::DrawScene()
+{
+	std::vector<WViewport*>::iterator it;
+	for (it = registeredViewports.begin(); it != registeredViewports.end(); ++it)
+	{
+		Engine->renderer3D->BeginTargetCamera((*it)->GetCurrentCamera(), (*it)->viewMode);
+
+		//TODO: Insert camera culling here so we avoid unnecessary draw calls
+		DrawAllChildren(root, (*it)->renderingFlags);
+
+		Engine->renderer3D->EndTargetCamera();
+	}
+}
+
+void Scene::DrawAllChildren(GameObject* gameObject, RenderingFlags flags)
 {
 	//TODO: Draw quadtree somewhere
 	if (gameObject != root)
-		gameObject->Draw(true, false, false, false);
+		gameObject->Draw(flags);
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
-		DrawAllChildren(gameObject->childs[i]);
+		DrawAllChildren(gameObject->childs[i], flags);
 }
 
 void Scene::DrawCulledGameObjects(C_Camera* targetCamera)
@@ -244,7 +281,7 @@ void Scene::DrawCulledGameObjects(C_Camera* targetCamera)
 	for (uint i = 0; i < finalCandidates.size(); i++)
 	{
 		if (finalCandidates[i]->name != "root");
-		((GameObject*)finalCandidates[i])->Draw(true, false, false, false);
+		((GameObject*)finalCandidates[i])->Draw(0);
 	}
 }
 

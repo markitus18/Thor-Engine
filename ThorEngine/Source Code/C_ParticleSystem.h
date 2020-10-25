@@ -21,6 +21,8 @@ public:
 	void Update(float dt);
 	void Reset();
 
+	virtual void Draw(RenderingFlags flags) override;
+
 	void SetResource(Resource* resource);
 	void SetResource(unsigned long long id);
 	

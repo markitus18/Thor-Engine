@@ -10,9 +10,12 @@
 
 class Quadtree;
 class C_Camera;
+class WViewport;
 class GameObject;
 struct ResourceBase;
 class M_SceneManager;
+
+typedef unsigned __int64 RenderingFlags;
 
 class Scene
 {
@@ -32,6 +35,7 @@ public:
 
 	void OnDestroyGameObject(GameObject* gameObject);
 	void OnGameObjectStaticChanged(GameObject* gameObject);
+	void OnCameraEnabledChanged(C_Camera* camera);
 
 	void PerformMousePick(const LineSegment& segment);
 
@@ -48,7 +52,10 @@ public:
 
 private:
 	void UpdateAllGameObjects(float dt);
-	void DrawAllChildren(GameObject* gameObject);
+
+	void DrawScene();
+
+	void DrawAllChildren(GameObject* gameObject, RenderingFlags flags);
 	void DrawCulledGameObjects(C_Camera* targetCamera);
 
 	void CollectCullingCandidates(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& candidates);
@@ -60,17 +67,20 @@ public:
 	uint64 ID;
 
 	GameObject* root = nullptr; //TODO: Move to private. Access in M_Editor save scene
-private:
-	C_Camera* mainCamera = nullptr;
+	std::vector<C_Camera*> enabledRenderingCameras;
+	std::vector<WViewport*> registeredViewports;
 
+private:
 	M_SceneManager* managerOwner = nullptr;
 
+	C_Camera* mainCamera = nullptr;
+	
 	std::vector<const GameObject*> dynamicGameObjects;
 	Quadtree* quadtree = nullptr;
 
 	std::vector<GameObject*> gameObjectsPendingRemoval;
 
-	LCG random; //TODO: Avoid including everywhere
+	LCG random; //TODO: Avoid including everywhere. Math namespace?
 };
 
 #endif

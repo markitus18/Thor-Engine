@@ -358,6 +358,9 @@
     <ClCompile Include="Source Code\Scene.cpp">
       <Filter>Source Code\GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\WViewport.cpp">
+      <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Geometry\AABB.h">
@@ -837,6 +840,12 @@
     </ClInclude>
     <ClInclude Include="Source Code\Scene.h">
       <Filter>Source Code\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\WViewport.h">
+      <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ERenderingFlagsh.h">
+      <Filter>Source Code\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

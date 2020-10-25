@@ -156,17 +156,20 @@ bool M_Renderer3D::Start()
 // PreUpdate: clear buffer
 update_status M_Renderer3D::PreUpdate()
 {
+/*
 	if (camera->update_projection)
 	{
 		UpdateProjectionMatrix();
 		camera->update_projection = false;
 	}
+	*/
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	/*
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(camera->GetOpenGLViewMatrix());
-
+	*/
 	// light 0 on cam pos
 	lights[0].SetPos(Engine->camera->GetCamera()->frustum.Pos().x, Engine->camera->GetCamera()->frustum.Pos().y, Engine->camera->GetCamera()->frustum.Pos().z);
 
@@ -179,7 +182,13 @@ update_status M_Renderer3D::PreUpdate()
 // PostUpdate present buffer to screen
 update_status M_Renderer3D::PostUpdate()
 {
-	DrawAllScene();
+	std::vector<CameraTarget>::iterator it;
+	for (it = cameraRenderingTargets.begin(); it != cameraRenderingTargets.end(); ++it)
+	{
+		DrawTargetCamera(*it);
+	}
+	cameraRenderingTargets.clear();
+
 	Engine->moduleEditor->Draw();
 
 	SDL_GL_SwapWindow(Engine->window->window);
@@ -221,6 +230,7 @@ uint M_Renderer3D::SaveImage(const char* source_file)
 
 uint M_Renderer3D::SaveModelThumbnail(GameObject* gameObject)
 {
+/*
 	C_Camera* previous_camera = camera;
 
 	PreUpdate();
@@ -234,6 +244,8 @@ uint M_Renderer3D::SaveModelThumbnail(GameObject* gameObject)
 	uint ID = SaveImage(path.c_str());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return ID;
+	*/
+	return 0;
 }
 
 void M_Renderer3D::SetDepthBufferEnabled(bool enabled)
@@ -308,25 +320,6 @@ void M_Renderer3D::UpdateProjectionMatrix()
 	glLoadIdentity();
 }
 
-void M_Renderer3D::SetActiveCamera(C_Camera* camera)
-{
-	if (this->camera)
-	{
-		this->camera->active_camera = false;
-	}
-	this->camera = camera ? camera : Engine->camera->GetCamera();
-	if (camera)
-	{
-		camera->active_camera = true;
-	}
-	UpdateProjectionMatrix();
-}
-
-C_Camera* M_Renderer3D::GetActiveCamera()
-{
-	return camera;
-}
-
 void M_Renderer3D::SetCullingCamera(C_Camera* camera)
 {
 	if (culling_camera)
@@ -341,15 +334,28 @@ void M_Renderer3D::SetCullingCamera(C_Camera* camera)
 
 }
 
-void M_Renderer3D::DrawAllScene()
+void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 {
-	glUseProgram(0);
+	std::vector<CameraTarget>::iterator it;
+	const C_Camera* cameraComponent = cameraTarget.camera;
+
+	for (it = cameraRenderingTargets.begin(); it != cameraRenderingTargets.end(); ++it)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, cameraComponent->GetFrameBuffer());
+		glClearColor(cameraComponent->backgroundColor.r, cameraComponent->backgroundColor.g, cameraComponent->backgroundColor.b, cameraComponent->backgroundColor.a);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glViewport(0, 0, cameraComponent->resolution.x, cameraComponent->resolution.y);
+
+		glUseProgram(0);
+
+		DrawAllMeshes(cameraTarget);
+		DrawAllParticles(cameraTarget);
+		DrawAllBox(cameraTarget);
+		DrawAllLines(cameraTarget);
+	}
+
 	//TODO: Move this into a mesh "prefab" or a renderer method
 	//Both draw and input handling
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 
 	if (drawGrid)
 	{
@@ -370,15 +376,6 @@ void M_Renderer3D::DrawAllScene()
 
 		glEnd();
 	}
-
-	if (Engine->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-	{
-		drawGrid = !drawGrid;
-	}
-
-	DrawAllMeshes();
-	DrawAllParticles();
-	DrawAllBox();
 	
 	//TODO: move to another side. Camera call to draw on renderer
 	if (Engine->camera->drawRay)
@@ -389,18 +386,31 @@ void M_Renderer3D::DrawAllScene()
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 }
 
-void M_Renderer3D::AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material, bool shaded, bool wireframe, bool selected, bool parentSelected, bool flippedNormals)
+void M_Renderer3D::BeginTargetCamera(const C_Camera* camera, EViewportViewMode viewMode)
 {
-	meshes.push_back(RenderMesh(transform, mesh, material, shaded, wireframe, selected, parentSelected, flippedNormals));
+	cameraRenderingTargets.push_back(CameraTarget(camera, viewMode));
+	currentCameraTarget = &cameraRenderingTargets.back();
 }
 
-void M_Renderer3D::DrawAllMeshes()
+void M_Renderer3D::EndTargetCamera()
 {
-	for (uint i = 0; i < meshes.size(); i++)
+	currentCameraTarget = nullptr;
+}
+
+void M_Renderer3D::AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material)
+{
+	if (currentCameraTarget)
+		currentCameraTarget->meshes.push_back(RenderMesh(transform, mesh, material));
+}
+
+void M_Renderer3D::DrawAllMeshes(CameraTarget& cameraTarget)
+{
+	std::vector<RenderMesh>::iterator it;
+	for (it = cameraTarget.meshes.begin(); it != cameraTarget.meshes.end(); ++it)
 	{
-		DrawMesh(meshes[i]);
+		DrawMesh(*it);
 	}
-	meshes.clear();
+	cameraTarget.meshes.clear();
 }
 
 void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
@@ -455,17 +465,18 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 
 void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, float4 color, float distanceToCamera)
 {
-	particles.insert(std::pair<float, RenderParticle>(distanceToCamera, RenderParticle(transform, material, color)));
+	if (currentCameraTarget)
+		currentCameraTarget->particles.insert(std::pair<float, RenderParticle>(distanceToCamera, RenderParticle(transform, material, color)));
 }
 
-void M_Renderer3D::DrawAllParticles()
+void M_Renderer3D::DrawAllParticles(CameraTarget& cameraTarget)
 {
 	std::map<float, RenderParticle>::reverse_iterator it;
-	for (it = particles.rbegin(); it != particles.rend(); ++it)
+	for (it = cameraTarget.particles.rbegin(); it != cameraTarget.particles.rend(); ++it)
 	{
 		DrawParticle((*it).second);
 	}
-	particles.clear();
+	cameraTarget.particles.clear();
 }
 
 void M_Renderer3D::DrawParticle(RenderParticle& particle)
@@ -511,41 +522,47 @@ void M_Renderer3D::DrawParticle(RenderParticle& particle)
 
 void M_Renderer3D::AddAABB(const AABB& box, const Color& color)
 {
-	aabb.push_back(RenderBox<AABB>(&box, color));
+	if (currentCameraTarget)
+		currentCameraTarget->aabb.push_back(RenderBox<AABB>(&box, color));
 }
 
 void M_Renderer3D::AddOBB(const OBB& box, const Color& color)
 {
-	obb.push_back(RenderBox<OBB>(&box, color));
+	if (currentCameraTarget)
+		currentCameraTarget->obb.push_back(RenderBox<OBB>(&box, color));
 }
 
 void M_Renderer3D::AddFrustum(const Frustum& box, const Color& color)
 {
-	frustum.push_back(RenderBox<Frustum>(&box, color));
+	if (currentCameraTarget)
+		currentCameraTarget->frustum.push_back(RenderBox<Frustum>(&box, color));
 }
 
-void M_Renderer3D::DrawAllBox()
+void M_Renderer3D::DrawAllBox(CameraTarget& cameraTarget)
 {
 	glDisable(GL_LIGHTING);
 	glBegin(GL_LINES);
 
-	for (uint i = 0; i < aabb.size(); i++)
+	std::vector<RenderBox<AABB>>::iterator aabb_it;
+	for (aabb_it = cameraTarget.aabb.begin(); aabb_it != cameraTarget.aabb.end(); ++aabb_it)
 	{
-		Gizmos::DrawWireBox(*aabb[i].box, aabb[i].color);
+		Gizmos::DrawWireBox(*aabb_it->box, aabb_it->color);
 	}
-	aabb.clear();
+	cameraTarget.aabb.clear();
 
-	for (uint i = 0; i < obb.size(); i++)
+	std::vector<RenderBox<OBB>>::iterator obb_it;
+	for (obb_it = cameraTarget.obb.begin(); obb_it != cameraTarget.obb.end(); ++obb_it)
 	{
-		Gizmos::DrawWireBox(*obb[i].box, obb[i].color);
+		Gizmos::DrawWireBox(*obb_it->box, (*obb_it).color);
 	}
-	obb.clear();
+	cameraTarget.obb.clear();
 
-	for (uint i = 0; i < frustum.size(); i++)
+	std::vector<RenderBox<Frustum>>::iterator frustum_it;
+	for (frustum_it = cameraTarget.frustum.begin(); frustum_it != cameraTarget.frustum.end(); ++frustum_it)
 	{
-		Gizmos::DrawWireBox(*frustum[i].box, frustum[i].color);
+		Gizmos::DrawWireBox(*frustum_it->box, (*frustum_it).color);
 	}
-	frustum.clear();
+	cameraTarget.frustum.clear();
 
 	glEnd();
 	glEnable(GL_LIGHTING);
@@ -553,16 +570,18 @@ void M_Renderer3D::DrawAllBox()
 
 void M_Renderer3D::AddLine(const float3 a, const float3 b, const Color& color)
 {
-	lines.push_back(RenderLine(a, b, color));
+	if (currentCameraTarget)
+		currentCameraTarget->lines.push_back(RenderLine(a, b, color));
 }
 
-void M_Renderer3D::DrawAllLines()
+void M_Renderer3D::DrawAllLines(CameraTarget& cameraTarget)
 {
-	for (uint i = 0; i < lines.size(); i++)
+	std::vector<RenderLine>::iterator it;
+	for (it = cameraTarget.lines.begin(); it != cameraTarget.lines.end(); ++it)
 	{
-		glColor3f(lines[i].color.r, lines[i].color.g, lines[i].color.b);
-		glVertex3f(lines[i].start.x, lines[i].start.y, lines[i].start.z);
-		glVertex3f(lines[i].end.x, lines[i].end.y, lines[i].end.z);
+		glColor3f(it->color.r, it->color.g, it->color.b);
+		glVertex3f(it->startPoint.x, it->startPoint.y, it->startPoint.z);
+		glVertex3f(it->endPoint.x, it->endPoint.y, it->endPoint.z);
 	}
 	glEnd();
 }
@@ -606,7 +625,25 @@ void M_Renderer3D::LoadBuffers(C_Material* material)
 
 void M_Renderer3D::ReleaseBuffers(R_Mesh* mesh)
 {
+	if (mesh->buffersSize[R_Mesh::b_vertices] > 0)
+	{
+		glDeleteBuffers(1, &mesh->buffers[R_Mesh::b_vertices]);
+	}
 
+	if (mesh->buffersSize[R_Mesh::b_indices] > 0)
+	{
+		glDeleteBuffers(1, &mesh->buffers[R_Mesh::b_indices]);
+	}
+
+	if (mesh->buffersSize[R_Mesh::b_normals] > 0)
+	{
+		glDeleteBuffers(1, &mesh->buffers[R_Mesh::b_normals]);
+	}
+
+	if (mesh->buffersSize[R_Mesh::b_tex_coords] > 0)
+	{
+		glDeleteBuffers(1, &mesh->buffers[R_Mesh::b_tex_coords]);
+	}
 }
 
 void M_Renderer3D::ReleaseBuffers(R_Texture* texture)
@@ -614,21 +651,5 @@ void M_Renderer3D::ReleaseBuffers(R_Texture* texture)
 	if (texture)
 	{
 		glDeleteBuffers(1, &texture->buffer);
-
 	}
 }
-
-void M_Renderer3D::OnRemoveGameObject(GameObject* gameObject)
-{
-	for (std::vector<RenderMesh>::iterator it = meshes.begin(); it != meshes.end();)
-	{
-		if ((*it).mesh->gameObject == gameObject)
-			meshes.erase(it);
-		else
-			it++;
-	}
-}
-
-
-
-//----------------------------------------------

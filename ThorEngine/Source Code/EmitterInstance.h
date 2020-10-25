@@ -2,7 +2,7 @@
 #define __EMITTER_INSTANCE_H__
 
 #include "Particle.h"
-
+#include "ERenderingFlagsh.h"
 class Emitter;
 class C_ParticleSystem;
 
@@ -14,7 +14,7 @@ public:
 	void Init(Emitter* emitterReference, C_ParticleSystem* component);
 
 	void Update(float dt);
-	void DrawParticles();
+	void DrawParticles(RenderingFlags flags);
 	void Reset();
 
 	void SpawnParticle();

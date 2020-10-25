@@ -16,8 +16,7 @@ public:
 		box.GetCornerPoints(corners);
 		DrawWireCube(corners, color);
 	}
-	//static void DrawWireBox(const OBB& obb, Color color);
-	//static void DrawWireFrustum(const Frustum& frustum, Color color);
+
 	static void DrawWireCube(const float3* corners, Color color);
 };
 

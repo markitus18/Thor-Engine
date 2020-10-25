@@ -33,6 +33,15 @@ void C_ParticleSystem::Reset()
 	}
 }
 
+void C_ParticleSystem::Draw(RenderingFlags flags)
+{
+	//TODO: Draw 2D Gizmo
+	for (unsigned int i = 0; i < emitters.size(); ++i)
+	{
+		emitters[i].DrawParticles(flags);
+	}
+}
+
 void C_ParticleSystem::SetResource(Resource* resource)
 {
 	Reset();

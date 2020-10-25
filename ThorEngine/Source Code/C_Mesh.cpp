@@ -7,8 +7,10 @@
 
 #include "R_Mesh.h"
 
+#include "C_Material.h"
 #include "C_Transform.h"
 
+#include "M_Renderer3D.h"
 #include "OpenGL.h"
 
 C_Mesh::C_Mesh() : Component(Type::Mesh, nullptr, true)
@@ -22,6 +24,11 @@ C_Mesh::C_Mesh(GameObject* new_GameObject) : Component(Type::Mesh, new_GameObjec
 C_Mesh::~C_Mesh()
 {
 
+}
+
+void C_Mesh::Draw(RenderingFlags flags)
+{
+	Engine->renderer3D->AddMesh(gameObject->GetComponent<C_Transform>()->GetGlobalTransformT(), this, gameObject->GetComponent<C_Material>());
 }
 
 const AABB& C_Mesh::GetAABB() const

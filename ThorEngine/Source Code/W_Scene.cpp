@@ -37,7 +37,7 @@ void W_Scene::Draw()
 
 	ImGui::SetCursorPos(/*ImGui::GetCursorPos() +*/ ImVec2(img_offset.x, img_offset.y));
 		img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y) + Vec2(0, img_size.y);
-		img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on botton
+		img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on bottom
 
 	ImGui::Image((ImTextureID)Engine->renderer3D->renderTexture, ImVec2(img_size.x, img_size.y), ImVec2(0, 1), ImVec2(1, 0));
 

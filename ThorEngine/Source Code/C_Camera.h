@@ -2,9 +2,11 @@
 #define __CAMERA_H__
 
 #include "Component.h"
+#include "Color.h"
 
 #include "MathGeoLib\src\MathBuildConfig.h"
 #include "MathGeoLib\src\MathGeoLib.h"
+
 class GameObject;
 
 class C_Camera : public Component
@@ -13,7 +15,7 @@ public:
 	C_Camera(GameObject* gameObject);
 	~C_Camera();
 
-	//Frustum variable management ----
+	//Frustum management ----
 	float GetNearPlane() const;
 	float GetFarPlane() const;
 	float GetFOV() const;
@@ -25,14 +27,22 @@ public:
 	void SetAspectRatio(float ar);
 	//--------------------------------
 
-
 	void Look(const float3& position);
 	void Match(const C_Camera* reference);
+
+	void SetRenderingEnabled(bool enabled);
+
+	void GenerateFrameBuffer();
+	void UpdateFrameBuffer();
+	inline uint GetFrameBuffer() const { return frameBuffer; }
+	inline uint GetRenderTarget() const { return renderTexture; }
 
 	float* GetOpenGLViewMatrix();
 	float* GetOpenGLProjectionMatrix();
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+
+	virtual void Draw(RenderingFlags flags) override;
 
 	void Save();
 	void Load();
@@ -44,10 +54,16 @@ private:
 
 public:
 	Frustum		frustum;
-	bool		update_projection = true;
 	bool		culling = false;
-	bool		active_camera = false;
+	bool		renderingEnabled = false;
 	Plane		planes[6];
+	float2		resolution;
+	Color		backgroundColor;
+
+private:
+	uint frameBuffer = 0;
+	uint depthStencilBuffer = 0;
+	uint renderTexture = 0;
 };
 
 #endif // __CAMERA_H__

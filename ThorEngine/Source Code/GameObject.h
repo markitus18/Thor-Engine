@@ -16,6 +16,8 @@ class C_Transform;
 class Config;
 class Scene;
 
+typedef unsigned __int64 RenderingFlags;
+
 class GameObject : public TreeNode
 {
 public:
@@ -27,8 +29,8 @@ public:
 
 	void Destroy();
 	void Update(float dt);
-	void Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected);
-	void DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBosSelected);
+	void Draw(RenderingFlags flags);
+	void DrawResursive(RenderingFlags flags);
 
 	void OnUpdateTransform();
 	const AABB& GetAABB() const;
@@ -122,9 +124,6 @@ public:
 	std::vector<GameObject*>	childs;
 
 	Scene*						sceneOwner = nullptr;
-
-	//TODO: this for when models (apply / revert) get implemented
-	Resource*					link = nullptr;
 
 	bool						active = true;
 	bool						isStatic = false;

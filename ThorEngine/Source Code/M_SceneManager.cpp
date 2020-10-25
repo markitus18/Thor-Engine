@@ -75,11 +75,7 @@ update_status M_SceneManager::Update()
 	for (uint i = 0; i < activeScenes.size(); ++i)
 	{
 		activeScenes[i]->UpdateAllGameObjects(Time::deltaTime);
-		//TODO: Might not be the best place to call it. Final draw, however, is in render's postupdate
-		//if (culling)
-			//activeScenes[i]->DrawCulledGameObjects(activeScenes[i]->mainCamera);
-		//else
-			activeScenes[i]->DrawAllChildren(activeScenes[i]->root);
+		activeScenes[i]->DrawScene();
 	}
 
 	return UPDATE_CONTINUE;

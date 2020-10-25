@@ -122,13 +122,18 @@ void C_Animator::Update(float dt)
 	}
 }
 
+void C_Animator::Draw(RenderingFlags flags)
+{
+	if (flags & RenderFlag_Bones)
+		DrawLinkedBones();
+}
+
 void C_Animator::SetAnimation(const char* name, float blendTime)
 {
 	R_AnimatorController* rAnimator = rAnimatorHandle.Get();
 	for (uint i = 0; i < rAnimator->animations.size(); ++i)
 	{
 		//TODO: Animations should be loaded with animator controller
-
 		/*
 		R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
 		if (animation && animation->name == name)

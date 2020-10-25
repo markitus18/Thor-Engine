@@ -95,40 +95,30 @@ void GameObject::Update(float dt)
 	}
 }
 
-void GameObject::Draw(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected)
+void GameObject::Draw(RenderingFlags flags)
 {
 	if (active && IsParentActive())
 	{
-		C_Mesh* mesh = GetComponent<C_Mesh>();
-		if (mesh)
+		std::vector<Component*>::iterator it;
+		for (it = components.begin(); it != components.end(); ++it)
 		{
-			Engine->renderer3D->AddMesh(transform->GetGlobalTransformT(), mesh, GetComponent<C_Material>(), shaded, wireframe, selected, IsParentSelected(), flipped_normals);
+			if ((*it)->IsActive())
+				(*it)->Draw(flags);
 		}
 
-		const C_Camera* camera = GetComponent<C_Camera>();
-		if (camera)
-		{
-			Engine->renderer3D->AddFrustum(camera->frustum, Blue);
-		}
-
-		if (drawBox || ( drawBoxSelected && (selected || IsParentSelected())))
-		{
+		if (flags & RenderFlag_Bounds_AABB)
 			Engine->renderer3D->AddAABB(aabb, Green);
+		if (flags & RenderFlag_Bounds_OBB)
 			Engine->renderer3D->AddOBB(obb, Yellow);
-		}
-
-		const C_Animator* animatior = GetComponent<C_Animator>();
-		if (animatior)
-			animatior->DrawLinkedBones();
 	}
 }
 
-void GameObject::DrawResursive(bool shaded, bool wireframe, bool drawBox, bool drawBoxSelected)
+void GameObject::DrawResursive(RenderingFlags flags)
 {
-	Draw(shaded, wireframe, drawBox, drawBoxSelected);
+	Draw(flags);
 
 	for (uint i = 0; i < childs.size(); i++)
-		childs[i]->DrawResursive(shaded, wireframe, drawBox, drawBoxSelected);
+		childs[i]->DrawResursive(flags);
 }
 
 void GameObject::OnUpdateTransform()

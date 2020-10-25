@@ -112,7 +112,7 @@ void WindowFrame::MenuBar_Edit()
 			if (ImGui::MenuItem("Cut", "Ctrl + X", nullptr, false)) {}
 			if (ImGui::MenuItem("Copy", "Ctrl + C", nullptr, false)) {}
 			if (ImGui::MenuItem("Paste", "Ctrl + V", nullptr, false)) {}
-			if (ImGui::MenuItem("Duplciate", "Ctrl + W", nullptr, false)) {}
+			if (ImGui::MenuItem("Duplicate", "Ctrl + W", nullptr, false)) {}
 			if (ImGui::MenuItem("Delete", "Delete", nullptr, false)) {}
 		ImGui::Unindent();  ImGui::Separator();
 		ImGui::Text("Configuration"); ImGui::Indent();

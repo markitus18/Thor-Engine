@@ -1,17 +1,5 @@
 #include "Gizmos.h"
 
-//template<typename Box>
-//void Gizmos::DrawWireBox(const Box& box, Color color)
-//{
-//	float3 corners[8];
-//	box.GetCornerPoints(corners);
-//	DrawWireCube(corners, color);
-//}
-//This allows us to declarate a templatized function in .cpp file
-//template void Gizmos::DrawWireBox<AABB>(const AABB& aabb, Color color);
-//template void Gizmos::DrawWireBox<OBB>(const OBB& obb, Color color);
-//template void Gizmos::DrawWireBox<Frustum>(const Frustum& frustum, Color color);
-
 void Gizmos::DrawWireCube(const float3* corners, Color color)
 {
 	glColor4f(color.r, color.g, color.b, color.a);

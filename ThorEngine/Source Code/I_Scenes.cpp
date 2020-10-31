@@ -79,7 +79,6 @@ void Importer::Models::Private::ImportNodeData(const aiScene* scene, const aiNod
 	}
 
 	ModelNode newNode(randomID.Int(), nodeName.c_str(), pos, scale, rot, parentID);
-	newNode.ID = randomID.Int();
 
 	// Loading node meshes ----------------------------------------
 	for (uint i = 0; i < node->mNumMeshes && i < 1; i++)

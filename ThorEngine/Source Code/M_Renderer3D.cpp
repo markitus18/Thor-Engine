@@ -64,10 +64,6 @@ bool M_Renderer3D::Init(Config& config)
 		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s", SDL_GetError());
 
-		//Initialize Projection Matrix
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-
 		//Check for error
 		GLenum error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -76,11 +72,11 @@ bool M_Renderer3D::Init(Config& config)
 			ret = false;
 		}
 
+		//Initialize Projection Matrix
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 
-
-		int monitor_screen_width = GetSystemMetrics(SM_CXSCREEN);
-		int monitor_screen_height = GetSystemMetrics(SM_CYSCREEN);
-		//Initialize Modelview Matrix
+		//Initialize ModelView Matrix
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -155,23 +151,17 @@ bool M_Renderer3D::Start()
 
 // PreUpdate: clear buffer
 update_status M_Renderer3D::PreUpdate()
-{
-/*
-	if (camera->update_projection)
-	{
-		UpdateProjectionMatrix();
-		camera->update_projection = false;
-	}
-	*/
+{	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	/*
+	
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(camera->GetOpenGLViewMatrix());
-	*/
+	glLoadIdentity();
+	
 	// light 0 on cam pos
-	lights[0].SetPos(Engine->camera->GetCamera()->frustum.Pos().x, Engine->camera->GetCamera()->frustum.Pos().y, Engine->camera->GetCamera()->frustum.Pos().z);
+	//lights[0].SetPos(Engine->camera->GetCamera()->frustum.Pos().x, Engine->camera->GetCamera()->frustum.Pos().y, Engine->camera->GetCamera()->frustum.Pos().z);
 
 //	for(uint i = 0; i < MAX_LIGHTS; ++i)
 //		lights[i].Render();
@@ -189,6 +179,7 @@ update_status M_Renderer3D::PostUpdate()
 	}
 	cameraRenderingTargets.clear();
 
+	glViewport(0, 0, Engine->window->windowSize.x, Engine->window->windowSize.y); //TODO: Is this necessary...?*/
 	Engine->moduleEditor->Draw();
 
 	SDL_GL_SwapWindow(Engine->window->window);
@@ -248,15 +239,6 @@ uint M_Renderer3D::SaveModelThumbnail(GameObject* gameObject)
 	return 0;
 }
 
-void M_Renderer3D::SetDepthBufferEnabled(bool enabled)
-{
-	depthEnabled = enabled;
-
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, enabled ? depthBuffer : 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
 // Called before quitting
 bool M_Renderer3D::CleanUp()
 {
@@ -267,96 +249,41 @@ bool M_Renderer3D::CleanUp()
 	return true;
 }
 
-void M_Renderer3D::GenerateSceneBuffers()
-{
-	//TODO: move into a function
-	//Generating buffers for scene render
-	glGenFramebuffers(1, &frameBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-	//Generating texture to render to
-	glGenTextures(1, &renderTexture);
-	glBindTexture(GL_TEXTURE_2D, renderTexture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Engine->window->windowSize.x, Engine->window->windowSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//Generating the depth buffer
-	glGenRenderbuffers(1, &depthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, Engine->window->windowSize.x, Engine->window->windowSize.y);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
-
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	//Configuring frame buffer
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		LOG("Error creating screen buffer");
-	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
 void M_Renderer3D::OnResize()
 {
 	glViewport(0, 0, Engine->window->windowSize.x, Engine->window->windowSize.y);
-	camera->SetAspectRatio((float)Engine->window->windowSize.x / (float)Engine->window->windowSize.y);
-	UpdateProjectionMatrix();
-	GenerateSceneBuffers();
-}
-
-void M_Renderer3D::UpdateProjectionMatrix()
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glLoadMatrixf((GLfloat*)camera->GetOpenGLProjectionMatrix());
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
-void M_Renderer3D::SetCullingCamera(C_Camera* camera)
-{
-	if (culling_camera)
-	{
-		culling_camera->culling = false;
-	}
-	this->culling_camera = camera;
-	if (camera)
-	{
-		camera->culling = true;
-	}
-
+	//camera->SetAspectRatio((float)Engine->window->windowSize.x / (float)Engine->window->windowSize.y);
 }
 
 void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 {
-	std::vector<CameraTarget>::iterator it;
+	currentCameraTarget = &cameraTarget;
 	const C_Camera* cameraComponent = cameraTarget.camera;
 
-	for (it = cameraRenderingTargets.begin(); it != cameraRenderingTargets.end(); ++it)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, cameraComponent->GetFrameBuffer());
-		glClearColor(cameraComponent->backgroundColor.r, cameraComponent->backgroundColor.g, cameraComponent->backgroundColor.b, cameraComponent->backgroundColor.a);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		glViewport(0, 0, cameraComponent->resolution.x, cameraComponent->resolution.y);
+	//Set projection matrix from the camera. TODO: Do we really need this? Isn't this done through shader?
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(cameraComponent->GetOpenGLProjectionMatrix());
 
-		glUseProgram(0);
+	//Set view matrix from the camera.  TODO: Do we really need this? Isn't this done through shader?
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(cameraComponent->GetOpenGLViewMatrix());
 
-		DrawAllMeshes(cameraTarget);
-		DrawAllParticles(cameraTarget);
-		DrawAllBox(cameraTarget);
-		DrawAllLines(cameraTarget);
-	}
+	//Set camera's frame buffer as the current target buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, cameraComponent->GetFrameBuffer());
+	glClearColor(cameraComponent->backgroundColor.r, cameraComponent->backgroundColor.g, cameraComponent->backgroundColor.b, cameraComponent->backgroundColor.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glViewport(0, 0, cameraComponent->resolution.x, cameraComponent->resolution.y);
+
+	glUseProgram(0);
+
+	DrawAllMeshes(cameraTarget);
+	DrawAllParticles(cameraTarget);
+	DrawAllBox(cameraTarget);
+	DrawAllLines(cameraTarget);
 
 	//TODO: Move this into a mesh "prefab" or a renderer method
 	//Both draw and input handling
-
+	
 	if (drawGrid)
 	{
 		glLineWidth(1.0f);
@@ -382,6 +309,7 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 	{
 		Engine->camera->DrawRay();
 	}
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 }
@@ -438,11 +366,11 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 
 	//Sending view matrix
 	uint projectionLoc = glGetUniformLocation(shader->shaderProgram, "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, Engine->camera->GetCamera()->GetOpenGLProjectionMatrix());
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, currentCameraTarget->camera->GetOpenGLProjectionMatrix());
 
 	//Sending projection matrix
 	uint viewLoc = glGetUniformLocation(shader->shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, Engine->camera->GetCamera()->GetOpenGLViewMatrix());
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, currentCameraTarget->camera->GetOpenGLViewMatrix());
 	
 	//Binding vertex array object
 	if (rMesh.mesh->animMesh == nullptr)

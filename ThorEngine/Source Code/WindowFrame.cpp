@@ -25,6 +25,12 @@ WindowFrame::~WindowFrame()
 	windows.clear();
 }
 
+void WindowFrame::PrepareUpdate()
+{
+	for (uint i = 0; i < windows.size(); ++i)
+		windows[i]->PrepareUpdate();
+}
+
 void WindowFrame::Draw()
 {
 	if (pendingLoadLayout) return;

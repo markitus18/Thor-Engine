@@ -49,8 +49,11 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 		//TODO: should this be handled in particle lifetime?
 		particle->relativeLifetime += particle->oneOverMaxLifetime * dt;
 		//TODO: find a way to link the camera
-		particle->worldRotation = GetAlignmentRotation(particle->position, Engine->camera->GetCamera()->frustum.WorldMatrix());
-		particle->distanceToCamera = float3(Engine->camera->GetCamera()->frustum.WorldMatrix().TranslatePart() - particle->position).LengthSq();
+
+		//particle->worldRotation = GetAlignmentRotation(particle->position, Engine->camera->GetCamera()->frustum.WorldMatrix());
+		
+		//TODO: Get scene camera! Maybe through render?
+		//particle->distanceToCamera = float3(Engine->camera->GetCamera()->frustum.WorldMatrix().TranslatePart() - particle->position).LengthSq();
 	}
 }
 

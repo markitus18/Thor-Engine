@@ -277,12 +277,12 @@ void W_Inspector::DrawCamera(GameObject* gameObject, C_Camera* camera)
 
 		if (ImGui::Button("Match camera"))
 		{
-			Engine->camera->Match(camera);
+			//Engine->camera->Match(camera);
 		}
 
 		if (DrawDetails_CheckBox("Camera Culling", camera->culling))
 		{
-			camera->culling ? Engine->renderer3D->SetCullingCamera(camera) : Engine->renderer3D->SetCullingCamera(nullptr);
+			//camera->culling ? Engine->renderer3D->SetCullingCamera(camera) : Engine->renderer3D->SetCullingCamera(nullptr);
 		}
 
 		float camera_fov = camera->GetFOV();

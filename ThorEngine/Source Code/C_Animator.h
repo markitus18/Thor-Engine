@@ -22,7 +22,7 @@ public:
 	void Start();
 	void Update(float dt);
 
-	virtual void Draw(RenderingFlags flags) override;
+	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
 
 	void SetAnimation(const char* name, float blendTime = 0.0f);
 	void SetAnimation(uint index, float blendTime = 0.0f);

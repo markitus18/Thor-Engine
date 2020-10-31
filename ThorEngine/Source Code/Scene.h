@@ -42,6 +42,12 @@ public:
 	GameObject* CreateCamera(); //TODO: Keeping old structure for now. Consider moving somewhere else
 	const C_Camera* GetMainCamera() const;
 
+	void RegisterCamera(C_Camera* camera);
+	void UnregisterCamera(C_Camera* camera);
+
+	void RegisterViewport(WViewport* viewport);
+	void UnregisterViewport(WViewport* viewport);
+
 	//TODO: Keeping old structure for now. Consider moving somewhere else
 	//Tick handling should be done in a separate structure
 	void Play();

@@ -107,6 +107,10 @@ update_status M_Editor::PreUpdate()
 			CloseWindow(windowFrames[i]);
 			--i;
 		}
+		else
+		{
+			windowFrames[i]->PrepareUpdate();
+		}
 	}
 
 	//Begin new ImGui Frame

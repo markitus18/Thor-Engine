@@ -22,6 +22,7 @@ public:
 	WindowFrame(const char* name, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID);
 	virtual ~WindowFrame();
 
+	virtual void PrepareUpdate();
 	void Draw();
 
 	virtual void LoadLayout_Default(ImGuiID mainDockID) = 0;

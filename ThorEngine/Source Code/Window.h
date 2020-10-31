@@ -16,11 +16,12 @@ public:
 	Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass, int ID);
 	virtual ~Window();
 
+	virtual void PrepareUpdate() {};
 	virtual void Draw() = 0;
 
-	void SetActive(bool active);
+	inline void SetActive(bool active) {this->active = active; }
 
-	virtual void OnResize(Vec2 newSize) {};
+	virtual void OnResize(Vec2 newSize);
 
 	virtual void SaveConfig(Config& config);
 	virtual void LoadConfig(Config& config);
@@ -30,7 +31,7 @@ public:
 
 public:
 	std::string name;
-	M_Editor* editor;
+	M_Editor* editor = nullptr;
 	bool showDebugInfo = false;
 	Vec2 windowSize = { 0, 0 };
 	ImGuiWindowClass* windowClass = nullptr;
@@ -39,6 +40,7 @@ protected:
 	bool active = true;
 	int ID = -1;
 	std::string windowStrID;
+	bool isTabBarHidden;
 };
 
 #endif //__DOCK_DATA_H__

@@ -95,7 +95,7 @@ void GameObject::Update(float dt)
 	}
 }
 
-void GameObject::Draw(RenderingFlags flags)
+void GameObject::Draw(RenderingSettings::RenderingFlags flags)
 {
 	if (active && IsParentActive())
 	{
@@ -106,14 +106,14 @@ void GameObject::Draw(RenderingFlags flags)
 				(*it)->Draw(flags);
 		}
 
-		if (flags & RenderFlag_Bounds_AABB)
+		if (flags & RenderingSettings::RenderFlag_Bounds_AABB)
 			Engine->renderer3D->AddAABB(aabb, Green);
-		if (flags & RenderFlag_Bounds_OBB)
+		if (flags & RenderingSettings::RenderFlag_Bounds_OBB)
 			Engine->renderer3D->AddOBB(obb, Yellow);
 	}
 }
 
-void GameObject::DrawResursive(RenderingFlags flags)
+void GameObject::DrawResursive(RenderingSettings::RenderingFlags flags)
 {
 	Draw(flags);
 

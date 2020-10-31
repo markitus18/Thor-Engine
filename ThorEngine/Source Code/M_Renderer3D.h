@@ -88,12 +88,9 @@ public:
 	update_status PreUpdate() override;
 	update_status PostUpdate() override;
 	bool CleanUp() override;
-	void GenerateSceneBuffers();
 
 	void OnResize();
-	void UpdateProjectionMatrix();
 
-	void SetCullingCamera(C_Camera* camcameraTarget);
 	void DrawTargetCamera(CameraTarget& camera);
 
 	void BeginTargetCamera(const C_Camera* camera, EViewportViewMode viewMode);
@@ -105,7 +102,6 @@ public:
 	void AddOBB(const OBB& box, const Color& color);
 	void AddFrustum(const Frustum& box, const Color& color);
 	void AddLine(const float3 a, const float3 b, const Color& color);
-
 
 	void DrawAllMeshes(CameraTarget& cameraTarget);
 	void DrawMesh(RenderMesh& mesh);
@@ -127,25 +123,11 @@ public:
 	uint SaveImage(const char* pathr);
 	uint SaveModelThumbnail(GameObject* gameObject);
 
-	//Rendering Settings ---------------------------
-	void SetDepthBufferEnabled(bool enabled);
-
-
-	//----------------------------------------------
-
 public:
-	C_Camera* camera = nullptr;
-	C_Camera* culling_camera = nullptr;
-
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 
 	bool drawGrid = true;
-
-	uint frameBuffer = 0;
-	uint depthBuffer = 0;
-	uint renderTexture = 0;
-
 	bool depthEnabled = true;
 
 private:

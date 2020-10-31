@@ -22,26 +22,9 @@ public:
 	float3 GetPosition() const;
 	float3 GetReference() const;
 
-	void Look(const float3& position);
-	void CenterOn(const float3& position, float distance);
-	void SetNewTarget(const float3& new_target);
-	void Match(const C_Camera* camera);
-
-	void SetPosition(float3 position);
-
-	C_Camera* GetCamera() const;
-
-	void OnClick(const Vec2& mousePos);
-	void Move_Mouse(float motion_x, float motion_y);
-	void Orbit(float motion_x, float motion_y);
-	void Pan(float motion_x, float motion_y);
-
-	void Zoom(float zoom);
-
 	void DrawRay();
 private:
 
-	void Move_Keyboard(float dt);
 
 public:
 	bool drawRay = false;

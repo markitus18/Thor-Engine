@@ -12,11 +12,11 @@ namespace Importer
 {
 	namespace Materials
 	{
-		//Creates an empty mesh resource using default constructor
+		//Creates an empty material resource using default constructor
 		R_Material* Create();
 
 		//Processes aiMaterial data into a ready-to-use R_Material to be saved later.
-		//Returns nullptr if any errors occured during the process.
+		//Returns nullptr if any errors occurred during the process.
 		void Import(const aiMaterial* material, R_Material* rMaterial);
 
 		//Process R_Material data into a buffer ready to save
@@ -25,7 +25,7 @@ namespace Importer
 		uint64 Save(const R_Material* rMaterial, char** buffer);
 
 		//Process buffer data into a ready-to-use R_Material.
-		//Returns nullptr if any errors occured during the process.
+		//Returns nullptr if any errors occurred during the process.
 		void Load(const char* buffer, uint size, R_Material* rMaterial);
 	}
 

@@ -18,7 +18,7 @@ public:
 	C_Mesh(GameObject* new_GameObject);
 	~C_Mesh();
 
-	virtual void Draw(RenderingFlags flags) override;
+	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
 
 	const AABB& GetAABB() const;
 	static inline Type GetType() { return Type::Mesh; };

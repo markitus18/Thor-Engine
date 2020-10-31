@@ -25,6 +25,7 @@ public:
 	void SetFarPlane(float distance);
 	void SetFOV(float fov); 
 	void SetAspectRatio(float ar);
+	void SetResolution(float width, float height);
 	//--------------------------------
 
 	void Look(const float3& position);
@@ -33,16 +34,16 @@ public:
 	void SetRenderingEnabled(bool enabled);
 
 	void GenerateFrameBuffer();
-	void UpdateFrameBuffer();
+	void UpdateFrameBufferSize();
 	inline uint GetFrameBuffer() const { return frameBuffer; }
 	inline uint GetRenderTarget() const { return renderTexture; }
 
-	float* GetOpenGLViewMatrix();
-	float* GetOpenGLProjectionMatrix();
+	float* GetOpenGLViewMatrix() const;
+	float* GetOpenGLProjectionMatrix() const;
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
-	virtual void Draw(RenderingFlags flags) override;
+	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
 
 	void Save();
 	void Load();

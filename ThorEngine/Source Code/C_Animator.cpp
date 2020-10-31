@@ -122,9 +122,9 @@ void C_Animator::Update(float dt)
 	}
 }
 
-void C_Animator::Draw(RenderingFlags flags)
+void C_Animator::Draw(RenderingSettings::RenderingFlags flags)
 {
-	if (flags & RenderFlag_Bones)
+	if (flags & RenderingSettings::RenderFlag_Bones)
 		DrawLinkedBones();
 }
 

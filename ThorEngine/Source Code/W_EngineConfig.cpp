@@ -50,7 +50,7 @@ void W_EngineConfig::Draw()
 		bool enabled = Engine->renderer3D->depthEnabled;
 		if (ImGui::Checkbox("Depth Buffer", &enabled))
 		{
-			Engine->renderer3D->SetDepthBufferEnabled(enabled);
+			//TODO: Removal
 		}
 	}
 
@@ -59,13 +59,13 @@ void W_EngineConfig::Draw()
 		float3 camera_pos = Engine->camera->GetPosition();
 		if (ImGui::DragFloat3("Position", (float*)&camera_pos))
 		{
-			Engine->camera->SetPosition(camera_pos);
+			//Engine->camera->SetPosition(camera_pos);
 		}
 
 		float3 camera_ref = Engine->camera->GetReference();
 		if (ImGui::DragFloat3("Reference", (float*)&camera_ref))
 		{
-			Engine->camera->Look(camera_ref);
+			//Engine->camera->Look(camera_ref);
 		}
 	}
 

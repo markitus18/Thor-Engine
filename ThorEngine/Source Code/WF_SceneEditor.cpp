@@ -36,7 +36,7 @@ WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowCl
 	explorerWindowClass->ClassId = 3;
 
 	windows.push_back(new W_Hierarchy(editor, windowClass, ID));
-	windows.push_back(new W_Scene(editor, windowClass, ID));
+	windows.push_back(new W_MainViewport(editor, windowClass, ID));
 	windows.push_back(new W_Inspector(editor, windowClass, ID));
 	windows.push_back(new W_Console(editor, windowClass, ID));
 	windows.push_back(new W_Explorer(editor, windowClass, explorerWindowClass, ID));
@@ -61,6 +61,9 @@ void WF_SceneEditor::SetResource(uint64 resourceID)
 	{
 		Engine->sceneManager->LoadMap(resourceID);
 		scene = Engine->sceneManager->mainScene;
+
+		W_MainViewport* viewport = (W_MainViewport*)GetWindow(W_MainViewport::GetName());
+		viewport->SetScene(scene);
 	}
 }
 
@@ -224,11 +227,11 @@ void WF_SceneEditor::LoadLayout_Default(ImGuiID mainDockID)
 	windowName = GetWindow(W_MainToolbar::GetName())->GetWindowStrID();
 	ImGui::DockBuilderDockWindow(windowName, topCenterSpace_id);
 	ImGui::DockBuilderGetNode(topCenterSpace_id)->WantHiddenTabBarToggle = true;
-
-	windowName = GetWindow(W_Scene::GetName())->GetWindowStrID();
+	
+	windowName = GetWindow(W_MainViewport::GetName())->GetWindowStrID();
 	ImGui::DockBuilderDockWindow(windowName, bottomCenterSpace_id);
 	ImGui::DockBuilderGetNode(bottomCenterSpace_id)->WantHiddenTabBarToggle = true;
-
+	
 	ImGuiID topRightSpace_id, bottomRightSpace_id;
 	ImGui::DockBuilderSplitNode(dock_space_B_Right, ImGuiDir_Up, 0.65f, &topRightSpace_id, &bottomRightSpace_id);
 

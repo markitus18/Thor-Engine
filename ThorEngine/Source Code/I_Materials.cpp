@@ -71,7 +71,7 @@ R_Material* Importer::Materials::Create()
 	return new R_Material();
 }
 
-//TODO: Find texture in hard drive, duplicate it and import it next to the scene
+//TODO: Find texture in hard drive, duplicate it and import it next to the model
 void Importer::Materials::Import(const aiMaterial* material, R_Material* rMaterial)
 {
 	uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);

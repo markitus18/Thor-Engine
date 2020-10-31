@@ -206,6 +206,34 @@ const C_Camera* Scene::GetMainCamera() const
 	return mainCamera;
 }
 
+void Scene::RegisterCamera(C_Camera* camera)
+{
+	enabledRenderingCameras.push_back(camera);
+}
+
+void Scene::UnregisterCamera(C_Camera* camera)
+{
+	std::vector<C_Camera*>::iterator it = std::find(enabledRenderingCameras.begin(), enabledRenderingCameras.end(), camera);
+	if (it != enabledRenderingCameras.end())
+	{
+		enabledRenderingCameras.erase(it);
+	}
+}
+
+void Scene::RegisterViewport(WViewport* viewport)
+{
+	registeredViewports.push_back(viewport);
+}
+
+void Scene::UnregisterViewport(WViewport* viewport)
+{
+	std::vector<WViewport*>::iterator it = std::find(registeredViewports.begin(), registeredViewports.end(), viewport);
+	if (it != registeredViewports.end())
+	{
+		registeredViewports.erase(it);
+	}
+}
+
 void Scene::Play()
 {
 	Time::Start(60);
@@ -247,13 +275,24 @@ void Scene::UpdateAllGameObjects(float dt)
 
 void Scene::DrawScene()
 {
-	std::vector<WViewport*>::iterator it;
-	for (it = registeredViewports.begin(); it != registeredViewports.end(); ++it)
+	std::vector<WViewport*>::iterator viewportIt;
+	for (viewportIt = registeredViewports.begin(); viewportIt != registeredViewports.end(); ++viewportIt)
 	{
-		Engine->renderer3D->BeginTargetCamera((*it)->GetCurrentCamera(), (*it)->viewMode);
+		Engine->renderer3D->BeginTargetCamera((*viewportIt)->GetCurrentCamera(), (*viewportIt)->viewMode);
 
 		//TODO: Insert camera culling here so we avoid unnecessary draw calls
-		DrawAllChildren(root, (*it)->renderingFlags);
+		DrawAllChildren(root, (*viewportIt)->renderingFlags);
+
+		Engine->renderer3D->EndTargetCamera();
+	}
+
+	std::vector<C_Camera*>::iterator cameraIt;
+	for (cameraIt = enabledRenderingCameras.begin(); cameraIt != enabledRenderingCameras.end(); ++cameraIt)
+	{
+		Engine->renderer3D->BeginTargetCamera(*cameraIt, EViewportViewMode::LIT);
+
+		//TODO: Insert camera culling here so we avoid unnecessary draw calls
+		DrawAllChildren(root, RenderingSettings::DefaultGameFlags);
 
 		Engine->renderer3D->EndTargetCamera();
 	}
@@ -290,9 +329,9 @@ void Scene::CollectCullingCandidates(std::vector<const GameObject*>& vector, std
 	for (uint i = 0; i < vector.size(); i++)
 	{
 		//TODO: Culling camera should be held in Scene or given as a parameter when calling collect culling candidates
-		if (Engine->renderer3D->culling_camera->frustum.Intersects(vector[i]->GetAABB()))
-		{
-			candidates.push_back(vector[i]);
-		}
+		//if (Engine->renderer3D->culling_camera->frustum.Intersects(vector[i]->GetAABB()))
+		//{
+		//	candidates.push_back(vector[i]);
+		//}
 	}
 }

@@ -2,6 +2,9 @@
 
 #include "Config.h"
 
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
+
 Window::Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass, int ID) : editor(editor), name(name), windowClass(windowClass), ID(ID)
 {
 	windowStrID = name + ("##") + std::to_string(ID);
@@ -12,14 +15,10 @@ Window::~Window()
 
 }
 
-void Window::Draw()
+void Window::OnResize(Vec2 newSize)
 {
-
-}
-
-void Window::SetActive(bool active)
-{
-	this->active = active;
+	windowSize = newSize;
+	isTabBarHidden = !(ImGui::GetCurrentWindow()->DockNode && ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar());
 }
 
 void Window::SaveConfig(Config& config)

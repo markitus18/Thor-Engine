@@ -14,7 +14,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
-#include "W_Scene.h"
+#include "W_MainViewport.h"
 #include "W_Hierarchy.h"
 #include "W_Inspector.h"
 #include "W_Explorer.h"

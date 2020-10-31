@@ -31,7 +31,7 @@ void W_MainToolbar::Draw()
 	}
 
 	ImGui::SameLine();
-	std::string name2 = Time::paused ? "Resmue" : "Pause";
+	std::string name2 = Time::paused ? "Resume" : "Pause";
 	if (ImGui::Button(name2.c_str()))
 	{
 		Time::paused ? Time::Resume() : Time::Pause();

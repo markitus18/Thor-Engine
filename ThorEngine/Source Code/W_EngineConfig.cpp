@@ -8,7 +8,7 @@
 #include "M_Renderer3D.h"
 
 #include "WindowFrame.h"
-#include "W_Scene.h"
+#include "W_MainViewport.h"
 
 #include "TreeNode.h"
 #include "C_Camera.h"

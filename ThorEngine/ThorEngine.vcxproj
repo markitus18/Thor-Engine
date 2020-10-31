@@ -248,7 +248,7 @@
     <ClInclude Include="Source Code\W_ParticleViewport.h" />
     <ClInclude Include="Source Code\W_ParticleToolbar.h" />
     <ClInclude Include="Source Code\W_Resources.h" />
-    <ClInclude Include="Source Code\W_Scene.h" />
+    <ClInclude Include="Source Code\W_MainViewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source Code\Engine.cpp" />
@@ -369,7 +369,7 @@
     <ClCompile Include="Source Code\W_ParticleViewport.cpp" />
     <ClCompile Include="Source Code\W_ParticleToolbar.cpp" />
     <ClCompile Include="Source Code\W_Resources.cpp" />
-    <ClCompile Include="Source Code\W_Scene.cpp" />
+    <ClCompile Include="Source Code\W_MainViewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source Code\External Libraries\MathGeoLib\src\Geometry\KDTree.inl" />

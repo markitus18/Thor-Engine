@@ -497,6 +497,9 @@ void M_Renderer3D::AddLine(const float3 a, const float3 b, const Color& color)
 
 void M_Renderer3D::DrawAllLines(CameraTarget& cameraTarget)
 {
+	glDisable(GL_LIGHTING);
+	glBegin(GL_LINES);
+
 	std::vector<RenderLine>::iterator it;
 	for (it = cameraTarget.lines.begin(); it != cameraTarget.lines.end(); ++it)
 	{
@@ -504,7 +507,10 @@ void M_Renderer3D::DrawAllLines(CameraTarget& cameraTarget)
 		glVertex3f(it->startPoint.x, it->startPoint.y, it->startPoint.z);
 		glVertex3f(it->endPoint.x, it->endPoint.y, it->endPoint.z);
 	}
+
 	glEnd();
+	glEnable(GL_LIGHTING);
+
 }
 
 //Component buffers management -----------------

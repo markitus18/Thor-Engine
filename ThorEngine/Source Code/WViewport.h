@@ -49,6 +49,7 @@ public:
 
 	virtual void SetScene(Scene* scene);
 	inline const C_Camera* GetCurrentCamera() const { return currentCamera; }
+	inline C_Camera* GetCurrentCamera() { return currentCamera; } //Added for scene draw access.. move somewhere else?
 
 	//Camera management methods
 	void CameraLookAt(const float3& position);

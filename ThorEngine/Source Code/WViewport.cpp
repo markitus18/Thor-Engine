@@ -54,7 +54,7 @@ void WViewport::Draw()
 
 	//TODO: Can we do it generically for all windows?
 	Vec2 currentSize = Vec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-	if (currentSize != windowSize || isTabBarHidden != ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar())
+	if (currentSize != windowSize || isTabBarHidden != (!ImGui::GetCurrentWindow()->DockNode || ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar()))
 		OnResize(currentSize);
 
 	DrawScene();
@@ -121,8 +121,8 @@ void WViewport::OnResize(Vec2 newSize)
 	if (!isTabBarHidden)
 		tabBarSize = g.FontSize + g.Style.FramePadding.y * 2.0f;
 
-	textureSize.x = windowSize.x; //<-- -4 why??? It's not FramePadding nor WindowPadding...
-	textureSize.y = windowSize.y - tabBarSize; //For some reason we need to subtract it again...
+	textureSize.x = windowSize.x - 1; //<-- -4 why??? It's not FramePadding nor WindowPadding...
+	textureSize.y = windowSize.y - tabBarSize - 1; //For some reason we need to subtract it again...
 
 	cameraSettingsNeedUpdate = true;
 }
@@ -187,17 +187,15 @@ void WViewport::SetCameraPosition(float3 position)
 
 void WViewport::OnClick(const Vec2& mousePos)
 {
-	float mouseNormX = mousePos.x / (float)Engine->window->windowSize.x;
-	//TODO: quick fix, mouse click is inverting Y
-	float mouseNormY = mousePos.y / (float)Engine->window->windowSize.y;
+	float mouseNormX = mousePos.x / Engine->window->windowSize.x;
+	float mouseNormY = mousePos.y / Engine->window->windowSize.y;
 
 	//Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
 	mouseNormY = (mouseNormY - 0.5) / 0.5;
 
-	//lastRay = Engine->renderer3D->camera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
-
-	//Engine->sceneManager->mainScene->PerformMousePick(lastRay);
+	currentCamera->lastRay = currentCamera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
+	scene->PerformMousePick(currentCamera->lastRay);
 }
 
 void WViewport::MoveCamera_Mouse(float motion_x, float motion_y)
@@ -253,15 +251,6 @@ void WViewport::HandleInput()
 {
 	//if (Engine->moduleEditor->UsingKeyboard() == false)
 	//	MoveCamera_Keyboard(Time::deltaTime);
-
-	if (Engine->moduleEditor->UsingMouse() == false)
-	{
-		if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-		{
-			//OnClick();
-		}
-		//Move_Mouse();
-	}
 
 	if (ImGui::IsItemHovered())
 	{

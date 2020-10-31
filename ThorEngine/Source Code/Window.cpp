@@ -18,7 +18,7 @@ Window::~Window()
 void Window::OnResize(Vec2 newSize)
 {
 	windowSize = newSize;
-	isTabBarHidden = (ImGui::GetCurrentWindow()->DockNode && ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar());
+	isTabBarHidden = (!ImGui::GetCurrentWindow()->DockNode || ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar());
 }
 
 void Window::SaveConfig(Config& config)

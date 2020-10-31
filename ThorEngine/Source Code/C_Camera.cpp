@@ -195,6 +195,9 @@ void C_Camera::Draw(RenderingSettings::RenderingFlags flags)
 {
 	if (flags & RenderingSettings::RenderFlag_Frustum)
 		Engine->renderer3D->AddFrustum(frustum, Blue);
+
+	if (flags & RenderingSettings::RenderFlag_MousePick)
+		Engine->renderer3D->AddLine(lastRay.a, lastRay.b, Red);
 }
 
 void C_Camera::Save()

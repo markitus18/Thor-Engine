@@ -282,6 +282,7 @@ void Scene::DrawScene()
 
 		//TODO: Insert camera culling here so we avoid unnecessary draw calls
 		DrawAllChildren(root, (*viewportIt)->renderingFlags);
+		(*viewportIt)->GetCurrentCamera()->Draw(RenderingSettings::RenderFlag_MousePick & (*viewportIt)->renderingFlags);
 
 		Engine->renderer3D->EndTargetCamera();
 	}

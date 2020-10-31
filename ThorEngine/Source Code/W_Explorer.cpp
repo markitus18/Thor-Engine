@@ -58,7 +58,7 @@ void W_Explorer::Draw()
 
 	std::string dockStrID = windowStrID + "_DockSpace";
 	ImGuiID dockspace_id = ImGui::GetID(dockStrID.c_str());
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, explorerWindowClass);
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoTabBar, explorerWindowClass);
 
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoMove;
 

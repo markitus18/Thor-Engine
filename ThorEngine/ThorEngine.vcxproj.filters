@@ -304,9 +304,6 @@
     <ClCompile Include="Source Code\W_Resources.cpp">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
-    <ClCompile Include="Source Code\W_Scene.cpp">
-      <Filter>Source Code\Editor\Windows\Main</Filter>
-    </ClCompile>
     <ClCompile Include="Source Code\Window.cpp">
       <Filter>Source Code\Editor\Windows\Base</Filter>
     </ClCompile>
@@ -357,6 +354,9 @@
     </ClCompile>
     <ClCompile Include="Source Code\WViewport.cpp">
       <Filter>Source Code\Editor\Windows\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Code\W_MainViewport.cpp">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -772,9 +772,6 @@
     <ClInclude Include="Source Code\W_Resources.h">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClInclude>
-    <ClInclude Include="Source Code\W_Scene.h">
-      <Filter>Source Code\Editor\Windows\Main</Filter>
-    </ClInclude>
     <ClInclude Include="Source Code\W_About.h">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClInclude>
@@ -840,6 +837,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\ERenderingFlagsh.h">
       <Filter>Source Code\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\W_MainViewport.h">
+      <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

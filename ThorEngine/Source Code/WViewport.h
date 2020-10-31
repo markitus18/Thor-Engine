@@ -96,16 +96,18 @@ private:
 	//Camera set to orthographic mode to render the screen
 	C_Camera* orthographicCamera = nullptr;
 
-	Vec2 start_drag;
-	Vec2 init_drag_val;
+	//Bottom-left corner of the scene image in OpenGL space coordinates (0y at the bottom of the screen)
+	Vec2 sceneTextureScreenPosition;
 
-	Vec2 img_corner;
-	Vec2 cornerPos;
-	bool tabBarHidden;
+	//Top-left corner of the image in ImGui space coordinates (0y at the top of the screen)
+	//Defines the origin of the gizmo's effective rectangle
+	Vec2 gizmoRectOrigin;
+
+	//The size of the screen texture in the window
+	Vec2 textureSize;
+
 	bool cameraSettingsNeedUpdate = false;
 
-	Vec2 cursorOffset;
-	Vec2 textureSize;
 
 	bool draggingOrbit = false;
 	bool draggingPan = false;

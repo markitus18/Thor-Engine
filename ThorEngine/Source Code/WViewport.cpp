@@ -47,13 +47,14 @@ void WViewport::Draw()
 	HandleInput();
 
 	ImGui::SetNextWindowClass(windowClass);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
 	if (!ImGui::Begin(windowStrID.c_str(), &active, flags)) { ImGui::End(); return; }
 
 	//TODO: Can we do it generically for all windows?
 	Vec2 currentSize = Vec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-	if (currentSize != windowSize || tabBarHidden != ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar())
+	if (currentSize != windowSize || isTabBarHidden != ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar())
 		OnResize(currentSize);
 
 	DrawScene();
@@ -62,15 +63,21 @@ void WViewport::Draw()
 
 	HandleGizmoUsage();
 
+	LOG("Scene Texture Screen Position: %.0f x, %.0f y", sceneTextureScreenPosition.x, sceneTextureScreenPosition.y);
+	LOG("Scene Texture Size: %.0f x, %.0f y", textureSize.x, textureSize.y);
+	LOG("Gizmo Rect Origin: %.0f x, %.0f y", gizmoRectOrigin.x, gizmoRectOrigin.y);
+
 	ImGui::End();
+	ImGui::PopStyleVar();
 }
 
 void WViewport::DrawScene()
 {
-	ImGui::SetCursorPos(ImGui::GetCursorPos() + ImVec2(cursorOffset.x, cursorOffset.y));
+	//Top-left corner of the image in ImGui space coordinates (0y at the top of the screen)
+	gizmoRectOrigin = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y - 25.0f); //<-- We need to subtract 25.0f which is the size of the header bar...
 
-	img_corner = Vec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y);
-	img_corner.y = Engine->window->windowSize.y - img_corner.y; //ImGui 0y is on top so we need to convert 0y on bottom
+	//Bottom-left corner of the image in OpenGL space coordinates (0y at the bottom of the screen)
+	sceneTextureScreenPosition = Vec2(gizmoRectOrigin.x, Engine->window->windowSize.y - gizmoRectOrigin.y - textureSize.y);
 
 	ImGui::Image((ImTextureID)currentCamera->GetRenderTarget(), ImVec2(textureSize.x, textureSize.y), ImVec2(0, 1), ImVec2(1, 0));
 
@@ -111,13 +118,11 @@ void WViewport::OnResize(Vec2 newSize)
 	ImGuiContext& g = *ImGui::GetCurrentContext();
 
 	float tabBarSize = 0;
-	if (!tabBarHidden)
+	if (!isTabBarHidden)
 		tabBarSize = g.FontSize + g.Style.FramePadding.y * 2.0f;
 
-	textureSize.x = windowSize.x + g.Style.WindowPadding.x * 2;
-	textureSize.y = windowSize.y - tabBarSize - g.Style.WindowPadding.y; //For some reason we need to subtract it again...
-
-	cursorOffset = Vec2(-g.Style.WindowPadding.x, -g.Style.WindowPadding.y + 4);
+	textureSize.x = windowSize.x; //<-- -4 why??? It's not FramePadding nor WindowPadding...
+	textureSize.y = windowSize.y - tabBarSize; //For some reason we need to subtract it again...
 
 	cameraSettingsNeedUpdate = true;
 }
@@ -125,7 +130,7 @@ void WViewport::OnResize(Vec2 newSize)
 //Converts a 2D point in the scene image to a 2D point in the real scene
 Vec2 WViewport::ScreenToWorld(Vec2 p) const
 {
-	Vec2 ret = p - img_corner;
+	Vec2 ret = p - sceneTextureScreenPosition;
 	ret = ret / windowSize * Engine->window->windowSize;
 	return ret;
 }
@@ -134,7 +139,7 @@ Vec2 WViewport::ScreenToWorld(Vec2 p) const
 Vec2 WViewport::WorldToScreen(Vec2 p) const
 {
 	Vec2 ret = p / Engine->window->windowSize * windowSize;
-	ret += img_corner;
+	ret += sceneTextureScreenPosition;
 	return ret;
 }
 
@@ -322,8 +327,7 @@ void WViewport::HandleGizmoUsage()
 	float4x4 modelProjection = gameObject->GetComponent<C_Transform>()->GetGlobalTransform().Transposed();
 
 	ImGuizmo::SetDrawlist();
-	cornerPos = Vec2(img_corner.x, Engine->window->windowSize.y - img_corner.y - windowSize.y);
-	ImGuizmo::SetRect(img_corner.x, cornerPos.y, windowSize.x, windowSize.y);
+	ImGuizmo::SetRect(gizmoRectOrigin.x, gizmoRectOrigin.y, textureSize.x, textureSize.y);
 
 	float modelPtr[16];
 	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));

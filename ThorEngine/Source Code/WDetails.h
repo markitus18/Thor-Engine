@@ -15,7 +15,7 @@ struct ImGuiWindowClass;
 class WDetails : public Window
 {
 public:
-	WDetails(M_Editor* editor, const char* name, ImGuiWindowClass* windowClass, int ID);
+	WDetails(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID);
 	~WDetails() { }
 
 	void BeginItemDraw(const char* name);

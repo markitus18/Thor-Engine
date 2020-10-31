@@ -6,7 +6,7 @@
 
 #include "ImGui/imgui.h"
 
-W_Emitters::W_Emitters(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow) : Window(editor, GetName(), windowClass, ID), hostWindow(hostWindow)
+W_Emitters::W_Emitters(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 
 }
@@ -14,6 +14,8 @@ W_Emitters::W_Emitters(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, 
 
 void W_Emitters::Draw()
 {
+	WF_ParticleEditor* hostWindow = (WF_ParticleEditor*)parentFrame;
+
 	R_ParticleSystem* particleSystem = hostWindow->particleSystem;
 	Emitter* selectedEmitter = hostWindow->selectedEmitter;
 	ParticleModule* selectedModule = hostWindow->selectedModule;

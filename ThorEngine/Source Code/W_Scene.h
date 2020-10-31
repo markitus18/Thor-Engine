@@ -8,7 +8,7 @@ struct ImGuiWindowClass;
 class W_MainViewport : public WViewport
 {
 public:
-	W_MainViewport(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
+	W_MainViewport(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_MainViewport() {}
 
 	virtual void DrawToolbarCustom() override;

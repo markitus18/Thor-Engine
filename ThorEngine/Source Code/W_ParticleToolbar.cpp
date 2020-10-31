@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-W_ParticleToolbar::W_ParticleToolbar(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow) : Window(editor, GetName(), windowClass, ID), hostWindow(hostWindow)
+W_ParticleToolbar::W_ParticleToolbar(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 
 }

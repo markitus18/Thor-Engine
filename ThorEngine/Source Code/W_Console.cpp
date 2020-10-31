@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-W_Console::W_Console(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
+W_Console::W_Console(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 	ClearLog();
 }

@@ -6,7 +6,6 @@
 #include "M_Input.h"
 #include "M_SceneManager.h"
 #include "M_Renderer3D.h"
-#include "M_Camera3D.h"
 #include "M_Editor.h"
 #include "M_Resources.h"
 
@@ -26,7 +25,6 @@ TEngine::TEngine()
 	sceneManager = new M_SceneManager();
 
 	renderer3D = new M_Renderer3D();
-	camera = new M_Camera3D();
 
 	moduleResources = new M_Resources();
 	moduleEditor = new M_Editor();
@@ -36,7 +34,6 @@ TEngine::TEngine()
 	AddModule(window);
 	AddModule(input);
 
-	AddModule(camera);
 	AddModule(sceneManager);
 
 	AddModule(moduleResources);

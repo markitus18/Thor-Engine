@@ -8,7 +8,6 @@
 #include "C_Transform.h"
 #include "Particle.h"
 #include "Engine.h"
-#include "M_Camera3D.h"
 #include "C_Camera.h"
 #include "MathGeoLib/src/Geometry/Frustum.h"
 

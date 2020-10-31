@@ -3,7 +3,6 @@
 #include "TreeNode.h"
 #include "Engine.h" //TODO: necessary?
 #include "M_Editor.h" //TODO: necessary?
-#include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_SceneManager.h"
 

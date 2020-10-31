@@ -20,7 +20,7 @@ struct ImGuiWindowClass;
 class W_Inspector : public WDetails
 {
 public:
-	W_Inspector(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
+	W_Inspector(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_Inspector() {}
 
 	void Draw() override;

@@ -4,16 +4,17 @@
 #include <string>
 #include "Vec2.h"
 
-class Dock;
 typedef unsigned int uint;
-class M_Editor;
+
 class Config;
+class WindowFrame;
+
 struct ImGuiWindowClass;
 
 class Window
 {
 public:
-	Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass, int ID);
+	Window(WindowFrame* parent, std::string name, ImGuiWindowClass* windowClass, int ID);
 	virtual ~Window();
 
 	virtual void PrepareUpdate() {};
@@ -31,7 +32,7 @@ public:
 
 public:
 	std::string name;
-	M_Editor* editor = nullptr;
+	WindowFrame* parentFrame = nullptr;
 	bool showDebugInfo = false;
 	Vec2 windowSize = { 0, 0 };
 	ImGuiWindowClass* windowClass = nullptr;

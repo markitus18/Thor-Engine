@@ -14,7 +14,6 @@ class M_Input;
 class M_SceneManager;
 
 class M_Renderer3D;
-class M_Camera3D;
 class M_Editor;
 class M_Resources;
 class M_Shaders;
@@ -30,7 +29,6 @@ public:
 	M_SceneManager* sceneManager = nullptr;
 
 	M_Renderer3D* renderer3D = nullptr;
-	M_Camera3D* camera = nullptr;
 
 	M_Editor* moduleEditor = nullptr;
 

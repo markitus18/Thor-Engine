@@ -10,7 +10,7 @@
 #include "R_Material.h"
 #include "R_Texture.h"
 
-W_Resources::W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
+W_Resources::W_Resources(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 
 

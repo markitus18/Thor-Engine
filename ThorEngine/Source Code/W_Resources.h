@@ -10,7 +10,7 @@ struct ImGuiWindowClass;
 class W_Resources : public Window
 {
 public:
-	W_Resources(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
+	W_Resources(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_Resources() {}
 
 	void Draw() override;

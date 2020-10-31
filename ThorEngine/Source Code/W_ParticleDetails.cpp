@@ -5,14 +5,14 @@
 
 #include "ImGui/imgui.h"
 
-W_ParticleDetails::W_ParticleDetails(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow) : Window(editor, GetName(), windowClass, ID), hostWindow(hostWindow)
+W_ParticleDetails::W_ParticleDetails(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 
 }
 
 void W_ParticleDetails::Draw()
 {
-	ParticleModule* module = hostWindow->selectedModule;
+	ParticleModule* module = ((WF_ParticleEditor*)parentFrame)->selectedModule;
 
 	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }

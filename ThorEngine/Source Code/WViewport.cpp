@@ -1,9 +1,8 @@
 #include "WViewport.h"
 
 #include "Engine.h"
-#include "M_Window.h" //TODO: OnResize change
+#include "M_Window.h"
 #include "M_Input.h"
-#include "M_Camera3D.h"
 #include "M_Editor.h"
 #include "M_Resources.h"
 #include "M_SceneManager.h"
@@ -17,10 +16,12 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
-WViewport::WViewport(M_Editor* editor, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(editor, name, windowClass, ID), cameraReference(.0f, .0f, .0f)
+WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID), cameraReference(.0f, .0f, .0f)
 {
 	perspectiveCamera = new C_Camera(nullptr);
 	perspectiveCamera->SetFarPlane(10000.0f);
+	perspectiveCamera->frustum.SetPos(float3(-50, 50, -50));
+	perspectiveCamera->Look(float3(.0f, .0f, .0f));
 	perspectiveCamera->GenerateFrameBuffer();
 
 	orthographicCamera = new C_Camera(nullptr);
@@ -32,6 +33,7 @@ WViewport::WViewport(M_Editor* editor, const char* name, ImGuiWindowClass* windo
 
 void WViewport::PrepareUpdate()
 {
+	//TODO: There is a one frame delay and it is lightly noticeable
 	if (cameraSettingsNeedUpdate)
 	{
 		currentCamera->SetAspectRatio(textureSize.x / textureSize.y);
@@ -297,7 +299,7 @@ void WViewport::HandleInput()
 		if (Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE) draggingPan = false;
 	}
 
-	if (editor->UsingKeyboard() == false)
+	if (Engine->moduleEditor->UsingKeyboard() == false)
 	{
 		if (Engine->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 			gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;

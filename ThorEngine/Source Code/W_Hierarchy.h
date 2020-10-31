@@ -9,7 +9,7 @@ struct ImGuiWindowClass;
 class W_Hierarchy : public Window, public TreeDisplay
 {
 public:
-	W_Hierarchy(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
+	W_Hierarchy(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_Hierarchy() {}
 
 	void Draw() override;

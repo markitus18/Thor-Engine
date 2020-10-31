@@ -35,7 +35,7 @@ enum class EViewportCameraAngle
 class WViewport : public Window
 {
 public:
-	WViewport(M_Editor* editor, const char* name, ImGuiWindowClass* windowClass, int ID);
+	WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID);
 	~WViewport() { }
 
 	virtual void PrepareUpdate();
@@ -81,6 +81,8 @@ public:
 	EViewportCameraAngle cameraAngle = EViewportCameraAngle::PERSPECTIVE;
 	RenderingSettings::RenderingFlags renderingFlags;
 
+	float3 cameraReference; //TODO: Consider moving to C_Camera
+
 private:
 	//The scene linked to this viewport
 	Scene* scene = nullptr;
@@ -104,8 +106,6 @@ private:
 
 	Vec2 cursorOffset;
 	Vec2 textureSize;
-
-	float3 cameraReference;
 
 	bool draggingOrbit = false;
 	bool draggingPan = false;

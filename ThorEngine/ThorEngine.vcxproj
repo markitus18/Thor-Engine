@@ -208,7 +208,6 @@
     <ClInclude Include="Source Code\C_Mesh.h" />
     <ClInclude Include="Source Code\Module.h" />
     <ClInclude Include="Source Code\I_Animations.h" />
-    <ClInclude Include="Source Code\M_Camera3D.h" />
     <ClInclude Include="Source Code\M_FileSystem.h" />
     <ClInclude Include="Source Code\I_Scenes.h" />
     <ClInclude Include="Source Code\M_Input.h" />
@@ -323,7 +322,6 @@
     <ClCompile Include="Source Code\Main.cpp" />
     <ClCompile Include="Source Code\C_Material.cpp" />
     <ClCompile Include="Source Code\C_Mesh.cpp" />
-    <ClCompile Include="Source Code\M_Camera3D.cpp" />
     <ClCompile Include="Source Code\I_Scenes.cpp" />
     <ClCompile Include="Source Code\M_Input.cpp" />
     <ClCompile Include="Source Code\I_Materials.cpp" />

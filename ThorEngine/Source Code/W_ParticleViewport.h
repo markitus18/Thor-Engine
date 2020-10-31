@@ -9,15 +9,11 @@ class WF_ParticleEditor;
 class W_ParticleViewport : public Window
 {
 public:
-	W_ParticleViewport(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow);
+	W_ParticleViewport(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_ParticleViewport() {}
 
 	void Draw() override;
 
 	static inline const char* GetName() { return "Viewport"; };
-
-private:
-	WF_ParticleEditor* hostWindow = nullptr;
-
 };
 #endif // !__W_PARTICLE_PREVIEW_H__

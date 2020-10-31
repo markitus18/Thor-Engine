@@ -12,7 +12,7 @@ struct ImGuiWindowClass;
 class W_EngineConfig : public Window
 {
 public:
-	W_EngineConfig(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
+	W_EngineConfig(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_EngineConfig() {}
 
 	void Draw() override;

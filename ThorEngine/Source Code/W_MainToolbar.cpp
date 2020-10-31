@@ -8,7 +8,7 @@
 
 #include "ImGui/imgui.h"
 
-W_MainToolbar::W_MainToolbar(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
+W_MainToolbar::W_MainToolbar(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 
 }

@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-W_ParticleViewport::W_ParticleViewport(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow) : Window(editor, GetName(), windowClass, ID), hostWindow(hostWindow)
+W_ParticleViewport::W_ParticleViewport(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 
 }

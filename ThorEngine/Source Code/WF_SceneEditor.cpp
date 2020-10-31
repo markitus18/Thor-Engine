@@ -5,7 +5,6 @@
 
 #include "M_SceneManager.h"
 #include "M_Editor.h"
-#include "M_Camera3D.h"
 #include "M_Resources.h"
 #include "M_FileSystem.h"
 #include "I_Scenes.h"
@@ -35,14 +34,14 @@ WF_SceneEditor::WF_SceneEditor(M_Editor* editor, ImGuiWindowClass* frameWindowCl
 	explorerWindowClass = new ImGuiWindowClass();
 	explorerWindowClass->ClassId = 3;
 
-	windows.push_back(new W_Hierarchy(editor, windowClass, ID));
-	windows.push_back(new W_MainViewport(editor, windowClass, ID));
-	windows.push_back(new W_Inspector(editor, windowClass, ID));
-	windows.push_back(new W_Console(editor, windowClass, ID));
-	windows.push_back(new W_Explorer(editor, windowClass, explorerWindowClass, ID));
-	windows.push_back(new W_Resources(editor, windowClass, ID));
-	windows.push_back(new W_EngineConfig(editor, windowClass, ID));
-	windows.push_back(new W_MainToolbar(editor, windowClass, ID));
+	windows.push_back(new W_Hierarchy(this, windowClass, ID));
+	windows.push_back(new W_MainViewport(this, windowClass, ID));
+	windows.push_back(new W_Inspector(this, windowClass, ID));
+	windows.push_back(new W_Console(this, windowClass, ID));
+	windows.push_back(new W_Explorer(this, windowClass, explorerWindowClass, ID));
+	windows.push_back(new W_Resources(this, windowClass, ID));
+	windows.push_back(new W_EngineConfig(this, windowClass, ID));
+	windows.push_back(new W_MainToolbar(this, windowClass, ID));
 
 	//W_About* w_about = new W_About(editor, windowClass, ID);
 	//w_about->SetActive(false);
@@ -177,7 +176,6 @@ void WF_SceneEditor::MenuBar_Development()
 		if (ImGui::BeginMenu("Display"))
 		{
 			ImGui::MenuItem("Quadtree", nullptr, &Engine->sceneManager->drawQuadtree);
-			ImGui::MenuItem("Ray picking", nullptr, &Engine->camera->drawRay);
 			ImGui::MenuItem("GameObjects box", nullptr, &Engine->sceneManager->drawBounds);
 			ImGui::MenuItem("GameObjects box (selected)", nullptr, &Engine->sceneManager->drawBoundsSelected);
 			ImGui::EndMenu();

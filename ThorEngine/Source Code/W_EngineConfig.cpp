@@ -3,16 +3,17 @@
 #include "ImGui/imgui.h"
 
 #include "Engine.h"
-#include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_Editor.h"
 #include "M_Renderer3D.h"
 
+#include "WindowFrame.h"
 #include "W_Scene.h"
 
 #include "TreeNode.h"
+#include "C_Camera.h"
 
-W_EngineConfig::W_EngineConfig(M_Editor* editor, ImGuiWindowClass* windowClass, int ID) : Window(editor, GetName(), windowClass, ID)
+W_EngineConfig::W_EngineConfig(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 	for (int i = 0; i < 100; i++)
 	{
@@ -56,13 +57,13 @@ void W_EngineConfig::Draw()
 
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		float3 camera_pos = Engine->camera->GetPosition();
+		W_MainViewport* mainViewport = (W_MainViewport*)parentFrame->GetWindow(W_MainViewport::GetName());
+		float3 camera_pos = mainViewport->GetCurrentCamera()->frustum.Pos();
 		if (ImGui::DragFloat3("Position", (float*)&camera_pos))
 		{
 			//Engine->camera->SetPosition(camera_pos);
 		}
-
-		float3 camera_ref = Engine->camera->GetReference();
+		float3 camera_ref = mainViewport->cameraReference;
 		if (ImGui::DragFloat3("Reference", (float*)&camera_ref))
 		{
 			//Engine->camera->Look(camera_ref);

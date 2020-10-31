@@ -16,7 +16,7 @@
 #include "R_Model.h"
 #include "R_Folder.h"
 
-W_Explorer::W_Explorer(M_Editor* editor, ImGuiWindowClass* windowClass, ImGuiWindowClass* explorerWindowClass, int ID) : Window(editor, GetName(), windowClass, ID),
+W_Explorer::W_Explorer(WindowFrame* parent, ImGuiWindowClass* windowClass, ImGuiWindowClass* explorerWindowClass, int ID) : Window(parent, GetName(), windowClass, ID),
 																														 explorerWindowClass(explorerWindowClass)
 {
 	updateTimer.Start();
@@ -304,7 +304,7 @@ void W_Explorer::HandleResourceDoubleClick(const ResourceBase& base)
 	if (base.type == ResourceType::FOLDER)
 		nextCurrentFolderID = base.ID;
 	else
-		editor->OpenWindowFromResource(base.ID);
+		Engine->moduleEditor->OpenWindowFromResource(base.ID);
 }
 
 uint W_Explorer::GetTextureFromResource(const ResourceBase& base, std::string* dnd_event)

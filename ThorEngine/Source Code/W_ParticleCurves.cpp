@@ -2,7 +2,7 @@
 
 #include "ImGui/imgui.h"
 
-W_ParticleCurves::W_ParticleCurves(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow) : Window(editor, GetName(), windowClass, ID), hostWindow(hostWindow)
+W_ParticleCurves::W_ParticleCurves(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
 {
 
 }

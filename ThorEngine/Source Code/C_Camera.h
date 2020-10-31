@@ -60,6 +60,7 @@ public:
 	Plane		planes[6];
 	float2		resolution;
 	Color		backgroundColor;
+	LineSegment lastRay;
 
 private:
 	uint frameBuffer = 0;

@@ -13,7 +13,7 @@ struct ImGuiWindowClass;
 class W_Emitters : public Window
 {
 public:
-	W_Emitters(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow);
+	W_Emitters(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_Emitters() {}
 
 	void Draw() override;
@@ -22,9 +22,6 @@ public:
 
 private:
 	std::string GetModuleName(const ParticleModule* module) const;
-
-private:
-	WF_ParticleEditor* hostWindow = nullptr;
 };
 
 #endif // !__W_EMITTERS_H__

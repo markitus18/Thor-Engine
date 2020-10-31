@@ -13,11 +13,11 @@
 
 WF_ParticleEditor::WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWindowClass, ImGuiWindowClass* windowClass, int ID) : WindowFrame(GetName(), frameWindowClass, windowClass, ID)
 {
-	windows.push_back(new W_Emitters(editor, windowClass, ID, this));
-	windows.push_back(new W_ParticleDetails(editor, windowClass, ID, this));
-	windows.push_back(new W_ParticleCurves(editor, windowClass, ID, this));
-	windows.push_back(new W_ParticleViewport(editor, windowClass, ID, this));
-	windows.push_back(new W_ParticleToolbar(editor, windowClass, ID, this));
+	windows.push_back(new W_Emitters(this, windowClass, ID));
+	windows.push_back(new W_ParticleDetails(this, windowClass, ID));
+	windows.push_back(new W_ParticleCurves(this, windowClass, ID));
+	windows.push_back(new W_ParticleViewport(this, windowClass, ID));
+	windows.push_back(new W_ParticleToolbar(this, windowClass, ID));
 }
 
 WF_ParticleEditor::~WF_ParticleEditor()

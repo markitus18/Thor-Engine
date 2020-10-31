@@ -20,7 +20,7 @@ struct ParticleVelocity;
 class W_ParticleDetails : public Window
 {
 public:
-	W_ParticleDetails(M_Editor* editor, ImGuiWindowClass* windowClass, int ID, WF_ParticleEditor* hostWindow);
+	W_ParticleDetails(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_ParticleDetails() {}
 
 	void Draw() override;
@@ -37,9 +37,6 @@ private:
 	void DrawModule(ParticleColor* module);
 	void DrawModule(ParticleLifetime* module);
 	void DrawModule(ParticleVelocity* module);
-
-private:
-	WF_ParticleEditor* hostWindow = nullptr;
 };
 
 #endif // !__W_PARTICLE_MODULE_H__

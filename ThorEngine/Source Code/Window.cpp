@@ -5,7 +5,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
-Window::Window(M_Editor* editor, std::string name, ImGuiWindowClass* windowClass, int ID) : editor(editor), name(name), windowClass(windowClass), ID(ID)
+Window::Window(WindowFrame* parent, std::string name, ImGuiWindowClass* windowClass, int ID) : parentFrame(parent), name(name), windowClass(windowClass), ID(ID)
 {
 	windowStrID = name + ("##") + std::to_string(ID);
 }

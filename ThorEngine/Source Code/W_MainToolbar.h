@@ -5,7 +5,7 @@ struct ImGuiWindowClass;
 class W_MainToolbar : public Window
 {
 public:
-	W_MainToolbar(M_Editor* editor, ImGuiWindowClass* windowClass, int ID);
+	W_MainToolbar(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_MainToolbar() {  }
 
 	void Draw() override;

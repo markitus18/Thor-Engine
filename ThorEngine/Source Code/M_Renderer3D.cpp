@@ -5,7 +5,6 @@
 #include "GameObject.h"
 
 #include "M_Renderer3D.h"
-#include "M_Camera3D.h"
 #include "M_Window.h"
 #include "M_Resources.h"
 #include "I_Materials.h"
@@ -302,12 +301,6 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 		}
 
 		glEnd();
-	}
-	
-	//TODO: move to another side. Camera call to draw on renderer
-	if (Engine->camera->drawRay)
-	{
-		Engine->camera->DrawRay();
 	}
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -18,16 +18,28 @@
 
 WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID), cameraReference(.0f, .0f, .0f)
 {
+	GameObject* perspectiveGO = new GameObject();
 	perspectiveCamera = new C_Camera(nullptr);
+	perspectiveGO->AddComponent(perspectiveCamera);
+
 	perspectiveCamera->SetFarPlane(10000.0f);
-	perspectiveCamera->frustum.SetPos(float3(-50, 50, -50));
-	perspectiveCamera->Look(float3(.0f, .0f, .0f));
+	perspectiveGO->GetComponent<C_Transform>()->SetPosition(float3(-100.0f, 50.0f, -50.0f));
+	perspectiveGO->GetComponent<C_Transform>()->LookAt(float3::zero);
+	perspectiveGO->Update(.0f);
+
 	perspectiveCamera->GenerateFrameBuffer();
-
+	
+	GameObject* orthographicGO = new GameObject();
 	orthographicCamera = new C_Camera(nullptr);
-	orthographicCamera->SetFarPlane(10000.0f);
-	orthographicCamera->GenerateFrameBuffer();
+	orthographicGO->AddComponent(orthographicCamera);
 
+	orthographicCamera->SetFarPlane(10000.0f);
+	orthographicGO->GetComponent<C_Transform>()->SetPosition(float3(0.0f, 50.f, 0.0f));
+	orthographicGO->GetComponent<C_Transform>()->LookAt(float3::zero);
+	orthographicGO->Update(.0f);
+
+	orthographicCamera->GenerateFrameBuffer();
+	
 	currentCamera = perspectiveCamera;
 }
 
@@ -63,9 +75,9 @@ void WViewport::Draw()
 
 	HandleGizmoUsage();
 
-	LOG("Scene Texture Screen Position: %.0f x, %.0f y", sceneTextureScreenPosition.x, sceneTextureScreenPosition.y);
-	LOG("Scene Texture Size: %.0f x, %.0f y", textureSize.x, textureSize.y);
-	LOG("Gizmo Rect Origin: %.0f x, %.0f y", gizmoRectOrigin.x, gizmoRectOrigin.y);
+	//LOG("Scene Texture Screen Position: %.0f x, %.0f y", sceneTextureScreenPosition.x, sceneTextureScreenPosition.y);
+	//LOG("Scene Texture Size: %.0f x, %.0f y", textureSize.x, textureSize.y);
+	//LOG("Gizmo Rect Origin: %.0f x, %.0f y", gizmoRectOrigin.x, gizmoRectOrigin.y);
 
 	ImGui::End();
 	ImGui::PopStyleVar();
@@ -152,18 +164,16 @@ void WViewport::SetScene(Scene* scene)
 	scene->RegisterViewport(this);
 }
 
-void WViewport::CameraLookAt(const float3& position)
-{
-	currentCamera->Look(position);
-	cameraReference = position;
-}
-
 // -----------------------------------------------------------------
-void WViewport::CenterCameraOn(const float3& position, float distance)
+void WViewport::CenterCameraOn(const float3& target, float distance)
 {
-	float3 v = currentCamera->frustum.Front().Neg();
-	currentCamera->frustum.SetPos(position + (v * distance));
-	cameraReference = position;
+	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+	float3 v = transform->GetGlobalTransform().WorldZ().Neg();
+
+	transform->SetPosition(target + (v * distance));
+	currentCamera->gameObject->Update(.0f);
+
+	cameraReference = target;
 }
 
 void WViewport::SetNewCameraTarget(const float3& new_target)
@@ -174,15 +184,23 @@ void WViewport::SetNewCameraTarget(const float3& new_target)
 
 void WViewport::MatchCamera(const C_Camera* camera)
 {
-	currentCamera->Match(camera);
-	cameraReference = currentCamera->frustum.Pos() + currentCamera->frustum.Front() * 40;
+	C_Transform* targetTransform = camera->gameObject->GetComponent<C_Transform>();
+	C_Transform* cameraTransform = currentCamera->gameObject->GetComponent<C_Transform>();
+	cameraTransform->SetGlobalTransform(targetTransform->GetGlobalTransform());
+	currentCamera->gameObject->Update(.0f);
+
+	//TODO: Store reference in C_Camera (?)
+	cameraReference = cameraTransform->GetPosition() + cameraTransform->GetGlobalTransform().WorldZ() * 40;
 }
 
 void WViewport::SetCameraPosition(float3 position)
 {
-	float3 difference = position - currentCamera->frustum.Pos();
-	currentCamera->frustum.SetPos(position);
-	cameraReference += difference;
+	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+	float3 offset = position - transform->GetPosition();
+	transform->SetPosition(position);
+	currentCamera->gameObject->Update(.0f);
+
+	cameraReference += offset;
 }
 
 void WViewport::OnClick(const Vec2& mousePos)
@@ -194,28 +212,23 @@ void WViewport::OnClick(const Vec2& mousePos)
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
 	mouseNormY = (mouseNormY - 0.5) / 0.5;
 
-	currentCamera->lastRay = currentCamera->frustum.UnProjectLineSegment(mouseNormX, mouseNormY);
-	scene->PerformMousePick(currentCamera->lastRay);
-}
-
-void WViewport::MoveCamera_Mouse(float motion_x, float motion_y)
-{
-	// Mouse wheel for zoom
-	int wheel = Engine->input->GetMouseZ();
-	if (wheel != 0)
-		ZoomCamera(wheel);
+	LineSegment ray = currentCamera->GenerateRaycast(mouseNormX, mouseNormY);
+	scene->PerformMousePick(ray);
 }
 
 void WViewport::PanCamera(float motion_x, float motion_y)
 {
-	float distance = cameraReference.Distance(currentCamera->frustum.Pos());
-	float3 Y_add = currentCamera->frustum.Up() * motion_y * (distance / 1800);
-	float3 X_add = currentCamera->frustum.WorldRight() * -motion_x * (distance / 1800);
+	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+	float distance = cameraReference.Distance(transform->GetGlobalPosition());
+
+	float3 Y_add = transform->GetGlobalTransform().WorldY() * motion_y * (distance / 1800);
+	float3 X_add = transform->GetGlobalTransform().WorldX() * motion_x * (distance / 1800);
 
 	cameraReference += X_add;
 	cameraReference += Y_add;
 
-	currentCamera->frustum.SetPos(currentCamera->frustum.Pos() + X_add + Y_add);
+	transform->SetPosition(transform->GetPosition() + X_add + Y_add);
+	currentCamera->gameObject->Update(.0f);
 }
 
 // -----------------------------------------------------------------
@@ -225,25 +238,33 @@ void WViewport::OrbitCamera(float dx, float dy)
 	//Rotate that vector according to our mouse motion
 	//Move the camera to where that vector ended up
 
-	//TODO: this causes issues when rotating when frustum Z = world +/- Y
-	float3 vector = currentCamera->frustum.Pos() - cameraReference;
+	//TODO: When the camera forward is near (0, -1, 0) the rotation starts tittering
+	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+	float3 vector = transform->GetPosition() - cameraReference;
 
-	Quat quat_y(currentCamera->frustum.Up(), dx * 0.003);
-	Quat quat_x(currentCamera->frustum.WorldRight(), dy * 0.003);
+	Quat quat_y(transform->GetTransform().WorldY(), dx * 0.003);
+	Quat quat_x(transform->GetTransform().WorldX().Neg(), dy * 0.003);
 
 	vector = quat_x.Transform(vector);
 	vector = quat_y.Transform(vector);
 
-	currentCamera->frustum.SetPos(vector + cameraReference);
-	CameraLookAt(cameraReference);
+	//Change camera position
+	transform->SetPosition(vector + cameraReference);
+
+	//Center camera back to the reference
+	currentCamera->gameObject->GetComponent<C_Transform>()->LookAt(cameraReference);
+	currentCamera->gameObject->Update(.0f);
 }
 
 // -----------------------------------------------------------------
 void WViewport::ZoomCamera(float zoom)
 {
-	float distance = cameraReference.Distance(currentCamera->frustum.Pos());
-	vec newPos = currentCamera->frustum.Pos() + currentCamera->frustum.Front() * zoom * distance * 0.05f;
-	currentCamera->frustum.SetPos(newPos);
+	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+	float distance = cameraReference.Distance(transform->GetPosition());
+	vec newPos = transform->GetPosition() + transform->GetGlobalTransform().WorldZ() * zoom * distance * 0.05f;
+	transform->SetPosition(newPos);
+
+	currentCamera->gameObject->Update(.0f);
 }
 
 //Handles user input
@@ -254,39 +275,42 @@ void WViewport::HandleInput()
 
 	if (ImGui::IsItemHovered())
 	{
+		if (Engine->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		{
+			//Center camera back to the reference
+			cameraReference = float3(0, 0, 0);
+			currentCamera->gameObject->GetComponent<C_Transform>()->LookAt(cameraReference);
+			currentCamera->gameObject->Update(.0f);
+		}
+
+		if (int wheel = Engine->input->GetMouseZ())
+			ZoomCamera(wheel);
+
 		if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 		{
 			Vec2 mousePos = ScreenToWorld(Vec2(Engine->input->GetMouseX(), Engine->window->windowSize.y - Engine->input->GetMouseY()));
 			OnClick(mousePos);
 		}
-		MoveCamera_Mouse(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-
 		draggingOrbit = Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT;
 		draggingPan = Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT;
-
-		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / windowSize * Engine->window->windowSize;
-
-		MoveCamera_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
 	}
 
 	if (draggingOrbit)
 	{
 		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / windowSize * Engine->window->windowSize;
+		Vec2 mouseMotion_screen = mouseMotion / 1.5f;// / windowSize * Engine->window->windowSize;
 
-		MoveCamera_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
 		OrbitCamera(-mouseMotion_screen.x, -mouseMotion_screen.y);
 		Engine->input->InfiniteHorizontal();
 
 		if (Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE) draggingOrbit = false;
 	}
+
 	if (draggingPan)
 	{
 		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / windowSize * Engine->window->windowSize;
+		Vec2 mouseMotion_screen = mouseMotion / 1.5f;// / windowSize * Engine->window->windowSize;
 
-		MoveCamera_Mouse(mouseMotion_screen.x, mouseMotion_screen.y);
 		PanCamera(mouseMotion_screen.x, mouseMotion_screen.y);
 		Engine->input->InfiniteHorizontal();
 
@@ -309,10 +333,10 @@ void WViewport::HandleGizmoUsage()
 	if (Engine->moduleEditor->selectedGameObjects.size() <= 0) return;
 
 	GameObject* gameObject = (GameObject*)Engine->moduleEditor->selectedGameObjects[0];
+	C_Transform* cameraTransform = currentCamera->gameObject->GetComponent<C_Transform>();
 
-	float4x4 viewMatrix = currentCamera->frustum.ViewMatrix();
-	viewMatrix.Transpose();
-	float4x4 projectionMatrix = currentCamera->frustum.ProjectionMatrix().Transposed();
+	float4x4 viewMatrix = cameraTransform->GetGlobalTransform().Transposed();
+	float4x4 projectionMatrix = currentCamera->GetOpenGLProjectionMatrix();
 	float4x4 modelProjection = gameObject->GetComponent<C_Transform>()->GetGlobalTransform().Transposed();
 
 	ImGuizmo::SetDrawlist();

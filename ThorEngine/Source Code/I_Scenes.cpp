@@ -224,11 +224,11 @@ void Importer::Maps::Load(const char* buffer, R_Map* scene)
 	int k = 3;
 }
 
-void Importer::Maps::SaveRootToMap(const GameObject* root, R_Map* map)
+void Importer::Maps::SaveRootToMap(GameObject* root, R_Map* map)
 {
 	Config_Array goArray = map->config.SetArray("GameObjects");
 
-	std::vector<const GameObject*> gameObjects;
+	std::vector<GameObject*> gameObjects;
 	root->CollectChilds(gameObjects);
 	gameObjects.erase(gameObjects.begin());
 
@@ -238,80 +238,9 @@ void Importer::Maps::SaveRootToMap(const GameObject* root, R_Map* map)
 	}
 }
 
-void Importer::Maps::Private::SaveGameObject(Config& config, const GameObject* gameObject)
+void Importer::Maps::Private::SaveGameObject(Config& config, GameObject* gameObject)
 {
-	config.SetNumber("UID", gameObject->uid);
-
-	config.SetNumber("ParentUID", gameObject->parent ? gameObject->parent->uid : 0);
-	config.SetString("Name", gameObject->name.c_str());
-
-	config.SetBool("Active", gameObject->active);
-	config.SetBool("Static", gameObject->isStatic);
-	config.SetBool("Selected", gameObject->IsSelected());
-	config.SetBool("OpenInHierarchy", gameObject->hierarchyOpen);
-
-	const C_Transform* transform = gameObject->GetComponent<C_Transform>();
-
-	//Translation part
-	config.SetArray("Translation").AddFloat3(transform->GetPosition());
-
-	//Rotation part
-	config.SetArray("Rotation").AddQuat(transform->GetQuatRotation());
-
-	//Scale part
-	config.SetArray("Scale").AddFloat3(transform->GetScale());
-
-	Config_Array compConfig = config.SetArray("Components");
-	const std::vector<Component*> components = gameObject->GetAllComponents();
-
-	for (uint i = 0; i < components.size(); i++)
-	{
-		SaveComponentBase(compConfig.AddNode(), components[i]);
-	}
-}
-
-void Importer::Maps::Private::SaveComponentBase(Config& config, const Component* component)
-{
-	config.SetNumber("ComponentType", (int)component->GetType());
-	Private::SaveComponent(config, component);
-
-	config.SetBool("HasResource", component->HasResource());
-	if (component->HasResource())
-	{
-		config.SetNumber("ID", component->GetResourceID());
-	}
-}
-
-void Importer::Maps::Private::SaveComponent(Config& config, const Component* component)
-{
-	switch (component->GetType())
-	{
-	case(Component::Camera):
-		Private::SaveComponent(config, (C_Camera*)component);
-		break;
-	case(Component::Animator):
-		Private::SaveComponent(config, (C_Animator*)component);
-		break;
-	}
-}
-
-void Importer::Maps::Private::SaveComponent(Config& config, const C_Camera* camera)
-{
-	config.SetNumber("FOV", camera->frustum.VerticalFov() * RADTODEG);
-	config.SetNumber("NearPlane", camera->frustum.NearPlaneDistance());
-	config.SetNumber("FarPlane", camera->frustum.FarPlaneDistance());
-}
-
-void Importer::Maps::Private::SaveComponent(Config& config, const C_Animator* animator)
-{
-	config.SetBool("Playing", animator->playing);
-	config.SetNumber("Current Animation", animator->current_animation);
-}
-
-//TODO: Do we need to fill this function ??
-void Importer::Maps::Private::SaveComponent(Config& config, const C_ParticleSystem* component)
-{
-
+	gameObject->Serialize(config);
 }
 
 GameObject* Importer::Maps::LoadRootFromMap(const R_Map* scene)
@@ -325,85 +254,16 @@ GameObject* Importer::Maps::LoadRootFromMap(const R_Map* scene)
 		//Single GameObject load
 		Config gameObject_node = gameObjects_array.GetNode(i);
 
-		float3 position = gameObject_node.GetArray("Translation").GetFloat3(0);
-		Quat rotation = gameObject_node.GetArray("Rotation").GetQuat(0);
-		float3 scale = gameObject_node.GetArray("Scale").GetFloat3(0);
-
 		//Parent setup
 		GameObject* parent = nullptr;
 		std::map<uint64, GameObject*>::iterator it = createdGameObjects.find(gameObject_node.GetNumber("ParentUID"));
 		if (it != createdGameObjects.end())
 			parent = it->second;
 
-		GameObject* gameObject = new GameObject(parent ? parent : root, gameObject_node.GetString("Name").c_str(), position, rotation, scale);
-		gameObject->uid = gameObject_node.GetNumber("UID");
+		GameObject* gameObject = new GameObject(parent ? parent : root);//, gameObject_node.GetString("Name").c_str(), position, rotation, scale);
+		gameObject->Serialize(gameObject_node);
 		createdGameObjects[gameObject->uid] = gameObject;
-
-		gameObject->active = gameObject_node.GetBool("Active");
-		gameObject->isStatic = gameObject_node.GetBool("Static");
-
-		//if (gameObject_node.GetBool("Selected", false))
-		//	Engine->moduleEditor->AddSelect(gameObject);
-
-		gameObject->beenSelected = gameObject->hierarchyOpen = gameObject_node.GetBool("OpenInHierarchy", false);
-
-		Config_Array components = gameObject_node.GetArray("Components");
-
-		for (uint i = 0; i < components.GetSize(); i++)
-		{
-			Config comp = components.GetNode(i);
-			Component::Type type = (Component::Type)((int)comp.GetNumber("ComponentType"));
-
-			if (Component* component = gameObject->CreateComponent(type))
-			{
-				if (comp.GetBool("HasResource") == true)
-				{
-					component->SetResource(comp.GetNumber("ID"));
-				}
-				Private::LoadComponent(comp, component);
-			}
-
-		}
-
-		//Call OnUpdateTransform() to init all components according to the GameObject
-		gameObject->OnUpdateTransform();
 	}
 
 	return root;
-}
-
-void Importer::Maps::Private::LoadComponent(Config& config, Component* component)
-{
-	switch (component->GetType())
-	{
-	case(Component::Camera):
-	{
-		Private::LoadComponent(config, (C_Camera*)component);
-		break;
-	}
-	case(Component::Animator):
-	{
-		Private::LoadComponent(config, (C_Animator*)component);
-		break;
-	}
-	}
-}
-
-void Importer::Maps::Private::LoadComponent(Config& config, C_Camera* camera)
-{
-	camera->SetFOV(config.GetNumber("FOV"));
-	camera->SetNearPlane(config.GetNumber("NearPlane"));
-	camera->SetFarPlane(config.GetNumber("FarPlane"));
-}
-
-void Importer::Maps::Private::LoadComponent(Config& config, C_Animator* animator)
-{
-	animator->playing = config.GetBool("Playing");
-	uint currentAnimation = config.GetNumber("Current Animation");
-	animator->SetAnimation(currentAnimation);
-}
-
-void Importer::Maps::Private::LoadComponent(Config& config, C_ParticleSystem* particleSystem)
-{
-
 }

@@ -192,7 +192,7 @@ GameObject* Scene::CreateCamera()
 	GameObject* camera = CreateNewGameObject("Camera", root);
 	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
 	camera->CreateComponent(Component::Type::Camera);
-	camera->GetComponent<C_Camera>()->Look(float3(0, 5, 0));
+	camera->GetComponent<C_Transform>()->LookAt(float3(0, 5, 0));
 	camera->uid = random.Int();
 
 	//TODO: Keeping a reference to the last camera, by now.
@@ -312,7 +312,7 @@ void Scene::DrawAllChildren(GameObject* gameObject, RenderingFlags flags)
 void Scene::DrawCulledGameObjects(C_Camera* targetCamera)
 {
 	std::vector<const GameObject*> treeCandidates;
-	quadtree->CollectCandidates(treeCandidates, targetCamera->frustum);
+//quadtree->CollectCandidates(treeCandidates, targetCamera->frustum);
 
 	std::vector<const GameObject*> finalCandidates;
 	CollectCullingCandidates(treeCandidates, finalCandidates);

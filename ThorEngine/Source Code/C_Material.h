@@ -14,6 +14,8 @@ public:
 	C_Material(GameObject* gameObject);
 	~C_Material();
 
+	void Serialize(Config& config) override;
+
 	static inline Type GetType() { return Type::Material; };
 
 	void SetResource(Resource* resource);

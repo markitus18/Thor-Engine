@@ -52,7 +52,6 @@ public:
 	inline C_Camera* GetCurrentCamera() { return currentCamera; } //Added for scene draw access.. move somewhere else?
 
 	//Camera management methods
-	void CameraLookAt(const float3& position);
 	void CenterCameraOn(const float3& position, float distance);
 	void SetNewCameraTarget(const float3& new_target);
 	void MatchCamera(const C_Camera* camera);
@@ -60,7 +59,6 @@ public:
 	void SetCameraPosition(float3 position);
 
 	void OnClick(const Vec2& mousePos);
-	void MoveCamera_Mouse(float motion_x, float motion_y);
 	void PanCamera(float motion_x, float motion_y);
 	void OrbitCamera(float motion_x, float motion_y);
 

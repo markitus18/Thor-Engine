@@ -11,6 +11,8 @@
 #include "W_MainViewport.h"
 
 #include "TreeNode.h"
+#include "GameObject.h"
+#include "C_Transform.h"
 #include "C_Camera.h"
 
 W_EngineConfig::W_EngineConfig(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : Window(parent, GetName(), windowClass, ID)
@@ -58,15 +60,17 @@ void W_EngineConfig::Draw()
 	if (ImGui::CollapsingHeader("Camera"))
 	{
 		W_MainViewport* mainViewport = (W_MainViewport*)parentFrame->GetWindow(W_MainViewport::GetName());
-		float3 camera_pos = mainViewport->GetCurrentCamera()->frustum.Pos();
+		C_Transform* cameraTransform = mainViewport->GetCurrentCamera()->gameObject->GetComponent<C_Transform>();
+		float3 camera_pos = cameraTransform->GetGlobalPosition();
+
 		if (ImGui::DragFloat3("Position", (float*)&camera_pos))
 		{
-			//Engine->camera->SetPosition(camera_pos);
+			mainViewport->SetCameraPosition(camera_pos);
 		}
 		float3 camera_ref = mainViewport->cameraReference;
 		if (ImGui::DragFloat3("Reference", (float*)&camera_ref))
 		{
-			//Engine->camera->Look(camera_ref);
+			mainViewport->SetNewCameraTarget(camera_ref);
 		}
 	}
 

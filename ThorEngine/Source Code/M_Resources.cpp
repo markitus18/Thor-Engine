@@ -34,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	//ClearMetaData();
+	ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;

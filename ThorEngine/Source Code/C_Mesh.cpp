@@ -31,6 +31,20 @@ void C_Mesh::Draw(RenderingFlags flags)
 	Engine->renderer3D->AddMesh(gameObject->GetComponent<C_Transform>()->GetGlobalTransformT(), this, gameObject->GetComponent<C_Material>());
 }
 
+void C_Mesh::Serialize(Config& config)
+{
+	Component::Serialize(config);
+	if (config.isSaving)
+	{
+		config.SetNumber("Mesh Resource", rMeshHandle.GetID());
+	}
+	else
+	{
+		uint64 resourceID = config.GetNumber("Mesh Resource");
+		SetResource(resourceID);
+	}
+}
+
 const AABB& C_Mesh::GetAABB() const
 {
 	if (rMeshHandle.GetID() != 0)

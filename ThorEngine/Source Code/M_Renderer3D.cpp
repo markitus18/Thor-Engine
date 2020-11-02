@@ -261,11 +261,11 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 
 	//Set projection matrix from the camera. TODO: Do we really need this? Isn't this done through shader?
 	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(cameraComponent->GetOpenGLProjectionMatrix());
+	glLoadMatrixf(*cameraComponent->GetOpenGLProjectionMatrix().v);
 
 	//Set view matrix from the camera.  TODO: Do we really need this? Isn't this done through shader?
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(cameraComponent->GetOpenGLViewMatrix());
+	glLoadMatrixf(*cameraComponent->GetOpenGLViewMatrix().v);
 
 	//Set camera's frame buffer as the current target buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraComponent->GetFrameBuffer());
@@ -359,11 +359,11 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 
 	//Sending view matrix
 	uint projectionLoc = glGetUniformLocation(shader->shaderProgram, "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, currentCameraTarget->camera->GetOpenGLProjectionMatrix());
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, *currentCameraTarget->camera->GetOpenGLProjectionMatrix().v);
 
 	//Sending projection matrix
 	uint viewLoc = glGetUniformLocation(shader->shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, currentCameraTarget->camera->GetOpenGLViewMatrix());
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *currentCameraTarget->camera->GetOpenGLViewMatrix().v);
 	
 	//Binding vertex array object
 	if (rMesh.mesh->animMesh == nullptr)

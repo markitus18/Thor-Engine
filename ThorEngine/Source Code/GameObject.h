@@ -37,6 +37,8 @@ public:
 	const OBB& GetOBB() const;
 	bool HasFlippedNormals() const;
 
+	void Serialize(Config& config);
+
 	void SetParent(GameObject* gameObject, GameObject* next = nullptr, bool worldPositionStays = true);
 	bool IsParentActive() const;
 	void RemoveChild(GameObject* gameObject);

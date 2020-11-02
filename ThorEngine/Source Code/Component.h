@@ -40,12 +40,14 @@ public:
 
 	virtual void Draw(RenderingSettings::RenderingFlags flags) { }
 
+	virtual void Serialize(Config& config);
+
 	//Resource handling
-	virtual void SetResource(Resource* resource) { }
-	virtual void SetResource(unsigned long long id) { }
+	//virtual void SetResource(Resource* resource) { }
+	//virtual void SetResource(unsigned long long id) { }
 	
-	virtual uint64 GetResourceID() const { return 0; }
-	inline bool HasResource() const { return hasResource; }
+	//virtual uint64 GetResourceID() const { return 0; }
+	//inline bool HasResource() const { return hasResource; }
 
 public:
 	GameObject* gameObject = nullptr;

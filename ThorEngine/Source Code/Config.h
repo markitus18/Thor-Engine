@@ -29,13 +29,16 @@ class Config
 	-	Append attributes to object: json_object_set_[type of attribute]. Attribute types are bool, number, string and value (any attribute or an object)
 	-	Get values from a node: same function as append, but with "get"
 	*/
+	friend class Config_Array;
 
 public:
 	Config();						//Contructor used for new files
 	Config(const char* buffer);		//Constructor used for data read
-	Config(JSON_Object* obj);		//Constructor used for node append
 	~Config();						//Free data if initialized
+private:
+	Config(JSON_Object* obj, bool isSaving);		//Constructor used for node append
 
+public:
 	void Set(const char* buffer);
 	uint Serialize(char** buffer) const;	//Returns a filled buffer
 	bool NodeExists();
@@ -57,6 +60,9 @@ public:
 	Config GetNode(const char* name) const;
 	//Endof Get attributes---------
 	
+public:
+	bool isSaving;
+
 private:
 	JSON_Value* root_value = nullptr; //Only used for file root
 	JSON_Object* node = nullptr;

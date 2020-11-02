@@ -225,7 +225,7 @@ void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 	{
 		ImGui::Indent();
 
-		if (uint64 newID = DrawDetails_Resource("Mesh", mesh->rMeshHandle.Get()))
+		if (uint64 newID = DrawDetails_Resource("Mesh", mesh->rMeshHandle.Get())) //TODO: Handle nullified ID
 		{
 			mesh->SetResource(newID);
 		}

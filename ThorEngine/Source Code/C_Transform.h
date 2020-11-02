@@ -19,14 +19,14 @@ public:
 
 	~C_Transform();
 
-	float4x4	GetTransform() const;
-	float3		GetPosition() const;
-	Quat		GetQuatRotation() const;
-	float3		GetEulerRotation() const;
-	float3		GetScale() const;
-	float4x4	GetGlobalTransform() const;
-	float4x4	GetGlobalTransformT() const;
-	float3		GetGlobalPosition() const;
+	inline float4x4		GetTransform() const { return transform; }
+	inline float3		GetPosition() const { return position; }
+	inline Quat			GetQuatRotation() const { return rotation; }
+	inline float3		GetEulerRotation() const { return rotation_euler; }
+	inline float3		GetScale() const { return scale; }
+	inline float4x4		GetGlobalTransform() const { return global_transform; }
+	inline float4x4		GetGlobalTransformT() const { return global_transformT; }
+	float3				GetGlobalPosition() const;
 
 	void SetPosition(float3 position);
 	void SetScale(float3 scale);
@@ -34,12 +34,14 @@ public:
 	void SetEulerRotation(float3 euler_angles);
 	void SetGlobalTransform(float4x4 transform);
 
+	void LookAt(float3 target);
+
 	void Reset();
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
-	void Save();
-	void Load();
+	void Serialize(Config& config) override;
+
 	static inline Type GetType() { return Type::Transform; };
 
 private:

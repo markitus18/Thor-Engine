@@ -22,3 +22,15 @@ void Component::OnUpdateTransform(const float4x4& global, const float4x4& parent
 {
 
 }
+
+void Component::Serialize(Config& config)
+{
+	if (config.isSaving)
+	{
+		config.SetNumber("ComponentType", (int)GetType());
+	}
+	else
+	{
+		
+	}
+}

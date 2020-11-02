@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "M_Renderer3D.h"
 #include "OpenGL.h"
+#include "Scene.h"
 
 #define DEFAULT_CAMERA_WIDTH 1920
 #define DEFAULT_CAMERA_HEIGHT 1080
@@ -14,12 +15,13 @@ C_Camera::C_Camera(GameObject* gameObject) : Component(Component::Type::Camera, 
 	frustum.SetViewPlaneDistances(0.1f, 1000.0f);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * 65.0f, (float)DEFAULT_CAMERA_WIDTH / (float)DEFAULT_CAMERA_HEIGHT);
 
-	frustum.SetPos(float3(10, 10, 10));
+	frustum.SetPos(float3(0, 0, 0));
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
 
-	UpdatePlanes();
+	frustum.GetPlanes(planes);
 }
+
 C_Camera::~C_Camera()
 {
 
@@ -51,14 +53,14 @@ void C_Camera::SetNearPlane(float distance)
 {
 	if (distance > 0 && distance < frustum.FarPlaneDistance())
 		frustum.SetViewPlaneDistances(distance, frustum.FarPlaneDistance());
-	UpdatePlanes();
+	frustum.GetPlanes(planes);
 }
 
 void C_Camera::SetFarPlane(float distance)
 {
 	if (distance > 0 && distance > frustum.NearPlaneDistance())
 		frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), distance);
-	UpdatePlanes();
+	frustum.GetPlanes(planes);
 }
 
 //Setting vertical FOV in degrees 
@@ -66,14 +68,14 @@ void C_Camera::SetFOV(float fov)
 {
 	fov *= DEGTORAD;
 	frustum.SetHorizontalFovAndAspectRatio(fov, frustum.AspectRatio());
-	UpdatePlanes();
+	frustum.GetPlanes(planes);
 }
 
 void C_Camera::SetAspectRatio(float ar)
 {
 	float verticalFov = frustum.VerticalFov();
 	frustum.SetVerticalFovAndAspectRatio(verticalFov, ar);
-	UpdatePlanes();
+	frustum.GetPlanes(planes);
 }
 
 void C_Camera::SetResolution(float width, float height)
@@ -84,23 +86,9 @@ void C_Camera::SetResolution(float width, float height)
 
 //--------------------------------
 
-void C_Camera::Look(const float3& position)
+LineSegment C_Camera::GenerateRaycast(float normalizedX, float normalizedY)
 {
-	float3 vector = position - frustum.Pos();
-
-	float3x3 matrix = float3x3::LookAt(frustum.Front(), vector.Normalized(), frustum.Up(), float3::unitY);
-
-	frustum.SetFront(matrix.MulDir(frustum.Front()).Normalized());
-	frustum.SetUp(matrix.MulDir(frustum.Up()).Normalized());
-	UpdatePlanes();
-}
-
-void C_Camera::Match(const C_Camera* reference)
-{
-	frustum.SetPos(reference->frustum.Pos());
-	frustum.SetFront(reference->frustum.Front());
-	frustum.SetUp(reference->frustum.Up());
-	UpdatePlanes();
+	return lastRay = frustum.UnProjectLineSegment(normalizedX, normalizedY);
 }
 
 void C_Camera::SetRenderingEnabled(bool enabled)
@@ -110,7 +98,7 @@ void C_Camera::SetRenderingEnabled(bool enabled)
 		renderingEnabled = enabled;
 		if (gameObject->sceneOwner)
 		{
-			//TODO: Call OnCameraEnabledChanged
+			gameObject->sceneOwner->OnCameraEnabledChanged(this);
 		}
 	}
 }
@@ -161,20 +149,20 @@ void C_Camera::UpdateFrameBufferSize()
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
-float * C_Camera::GetOpenGLViewMatrix() const
+float4x4 C_Camera::GetOpenGLViewMatrix() const
 {
 	static float4x4 view;
 	view = frustum.ViewMatrix();
 	view.Transpose();
-	return *view.v;
+	return view;
 }
 
-float * C_Camera::GetOpenGLProjectionMatrix() const
+float4x4 C_Camera::GetOpenGLProjectionMatrix() const
 {
 	static float4x4 proj;
 	proj = frustum.ProjectionMatrix();
 	proj.Transpose();
-	return *proj.v;
+	return proj;
 }
 
 void C_Camera::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
@@ -188,7 +176,10 @@ void C_Camera::OnUpdateTransform(const float4x4& global, const float4x4& parent_
 	global.Decompose(position, quat, scale);
 
 	frustum.SetPos(position);
-	UpdatePlanes();
+
+	//TODO: Substitute for this function
+	//frustum.SetPos(global.TranslatePart());
+	frustum.GetPlanes(planes);
 }
 
 void C_Camera::Draw(RenderingSettings::RenderingFlags flags)
@@ -200,17 +191,19 @@ void C_Camera::Draw(RenderingSettings::RenderingFlags flags)
 		Engine->renderer3D->AddLine(lastRay.a, lastRay.b, Red);
 }
 
-void C_Camera::Save()
+void C_Camera::Serialize(Config& config)
 {
-
-}
-
-void C_Camera::Load()
-{
-
-}
-
-void C_Camera::UpdatePlanes()
-{
-	frustum.GetPlanes(planes);
+	Component::Serialize(config);
+	if (config.isSaving)
+	{
+		config.SetNumber("FOV", frustum.HorizontalFov() * RADTODEG);
+		config.SetNumber("NearPlane", frustum.NearPlaneDistance());
+		config.SetNumber("FarPlane", frustum.FarPlaneDistance());
+	}
+	else
+	{
+		SetFOV(config.GetNumber("FOV"));
+		SetNearPlane(config.GetNumber("NearPlane"));
+		SetFarPlane(config.GetNumber("FarPlane"));
+	}
 }

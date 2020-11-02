@@ -164,6 +164,48 @@ bool GameObject::HasFlippedNormals() const
 	return transform->flipped_normals;
 }
 
+void GameObject::Serialize(Config& config)
+{
+	if (config.isSaving)
+	{
+		config.SetNumber("UID", uid);
+
+		config.SetNumber("ParentUID", parent ? parent->uid : 0);
+		config.SetString("Name", name.c_str());
+
+		config.SetBool("Active", active);
+		config.SetBool("Static", isStatic);
+		config.SetBool("Selected", IsSelected());
+		config.SetBool("OpenInHierarchy", hierarchyOpen);
+
+		Config_Array compConfig = config.SetArray("Components");
+		for (uint i = 0; i < components.size(); ++i)
+			components[i]->Serialize(compConfig.AddNode());
+	}
+	else
+	{
+		uid = config.GetNumber("UID");
+		name = config.GetString("Name", "[Name not found on serialization]");
+
+		active = config.GetBool("Active");
+		isStatic = config.GetBool("Static");
+		//selected = config.GetBool("Selected", false);
+		//	Engine->moduleEditor->AddSelect(gameObject);
+		beenSelected = hierarchyOpen = config.GetBool("OpenInHierarchy", false);
+
+		Config_Array compConfig = config.GetArray("Components");
+		for (uint i = 0; i < compConfig.GetSize(); ++i)
+		{
+			Config comp = compConfig.GetNode(i);
+			Component::Type type = (Component::Type)((int)comp.GetNumber("ComponentType"));
+
+			if (Component* component = CreateComponent(type))
+				component->Serialize(comp);
+		}
+		OnUpdateTransform();
+	}
+}
+
 void GameObject::SetParent(GameObject* gameObject, GameObject* next, bool worldPositionStays)
 {
 	if (this != gameObject && gameObject != nullptr && parent != gameObject)
@@ -339,6 +381,10 @@ Component* GameObject::CreateComponent(Component::Type type)
 	Component* new_component = nullptr;
 	switch (type)
 	{
+		case(Component::Type::Transform):
+		{
+			return transform; //No need to create transform, useful to return it for serialization methods
+		}
 		case(Component::Type::Mesh):
 		{
 			if (!HasComponent(Component::Mesh))

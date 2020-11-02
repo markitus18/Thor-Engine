@@ -42,21 +42,23 @@ void C_ParticleSystem::Draw(RenderingSettings::RenderingFlags flags)
 	}
 }
 
+void C_ParticleSystem::Serialize(Config& config)
+{
+	Component::Serialize(config);
+	if (config.isSaving)
+	{
+		config.SetNumber("Particle System Resource", rParticleSystemHandle.GetID());
+	}
+	else
+	{
+		uint64 resourceID = config.GetNumber("Particle System Resource");
+		SetResource(resourceID);
+	}
+}
+
 void C_ParticleSystem::SetResource(Resource* resource)
 {
-	Reset();
-	emitters.clear();
-
-	rParticleSystemHandle.Set((R_ParticleSystem*)resource);
-
-	if (R_ParticleSystem* system = rParticleSystemHandle.Get())
-	{
-		for (uint i = 0; i < system->emitters.size(); ++i)
-		{
-			emitters.push_back(EmitterInstance());
-			emitters.back().Init(&system->emitters[i], this);
-		}
-	}
+	SetResource(resource->GetID());
 }
 
 void C_ParticleSystem::SetResource(unsigned long long id)

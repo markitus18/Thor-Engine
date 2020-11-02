@@ -28,9 +28,7 @@ public:
 	void SetResolution(float width, float height);
 	//--------------------------------
 
-	void Look(const float3& position);
-	void Match(const C_Camera* reference);
-
+	LineSegment GenerateRaycast(float normalizedX, float normalizedY);
 	void SetRenderingEnabled(bool enabled);
 
 	void GenerateFrameBuffer();
@@ -38,31 +36,29 @@ public:
 	inline uint GetFrameBuffer() const { return frameBuffer; }
 	inline uint GetRenderTarget() const { return renderTexture; }
 
-	float* GetOpenGLViewMatrix() const;
-	float* GetOpenGLProjectionMatrix() const;
+	float4x4 GetOpenGLViewMatrix() const;
+	float4x4 GetOpenGLProjectionMatrix() const;
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
 
-	void Save();
-	void Load();
+	void Serialize(Config& config) override;
 
 	static inline Type GetType() { return Type::Camera; };
 
-private:
-	void UpdatePlanes();
-
 public:
-	Frustum		frustum;
 	bool		culling = false;
 	bool		renderingEnabled = false;
 	Plane		planes[6];
 	float2		resolution;
 	Color		backgroundColor;
-	LineSegment lastRay;
 
 private:
+	Frustum		frustum;
+
+	LineSegment lastRay;
+
 	uint frameBuffer = 0;
 	uint depthStencilBuffer = 0;
 	uint renderTexture = 0;

@@ -22,6 +22,7 @@ public:
 	void Reset();
 
 	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
+	void Serialize(Config& config) override;
 
 	void SetResource(Resource* resource);
 	void SetResource(unsigned long long id);

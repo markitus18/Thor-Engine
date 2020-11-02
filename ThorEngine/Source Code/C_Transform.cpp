@@ -20,41 +20,6 @@ C_Transform::~C_Transform()
 
 }
 
-float4x4 C_Transform::GetTransform() const
-{
-	return transform;
-}
-
-float3 C_Transform::GetPosition() const
-{
-	return position;
-}
-
-Quat C_Transform::GetQuatRotation() const
-{
-	return rotation;
-}
-
-float3 C_Transform::GetEulerRotation() const
-{
-	return rotation_euler;
-}
-
-float3 C_Transform::GetScale() const
-{
-	return scale;
-}
-
-float4x4 C_Transform::GetGlobalTransform() const
-{
-	return global_transform;
-}
-
-float4x4 C_Transform::GetGlobalTransformT() const
-{
-	return global_transformT;
-}
-
 float3 C_Transform::GetGlobalPosition() const
 {
 	float4x4 global_transform = GetGlobalTransform();
@@ -102,6 +67,21 @@ void C_Transform::SetGlobalTransform(float4x4 transform)
 	transform_updated = true;
 }
 
+void C_Transform::LookAt(float3 target)
+{
+	float3 dir = target - position;
+
+	float3 fwd = dir.Normalized();
+	float3 right = float3::unitY.Cross(fwd).Normalized();
+	float3 up = fwd.Cross(right).Normalized();
+
+	transform.SetCol3(0, right.x, right.y, right.z);
+	transform.SetCol3(1, up.x, up.y, up.z);
+	transform.SetCol3(2, fwd.x, fwd.y, fwd.z);
+
+	transform_updated = true;
+}
+
 void C_Transform::Reset()
 {
 	position = float3::zero;
@@ -111,9 +91,7 @@ void C_Transform::Reset()
 	UpdateEulerAngles();
 	UpdateLocalTransform();
 
-	//Getting normals sign
-	float result = scale.x * scale.y * scale.z;
-	flipped_normals = result >= 0 ? false : true;
+	flipped_normals = false;
 }
 
 void C_Transform::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
@@ -124,14 +102,26 @@ void C_Transform::OnUpdateTransform(const float4x4& global, const float4x4& pare
 	transform_updated = false;
 }
 
-void C_Transform::Save()
+void C_Transform::Serialize(Config& config)
 {
+	Component::Serialize(config);
+	if (config.isSaving)
+	{
+		config.SetArray("Translation").AddFloat3(GetPosition());
+		config.SetArray("Rotation").AddQuat(GetQuatRotation());
+		config.SetArray("Scale").AddFloat3(GetScale());
+	}
+	else
+	{
 
-}
+		position = config.GetArray("Translation").GetFloat3(0, float3::zero);
+		rotation = config.GetArray("Rotation").GetQuat(0, Quat::identity);
+		scale = config.GetArray("Scale").GetFloat3(0, float3::one);
 
-void C_Transform::Load()
-{
-
+		transform = float4x4::FromTRS(position, rotation, scale);
+		transform_updated = true;
+		UpdateEulerAngles();
+	}
 }
 
 void C_Transform::UpdateLocalTransform()

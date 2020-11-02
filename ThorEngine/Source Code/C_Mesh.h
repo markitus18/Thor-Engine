@@ -19,6 +19,7 @@ public:
 	~C_Mesh();
 
 	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
+	void Serialize(Config& config) override;
 
 	const AABB& GetAABB() const;
 	static inline Type GetType() { return Type::Mesh; };

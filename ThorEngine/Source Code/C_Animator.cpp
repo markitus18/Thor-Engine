@@ -128,6 +128,26 @@ void C_Animator::Draw(RenderingSettings::RenderingFlags flags)
 		DrawLinkedBones();
 }
 
+void C_Animator::Serialize(Config& config)
+{
+	Component::Serialize(config);
+	if (config.isSaving)
+	{
+		config.SetNumber("Animator Resource", rAnimatorHandle.GetID());
+		config.SetBool("Playing", playing);
+		config.SetNumber("Current Animation", current_animation);
+
+	}
+	else
+	{
+		uint64 resourceID = config.GetNumber("Animator Resource");
+		SetResource(resourceID);
+
+		playing = config.GetBool("Playing");
+		SetAnimation(config.GetNumber("Current Animation"));
+	}
+}
+
 void C_Animator::SetAnimation(const char* name, float blendTime)
 {
 	R_AnimatorController* rAnimator = rAnimatorHandle.Get();

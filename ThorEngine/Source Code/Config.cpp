@@ -15,9 +15,10 @@ Config::Config(const char* buffer)
 	{
 		node = json_value_get_object(root_value);
 	}
+	isSaving = false;
 }
 
-Config::Config(JSON_Object* obj) : node(obj)
+Config::Config(JSON_Object* obj, bool isSaving) : node(obj), isSaving(isSaving)
 {
 
 }
@@ -36,6 +37,7 @@ void Config::Set(const char* buffer)
 	{
 		node = json_value_get_object(root_value);
 	}
+	isSaving = false;
 }
 
 //Fills a buffer, returns its size
@@ -85,7 +87,7 @@ Config_Array Config::SetArray(const char* name)
 Config Config::SetNode(const char* name)
 {
 	json_object_set_value(node, name, json_value_init_object());
-	return Config(json_object_get_object(node, name));
+	return Config(json_object_get_object(node, name), true);
 }
 
 //Get attributes --------------
@@ -125,7 +127,7 @@ Config_Array Config::GetArray(const char* name) const
 
 Config Config::GetNode(const char* name) const
 {
-	return Config(json_object_get_object(node, name));
+	return Config(json_object_get_object(node, name), false);
 }
 //Endof Get attributes---------
 
@@ -188,7 +190,7 @@ Config Config_Array::AddNode()
 {
 	json_array_append_value(arr, json_value_init_object());
 	size++;
-	return Config(json_array_get_object(arr, size - 1));
+	return Config(json_array_get_object(arr, size - 1), true);
 }
 //Endof append attributes-------
 
@@ -200,7 +202,7 @@ double Config_Array::GetNumber(uint index, double default) const
 	else
 	{
 		LOG("[Warning] JSON Array: Index out of size");
-		return 0;
+		return default;
 	}
 }
 
@@ -290,7 +292,7 @@ void Config_Array::FillVectorBoool(std::vector<bool>& vector) const
 
 Config Config_Array::GetNode(uint index) const
 {
-	return Config(json_array_get_object(arr, index));
+	return Config(json_array_get_object(arr, index), false);
 }
 
 uint Config_Array::GetSize() const

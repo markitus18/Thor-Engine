@@ -79,7 +79,7 @@ namespace Importer
 		void Load(const char* buffer, R_Map* scene);
 
 		//Process a GameObject data with its hierarchy into a json config in R_Map
-		void SaveRootToMap(const GameObject* root, R_Map* map);
+		void SaveRootToMap(GameObject* root, R_Map* map);
 
 		//Generates a new root which holds all GameObject hierarchy loaded from R_Map
 		GameObject* LoadRootFromMap(const R_Map* map);
@@ -88,23 +88,7 @@ namespace Importer
 		{
 			//Process a GameObject data with its hierarchy into a config file
 			//This function will be called recursively for every child in <gameObject>
-			void SaveGameObject(Config& config, const GameObject* gameObject);
-
-			//Process a Component base data into a config file
-			//This function will call specific functions for each component type
-			void SaveComponentBase(Config& config, const Component* component);
-
-			//Select the specific component class to be saved and calls its according function
-			void SaveComponent(Config& config, const Component* component);
-
-			//Process a Camera component data into a config file
-			void SaveComponent(Config& config, const C_Camera* component);
-
-			//Process an Animation component data into a config file
-			void SaveComponent(Config& config, const C_Animator* component);
-
-			//Process a Particle System component data into a config file
-			void SaveComponent(Config& config, const C_ParticleSystem* component);
+			void SaveGameObject(Config& config, GameObject* gameObject);
 
 			//Loads the base for all components and calls the specific component load function
 			void LoadComponent(Config& config, Component* component);

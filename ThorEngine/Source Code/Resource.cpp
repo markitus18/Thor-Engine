@@ -44,3 +44,13 @@ void Resource::RemoveContainedResource(uint64 ID)
 			baseData->containedResources.erase(baseData->containedResources.begin() + i);
 	}
 }
+
+bool Resource::HasContainedResource(uint64 ID) const
+{
+	for (uint i = 0; i < baseData->containedResources.size(); ++i)
+	{
+		if (baseData->containedResources[i] == ID)
+			return true;
+	}
+	return false;
+}

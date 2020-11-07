@@ -1,5 +1,7 @@
 #include "C_Camera.h"
+
 #include "GameObject.h"
+#include "C_Transform.h"
 
 #include "Engine.h"
 #include "M_Renderer3D.h"
@@ -165,15 +167,17 @@ float4x4 C_Camera::GetOpenGLProjectionMatrix() const
 	return proj;
 }
 
-void C_Camera::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
+void C_Camera::OnTransformUpdated()
 {
-	frustum.SetFront(global.WorldZ());
-	frustum.SetUp(global.WorldY());
+	C_Transform* transform = gameObject->GetComponent<C_Transform>();
+
+	frustum.SetFront(transform->GetFwd());
+	frustum.SetUp(transform->GetUp());
 
 	float3 position = float3::zero;
 	float3 scale = float3::one;
 	Quat quat = Quat::identity;
-	global.Decompose(position, quat, scale);
+	transform->GetTransform().Decompose(position, quat, scale);
 
 	frustum.SetPos(position);
 

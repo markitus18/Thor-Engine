@@ -233,22 +233,22 @@ void C_Animator::UpdateChannelsTransform(const R_Animation* settings, const R_An
 
 		const Channel& channel = settings->channels.find(boneIt->first.c_str())->second;
 
-		float3 position = GetChannelPosition(channel, currentFrame, transform->GetPosition());
-		Quat rotation = GetChannelRotation(channel, currentFrame, transform->GetQuatRotation());
-		float3 scale = GetChannelScale(channel, currentFrame, transform->GetScale());
+		float3 position = GetChannelPosition(channel, currentFrame, transform->GetLocalPosition());
+		Quat rotation = GetChannelRotation(channel, currentFrame, transform->GetLocalRotation());
+		float3 scale = GetChannelScale(channel, currentFrame, transform->GetLocalScale());
 
 		if (blend != nullptr)
 		{
 			const Channel& blendChannel = blend->channels.find(boneIt->first.c_str())->second;
 
-			position = float3::Lerp(GetChannelPosition(blendChannel, prevBlendFrame, transform->GetPosition()), position, blendRatio);
-			rotation = Quat::Slerp(GetChannelRotation(blendChannel, prevBlendFrame, transform->GetQuatRotation()), rotation, blendRatio);
-			scale = float3::Lerp(GetChannelScale(blendChannel , prevBlendFrame, transform->GetScale()), scale, blendRatio);
+			position = float3::Lerp(GetChannelPosition(blendChannel, prevBlendFrame, transform->GetLocalPosition()), position, blendRatio);
+			rotation = Quat::Slerp(GetChannelRotation(blendChannel, prevBlendFrame, transform->GetLocalRotation()), rotation, blendRatio);
+			scale = float3::Lerp(GetChannelScale(blendChannel , prevBlendFrame, transform->GetLocalScale()), scale, blendRatio);
 		}
 
-		transform->SetPosition(position);
-		transform->SetQuatRotation(rotation);
-		transform->SetScale(scale);
+		transform->SetLocalPosition(position);
+		transform->SetLocalRotation(rotation);
+		transform->SetLocalScale(scale);
 	}
 }
 

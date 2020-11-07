@@ -34,9 +34,18 @@ enum class EViewportCameraAngle
 
 class WViewport : public Window
 {
+	enum class CameraInputOperation
+	{
+		NONE = 0,
+		SELECTION,
+		ORBIT,
+		PAN,
+		TURN
+	};
+
 public:
 	WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID);
-	~WViewport() { }
+	~WViewport();
 
 	virtual void PrepareUpdate();
 	void Draw() override;
@@ -52,7 +61,7 @@ public:
 	inline C_Camera* GetCurrentCamera() { return currentCamera; } //Added for scene draw access.. move somewhere else?
 
 	//Camera management methods
-	void CenterCameraOn(const float3& position, float distance);
+	void FocusCameraOnPosition(const float3& position, float distance);
 	void SetNewCameraTarget(const float3& new_target);
 	void MatchCamera(const C_Camera* camera);
 
@@ -61,7 +70,7 @@ public:
 	void OnClick(const Vec2& mousePos);
 	void PanCamera(float motion_x, float motion_y);
 	void OrbitCamera(float motion_x, float motion_y);
-
+	void TurnCamera(float motion_x, float motion_y);
 	void ZoomCamera(float zoom);
 
 protected:
@@ -71,9 +80,10 @@ protected:
 	virtual void DrawToolbarCustom() {}
 
 private:
-	//Handles user input
+	//Handles user input. TODO: Add deltaTime everywhere
 	void HandleInput();
 	void HandleGizmoUsage();
+	void HandleKeyboardInput();
 
 public:
 	EViewportViewMode viewMode = EViewportViewMode::LIT;
@@ -107,9 +117,8 @@ private:
 
 	bool cameraSettingsNeedUpdate = false;
 
-
-	bool draggingOrbit = false;
-	bool draggingPan = false;
+	CameraInputOperation cameraInputOperation = CameraInputOperation::NONE;
+	Vec2 selectionStartPoint = Vec2(-1, -1);
 
 	//Variables for gizmo's handling
 	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;

@@ -19,48 +19,62 @@ public:
 
 	~C_Transform();
 
-	inline float4x4		GetTransform() const { return transform; }
-	inline float3		GetPosition() const { return position; }
-	inline Quat			GetQuatRotation() const { return rotation; }
-	inline float3		GetEulerRotation() const { return rotation_euler; }
-	inline float3		GetScale() const { return scale; }
-	inline float4x4		GetGlobalTransform() const { return global_transform; }
-	inline float4x4		GetGlobalTransformT() const { return global_transformT; }
-	float3				GetGlobalPosition() const;
+	// All transformation methods en up calling this function. Updates TRS from the new local transform and recursively updates the global transformations
+	void SetLocalTransform(float4x4 newTransform);
 
-	void SetPosition(float3 position);
-	void SetScale(float3 scale);
-	void SetQuatRotation(Quat rotation);
-	void SetEulerRotation(float3 euler_angles);
+	// Local setters
+	inline void SetLocalPosition(float3 newPosition)	{ SetLocalTransform(newPosition, localRotation, localScale); }
+	inline void SetLocalScale(float3 newScale)			{ SetLocalTransform(localPosition, localRotation, newScale); }
+	inline void SetLocalRotation(Quat newRotation)		{ SetLocalTransform(localPosition, newRotation, localScale); }
+	void SetLocalEulerRotation(float3 euler_angles);
+	inline void SetLocalTransform(float3 position, Quat rotation, float3 scale) { SetLocalTransform(float4x4::FromTRS(position, rotation, scale)); }
+
+	// Global setters
+	void SetPosition(float3 newPosition);
+	void SetRotationAxis(float3 x, float3 y, float3 z);
 	void SetGlobalTransform(float4x4 transform);
 
+	// Local accessors
+	inline float4x4		GetLocalTransform() const { return localTransform; }
+	inline float3		GetLocalPosition() const { return localPosition; }
+	inline Quat			GetLocalRotation() const { return localRotation; }
+	inline float3		GetLocalEulerRotation() const { return localRotation.ToEulerXYZ() * DEGTORAD; }
+	inline float3		GetLocalScale() const { return localScale; }
+
+	// Global accessors
+	inline float4x4		GetTransform() const { return transform; }
+	inline float4x4		GetTransformT() const { return transformT; }
+
+	inline float3		GetPosition() const { return transform.TranslatePart(); }
+	inline float3		GetFwd() const { return transform.WorldZ(); }
+	inline float3		GetUp() const { return transform.WorldY(); }
+	inline float3		GetRight() const { return transform.WorldX(); }
+
+public:
 	void LookAt(float3 target);
 
 	void Reset();
 
-	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+	void OnTransformUpdated() override;
 
 	void Serialize(Config& config) override;
 
 	static inline Type GetType() { return Type::Transform; };
 
 private:
-	void UpdateLocalTransform();
-	void UpdateTRS();
-	void UpdateEulerAngles();
+	void UpdateTransformHierarchy();
 
 private:
+	float4x4	localTransform;
 	float4x4	transform;
-	float4x4	global_transform;
-	float4x4	global_transformT;
+	float4x4	transformT;
 
-	float3		position;
-	float3		scale;
-	Quat		rotation;
-	float3		rotation_euler;
+	float3		localPosition;
+	float3		localScale;
+	Quat		localRotation;
+	float3		localRotationEuler;
 
 public:
-	bool		flipped_normals = false;
 	bool		transform_updated = true;
 };
 

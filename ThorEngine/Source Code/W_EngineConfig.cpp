@@ -61,7 +61,7 @@ void W_EngineConfig::Draw()
 	{
 		W_MainViewport* mainViewport = (W_MainViewport*)parentFrame->GetWindow(W_MainViewport::GetName());
 		C_Transform* cameraTransform = mainViewport->GetCurrentCamera()->gameObject->GetComponent<C_Transform>();
-		float3 camera_pos = cameraTransform->GetGlobalPosition();
+		float3 camera_pos = cameraTransform->GetPosition();
 
 		if (ImGui::DragFloat3("Position", (float*)&camera_pos))
 		{

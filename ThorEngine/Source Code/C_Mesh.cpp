@@ -28,7 +28,7 @@ C_Mesh::~C_Mesh()
 
 void C_Mesh::Draw(RenderingFlags flags)
 {
-	Engine->renderer3D->AddMesh(gameObject->GetComponent<C_Transform>()->GetGlobalTransformT(), this, gameObject->GetComponent<C_Material>());
+	Engine->renderer3D->AddMesh(gameObject->GetComponent<C_Transform>()->GetTransformT(), this, gameObject->GetComponent<C_Material>());
 }
 
 void C_Mesh::Serialize(Config& config)
@@ -110,9 +110,9 @@ void C_Mesh::DeformAnimMesh()
 		GameObject* bone = boneMapping[it->first];
 
 		//TODO: Here we are just picking bone global transform, we need the bone transform matrix
-		float4x4 mat = rootBone->parent->parent->GetComponent<C_Transform>()->GetGlobalTransform().Inverted();
-		mat = mat * bone->GetComponent<C_Transform>()->GetGlobalTransform();
-		mat = gameObject->GetComponent<C_Transform>()->GetTransform().Inverted() * mat;
+		float4x4 mat = rootBone->parent->parent->GetComponent<C_Transform>()->GetTransform().Inverted();
+		mat = mat * bone->GetComponent<C_Transform>()->GetTransform();
+		mat = gameObject->GetComponent<C_Transform>()->GetLocalTransform().Inverted() * mat;
 
 		mat = mat * rMesh->boneOffsets[it->second];
 		boneTransforms[it->second] = mat;

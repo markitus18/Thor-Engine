@@ -32,10 +32,9 @@ public:
 	void Draw(RenderingFlags flags);
 	void DrawResursive(RenderingFlags flags);
 
-	void OnUpdateTransform();
+	void OnTransformUpdated();
 	const AABB& GetAABB() const;
 	const OBB& GetOBB() const;
-	bool HasFlippedNormals() const;
 
 	void Serialize(Config& config);
 
@@ -133,8 +132,6 @@ public:
 	unsigned long long			uid = 0;
 	 
 private:
-	bool						flipped_normals = false;
-
 	C_Transform*				transform = nullptr;
 	std::vector<Component*>		components; //TODO: move into map? 
 

@@ -34,6 +34,7 @@ public:
 
 	virtual void AddContainedResource(uint64 ID);
 	virtual void RemoveContainedResource(uint64 ID);
+	virtual bool HasContainedResource(uint64 ID) const;
 
 	virtual void LoadOnMemory() {};
 	virtual void FreeMemory() {};

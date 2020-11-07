@@ -171,13 +171,13 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 			ImGui::EndPopup();
 		}
 
-		float3 pos = transform->GetPosition();
-		float3 scale = transform->GetScale();
-		float3 rotation = transform->GetEulerRotation();
+		float3 pos = transform->GetLocalPosition();
+		float3 scale = transform->GetLocalScale();
+		float3 rotation = transform->GetLocalEulerRotation();
 
-		if (DrawDetails_Float3("Position", pos)) transform->SetPosition(pos);
-		if (DrawDetails_Float3("Rotation", rotation)) transform->SetEulerRotation(rotation);
-		if (DrawDetails_Float3("Scale", scale)) transform->SetScale(scale);
+		if (DrawDetails_Float3("Position", pos)) transform->SetLocalPosition(pos);
+		if (DrawDetails_Float3("Rotation", rotation)) transform->SetLocalEulerRotation(rotation);
+		if (DrawDetails_Float3("Scale", scale)) transform->SetLocalScale(scale);
 
 		if (showDebugInfo)
 		{
@@ -191,7 +191,7 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					ImGui::Text("%f", transform->GetTransform()[j][i]);
+					ImGui::Text("%f", transform->GetLocalTransform()[j][i]);
 					if (j < 3) ImGui::SameLine();
 				}
 			}
@@ -205,7 +205,7 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					ImGui::Text("%f", transform->GetGlobalTransform()[j][i]);
+					ImGui::Text("%f", transform->GetTransform()[j][i]);
 					if (j < 3) ImGui::SameLine();
 				}
 			}

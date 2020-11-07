@@ -41,6 +41,13 @@ WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* wi
 	orthographicCamera->GenerateFrameBuffer();
 	
 	currentCamera = perspectiveCamera;
+	ImGuizmo::Enable(true);
+}
+
+WViewport::~WViewport()
+{
+	RELEASE(perspectiveCamera->gameObject);
+	RELEASE(orthographicCamera->gameObject);
 }
 
 void WViewport::PrepareUpdate()
@@ -56,15 +63,13 @@ void WViewport::PrepareUpdate()
 
 void WViewport::Draw()
 {
-	HandleInput();
-
 	ImGui::SetNextWindowClass(windowClass);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
 	if (!ImGui::Begin(windowStrID.c_str(), &active, flags)) { ImGui::End(); return; }
 
-	//TODO: Can we do it generically for all windows?
+	//TODO: Can we check for resizing generically for all windows?
 	Vec2 currentSize = Vec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 	if (currentSize != windowSize || isTabBarHidden != (!ImGui::GetCurrentWindow()->DockNode || ImGui::GetCurrentWindow()->DockNode->IsHiddenTabBar()))
 		OnResize(currentSize);
@@ -72,12 +77,6 @@ void WViewport::Draw()
 	DrawScene();
 	DrawToolbarShared();
 	DrawToolbarCustom();
-
-	HandleGizmoUsage();
-
-	//LOG("Scene Texture Screen Position: %.0f x, %.0f y", sceneTextureScreenPosition.x, sceneTextureScreenPosition.y);
-	//LOG("Scene Texture Size: %.0f x, %.0f y", textureSize.x, textureSize.y);
-	//LOG("Gizmo Rect Origin: %.0f x, %.0f y", gizmoRectOrigin.x, gizmoRectOrigin.y);
 
 	ImGui::End();
 	ImGui::PopStyleVar();
@@ -143,7 +142,7 @@ void WViewport::OnResize(Vec2 newSize)
 Vec2 WViewport::ScreenToWorld(Vec2 p) const
 {
 	Vec2 ret = p - sceneTextureScreenPosition;
-	ret = ret / windowSize * Engine->window->windowSize;
+	ret = ret / windowSize * Vec2(currentCamera->resolution.x, currentCamera->resolution.y);
 	return ret;
 }
 
@@ -165,10 +164,10 @@ void WViewport::SetScene(Scene* scene)
 }
 
 // -----------------------------------------------------------------
-void WViewport::CenterCameraOn(const float3& target, float distance)
+void WViewport::FocusCameraOnPosition(const float3& target, float distance)
 {
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
-	float3 v = transform->GetGlobalTransform().WorldZ().Neg();
+	float3 v = transform->GetFwd().Neg();
 
 	transform->SetPosition(target + (v * distance));
 	currentCamera->gameObject->Update(.0f);
@@ -179,25 +178,25 @@ void WViewport::CenterCameraOn(const float3& target, float distance)
 void WViewport::SetNewCameraTarget(const float3& new_target)
 {
 	float distance = cameraReference.Distance(new_target);
-	CenterCameraOn(new_target, distance);
+	FocusCameraOnPosition(new_target, distance);
 }
 
 void WViewport::MatchCamera(const C_Camera* camera)
 {
 	C_Transform* targetTransform = camera->gameObject->GetComponent<C_Transform>();
 	C_Transform* cameraTransform = currentCamera->gameObject->GetComponent<C_Transform>();
-	cameraTransform->SetGlobalTransform(targetTransform->GetGlobalTransform());
+	cameraTransform->SetGlobalTransform(targetTransform->GetTransform());
 	currentCamera->gameObject->Update(.0f);
 
 	//TODO: Store reference in C_Camera (?)
-	cameraReference = cameraTransform->GetPosition() + cameraTransform->GetGlobalTransform().WorldZ() * 40;
+	cameraReference = cameraTransform->GetPosition() + cameraTransform->GetFwd() * 40;
 }
 
 void WViewport::SetCameraPosition(float3 position)
 {
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
 	float3 offset = position - transform->GetPosition();
-	transform->SetPosition(position);
+	transform->SetPosition(position);  //TODO: Use Global Position
 	currentCamera->gameObject->Update(.0f);
 
 	cameraReference += offset;
@@ -205,8 +204,8 @@ void WViewport::SetCameraPosition(float3 position)
 
 void WViewport::OnClick(const Vec2& mousePos)
 {
-	float mouseNormX = mousePos.x / Engine->window->windowSize.x;
-	float mouseNormY = mousePos.y / Engine->window->windowSize.y;
+	float mouseNormX = mousePos.x / currentCamera->resolution.x;
+	float mouseNormY = mousePos.y / currentCamera->resolution.y;
 
 	//Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
@@ -219,49 +218,75 @@ void WViewport::OnClick(const Vec2& mousePos)
 void WViewport::PanCamera(float motion_x, float motion_y)
 {
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
-	float distance = cameraReference.Distance(transform->GetGlobalPosition());
+	float distance = cameraReference.Distance(transform->GetPosition());
 
-	float3 Y_add = transform->GetGlobalTransform().WorldY() * motion_y * (distance / 1800);
-	float3 X_add = transform->GetGlobalTransform().WorldX() * motion_x * (distance / 1800);
+	float3 deltaX = transform->GetRight() * motion_x * (distance / 1800);
+	float3 deltaY = transform->GetUp() * motion_y * (distance / 1800);
 
-	cameraReference += X_add;
-	cameraReference += Y_add;
+	cameraReference += deltaX;
+	cameraReference += deltaY;
 
-	transform->SetPosition(transform->GetPosition() + X_add + Y_add);
+	transform->SetPosition(transform->GetPosition() + deltaX + deltaY);
 	currentCamera->gameObject->Update(.0f);
 }
 
 // -----------------------------------------------------------------
 void WViewport::OrbitCamera(float dx, float dy)
 {
-	//Procedure: create a vector from camera position to reference position
-	//Rotate that vector according to our mouse motion
-	//Move the camera to where that vector ended up
+	// Create a vector from camera position to reference position
+	// Rotate that vector according to our mouse motion
+	// Move the camera to where that vector ended up
 
 	//TODO: When the camera forward is near (0, -1, 0) the rotation starts tittering
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
 	float3 vector = transform->GetPosition() - cameraReference;
 
-	Quat quat_y(transform->GetTransform().WorldY(), dx * 0.003);
-	Quat quat_x(transform->GetTransform().WorldX().Neg(), dy * 0.003);
+	Quat quat_y(transform->GetUp(), dx * 0.003);
+	Quat quat_x(transform->GetRight().Neg(), dy * 0.003);
 
 	vector = quat_x.Transform(vector);
 	vector = quat_y.Transform(vector);
 
 	//Change camera position
-	transform->SetPosition(vector + cameraReference);
+	transform->SetPosition(vector + cameraReference); //TODO: Use Global Position
 
 	//Center camera back to the reference
 	currentCamera->gameObject->GetComponent<C_Transform>()->LookAt(cameraReference);
 	currentCamera->gameObject->Update(.0f);
 }
 
-// -----------------------------------------------------------------
+void WViewport::TurnCamera(float motion_x, float motion_y)
+{
+	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+
+	// Yaw Rotation: We rotate around world up (0, 1, 0) to keep the Right axis of the camera always parallel to the ground
+	float3x3 yawRotation = float3x3::RotateAxisAngle(float3::unitY, motion_x);
+	float3 newRight = yawRotation * transform->GetRight();
+
+	// Pitch Rotation: We rotate our fwd and up along our current Right axis
+	float3x3 pitchRotation = float3x3::RotateAxisAngle(newRight, motion_y);
+	float3 newUp = pitchRotation * yawRotation * transform->GetUp();
+	float3 newFwd = pitchRotation * yawRotation * transform->GetFwd();
+
+	// Fix-up to lock the camera's front angle to not go over the world's up
+	if (newUp.y < 0.0f)
+	{
+		newFwd = float3(0.0f, transform->GetFwd().y > 0.0f ? 1.0f : -1.0f, 0.0f);
+		newUp = newFwd.Cross(newRight);
+	}
+	transform->SetRotationAxis(newRight, newUp, newFwd);
+	currentCamera->gameObject->Update(.0f);
+
+	// Moving the camera reference to the same distance we had before
+	float distancetoReference = (cameraReference - transform->GetPosition()).Length();
+	cameraReference = transform->GetPosition() + transform->GetFwd() * distancetoReference;
+}
+
 void WViewport::ZoomCamera(float zoom)
 {
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
 	float distance = cameraReference.Distance(transform->GetPosition());
-	vec newPos = transform->GetPosition() + transform->GetGlobalTransform().WorldZ() * zoom * distance * 0.05f;
+	vec newPos = transform->GetPosition() + transform->GetFwd() * zoom * distance * 0.05f;
 	transform->SetPosition(newPos);
 
 	currentCamera->gameObject->Update(.0f);
@@ -270,54 +295,96 @@ void WViewport::ZoomCamera(float zoom)
 //Handles user input
 void WViewport::HandleInput()
 {
-	//if (Engine->moduleEditor->UsingKeyboard() == false)
-	//	MoveCamera_Keyboard(Time::deltaTime);
-
 	if (ImGui::IsItemHovered())
 	{
-		if (Engine->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		{
-			//Center camera back to the reference
-			cameraReference = float3(0, 0, 0);
-			currentCamera->gameObject->GetComponent<C_Transform>()->LookAt(cameraReference);
-			currentCamera->gameObject->Update(.0f);
-		}
-
 		if (int wheel = Engine->input->GetMouseZ())
 			ZoomCamera(wheel);
-
-		if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+		
+		if (Engine->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && Engine->moduleEditor->selectedGameObjects.size() > 0)
 		{
-			Vec2 mousePos = ScreenToWorld(Vec2(Engine->input->GetMouseX(), Engine->window->windowSize.y - Engine->input->GetMouseY()));
-			OnClick(mousePos);
+			float distance = (cameraReference - currentCamera->gameObject->GetComponent<C_Transform>()->GetPosition()).Length();
+			GameObject* gameObject = ((GameObject*)Engine->moduleEditor->selectedGameObjects[0]);
+			FocusCameraOnPosition(gameObject->GetComponent<C_Transform>()->GetPosition(), distance);
 		}
-		draggingOrbit = Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT;
-		draggingPan = Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT;
+		
+		if (Engine->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
+		{
+			cameraInputOperation = CameraInputOperation::ORBIT;
+		}
+		if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
+		{
+			cameraInputOperation = CameraInputOperation::SELECTION;
+			selectionStartPoint = Vec2(Engine->input->GetMouseY(), Engine->input->GetMouseY());
+		}
+		if (Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
+		{
+			cameraInputOperation = CameraInputOperation::TURN;
+		}
+		if (Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
+		{
+			cameraInputOperation = CameraInputOperation::PAN;
+		}
 	}
 
-	if (draggingOrbit)
+	switch (cameraInputOperation)
 	{
-		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / 1.5f;// / windowSize * Engine->window->windowSize;
+		case(CameraInputOperation::NONE): break;
 
-		OrbitCamera(-mouseMotion_screen.x, -mouseMotion_screen.y);
-		Engine->input->InfiniteHorizontal();
+		case(CameraInputOperation::SELECTION):
+		{
+			// TODO: Keep track of mouse movement, generate a box at frustum projection, select multiple objects
 
-		if (Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE) draggingOrbit = false;
+			// End selection on mouse button release
+			if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				Vec2 mousePos = ScreenToWorld(Vec2(Engine->input->GetMouseX(), Engine->window->windowSize.y - Engine->input->GetMouseY()));
+				OnClick(mousePos);
+				cameraInputOperation = CameraInputOperation::NONE;
+			}
+			break;
+		}
+		case(CameraInputOperation::ORBIT):
+		{
+			if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
+				Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
+				Vec2 mouseMotion_screen = mouseMotion * 1.5f;// / windowSize * Engine->window->windowSize;
+
+				OrbitCamera(-mouseMotion_screen.x, -mouseMotion_screen.y);
+				Engine->input->InfiniteHorizontal();
+			}
+			if (Engine->input->GetKey(SDL_SCANCODE_LALT) == KEY_IDLE)
+				cameraInputOperation = CameraInputOperation::NONE;
+			break;
+		}
+		case(CameraInputOperation::PAN):
+		{
+			Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
+			Vec2 mouseMotion_screen = mouseMotion * 1.7f;// / windowSize * Engine->window->windowSize;
+
+			PanCamera(mouseMotion_screen.x, mouseMotion_screen.y);
+			Engine->input->InfiniteHorizontal();
+
+			if (Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE)
+				cameraInputOperation = CameraInputOperation::NONE;
+			break;
+		}
+		case(CameraInputOperation::TURN):
+		{
+			Vec2 mouseMotion = Vec2(-Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
+			Vec2 mouseMotion_screen = mouseMotion / 350.0f;// / windowSize * Engine->window->windowSize;
+
+			TurnCamera(mouseMotion_screen.x, mouseMotion_screen.y);
+			Engine->input->InfiniteHorizontal();
+			HandleKeyboardInput();
+
+			if (Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE)
+				cameraInputOperation = CameraInputOperation::NONE;
+			break;
+		}
 	}
 
-	if (draggingPan)
-	{
-		Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-		Vec2 mouseMotion_screen = mouseMotion / 1.5f;// / windowSize * Engine->window->windowSize;
-
-		PanCamera(mouseMotion_screen.x, mouseMotion_screen.y);
-		Engine->input->InfiniteHorizontal();
-
-		if (Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE) draggingPan = false;
-	}
-
-	if (Engine->moduleEditor->UsingKeyboard() == false)
+	if (Engine->moduleEditor->UsingKeyboard() == false) //TODO: Only when the frame has focus
 	{
 		if (Engine->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 			gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
@@ -333,11 +400,10 @@ void WViewport::HandleGizmoUsage()
 	if (Engine->moduleEditor->selectedGameObjects.size() <= 0) return;
 
 	GameObject* gameObject = (GameObject*)Engine->moduleEditor->selectedGameObjects[0];
-	C_Transform* cameraTransform = currentCamera->gameObject->GetComponent<C_Transform>();
 
-	float4x4 viewMatrix = cameraTransform->GetGlobalTransform().Transposed();
+	float4x4 viewMatrix = currentCamera->GetOpenGLViewMatrix();
 	float4x4 projectionMatrix = currentCamera->GetOpenGLProjectionMatrix();
-	float4x4 modelProjection = gameObject->GetComponent<C_Transform>()->GetGlobalTransform().Transposed();
+	float4x4 modelProjection = gameObject->GetComponent<C_Transform>()->GetTransform().Transposed();
 
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(gizmoRectOrigin.x, gizmoRectOrigin.y, textureSize.x, textureSize.y);
@@ -354,4 +420,40 @@ void WViewport::HandleGizmoUsage()
 		modelProjection = newMatrix.Transposed();
 		gameObject->GetComponent<C_Transform>()->SetGlobalTransform(modelProjection);
 	}
+}
+
+void WViewport::HandleKeyboardInput()
+{
+	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+	float3 deltaRight = float3::zero, deltaUp = float3::zero, deltaFwd = float3::zero;
+
+	if (Engine->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
+		deltaFwd = transform->GetFwd() * 1.0f;
+	}
+	if (Engine->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	{
+		deltaFwd = transform->GetFwd().Neg() * 1.0f;
+	}
+
+	if (Engine->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+	{
+		deltaRight = transform->GetRight() * 1.0f;
+	}
+	if (Engine->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+	{
+		deltaRight = transform->GetRight().Neg() * 1.0f;
+	}
+
+	if (Engine->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+	{
+		deltaUp = float3::unitY * 1.0f;
+	}
+	if (Engine->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+	{
+		deltaUp = float3::unitY.Neg() * 1.0f;
+	}
+
+	transform->SetPosition(transform->GetPosition() + deltaFwd + deltaRight + deltaUp);
+	cameraReference += deltaRight + deltaUp;
 }

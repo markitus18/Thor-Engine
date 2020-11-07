@@ -34,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -147,8 +147,6 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 					containedBase.libraryFile = contained.GetString("Library file").c_str();
 					resourceLibrary[containedBase.ID] = containedBase;
 				}
-
-
 			}
 			resourceLibrary[base.ID] = base;
 			assetID = base.ID;
@@ -164,18 +162,17 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 	//Load the assets contained in the current folder
 	if (!node.isFile && !node.isLeaf)
 	{
+		ResourceHandle<Resource> hFolder(assetID);
 		std::vector<uint64> newChildren;
 		for (uint i = 0; i < node.children.size(); i++)
 		{
 			uint64 childID = 0;
-			if (LoadAssetBase(node.children[i], childID))
-			{
+			LoadAssetBase(node.children[i], childID);
+			if (!hFolder.Get()->HasContainedResource(childID))
 				newChildren.push_back(childID);
-			}
 		}
 		if (newChildren.size() > 0) //New resources from this folder have been imported. Update folder content
 		{
-			ResourceHandle<Resource> hFolder(assetID);
 			for (uint i = 0; i < newChildren.size(); ++i)
 				hFolder.Get()->AddContainedResource(newChildren[i]);
 			SaveResource(hFolder.Get());

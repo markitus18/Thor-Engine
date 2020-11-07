@@ -18,11 +18,6 @@ void Component::SetActive(bool set)
 	active = set;
 }
 
-void Component::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
-{
-
-}
-
 void Component::Serialize(Config& config)
 {
 	if (config.isSaving)

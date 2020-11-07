@@ -219,7 +219,7 @@ void TreeDisplay::HandleUserInput(TreeNode* node)
 		{
 			//TODO: move to another function, this is for generic tree display
 			GameObject* gameObject = (GameObject*)node;
-			float3 pos = gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
+			float3 pos = gameObject->GetComponent<C_Transform>()->GetPosition();
 			
 			//Engine->camera->SetNewTarget(vec(pos.x, pos.y, pos.z));
 			//LOG("New camera look position: %f x, %f y, %f z", pos.x, pos.y, pos.z);

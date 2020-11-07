@@ -286,6 +286,7 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 	if (drawGrid)
 	{
 		glLineWidth(1.0f);
+		glDisable(GL_LIGHTING);
 
 		glBegin(GL_LINES);
 		glColor4f(0.8f, 0.8f, 0.8f, 0.8f);
@@ -301,6 +302,7 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 		}
 
 		glEnd();
+		glEnable(GL_LIGHTING);
 	}
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

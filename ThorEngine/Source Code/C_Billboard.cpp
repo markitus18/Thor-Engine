@@ -32,7 +32,7 @@ void C_Billboard::Update(float dt)
 
 	//TODO: Send transform to shader, calculate there based on view matrix
 	/* Read line 140 from float4x4 to understand function usage */
-	float4x4 resultMatrix(right.ToDir4(), up.ToDir4(), fwd.ToDir4(), transform.GetGlobalPosition().ToPos4());
+	float4x4 resultMatrix(right.ToDir4(), up.ToDir4(), fwd.ToDir4(), transform.GetPosition().ToPos4());
 	transform.SetGlobalTransform(resultMatrix);
 }
 
@@ -41,17 +41,17 @@ void C_Billboard::GetVectorsFromAlignment(const C_Transform& transform, const C_
 	switch (alignment)
 	{
 		case(Alignment::Screen_Aligned):
-			fwd = cameraTransform.GetGlobalTransform().WorldZ().Normalized().Neg();
-			up = cameraTransform.GetGlobalTransform().WorldY().Normalized();
+			fwd = cameraTransform.GetFwd().Neg();
+			up = cameraTransform.GetUp();
 			right = up.Cross(fwd).Normalized();
 			break;
 		case(Alignment::Camera_Aligned):
-			fwd = float3(cameraTransform.GetGlobalPosition() - transform.GetGlobalPosition()).Normalized();
-			right = cameraTransform.GetGlobalTransform().WorldY().Normalized().Cross(fwd).Normalized();
+			fwd = float3(cameraTransform.GetPosition() - transform.GetPosition()).Normalized();
+			right = cameraTransform.GetUp().Cross(fwd).Normalized();
 			up = fwd.Cross(right).Normalized();
 			break;
 		case(Alignment::Axis_Aligned):
-			float3 direction = float3(cameraTransform.GetGlobalPosition() - transform.GetGlobalPosition()).Normalized();
+			float3 direction = float3(cameraTransform.GetPosition() - transform.GetPosition()).Normalized();
 			switch (lockAxis)
 			{
 				//TODO: same as Unreal, this could be xy, xz, yx, yz, zx, zy. Here we are taking arbitrary decisions on which is the "forward" vector

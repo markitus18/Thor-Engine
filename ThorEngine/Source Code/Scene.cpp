@@ -167,7 +167,7 @@ void Scene::PerformMousePick(const LineSegment& segment)
 			{
 				//Convert segment in world space coordinates to model space coordinates
 				LineSegment rayToMeshSpace = segment;
-				rayToMeshSpace.Transform(it->second->GetComponent<C_Transform>()->GetGlobalTransform().Inverted());
+				rayToMeshSpace.Transform(it->second->GetComponent<C_Transform>()->GetTransform().Inverted());
 
 				//Iterate all mesh triangles until we find a hit
 				for (uint v = 0; v < rMesh->buffersSize[R_Mesh::b_indices] && finalCandidate == nullptr; v += 3)
@@ -190,7 +190,7 @@ void Scene::PerformMousePick(const LineSegment& segment)
 GameObject* Scene::CreateCamera()
 {
 	GameObject* camera = CreateNewGameObject("Camera", root);
-	camera->GetComponent<C_Transform>()->SetPosition(float3(10, 10, 0));
+	camera->GetComponent<C_Transform>()->SetLocalPosition(float3(10, 10, 0));
 	camera->CreateComponent(Component::Type::Camera);
 	camera->GetComponent<C_Transform>()->LookAt(float3(0, 5, 0));
 	camera->uid = random.Int();

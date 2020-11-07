@@ -57,7 +57,7 @@ public:
 	void RemoveScene(Scene* scene);
 
 private:
-	void AddRootToScene(GameObject* root, Scene* target);
+	void AddRootMapToScene(GameObject* root, Scene* target);
 
 public:
 	bool drawQuadtree = false;

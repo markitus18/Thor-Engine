@@ -77,7 +77,7 @@ void GameObject::Update(float dt)
 	//Throw on update transform event if matrix has been updated
 	if (transform && transform->transform_updated)
 	{
-		OnUpdateTransform();
+		OnTransformUpdated();
 	}
 
 	//Updating all components
@@ -121,25 +121,18 @@ void GameObject::DrawResursive(RenderingSettings::RenderingFlags flags)
 		childs[i]->DrawResursive(flags);
 }
 
-void GameObject::OnUpdateTransform()
+void GameObject::OnTransformUpdated()
 {
-	flipped_normals = HasFlippedNormals();
-
 	//Updating components
-	float4x4 global_parent = float4x4::identity;
-	if (parent)
-	{
-		global_parent = parent->GetComponent<C_Transform>()->GetGlobalTransform();
-	}
 	for (uint i = 0; i < components.size(); i++)
 	{
-		components[i]->OnUpdateTransform(transform->GetGlobalTransform(), global_parent);
+		components[i]->OnTransformUpdated();
 	}
 
-	//Updating childs transform
+	//Updating children transform
 	for (uint i = 0; i < childs.size(); i++)
 	{
-		childs[i]->OnUpdateTransform();
+		childs[i]->OnTransformUpdated();
 	}
 
 	UpdateAABB();
@@ -153,15 +146,6 @@ const AABB& GameObject::GetAABB() const
 const OBB& GameObject::GetOBB() const
 {
 	return obb;
-}
-
-bool GameObject::HasFlippedNormals() const
-{
-	if (parent)
-	{
-		return transform->flipped_normals != parent->HasFlippedNormals() ? true : false;
-	}
-	return transform->flipped_normals;
 }
 
 void GameObject::Serialize(Config& config)
@@ -202,7 +186,7 @@ void GameObject::Serialize(Config& config)
 			if (Component* component = CreateComponent(type))
 				component->Serialize(comp);
 		}
-		OnUpdateTransform();
+		OnTransformUpdated();
 	}
 }
 
@@ -210,10 +194,8 @@ void GameObject::SetParent(GameObject* gameObject, GameObject* next, bool worldP
 {
 	if (this != gameObject && gameObject != nullptr && parent != gameObject)
 	{
-		float4x4 global = transform->GetTransform();
 		if (parent != nullptr)
 		{
-			global = transform->GetGlobalTransform();
 			parent->RemoveChild(this);
 		}
 		parent = gameObject;
@@ -221,7 +203,8 @@ void GameObject::SetParent(GameObject* gameObject, GameObject* next, bool worldP
 		std::vector<GameObject*>::iterator it = next ? std::find(parent->childs.begin(), parent->childs.end(), next) : parent->childs.end();
 		parent->childs.insert(it, this);
 
-		transform->SetGlobalTransform(global);
+		// Updates the local transform maintaining the global
+		transform->SetGlobalTransform(transform->GetTransform());
 	}
 }
 
@@ -402,7 +385,7 @@ Component* GameObject::CreateComponent(Component::Type type)
 			if (!HasComponent(Component::Material))
 			{
 				new_component = new C_Camera(this);
-				new_component->OnUpdateTransform(transform->GetGlobalTransform(), float4x4::identity);
+				new_component->OnTransformUpdated();
 			}
 			break;
 		}
@@ -442,7 +425,6 @@ void GameObject::AddComponent(Component* component)
 				components.push_back(component);
 				transform = (C_Transform*)component;
 				component->gameObject = this;
-				OnUpdateTransform();
 			}
 			break;
 		}
@@ -452,7 +434,7 @@ void GameObject::AddComponent(Component* component)
 			{
 				components.push_back(component);
 				component->gameObject = this;
-				component->OnUpdateTransform(GetComponent<C_Transform>()->GetGlobalTransform());
+				component->OnTransformUpdated();
 				UpdateAABB();
 			}
 			break;
@@ -488,12 +470,12 @@ bool GameObject::HasComponent(Component::Type type)
 
 void GameObject::UpdateAABB()
 {
-	C_Mesh* mesh = GetComponent <C_Mesh>();
+	C_Mesh* mesh = GetComponent<C_Mesh>();
 	if (mesh)
 	{
 		AABB meshAABB = mesh->GetAABB();
 		obb = mesh->GetAABB();
-		obb.Transform(GetComponent< C_Transform>()->GetGlobalTransform());
+		obb.Transform(GetComponent< C_Transform>()->GetTransform());
 
 		aabb.SetNegativeInfinity();
 		aabb.Enclose(obb);
@@ -501,7 +483,7 @@ void GameObject::UpdateAABB()
 	else
 	{
 		aabb.SetNegativeInfinity();
-		aabb.SetFromCenterAndSize(transform->GetGlobalPosition(), float3(1, 1, 1));
+		aabb.SetFromCenterAndSize(transform->GetPosition(), float3(1, 1, 1));
 		obb = aabb;
 	}
 }

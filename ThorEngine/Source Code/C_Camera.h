@@ -39,7 +39,7 @@ public:
 	float4x4 GetOpenGLViewMatrix() const;
 	float4x4 GetOpenGLProjectionMatrix() const;
 
-	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+	void OnTransformUpdated() override;
 
 	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
 

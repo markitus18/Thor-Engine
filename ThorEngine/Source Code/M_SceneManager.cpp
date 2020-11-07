@@ -108,7 +108,7 @@ Scene* M_SceneManager::CreateNewScene(uint64 resourceID)
 		GameObject* root = Importer::Maps::LoadRootFromMap(rMapHandle.Get());
 
 		mainScene->InitFromResourceData(rMapHandle.Get()->baseData);
-		AddRootToScene(root, mainScene);
+		AddRootMapToScene(root, mainScene);
 	}
 
 	activeScenes.push_back(newScene);
@@ -132,7 +132,7 @@ void M_SceneManager::LoadMap(uint64 resourceID, bool append)
 	GameObject* root = Importer::Maps::LoadRootFromMap(rMapHandle.Get());
 
 	mainScene->InitFromResourceData(rMapHandle.Get()->baseData);
-	AddRootToScene(root, mainScene);
+	AddRootMapToScene(root, mainScene);
 
 	RELEASE(root);
 }
@@ -141,8 +141,7 @@ void M_SceneManager::LoadModel(uint64 modelID, Scene* targetScene)
 {
 	ResourceHandle<R_Model> rModelHandle(modelID);
 	GameObject* root = Importer::Models::LoadNewRoot(rModelHandle.Get());
-	AddRootToScene(root, targetScene ? targetScene : mainScene);
-	RELEASE(root);
+	targetScene->AddGameObject(root, nullptr);
 }
 
 //TODO: Current folder directory access is not clean. Check other engines and adapt the code
@@ -165,7 +164,7 @@ void M_SceneManager::SaveCurrentScene(const char* saveAsNewPath)
 	}
 }
 
-void M_SceneManager::AddRootToScene(GameObject* root, Scene* target)
+void M_SceneManager::AddRootMapToScene(GameObject* root, Scene* target)
 {
 	std::vector<GameObject*> newGameObjects;
 	root->CollectChilds(newGameObjects);

@@ -34,7 +34,7 @@ float4 ParticleModule::RandomFloat4(const float4& a, const float4& b)
 
 void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	float3 position = emitter->component->gameObject->GetComponent<C_Transform>()->GetGlobalPosition();
+	float3 position = emitter->component->gameObject->GetComponent<C_Transform>()->GetPosition();
 	particle->position += position + emitterOrigin;
 }
 

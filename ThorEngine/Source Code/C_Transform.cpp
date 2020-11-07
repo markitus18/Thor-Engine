@@ -2,17 +2,15 @@
 #include "Component.h"
 #include "GameObject.h"
 
-C_Transform::C_Transform(GameObject* new_GameObject, float3 position, Quat rotation, float3 scale) : Component(Component::Type::Transform, gameObject, false), position(position), rotation(rotation), scale(scale)
+C_Transform::C_Transform(GameObject* parent, float3 position, Quat rotation, float3 scale) : Component(Component::Type::Transform, parent, false),
+						localPosition(position), localRotation(rotation), localScale(scale)
 {
-	transform = float4x4::FromTRS(position, rotation, scale);
-	UpdateEulerAngles();
+	SetLocalTransform(position, rotation, scale);
 }
 
-C_Transform::C_Transform(GameObject* new_GameObject, const float4x4& transform) : Component(Component::Type::Transform, gameObject, false)
+C_Transform::C_Transform(GameObject* parent, const float4x4& transform) : Component(Component::Type::Transform, parent, false)
 {
-	this->transform = transform;
-	transform.Decompose(position, rotation, scale);
-	UpdateEulerAngles();
+	SetLocalTransform(transform);
 }
 
 C_Transform::~C_Transform()
@@ -20,85 +18,65 @@ C_Transform::~C_Transform()
 
 }
 
-float3 C_Transform::GetGlobalPosition() const
+void C_Transform::SetLocalEulerRotation(float3 euler_angles)
 {
-	float4x4 global_transform = GetGlobalTransform();
-	return float3(global_transform[0][3], global_transform[1][3], global_transform[2][3]);
+	float3 delta = (euler_angles - localRotationEuler) * DEGTORAD;
+	Quat newRotation = localRotation * Quat::FromEulerXYZ(delta.x, delta.y, delta.z);
+	SetLocalTransform(localPosition, newRotation, localScale);
 }
 
-void C_Transform::SetPosition(float3 new_position)
+void C_Transform::SetLocalTransform(float4x4 newTransform)
 {
-	position = new_position;
-	UpdateLocalTransform();
-}
+	localTransform = newTransform;
+	localTransform.Decompose(localPosition, localRotation, localScale);
+	localRotationEuler = localRotation.ToEulerXYZ();
+	localRotationEuler *= RADTODEG;
 
-void C_Transform::SetScale(float3 new_scale)
-{
-	scale = new_scale;
-	UpdateLocalTransform();
-
-	//Getting normals sign
-	float result = scale.x * scale.y * scale.z;
-	flipped_normals = result >= 0 ? false : true;
-}
-
-void C_Transform::SetQuatRotation(Quat rotation)
-{
-	this->rotation = rotation;
-	UpdateEulerAngles();
-	UpdateLocalTransform();
-}
-
-void C_Transform::SetEulerRotation(float3 euler_angles)
-{
-	float3 delta = (euler_angles - rotation_euler) * DEGTORAD;
-	Quat quaternion_rotation = Quat::FromEulerXYZ(delta.x, delta.y, delta.z);
-	rotation = rotation * quaternion_rotation;
-	rotation_euler = euler_angles;
-	UpdateLocalTransform();
+	UpdateTransformHierarchy();
 }
 
 void C_Transform::SetGlobalTransform(float4x4 transform)
 {
-	float4x4 localTransform = gameObject->parent->GetComponent<C_Transform>()->GetGlobalTransform().Inverted() * transform;
-	this->transform = localTransform;
-	global_transform = transform;
-	global_transformT = global_transform.Transposed();
-	transform_updated = true;
+	// Recalculate local transform depending on the parent transform
+	localTransform = transform;
+	if (gameObject->parent)
+		localTransform = gameObject->parent->GetComponent<C_Transform>()->GetTransform().Inverted() * transform;
+	SetLocalTransform(localTransform);
+}
+
+void C_Transform::SetPosition(float3 newPosition)
+{
+	transform.SetTranslatePart(newPosition);
+	SetGlobalTransform(transform);
+}
+
+void C_Transform::SetRotationAxis(float3 x, float3 y, float3 z)
+{
+	transform.SetCol3(0, x);	
+	transform.SetCol3(1, y);
+	transform.SetCol3(2, z);
+
+	SetGlobalTransform(transform);
 }
 
 void C_Transform::LookAt(float3 target)
 {
-	float3 dir = target - position;
+	float3 dir = target - GetPosition();
 
 	float3 fwd = dir.Normalized();
 	float3 right = float3::unitY.Cross(fwd).Normalized();
 	float3 up = fwd.Cross(right).Normalized();
 
-	transform.SetCol3(0, right.x, right.y, right.z);
-	transform.SetCol3(1, up.x, up.y, up.z);
-	transform.SetCol3(2, fwd.x, fwd.y, fwd.z);
-
-	transform_updated = true;
+	SetRotationAxis(right, up, fwd);
 }
 
 void C_Transform::Reset()
 {
-	position = float3::zero;
-	scale = float3::one;
-	rotation = Quat::identity;
-
-	UpdateEulerAngles();
-	UpdateLocalTransform();
-
-	flipped_normals = false;
+	SetLocalTransform(float4x4::identity);
 }
 
-void C_Transform::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
+void C_Transform::OnTransformUpdated()
 {
-	global_transform = parent_global * transform;
-	global_transformT = global_transform.Transposed();
-	UpdateTRS();
 	transform_updated = false;
 }
 
@@ -107,37 +85,33 @@ void C_Transform::Serialize(Config& config)
 	Component::Serialize(config);
 	if (config.isSaving)
 	{
-		config.SetArray("Translation").AddFloat3(GetPosition());
-		config.SetArray("Rotation").AddQuat(GetQuatRotation());
-		config.SetArray("Scale").AddFloat3(GetScale());
+		config.SetArray("Translation").AddFloat3(localPosition);
+		config.SetArray("Rotation").AddQuat(localRotation);
+		config.SetArray("Scale").AddFloat3(localScale);
 	}
 	else
 	{
 
-		position = config.GetArray("Translation").GetFloat3(0, float3::zero);
-		rotation = config.GetArray("Rotation").GetQuat(0, Quat::identity);
-		scale = config.GetArray("Scale").GetFloat3(0, float3::one);
+		localPosition = config.GetArray("Translation").GetFloat3(0, float3::zero);
+		localRotation = config.GetArray("Rotation").GetQuat(0, Quat::identity);
+		localScale = config.GetArray("Scale").GetFloat3(0, float3::one);
 
-		transform = float4x4::FromTRS(position, rotation, scale);
+		localTransform = float4x4::FromTRS(localPosition, localRotation, localScale);
 		transform_updated = true;
-		UpdateEulerAngles();
+
+		localRotationEuler = localRotation.ToEulerXYZ() * RADTODEG;
 	}
 }
 
-void C_Transform::UpdateLocalTransform()
+void C_Transform::UpdateTransformHierarchy()
 {
-	transform = float4x4::FromTRS(position, rotation, scale);
+	transform = gameObject->parent ? gameObject->parent->GetComponent<C_Transform>()->GetTransform() * localTransform : localTransform;
+	transformT = transform.Transposed();
 	transform_updated = true;
-}
 
-void C_Transform::UpdateTRS()
-{
-	transform.Decompose(position, rotation, scale);
-	UpdateEulerAngles();
-}
-
-void C_Transform::UpdateEulerAngles()
-{
-	rotation_euler = rotation.ToEulerXYZ();
-	rotation_euler *= RADTODEG;
+	// Recursively update child transforms
+	for (uint i = 0; i < gameObject->childs.size(); ++i)
+	{
+		gameObject->childs[i]->GetComponent<C_Transform>()->UpdateTransformHierarchy();
+	}
 }

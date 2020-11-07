@@ -36,7 +36,7 @@ public:
 	inline Type GetType() const { return type; };
 
 	virtual void Update(float dt) {}; //TODO: should return bool?
-	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
+	virtual void OnTransformUpdated() {};
 
 	virtual void Draw(RenderingSettings::RenderingFlags flags) { }
 

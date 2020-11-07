@@ -189,14 +189,14 @@ GameObject* Importer::Models::LoadNewRoot(const R_Model* model)
 		createdGameObjects[node.ID] = newGameObject; //Here we store Node ID as we only use it for building parentships
 		if (!parent) root = newGameObject;
 
-		//Adding mesh component and assignint its resource (if any)
+		//Adding mesh component and assigning its resource (if any)
 		if (node.meshID != 0)
 		{
 			C_Mesh* meshComponent = (C_Mesh*)newGameObject->CreateComponent(Component::Type::Mesh);
 			meshComponent->SetResource(node.meshID);
 		}
 
-		//Adding material component and assignint its resource (if any)
+		//Adding material component and assigning its resource (if any)
 		if (node.materialID != 0)
 		{
 			C_Material* materialComponent = (C_Material*)newGameObject->CreateComponent(Component::Type::Material);

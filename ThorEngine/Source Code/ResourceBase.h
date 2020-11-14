@@ -43,10 +43,13 @@ struct ResourceBase
 
 	void Serialize(Config& config) const
 	{
-		config.SetNumber("ID", ID);
-		config.SetString("Name", name.c_str());
-		config.SetNumber("Type", static_cast<int>(type));
-		config.SetString("Library file", libraryFile.c_str());
+		if (config.isSaving)
+		{
+			config.SetNumber("ID", ID);
+			config.SetString("Name", name.c_str());
+			config.SetNumber("Type", static_cast<int>(type));
+			config.SetString("Library file", libraryFile.c_str());
+		}
 	}
 };
 

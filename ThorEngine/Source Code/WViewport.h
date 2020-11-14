@@ -12,6 +12,8 @@ class C_Camera;
 
 struct ImGuiWindowClass;
 
+#define CAMERA_KEYBOARD_MULT 60.0f
+
 enum class EViewportViewMode
 {
 	NONE		= 0,
@@ -51,46 +53,64 @@ public:
 	void Draw() override;
 	virtual void OnResize(Vec2 newSize) override;
 
+	virtual void SetScene(Scene* scene);
+	inline const C_Camera* GetCurrentCamera() const { return currentCamera; }
+	inline C_Camera* GetCurrentCamera() { return currentCamera; } //Added for scene draw access.. move somewhere else?
+
+	// Centers the camera on target position at specified distance. Maintains camera rotation
+	void FocusCameraOnPosition(const float3& position, float distance);
+
+	// Changes the camera target and performs a LookAt to it
+	void SetNewCameraTarget(const float3& new_target);
+
+	// Copies the specs of the target camera
+	void MatchCamera(const C_Camera* camera);
+
+	// Changes the camera position, keeping the reference at the same distance
+	void SetCameraPosition(float3 position);
+
+protected:
+	// Render the scene texture + handle the user input
+	void DrawScene();
+
+	// Draw the part of the toolbar shared in all viewport implementations
+	void DrawToolbarShared();
+
+	// Draw a custom toolbar with specific implementations
+	virtual void DrawToolbarCustom() {}
+
+private:
 	//Converts a 2D point in the scene image to a 2D point in the real scene
 	Vec2 ScreenToWorld(Vec2 p) const;
 	//Converts a 2D point in the real scene to a 2D point in the scene image
 	Vec2 WorldToScreen(Vec2 p) const;
 
-	virtual void SetScene(Scene* scene);
-	inline const C_Camera* GetCurrentCamera() const { return currentCamera; }
-	inline C_Camera* GetCurrentCamera() { return currentCamera; } //Added for scene draw access.. move somewhere else?
-
-	//Camera management methods
-	void FocusCameraOnPosition(const float3& position, float distance);
-	void SetNewCameraTarget(const float3& new_target);
-	void MatchCamera(const C_Camera* camera);
-
-	void SetCameraPosition(float3 position);
-
-	void OnClick(const Vec2& mousePos);
-	void PanCamera(float motion_x, float motion_y);
-	void OrbitCamera(float motion_x, float motion_y);
-	void TurnCamera(float motion_x, float motion_y);
-	void ZoomCamera(float zoom);
-
-protected:
-	//Renders the scene 
-	void DrawScene();
-	void DrawToolbarShared();
-	virtual void DrawToolbarCustom() {}
-
-private:
-	//Handles user input. TODO: Add deltaTime everywhere
 	void HandleInput();
 	void HandleGizmoUsage();
 	void HandleKeyboardInput();
+
+	// Normalizes the mouse click position and performs a raycast collision test
+	void OnClick(const Vec2& mousePos);
+
+	// Moves the camera in its X and Y axis
+	void PanCamera(float motion_x, float motion_y);
+
+	// Rotates the camera around the camera reference
+	void OrbitCamera(float motion_x, float motion_y);
+
+	// Rotates the camera around itself
+	void TurnCamera(float motion_x, float motion_y);
+
+	// Moves the camera forward or backward
+	void ZoomCamera(float zoom);
 
 public:
 	EViewportViewMode viewMode = EViewportViewMode::LIT;
 	EViewportCameraAngle cameraAngle = EViewportCameraAngle::PERSPECTIVE;
 	RenderingSettings::RenderingFlags renderingFlags;
 
-	float3 cameraReference; //TODO: Consider moving to C_Camera
+	float3 cameraReference; //TODO: Consider moving to C_Camera (or remove like Unreal?)
+	float cameraSpeed = 1.0f;
 
 private:
 	//The scene linked to this viewport

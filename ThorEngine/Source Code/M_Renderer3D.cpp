@@ -159,11 +159,11 @@ update_status M_Renderer3D::PreUpdate()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	// light 0 on cam pos
+	//light 0 on cam pos
 	//lights[0].SetPos(Engine->camera->GetCamera()->frustum.Pos().x, Engine->camera->GetCamera()->frustum.Pos().y, Engine->camera->GetCamera()->frustum.Pos().z);
 
-//	for(uint i = 0; i < MAX_LIGHTS; ++i)
-//		lights[i].Render();
+	//for(uint i = 0; i < MAX_LIGHTS; ++i)
+	//	lights[i].Render();
 
 	return UPDATE_CONTINUE;
 }
@@ -178,7 +178,7 @@ update_status M_Renderer3D::PostUpdate()
 	}
 	cameraRenderingTargets.clear();
 
-	glViewport(0, 0, Engine->window->windowSize.x, Engine->window->windowSize.y); //TODO: Is this necessary...?*/
+	//glViewport(0, 0, Engine->window->windowSize.x, Engine->window->windowSize.y); //TODO: Is this necessary...?*/
 	Engine->moduleEditor->Draw();
 
 	SDL_GL_SwapWindow(Engine->window->window);

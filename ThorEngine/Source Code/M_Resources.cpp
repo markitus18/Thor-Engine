@@ -65,7 +65,7 @@ update_status M_Resources::Update()
 
 	if (saveChangedResources_timer.ReadSec() > 5)
 	{
-		SaveChangedResources();
+		//SaveChangedResources();
 		saveChangedResources_timer.Start();
 	}
 

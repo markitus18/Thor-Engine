@@ -102,7 +102,7 @@ private:
 
 	float drag_detection_offset = 7.0f;
 
-	//TODO: change "ifinite mouse" functionality in a more polite way
+	//TODO: change "infinite mouse" functionality in a more polite way
 	int last_mouse_swap = 0;
 	bool infiniteHorizontal = false;
 	int ignoreDragCount = 0;

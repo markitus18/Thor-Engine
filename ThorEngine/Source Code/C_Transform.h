@@ -38,7 +38,7 @@ public:
 	inline float4x4		GetLocalTransform() const { return localTransform; }
 	inline float3		GetLocalPosition() const { return localPosition; }
 	inline Quat			GetLocalRotation() const { return localRotation; }
-	inline float3		GetLocalEulerRotation() const { return localRotation.ToEulerXYZ() * DEGTORAD; }
+	inline float3		GetLocalEulerRotation() const { return localRotationEuler; }
 	inline float3		GetLocalScale() const { return localScale; }
 
 	// Global accessors

@@ -29,8 +29,7 @@ void C_Transform::SetLocalTransform(float4x4 newTransform)
 {
 	localTransform = newTransform;
 	localTransform.Decompose(localPosition, localRotation, localScale);
-	localRotationEuler = localRotation.ToEulerXYZ();
-	localRotationEuler *= RADTODEG;
+	localRotationEuler = localRotation.ToEulerXYZ() * RADTODEG;
 
 	UpdateTransformHierarchy();
 }
@@ -40,7 +39,7 @@ void C_Transform::SetGlobalTransform(float4x4 transform)
 	// Recalculate local transform depending on the parent transform
 	localTransform = transform;
 	if (gameObject->parent)
-		localTransform = gameObject->parent->GetComponent<C_Transform>()->GetTransform().Inverted() * transform;
+		localTransform = gameObject->parent->GetComponent<C_Transform>()->GetTransform().Transposed() * transform;
 	SetLocalTransform(localTransform);
 }
 

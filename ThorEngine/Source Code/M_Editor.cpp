@@ -122,7 +122,7 @@ update_status M_Editor::PreUpdate()
 	ImGuiIO& io = ImGui::GetIO();
 	using_keyboard = io.WantCaptureKeyboard;
 	using_mouse = io.WantCaptureMouse;
-	
+
 	return UPDATE_CONTINUE;
 }
 

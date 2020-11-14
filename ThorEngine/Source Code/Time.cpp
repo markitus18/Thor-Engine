@@ -19,7 +19,8 @@ void Time::Start(int maxFPS)
 
 void Time::PreUpdate(float dt)
 {
-	deltaTime = running ? dt : 0;
+	deltaTime =  dt;
+	// TODO: Calculate game time
 	if (running)
 		time = gameTimer.ReadSec();
 }

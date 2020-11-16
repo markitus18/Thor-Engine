@@ -28,6 +28,9 @@ C_Mesh::~C_Mesh()
 
 void C_Mesh::Draw(RenderingFlags flags)
 {
+	StartBoneDeformation();
+	DeformAnimMesh();
+
 	Engine->renderer3D->AddMesh(gameObject->GetComponent<C_Transform>()->GetTransformT(), this, gameObject->GetComponent<C_Material>());
 }
 
@@ -55,6 +58,8 @@ const AABB& C_Mesh::GetAABB() const
 
 void C_Mesh::StartBoneDeformation()
 {
+	rootBone = gameObject->parent->childs[0]->childs[0];
+
 	bool newMesh = false; 
 	if (animMesh == nullptr)
 	{
@@ -109,12 +114,14 @@ void C_Mesh::DeformAnimMesh()
 	{
 		GameObject* bone = boneMapping[it->first];
 
-		//TODO: Here we are just picking bone global transform, we need the bone transform matrix
+		/* Older setup: Accessing FBX's root to get the mesh in local space. Unnecessary step!!
 		float4x4 mat = rootBone->parent->parent->GetComponent<C_Transform>()->GetTransform().Inverted();
 		mat = mat * bone->GetComponent<C_Transform>()->GetTransform();
-		mat = gameObject->GetComponent<C_Transform>()->GetLocalTransform().Inverted() * mat;
+		mat = gameObject->GetComponent<C_Transform>()->GetLocalTransform().Inverted() * mat; */
 
-		mat = mat * rMesh->boneOffsets[it->second];
+		float4x4 mat = bone->GetComponent<C_Transform>()->GetTransform();
+		mat = gameObject->GetComponent<C_Transform>()->GetTransform().Inverted() * mat; // Converting bone transform to mesh space
+		mat = mat * rMesh->boneOffsets[it->second];										// Getting Delta Matrix from T-pose to current pose
 		boneTransforms[it->second] = mat;
 	}
 

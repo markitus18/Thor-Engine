@@ -45,7 +45,7 @@ void C_Animator::DrawLinkedBones() const
 void C_Animator::Start()
 {
 	//TODO: hard-coding root bone for fast code iteration
-	rootBone = gameObject->childs[1]->childs[0];
+	rootBone = gameObject->childs[1]->childs[0]; //Should be childs[0] childs[0] in skeleton mesh
 	gameObject->childs[0]->GetComponent<C_Mesh>()->rootBone = rootBone;
 
 	if (rootBone == nullptr) return;
@@ -229,6 +229,7 @@ void C_Animator::UpdateChannelsTransform(const R_Animation* settings, const R_An
 	{
 		C_Transform* transform = boneIt->second->GetComponent<C_Transform>();
 
+		//TODO: Searching here for strings. Bone mapping should handle this at start
 		if (settings->channels.find(boneIt->first.c_str()) == settings->channels.end()) continue;
 
 		const Channel& channel = settings->channels.find(boneIt->first.c_str())->second;
@@ -243,7 +244,7 @@ void C_Animator::UpdateChannelsTransform(const R_Animation* settings, const R_An
 
 			position = float3::Lerp(GetChannelPosition(blendChannel, prevBlendFrame, transform->GetLocalPosition()), position, blendRatio);
 			rotation = Quat::Slerp(GetChannelRotation(blendChannel, prevBlendFrame, transform->GetLocalRotation()), rotation, blendRatio);
-			scale = float3::Lerp(GetChannelScale(blendChannel , prevBlendFrame, transform->GetLocalScale()), scale, blendRatio);
+			scale = float3::Lerp(GetChannelScale(blendChannel, prevBlendFrame, transform->GetLocalScale()), scale, blendRatio);
 		}
 
 		transform->SetLocalPosition(position);

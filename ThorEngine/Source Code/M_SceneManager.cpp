@@ -166,14 +166,9 @@ void M_SceneManager::SaveCurrentScene(const char* saveAsNewPath)
 
 void M_SceneManager::AddRootMapToScene(GameObject* root, Scene* target)
 {
-	std::vector<GameObject*> newGameObjects;
-	root->CollectChilds(newGameObjects);
-	newGameObjects.erase(newGameObjects.begin());
-
-	for (uint i = 0; i < newGameObjects.size(); ++i)
+	for (uint i = 0; i < root->childs.size(); ++i)
 	{
-		GameObject* parent = newGameObjects[i]->parent == root ? nullptr : newGameObjects[i]->parent;
-		target->AddGameObject(newGameObjects[i], parent); //TODO: calling set parent on the same parent for most gameObjects
+		target->AddGameObject(root->childs[i]);
 	}
 }
 

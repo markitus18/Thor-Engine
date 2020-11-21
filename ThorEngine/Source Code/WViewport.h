@@ -107,7 +107,7 @@ private:
 public:
 	EViewportViewMode viewMode = EViewportViewMode::LIT;
 	EViewportCameraAngle cameraAngle = EViewportCameraAngle::PERSPECTIVE;
-	RenderingSettings::RenderingFlags renderingFlags;
+	RenderingSettings::RenderingFlags renderingFlags = RenderingSettings::DefaultEditorFlags;
 
 	float3 cameraReference; //TODO: Consider moving to C_Camera (or remove like Unreal?)
 	float cameraSpeed = 1.0f;

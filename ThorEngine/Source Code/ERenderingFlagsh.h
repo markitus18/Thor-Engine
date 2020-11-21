@@ -19,6 +19,9 @@ struct RenderingSettings
 	};
 
 	static const RenderingFlags DefaultGameFlags = RenderFlag_Skybox;
+	static const RenderingFlags DefaultEditorFlags =	RenderFlag_Grid			| RenderFlag_Skybox		| RenderFlag_2D_Gizmo | 
+														RenderFlag_Frustum		| RenderFlag_Bones		|
+														RenderFlag_Bounds_AABB	| RenderFlag_Bounds_OBB;
 };
 
 

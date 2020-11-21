@@ -34,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	//ClearMetaData();
+	ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -675,7 +675,7 @@ ResourceType M_Resources::GetTypeFromFileExtension(const char* path) const
 
 	static_assert(static_cast<int>(ResourceType::UNKNOWN) == 10, "Code Needs Update");
 	
-	if (ext == "FBX" || ext == "fbx")
+	if (ext == "FBX" || ext == "fbx" || ext == "DAE" || ext == "dae")
 		return ResourceType::MODEL;
 	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
 		return ResourceType::TEXTURE;

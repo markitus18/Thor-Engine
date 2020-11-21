@@ -58,7 +58,7 @@ public:
 	float* boneWeights = nullptr;
 
 	std::map<std::string, uint> boneMapping;
-	std::vector<float4x4> boneTransforms;
+	std::vector<float4x4> boneTransforms; //TODO: Can be removed, not used! Only used for its size, can be retrieved somewhere else
 	std::vector<float4x4> boneOffsets;
 
 	AABB aabb;

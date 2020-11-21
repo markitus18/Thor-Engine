@@ -37,13 +37,13 @@ void Scene::InitFromResourceData(const ResourceBase* data)
 void Scene::AddGameObject(GameObject* newGameObject, GameObject* parent)
 {
 	newGameObject->SetParent(parent ? parent : root);
-	newGameObject->sceneOwner = this;
 
 	std::vector<GameObject*> newGameObjects;
 	newGameObject->CollectChilds(newGameObjects);
 
 	for (uint i = 0; i < newGameObjects.size(); ++i)
 	{
+		newGameObjects[i]->sceneOwner = this;
 		OnGameObjectStaticChanged(newGameObjects[i]);
 	}
 }
@@ -141,26 +141,32 @@ void Scene::OnCameraEnabledChanged(C_Camera* camera)
 
 void Scene::PerformMousePick(const LineSegment& segment)
 {
-	//Collect quadtree GameObjects
+	LOG("Starting Mouse Raycast...");
+
+	// Collect quadtree GameObjects
 	std::map<float, const GameObject*> candidates;
 	quadtree->CollectCandidates(candidates, segment);
 
-	//Collect dynamic GameObjects
+	// Collect dynamic GameObjects
 	for (uint i = 0; i < dynamicGameObjects.size(); i++)
 	{
 		if (segment.Intersects(dynamicGameObjects[i]->GetAABB()))
 		{
 			float hit_near, hit_far;
 			if (segment.Intersects(dynamicGameObjects[i]->GetOBB(), hit_near, hit_far))
+			{
 				candidates[hit_near] = dynamicGameObjects[i];
+			}
 		}
 	}
 
-	//Iterate all candidates from near to far, check for mesh intersection
-	//TODO: Should iterate ALL candidates or stop on first? Closest OBB might not be closest triangle
+	// Iterate all candidates from near to far, check for mesh intersection
+	// *We iterate all candidates since MathGeoLib does not give accurate OBB distance results
 	const GameObject* finalCandidate = nullptr;
+	float finalDistance = segment.Length();
+
 	std::map<float, const GameObject*>::iterator it;
-	for (it = candidates.begin(); it != candidates.end() && finalCandidate == nullptr; it++)
+	for (it = candidates.begin(); it != candidates.end(); ++it)
 	{
 		if (const Component* mesh = it->second->GetComponent<C_Mesh>())
 			if (const R_Mesh* rMesh = ((C_Mesh*)mesh)->rMeshHandle.Get())
@@ -170,7 +176,7 @@ void Scene::PerformMousePick(const LineSegment& segment)
 				rayToMeshSpace.Transform(it->second->GetComponent<C_Transform>()->GetTransform().Inverted());
 
 				//Iterate all mesh triangles until we find a hit
-				for (uint v = 0; v < rMesh->buffersSize[R_Mesh::b_indices] && finalCandidate == nullptr; v += 3)
+				for (uint v = 0; v < rMesh->buffersSize[R_Mesh::b_indices]; v += 3)
 				{
 					vec vertexA(&rMesh->vertices[rMesh->indices[v] * 3]);
 					vec vertexB(&rMesh->vertices[rMesh->indices[v + 1] * 3]);
@@ -178,11 +184,19 @@ void Scene::PerformMousePick(const LineSegment& segment)
 
 					Triangle triangle(vertexA, vertexB, vertexC);
 
-					if (rayToMeshSpace.Intersects(triangle, nullptr, nullptr))
-						finalCandidate = it->second;
+					float newDistance = 0.0f;
+					if (rayToMeshSpace.Intersects(triangle, &newDistance, nullptr))
+					{
+						if (newDistance < finalDistance)
+						{
+							finalCandidate = it->second;
+							finalDistance = newDistance;
+						}
+					}
 				}
 			}
 	}
+
 	//TODO: PerformMousePick should return final candidate, which will be grabbed by viewport and then call editor
 	Engine->moduleEditor->SelectSingle((GameObject*)finalCandidate);
 }

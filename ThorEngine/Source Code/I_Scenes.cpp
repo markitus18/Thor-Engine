@@ -53,9 +53,10 @@ void Importer::Models::Private::ImportNodeData(const aiScene* scene, const aiNod
 	float3 scale(aiScale.x, aiScale.y, aiScale.z);
 	Quat rot(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
 
+	std::string nodeName = node->mName.C_Str();
+	
 	//Assimp loads "dummy" modules to stack fbx transformation. Here we collapse all those transformations
 	//to the first node that is not a dummy
-	std::string nodeName = node->mName.C_Str();
 	bool dummyFound = true;
 	while (dummyFound)
 	{
@@ -77,7 +78,7 @@ void Importer::Models::Private::ImportNodeData(const aiScene* scene, const aiNod
 			dummyFound = true;
 		}
 	}
-
+	
 	ModelNode newNode(randomID.Int(), nodeName.c_str(), pos, scale, rot, parentID);
 
 	// Loading node meshes ----------------------------------------

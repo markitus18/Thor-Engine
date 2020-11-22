@@ -110,35 +110,18 @@ void Importer::Models::LinkModelResources(R_Model* model, const std::vector<uint
 	}
 }
 
-uint64 Importer::Models::Save(const R_Model* model, char** buffer)
+uint64 Importer::Models::Save(R_Model* model, char** buffer)
 {
 	Config file;
 	Config_Array nodesArray = file.SetArray("Nodes");
 	
 	for (uint i = 0; i < model->nodes.size(); ++i)
 	{
-		Private::SaveModelNode(nodesArray.AddNode(), model->nodes[i]);
+		model->nodes[i].Serialize(nodesArray.AddNode());
 	}
 
 	uint size = file.Serialize(buffer);
 	return size;
-}
-
-void Importer::Models::Private::SaveModelNode(Config& config, const ModelNode& node)
-{
-	config.SetNumber("Node ID", node.ID);
-	config.SetString("Name", node.name.c_str());
-
-	config.SetNumber("Parent Node ID", node.parentID);
-
-	Config_Array transformArray = config.SetArray("Transform");
-	for (uint i = 0u; i < 16u; ++i)
-	{
-		transformArray.AddNumber(node.transform.ptr()[i]);
-	}
-
-	config.SetNumber("Mesh ID", node.meshID);
-	config.SetNumber("Material ID", node.materialID);
 }
 
 void Importer::Models::Load(const char* buffer, R_Model* model)
@@ -150,21 +133,7 @@ void Importer::Models::Load(const char* buffer, R_Model* model)
 	{
 		Config node = nodesArray.GetNode(i);
 		model->nodes.push_back(ModelNode());
-		ModelNode& modelNode = (model->nodes.back());
-
-		modelNode.ID = node.GetNumber("Node ID");
-		modelNode.name = node.GetString("Name");
-
-		modelNode.parentID = node.GetNumber("Parent Node ID");
-
-		Config_Array transformArray = node.GetArray("Transform");
-		for (uint i = 0u; i < 16; ++i)
-		{
-			modelNode.transform.ptr()[i] = transformArray.GetNumber(i);
-		}
-
-		modelNode.meshID = node.GetNumber("Mesh ID");
-		modelNode.materialID = node.GetNumber("Material ID");
+		model->nodes.back().Serialize(node);
 	}
 }
 
@@ -222,7 +191,6 @@ uint64 Importer::Maps::Save(const R_Map* map, char** buffer)
 void Importer::Maps::Load(const char* buffer, R_Map* scene)
 {
 	scene->config.Set(buffer);
-	int k = 3;
 }
 
 void Importer::Maps::SaveRootToMap(GameObject* root, R_Map* map)
@@ -252,16 +220,13 @@ GameObject* Importer::Maps::LoadRootFromMap(const R_Map* scene)
 
 	for (uint i = 0; i < gameObjects_array.GetSize(); ++i)
 	{
-		//Single GameObject load
 		Config gameObject_node = gameObjects_array.GetNode(i);
 
-		//Parent setup
-		GameObject* parent = nullptr;
-		std::map<uint64, GameObject*>::iterator it = createdGameObjects.find(gameObject_node.GetNumber("ParentUID"));
-		if (it != createdGameObjects.end())
-			parent = it->second;
+		GameObject* newParent = nullptr;
+		uint64 parentID = 0;
+		gameObject_node.Serialize("Parent UID", parentID);
 
-		GameObject* gameObject = new GameObject(parent ? parent : root);//, gameObject_node.GetString("Name").c_str(), position, rotation, scale);
+		GameObject* gameObject = new GameObject(parentID != 0 ? createdGameObjects[parentID] : root);
 		gameObject->Serialize(gameObject_node);
 		createdGameObjects[gameObject->uid] = gameObject;
 	}

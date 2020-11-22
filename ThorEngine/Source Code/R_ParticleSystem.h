@@ -15,9 +15,7 @@ public:
 	void InitDefaultSystem();
 	void AddDefaultEmitter();
 
-	void SaveAsset(Config& config) const;
-	void SaveResource(char* buffer);
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 public:
 	std::vector<Emitter> emitters;

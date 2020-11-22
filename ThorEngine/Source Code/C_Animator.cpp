@@ -131,20 +131,14 @@ void C_Animator::Draw(RenderingSettings::RenderingFlags flags)
 void C_Animator::Serialize(Config& config)
 {
 	Component::Serialize(config);
-	if (config.isSaving)
-	{
-		config.SetNumber("Animator Resource", rAnimatorHandle.GetID());
-		config.SetBool("Playing", playing);
-		config.SetNumber("Current Animation", current_animation);
 
-	}
-	else
-	{
-		uint64 resourceID = config.GetNumber("Animator Resource");
-		SetResource(resourceID);
+	rAnimatorHandle.Serialize("Animator Resource", config);
+	config.Serialize("Playing", playing);
+	config.Serialize("current Animation", current_animation);
 
-		playing = config.GetBool("Playing");
-		SetAnimation(config.GetNumber("Current Animation"));
+	if (!config.isSaving)
+	{
+		SetAnimation(current_animation);
 	}
 }
 
@@ -199,6 +193,8 @@ R_Animation* C_Animator::GetAnimation(uint index)
 	}
 }
 
+
+//TODO: Can be removed??
 void C_Animator::SetResource(Resource* resource)
 {
 	rAnimatorHandle.Set((R_AnimatorController*)resource);

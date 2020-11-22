@@ -17,11 +17,9 @@ public:
 	//Loop through all modules, loop through particles, update them
 	void Update(float dt);
 
-	void SaveAsset(Config& config) const;
-	void SaveResource(char* buffer);
+	void Serialize(Config& config);
 
-	void Load(Config& config);
-	bool AddModuleFromType(ParticleModule::Type type);
+	ParticleModule* AddModuleFromType(ParticleModule::Type type);
 
 public:
 	std::string name = "Particle Emitter";

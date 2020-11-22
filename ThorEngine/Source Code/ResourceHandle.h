@@ -44,6 +44,13 @@ public:
 		}
 	}
 
+	// Temporal, including name so we do not have ID collisions when saving multiple handles in one class
+	// Mind that we are not calling Set(ID) and this will not free memory if a resource is changed
+	void Serialize(const  char* name, Config& config)
+	{
+		config.Serialize(name, ID);
+	}
+
 	//Loads the resource if it has not been loaded previously. Compiler throws errors when trying 'inline'
 	inline T* Get() { return resource ? resource : (resource = RequestResource()); }
 	inline const T* Get() const { return resource ? resource : (resource = RequestResource()); }

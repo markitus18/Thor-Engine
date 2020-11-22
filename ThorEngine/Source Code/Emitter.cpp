@@ -15,92 +15,83 @@ void Emitter::Update(float dt)
 
 }
 
-void Emitter::SaveAsset(Config& config) const
+void Emitter::Serialize(Config& config)
 {
-	config.SetString("Name", name.c_str());
-	config.SetNumber("Material ID", hMaterial.GetID());
-	config.SetNumber("Max Particle Count", maxParticleCount);
+	config.Serialize("Name", name);
+	hMaterial.Serialize("Material ID", config);
+	config.Serialize("Max Particle Count", maxParticleCount);
 
-	Config_Array modulesArray = config.SetArray("Modules");
-
-	for (uint i = 0; i < modules.size(); ++i)
+	if (config.isSaving)
 	{
-		modules[i]->SaveAsset(modulesArray.AddNode());
+		Config_Array arr = config.GetArray("Modules");
+		for (uint i = 0; i < modules.size(); ++i)
+		{
+			modules[i]->Serialize(arr.GetNode(i));
+		}
+	}
+	else
+	{
+		Config_Array arr = config.GetArray("Modules");
+		for (uint i = 0; i < arr.GetSize(); ++i)
+		{
+			int nodeType = 0;
+			arr.GetNode(i).Serialize("Type", nodeType);
+
+			if (ParticleModule* newModule = AddModuleFromType((ParticleModule::Type)nodeType))
+				newModule->Serialize(arr.GetNode(i));
+		}
 	}
 }
 
-void Emitter::SaveResource(char* buffer)
-{
-
-}
-
-void Emitter::Load(Config& config)
-{
-	name = config.GetString("Name");
-	hMaterial.Set(config.GetNumber("Material ID", 0));
-	maxParticleCount = config.GetNumber("Max Particle Count");
-
-	Config_Array modulesArray = config.GetArray("Modules");
-
-	for (uint i = 0; i < modulesArray.GetSize(); ++i)
-	{
-		Config modulesArraNode = modulesArray.GetNode(i);
-
-		if (AddModuleFromType((ParticleModule::Type)(int)modulesArraNode.GetNumber("Type")))
-			modules.back()->Load(modulesArraNode);
-	}
-
-}
-
-bool Emitter::AddModuleFromType(ParticleModule::Type type)
+ParticleModule* Emitter::AddModuleFromType(ParticleModule::Type type)
 {
 	switch (type)
 	{
 		case(ParticleModule::Type::EmitterBase):
 		{
 			modules.push_back(new EmitterBase());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::EmitterSpawn):
 		{
 			modules.push_back(new EmitterSpawn());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::EmitterArea):
 		{
 			modules.push_back(new EmitterArea());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::ParticlePosition):
 		{
 			modules.push_back(new ParticlePosition());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::ParticleRotation):
 		{
 			modules.push_back(new ParticleRotation());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::ParticleSize):
 		{
 			modules.push_back(new ParticleSize());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::ParticleColor):
 		{
 			modules.push_back(new ParticleColor());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::ParticleLifetime):
 		{
 			modules.push_back(new ParticleLifetime());
-			return true;
+			return modules.back();
 		}
 		case(ParticleModule::Type::ParticleVelocity):
 		{
 			modules.push_back(new ParticleVelocity());
-			return true;
+			return modules.back();
 		}
 	}
-	return false;
+	return nullptr;
 }

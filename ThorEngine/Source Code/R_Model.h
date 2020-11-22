@@ -21,12 +21,25 @@ struct ModelNode
 	}
 
 	std::string name;
-	uint ID;
+	uint64 ID;
 	float4x4 transform;
 
-	uint parentID;
+	uint64 parentID;
 	int meshID;
 	int materialID;
+
+	virtual void Serialize(Config& config)
+	{
+		config.Serialize("Node ID", ID);
+		config.Serialize("Name", name);
+
+		config.Serialize("Parent Node ID", parentID);
+
+		config.SerializeArray("Transform", transform.ptr(), 16);
+
+		config.Serialize("Mesh ID", meshID);
+		config.Serialize("Material ID", materialID);
+	}
 };
 
 class R_Model : public Resource
@@ -34,6 +47,8 @@ class R_Model : public Resource
 public:
 	R_Model();
 	~R_Model();
+
+	void Serialize(Config& config);
 
 	uint64 thumbnailID = 0;
 	std::vector<ModelNode> nodes;

@@ -16,7 +16,6 @@
 M_Window::M_Window(bool start_enabled) : Module("Window", start_enabled)
 {
 	window = nullptr;
-	screen_surface = nullptr;
 	windowSize = Vec2(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
@@ -82,14 +81,6 @@ bool M_Window::Init(Config& config)
 			LOG("Window could not be created! SDL_Error: %s", SDL_GetError());
 			ret = false;
 		}
-		else
-		{
-			//Get window surface
-			screen_surface = SDL_GetWindowSurface(window);
-
-			//Get GL Context
-			context = SDL_GL_CreateContext(window);
-		}
 	}
 
 	return ret;
@@ -99,8 +90,6 @@ bool M_Window::Init(Config& config)
 bool M_Window::CleanUp()
 {
 	LOG("Destroying SDL window and quitting all SDL systems");
-
-	SDL_GL_DeleteContext(context);
 
 	//Destroy window
 	if(window != nullptr)

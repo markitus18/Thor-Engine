@@ -34,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -116,40 +116,47 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 		Engine->fileSystem->Load(metaFile.c_str(), &buffer);
 		Config metaData(buffer);
 
-		std::map<uint64, ResourceBase>::iterator it = resourceLibrary.find(metaData.GetNumber("ID"));
+		ResourceBase newResourceBase;
+		newResourceBase.Serialize(metaData);
+
+		std::map<uint64, ResourceBase>::iterator it = resourceLibrary.find(newResourceBase.ID);
 		if (it != resourceLibrary.end()) //The resource is already loaded. Check modification date in case it needs re-importing
 		{
 			assetID = it->first;
 
 			uint64 fileMod = Engine->fileSystem->GetLastModTime(node.path.c_str());
-			uint64 configDate = metaData.GetNumber("Date");
+			uint64 configDate = 0;
+			metaData.Serialize("Date", configDate);
+
 			if (fileMod != configDate)
-				ImportFileFromAssets(node.path.c_str());
+				ImportFileFromAssets(node.path.c_str()); //Send 'newResourceBase'?
 		}
 		else //Load resource base from the .meta content
 		{
-			ResourceBase base((ResourceType)(int)(metaData.GetNumber("Type")), node.path.c_str(), metaData.GetString("Name").c_str(), metaData.GetNumber("ID"));
-			base.libraryFile = metaData.GetString("Library file").c_str();
+			newResourceBase.assetsFile = node.path;
 
 			//Add all contained resources saved in the meta file
-			Config_Array containedResources = metaData.GetArray("Contained Resources");
-			for (uint i = 0; i < containedResources.GetSize(); ++i)
+			Config_Array arr = metaData.GetArray("Contained Resources");
+			for (uint i = 0; i < arr.GetSize(); ++i)
 			{
-				Config contained = containedResources.GetNode(i);
-
-				//Adding the resource ID as a child
-				base.containedResources.push_back(contained.GetNumber("ID"));
-
-				if (base.type != ResourceType::FOLDER) //Folders' contained resources will be loaded as normal files
+				if (newResourceBase.type != ResourceType::FOLDER)
 				{
-					//Adding new library entry for the resource
-					ResourceBase containedBase((ResourceType)(int)(contained.GetNumber("Type")), base.assetsFile.c_str(), contained.GetString("Name").c_str(), contained.GetNumber("ID"));
-					containedBase.libraryFile = contained.GetString("Library file").c_str();
-					resourceLibrary[containedBase.ID] = containedBase;
+					ResourceBase childBase;
+					childBase.Serialize(arr.GetNode(i));
+					childBase.assetsFile = newResourceBase.assetsFile;
+					resourceLibrary[childBase.ID] = childBase;
+					newResourceBase.containedResources.push_back(childBase.ID);
+				}
+				else // For folders we only store the contained resources ID instead of loading all the data (library data will be loaded when we load each individual file)
+				{
+					Config arrNode = arr.GetNode(i);
+					uint64 childID = 0;
+					arrNode.Serialize("ID", childID);
+					newResourceBase.containedResources.push_back(childID);
 				}
 			}
-			resourceLibrary[base.ID] = base;
-			assetID = base.ID;
+			resourceLibrary[newResourceBase.ID] = newResourceBase;
+			assetID = newResourceBase.ID;
 		}
 		RELEASE_ARRAY(buffer);
 	}
@@ -415,7 +422,8 @@ Resource* M_Resources::RequestResource(uint64 ID)
 			RELEASE(resource);
 			return nullptr;
 		}
-
+		PerfTimer timer;
+		timer.Start();
 		switch (resource->GetType())
 		{
 			case (ResourceType::FOLDER):				{ Importer::Folders::Load(buffer, (R_Folder*)resource); break; }
@@ -429,6 +437,7 @@ Resource* M_Resources::RequestResource(uint64 ID)
 			case (ResourceType::SHADER):				{ Importer::Shaders::Load(buffer, size, (R_Shader*)resource); break; }
 			case (ResourceType::MAP):					{ Importer::Maps::Load(buffer, (R_Map*)resource); break; }
 		}
+		LOG("Loding resource '%s' took %.2f ms", resource->GetName(), timer.ReadMs());
 		RELEASE_ARRAY(buffer);
 		resource->LoadOnMemory();
 		resource->instances++;
@@ -545,14 +554,14 @@ uint64 M_Resources::SaveResourceAs(Resource* resource, const char* directory, co
 }
 
 //Save .meta file in assets
-void M_Resources::SaveMetaInfo(const ResourceBase& base)
+void M_Resources::SaveMetaInfo(ResourceBase& base)
 {
 	Config config;
 	base.Serialize(config);
 
 	//Getting file modification date
 	uint64 modDate = Engine->fileSystem->GetLastModTime(base.assetsFile.c_str());
-	config.SetNumber("Date", modDate);
+	config.Serialize("Date", modDate);
 
 	Config_Array children = config.SetArray("Contained Resources");
 	for (uint i = 0; i < base.containedResources.size(); ++i)

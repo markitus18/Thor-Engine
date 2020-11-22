@@ -9,3 +9,8 @@ R_Model::~R_Model()
 {
 
 }
+
+void R_Model::Serialize(Config& config)
+{
+	config.SerializeVector<ModelNode>("Nodes", nodes);
+}

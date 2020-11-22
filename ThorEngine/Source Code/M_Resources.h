@@ -77,7 +77,7 @@ private:
 	Resource* CreateResourceFromBase(ResourceBase& base);
 
 	//.meta file generation
-	void SaveMetaInfo(const ResourceBase& base);
+	void SaveMetaInfo(ResourceBase& base);
 
 	void SaveChangedResources();
 

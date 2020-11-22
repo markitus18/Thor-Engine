@@ -45,14 +45,12 @@ void C_ParticleSystem::Draw(RenderingSettings::RenderingFlags flags)
 void C_ParticleSystem::Serialize(Config& config)
 {
 	Component::Serialize(config);
-	if (config.isSaving)
+
+	rParticleSystemHandle.Serialize("Particle System Resource", config);
+
+	if (!config.isSaving)
 	{
-		config.SetNumber("Particle System Resource", rParticleSystemHandle.GetID());
-	}
-	else
-	{
-		uint64 resourceID = config.GetNumber("Particle System Resource");
-		SetResource(resourceID);
+		SetResource(rParticleSystemHandle.GetID());
 	}
 }
 

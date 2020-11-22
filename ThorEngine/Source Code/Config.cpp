@@ -5,6 +5,7 @@ Config::Config()
 {
 	root_value = json_value_init_object();
 	node = json_value_get_object(root_value);
+	isSaving = true;
 }
 
 //Constructor used for data read
@@ -63,14 +64,151 @@ void Config::Release()
 	}
 }
 
-void Config::SetNumber(const char* name, double data)
+void Config::Serialize(const char* name, int& data, int default)
 {
-	json_object_set_number(node, name, data);
+	if (isSaving)
+	{
+		json_object_set_number(node, name, data);
+	}
+	else
+	{
+		if (json_object_has_value_of_type(node, name, JSONNumber))
+			data = json_object_get_number(node, name);
+		else
+			data = default;
+	}
 }
 
-void Config::SetString(const char* name, const char* data)
+void Config::Serialize(const char* name, uint& data, uint default)
 {
-	json_object_set_string(node, name, data);
+	if (isSaving)
+	{
+		json_object_set_number(node, name, data);
+	}
+	else
+	{
+		if (json_object_has_value_of_type(node, name, JSONNumber))
+			data = json_object_get_number(node, name);
+		else
+			data = default;
+	}
+}
+
+void Config::Serialize(const char* name, uint64& data, uint64 default)
+{
+	if (isSaving)
+	{
+		json_object_set_number(node, name, data);
+	}
+	else
+	{
+		if (json_object_has_value_of_type(node, name, JSONNumber))
+			data = json_object_get_number(node, name);
+		else
+			data = default;
+	}
+}
+
+void Config::Serialize(const char* name, float& data, float default)
+{
+	if (isSaving)
+	{
+		json_object_set_number(node, name, data);
+	}
+	else
+	{
+		if (json_object_has_value_of_type(node, name, JSONNumber))
+			data = json_object_get_number(node, name);
+		else
+			data = default;
+	}
+}
+
+void Config::Serialize(const char* name, bool& data, bool default)
+{
+	if (isSaving)
+	{
+		json_object_set_boolean(node, name, data);
+	}
+	else
+	{
+		if (json_object_has_value_of_type(node, name, JSONBoolean))
+			data = json_object_get_boolean(node, name);
+		else
+			data = default;
+	}
+}
+
+void Config::Serialize(const char* name, std::string& data, const char* default)
+{
+	if (isSaving)
+	{
+		json_object_set_string(node, name, data.c_str());
+	}
+	else
+	{
+		if (json_object_has_value_of_type(node, name, JSONString))
+			data = json_object_get_string(node, name);
+		else
+			data = default;
+	}
+}
+
+void Config::SerializeArray(const char* name, int* data, uint size)
+{
+	if (isSaving)
+	{
+		Config_Array arr = SetArray(name);
+		for (uint i = 0; i < size; ++i)
+			arr.AddNumber(data[i]);
+	}
+	else
+	{
+		Config_Array arr = GetArray(name);
+		if (arr.IsValid())
+		{
+			for (uint i = 0; i < size; ++i)
+				data[i] = arr.GetNumber(i);
+		}
+	}
+}
+
+void Config::SerializeArray(const char* name, uint64* data, uint size)
+{
+	if (isSaving)
+	{
+		Config_Array arr = SetArray(name);
+		for (uint i = 0; i < size; ++i)
+			arr.AddNumber(data[i]);
+	}
+	else
+	{
+		Config_Array arr = GetArray(name);
+		if (arr.IsValid())
+		{
+			for (uint i = 0; i < size; ++i)
+				data[i] = arr.GetNumber(i);
+		}
+	}
+}
+
+void Config::SerializeArray(const char* name, float* data, uint size)
+{
+	if (isSaving)
+	{
+		Config_Array arr = SetArray(name);
+		for (uint i = 0; i < size; ++i)
+			arr.AddNumber(data[i]);
+	}
+	else
+	{
+		Config_Array arr = GetArray(name);
+		if (arr.IsValid())
+		{
+			for (uint i = 0; i < size; ++i)
+				data[i] = arr.GetNumber(i);
+		}
+	}
 }
 
 void Config::SetBool(const char* name, bool data)
@@ -90,20 +228,6 @@ Config Config::SetNode(const char* name)
 	return Config(json_object_get_object(node, name), true);
 }
 
-//Get attributes --------------
-double Config::GetNumber(const char* name, double default) const
-{
-	if (json_object_has_value_of_type(node, name, JSONNumber))
-		return json_object_get_number(node, name);
-	return default;
-}
-
-std::string Config::GetString(const char* name, const char* default) const
-{
-	if (json_object_has_value_of_type(node, name, JSONString))
-		return json_object_get_string(node, name);
-	return default;
-}
 
 bool Config::GetBool(const char* name, bool default) const
 {
@@ -139,6 +263,11 @@ Config_Array::Config_Array()
 Config_Array::Config_Array(JSON_Array* arr) : arr(arr)
 {
 	size = json_array_get_count(arr);
+}
+
+bool Config_Array::IsValid()
+{
+	return arr != nullptr;
 }
 
 //Append attributes ------------

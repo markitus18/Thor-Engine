@@ -18,7 +18,7 @@ namespace Importer
 		//Process R_Shader data into a buffer ready to save
 		//Returns the size of the buffer file (0 if any errors)
 		//Warning: buffer memory needs to be released after the function call
-		uint64 Save(const R_ParticleSystem* rParticles, char** buffer);
+		uint64 Save(R_ParticleSystem* rParticles, char** buffer);
 
 		//Process buffer data into a ready-to-use R_Mesh.
 		//Returns nullptr if any errors occured during the process.

@@ -33,30 +33,9 @@ void R_ParticleSystem::AddDefaultEmitter()
 	emitters.back().modules.push_back(new ParticleColor());
 }
 
-void R_ParticleSystem::SaveAsset(Config& config) const
+void R_ParticleSystem::Serialize(Config& config)
 {
 	Config_Array emittersArray = config.SetArray("Emitters");
 
-	for (uint i = 0; i < emitters.size(); ++i)
-	{
-		emitters[i].SaveAsset(emittersArray.AddNode());
-	}
-}
-
-void R_ParticleSystem::SaveResource(char* buffer)
-{
-
-}
-
-void R_ParticleSystem::Load(Config& config)
-{
-	Config_Array emittersArray = config.GetArray("Emitters");
-
-	for (uint i = 0; i < emittersArray.GetSize(); ++i)
-	{
-		Config emitterNode = emittersArray.GetNode(i);
-		emitters.push_back(Emitter());
-		emitters[i].Load(emitterNode);
-	}
-
+	config.SerializeVector("Emitters", emitters);
 }

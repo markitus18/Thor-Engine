@@ -41,15 +41,15 @@ struct ResourceBase
 		return (this->assetsFile == file && (name ? this->name == name : true) && (type != ResourceType::UNKNOWN ? type == this->type : true));
 	}
 
-	void Serialize(Config& config) const
+	void Serialize(Config& config)
 	{
-		if (config.isSaving)
-		{
-			config.SetNumber("ID", ID);
-			config.SetString("Name", name.c_str());
-			config.SetNumber("Type", static_cast<int>(type));
-			config.SetString("Library file", libraryFile.c_str());
-		}
+		config.Serialize("ID", ID);
+		config.Serialize("Name", name);
+		config.Serialize("Library file", libraryFile);
+
+		int intType = static_cast<int>(type);
+		config.Serialize("Type", intType);
+		type = static_cast<ResourceType>(intType);
 	}
 };
 

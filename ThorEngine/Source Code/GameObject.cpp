@@ -25,7 +25,6 @@ GameObject::GameObject(GameObject* parent, const char* name, const float3& trans
 		parent->childs.push_back(this);
 
 	AddComponent(new C_Transform(this, translation, rotation, scale));
-	
 }
 
 GameObject::GameObject(GameObject* parent, const float4x4& transform, const char* name) : name(name), TreeNode(GAMEOBJECT)
@@ -150,41 +149,36 @@ const OBB& GameObject::GetOBB() const
 
 void GameObject::Serialize(Config& config)
 {
+	config.Serialize("UID", uid);
+	config.Serialize("Name", name, "[Name not found on serialization]");
+
+	uint64 parentUID = parent ? parent->uid : 0;
+	config.Serialize("Parent UID", parentUID);
+
+	config.Serialize("Active", active);
+	config.Serialize("Static", isStatic);
+
+	config.Serialize("Selected", selected);
+	config.Serialize("OpenInHierarchy", hierarchyOpen);
+
+	beenSelected = hierarchyOpen;
+
 	if (config.isSaving)
 	{
-		config.SetNumber("UID", uid);
-
-		config.SetNumber("ParentUID", parent ? parent->uid : 0);
-		config.SetString("Name", name.c_str());
-
-		config.SetBool("Active", active);
-		config.SetBool("Static", isStatic);
-		config.SetBool("Selected", IsSelected());
-		config.SetBool("OpenInHierarchy", hierarchyOpen);
-
 		Config_Array compConfig = config.SetArray("Components");
 		for (uint i = 0; i < components.size(); ++i)
 			components[i]->Serialize(compConfig.AddNode());
 	}
 	else
 	{
-		uid = config.GetNumber("UID");
-		name = config.GetString("Name", "[Name not found on serialization]");
-
-		active = config.GetBool("Active");
-		isStatic = config.GetBool("Static");
-		//selected = config.GetBool("Selected", false);
-		//	Engine->moduleEditor->AddSelect(gameObject);
-		beenSelected = hierarchyOpen = config.GetBool("OpenInHierarchy", false);
-
 		Config_Array compConfig = config.GetArray("Components");
 		for (uint i = 0; i < compConfig.GetSize(); ++i)
 		{
-			Config comp = compConfig.GetNode(i);
-			Component::Type type = (Component::Type)((int)comp.GetNumber("ComponentType"));
+			int componentType = 0;
+			compConfig.GetNode(i).Serialize("Component Type", componentType);
 
-			if (Component* component = CreateComponent(type))
-				component->Serialize(comp);
+			if (Component* component = CreateComponent((Component::Type)componentType))
+				component->Serialize(compConfig.GetNode(i));
 		}
 		OnTransformUpdated();
 	}

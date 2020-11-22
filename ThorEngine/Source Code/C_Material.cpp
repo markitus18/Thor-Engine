@@ -17,15 +17,8 @@ C_Material::~C_Material()
 void C_Material::Serialize(Config& config)
 {
 	Component::Serialize(config);
-	if (config.isSaving)
-	{
-		config.SetNumber("Material Resource", rMaterialHandle.GetID());
-	}
-	else
-	{
-		uint64 resourceID = config.GetNumber("Material Resource");
-		SetResource(resourceID);
-	}
+
+	rMaterialHandle.Serialize("Material Resource", config);
 }
 
 void C_Material::SetResource(Resource* resource)

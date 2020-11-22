@@ -45,16 +45,43 @@ public:
 	void Release();
 
 	//Append attributes -----------
-	void SetNumber(const char* name, double data);
-	void SetString(const char* name, const char* data);
+	void Serialize(const char* name, int& data, int default = 0);
+	void Serialize(const char* name, uint& data, uint default = 0);
+	void Serialize(const char* name, uint64& data, uint64 default = 0);
+	void Serialize(const char* name, float& data, float default = .0f);
+
+	void Serialize(const char* name, bool& data, bool default = true);
+	void Serialize(const char* name, std::string& data, const char* default = "");
+
+	void SerializeArray(const char* name, int* data, uint size);
+	void SerializeArray(const char* name, uint64* data, uint size);
+	void SerializeArray(const char* name, float* data, uint size);
+
+	template <class T>
+	void SerializeVector(const char* name, std::vector<T> vector)
+	{
+		Config_Array arr;
+		if (isSaving)
+		{
+			arr = SetArray(name);
+		}
+		else
+		{
+			arr = GetArray(name);
+			vector.resize(arr.GetSize());
+		}
+		for (uint i = 0; i < vector.size(); ++i)
+		{
+			vector[i].Serialize(arr.GetNode(i));
+		}
+	}
+
 	void SetBool(const char* name, bool data);
 	Config_Array SetArray(const char* name);
 	Config SetNode(const char* name);
 	//Endof append attributes------
 
 	//Get attributes --------------
-	double GetNumber(const char* name, double default = 0) const;
-	std::string GetString(const char* name, const char* default = "") const;
 	bool GetBool(const char* name, bool default = true) const;
 	Config_Array GetArray(const char* name) const;
 	Config GetNode(const char* name) const;
@@ -74,6 +101,8 @@ public:
 	//Contructor only to be called from Config, it would cause mem leak
 	Config_Array();
 	Config_Array(JSON_Array* arr);
+
+	bool IsValid();
 
 	//Append attributes ------------
 	void AddNumber(double number);

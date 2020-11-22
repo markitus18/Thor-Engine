@@ -11,14 +11,10 @@
 #include "C_Camera.h"
 #include "MathGeoLib/src/Geometry/Frustum.h"
 
-void ParticleModule::SaveAsset(Config& config)
+void ParticleModule::Serialize(Config& config)
 {
-	config.SetNumber("Type", (int)type);
-}
-
-void ParticleModule::SaveResource(char* buffer)
-{
-	//TODO: by now it is being saved as json file, same as asset
+	int intType = (int)type;
+	config.Serialize("Type", intType);
 }
 
 float3 ParticleModule::RandomFloat3(const float3& a, const float3& b)
@@ -119,23 +115,15 @@ Quat EmitterBase::GetAlignmentRotation(const float3& position, const float4x4& c
 	return Quat(float3x3(right, up, fwd));
 }
 
-void EmitterBase::SaveAsset(Config& config)
+void EmitterBase::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetArray("Origin").AddFloat3(emitterOrigin);
-	config.SetNumber("Alignment", (int)alignment);
-}
+	config.SerializeArray("Origin", emitterOrigin.ptr(), 3);
 
-void EmitterBase::SaveResource(char* buffer)
-{
-
-}
-
-void EmitterBase::Load(Config & config)
-{
-	emitterOrigin = config.GetArray("Origin").GetFloat3(0);
-	alignment = (EmitterBase::Alignment)(int)config.GetNumber("Alignment");
+	int intAlignmnet = (int)alignment;
+	config.Serialize("Alignment", intAlignmnet);
+	alignment = (EmitterBase::Alignment)intAlignmnet;
 }
 
 void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -153,21 +141,11 @@ void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
-void EmitterSpawn::SaveAsset(Config& config)
+void EmitterSpawn::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetNumber("Spawn Ratio", spawnRatio);
-}
-
-void EmitterSpawn::SaveResource(char* buffer)
-{
-
-}
-
-void EmitterSpawn::Load(Config & config)
-{
-	spawnRatio = config.GetNumber("Spawn Ratio");
+	config.Serialize("Spawn Ratio", spawnRatio);
 }
 
 void EmitterArea::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -180,19 +158,9 @@ void EmitterArea::Update(float dt, EmitterInstance* emitter)
 
 }
 
-void EmitterArea::SaveAsset(Config& config)
+void EmitterArea::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
-}
-
-void EmitterArea::SaveResource(char* buffer)
-{
-
-}
-
-void EmitterArea::Load(Config & config)
-{
-
+	ParticleModule::Serialize(config);
 }
 
 void ParticlePosition::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -205,23 +173,12 @@ void ParticlePosition::Update(float dt, EmitterInstance* emitter)
 
 }
 
-void ParticlePosition::SaveAsset(Config& config)
+void ParticlePosition::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetArray("Initial Position 1").AddFloat3(initialPosition1);
-	config.SetArray("Initial Position 2").AddFloat3(initialPosition2);
-}
-
-void ParticlePosition::SaveResource(char* buffer)
-{
-
-}
-
-void ParticlePosition::Load(Config & config)
-{
-	initialPosition1 = config.GetArray("Initial Position 1").GetFloat3(0);
-	initialPosition2 = config.GetArray("Initial Position 2").GetFloat3(0);
+	config.SerializeArray("Initial Position 1", initialPosition1.ptr(), 3);
+	config.SerializeArray("Initial Position 2", initialPosition2.ptr(), 3);
 }
 
 void ParticleRotation::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -234,24 +191,12 @@ void ParticleRotation::Update(float dt, EmitterInstance* emitter)
 
 }
 
-void ParticleRotation::SaveAsset(Config& config)
+void ParticleRotation::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetNumber("Initial Rotation 1", initialRotation1);
-	config.SetNumber("Initial Rotation 2", initialRotation2);
-}
-
-void ParticleRotation::SaveResource(char* buffer)
-{
-
-}
-
-void ParticleRotation::Load(Config & config)
-{
-	initialRotation1 = config.GetNumber("Initial Rotation 1");
-	initialRotation2 = config.GetNumber("Initial Rotation 2");
-
+	config.Serialize("Initial Rotation 1", initialRotation1);
+	config.Serialize("Initial Rotation 2", initialRotation2);
 }
 
 void ParticleSize::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -264,24 +209,12 @@ void ParticleSize::Update(float dt, EmitterInstance* emitter)
 
 }
 
-void ParticleSize::SaveAsset(Config& config)
+void ParticleSize::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetNumber("Initial Size 1", initialSize1);
-	config.SetNumber("Initial Size 2", initialSize2);
-
-}
-
-void ParticleSize::SaveResource(char* buffer)
-{
-
-}
-
-void ParticleSize::Load(Config & config)
-{
-	initialSize1 = config.GetNumber("Initial Size 1");
-	initialSize2 = config.GetNumber("Initial Size 2");
+	config.Serialize("Initial Size 1", initialSize1);
+	config.Serialize("Initial Size 2", initialSize2);
 }
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -294,23 +227,12 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 
 }
 
-void ParticleColor::SaveAsset(Config& config)
+void ParticleColor::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetArray("Initial Color 1").AddFloat4(initialColor1);
-	config.SetArray("Initial Color 2").AddFloat4(initialColor2);
-}
-
-void ParticleColor::SaveResource(char* buffer)
-{
-
-}
-
-void ParticleColor::Load(Config & config)
-{
-	initialColor1 = config.GetArray("Initial Color 1").GetFloat4(0);
-	initialColor2 = config.GetArray("Initial Color 2").GetFloat4(0);
+	config.SerializeArray("Initial Color 1", initialColor1.ptr(), 4);
+	config.SerializeArray("Initial Color 2", initialColor2.ptr(), 4);
 }
 
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -331,23 +253,12 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
-void ParticleLifetime::SaveAsset(Config& config)
+void ParticleLifetime::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetNumber("Initial Lifetime 1", initialLifetime1);
-	config.SetNumber("Initial Lifetime 2", initialLifetime2);
-}
-
-void ParticleLifetime::SaveResource(char* buffer)
-{
-
-}
-
-void ParticleLifetime::Load(Config & config)
-{
-	initialLifetime1 = config.GetNumber("Initial Lifetime 1");
-	initialLifetime2 = config.GetNumber("Initial Lifetime 2");
+	config.Serialize("Initial Lifetime 1", initialLifetime1);
+	config.Serialize("Initial Lifetime 2", initialLifetime2);
 }
 
 void ParticleVelocity::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -368,22 +279,10 @@ void ParticleVelocity::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
-void ParticleVelocity::SaveAsset(Config& config)
+void ParticleVelocity::Serialize(Config& config)
 {
-	ParticleModule::SaveAsset(config);
+	ParticleModule::Serialize(config);
 
-	config.SetArray("Initial Velocity 1").AddFloat4(initialVelocity1);
-	config.SetArray("Initial Velocity 2").AddFloat4(initialVelocity2);
-}
-
-void ParticleVelocity::SaveResource(char* buffer)
-{
-
-}
-
-void ParticleVelocity::Load(Config & config)
-{
-	initialVelocity1 = config.GetArray("Initial Velocity 1").GetFloat4(0);
-	initialVelocity2 = config.GetArray("Initial Velocity 2").GetFloat4(0);
-
+	config.SerializeArray("Initial Velocity 1", initialVelocity1.ptr(), 4);
+	config.SerializeArray("Initial Velocity 2", initialVelocity2.ptr(), 4);
 }

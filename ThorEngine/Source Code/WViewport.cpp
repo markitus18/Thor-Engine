@@ -111,7 +111,13 @@ void WViewport::DrawScene()
 
 				if (base.type == ResourceType::MODEL)
 				{
+					PerfTimer timer;
+					timer.Start();
+
 					Engine->sceneManager->LoadModel(resourceID, scene);
+
+					LOG("Load Model took %.2f ms", timer.ReadMs());
+
 				}
 			}
 		}

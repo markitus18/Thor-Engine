@@ -33,10 +33,7 @@ struct ParticleModule
 	virtual void Spawn(EmitterInstance* emitter, Particle* particle) = 0;
 	virtual void Update(float dt, EmitterInstance* emitter) = 0;
 
-	virtual void SaveAsset(Config& config);
-	virtual void SaveResource(char* buffer);
-
-	virtual void Load(Config& config) = 0;
+	virtual void Serialize(Config& config) = 0;
 
 	//TODO: use a single random for all modules
 	LCG random;
@@ -66,10 +63,7 @@ struct EmitterBase : ParticleModule
 	void Update(float dt, EmitterInstance* emitter);
 	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
 	
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float3 emitterOrigin = float3::zero;
 	//float3 emitterRotation;
@@ -82,10 +76,7 @@ struct EmitterSpawn : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float spawnRatio = 0.1f;
 	float currentTimer = 0.0f;
@@ -98,10 +89,7 @@ struct EmitterArea: ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	//Variable Type? Setting and AABB, Cylinder, point?
 };
@@ -113,10 +101,7 @@ struct ParticlePosition : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float3 initialPosition1 = float3::zero;
 	float3 initialPosition2 = float3::zero;
@@ -129,10 +114,7 @@ struct ParticleRotation : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float initialRotation1 = 0.0f;
 	float initialRotation2 = 0.0f;
@@ -145,10 +127,7 @@ struct ParticleSize : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float initialSize1 = 1.0f;
 	float initialSize2 = 1.0f;
@@ -161,10 +140,7 @@ struct ParticleColor : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float4 initialColor1 = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	float4 initialColor2 = float4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -177,10 +153,7 @@ struct ParticleLifetime : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float initialLifetime1 = 3.0f;
 	float initialLifetime2 = 3.0f;
@@ -193,10 +166,7 @@ struct ParticleVelocity : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	void SaveAsset(Config& config);
-	void SaveResource(char* buffer);
-
-	void Load(Config& config);
+	void Serialize(Config& config);
 
 	float4 initialVelocity1 = float4(1.0f, 1.0f, 1.0f, 2.0f);
 	float4 initialVelocity2 = float4(-1.0f, 1.0f, -1.0f, 2.0f);

@@ -196,15 +196,15 @@ void W_Explorer::DrawSelectedFolderContent()
 		const ResourceBase& childBase = *Engine->moduleResources->GetResourceBase(currentFolder->baseData->containedResources[i]);
 		DrawResourceItem(childBase, itemIndex, windowCursorPosition);
 		itemIndex++;
+
 	}
-
-	ImGui::PopStyleVar();
-	ImGui::EndChild();
-
 	if (nextCurrentFolderID != 0)
 	{
 		SetCurrentFolder(nextCurrentFolderID);
 	}
+
+	ImGui::PopStyleVar();
+	ImGui::EndChild();
 
 	ImGui::EndChild();
 }

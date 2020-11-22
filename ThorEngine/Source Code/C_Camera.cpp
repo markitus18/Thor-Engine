@@ -198,16 +198,20 @@ void C_Camera::Draw(RenderingSettings::RenderingFlags flags)
 void C_Camera::Serialize(Config& config)
 {
 	Component::Serialize(config);
-	if (config.isSaving)
+
+	float currentHFov = frustum.HorizontalFov() * RADTODEG;
+	config.Serialize("FOV", currentHFov);
+	
+	float nearPlane = frustum.NearPlaneDistance();
+	config.Serialize("Near Plane", nearPlane);
+
+	float farPlane = frustum.NearPlaneDistance();
+	config.Serialize("Far Plane", farPlane);
+
+	if (!config.isSaving)
 	{
-		config.SetNumber("FOV", frustum.HorizontalFov() * RADTODEG);
-		config.SetNumber("NearPlane", frustum.NearPlaneDistance());
-		config.SetNumber("FarPlane", frustum.FarPlaneDistance());
-	}
-	else
-	{
-		SetFOV(config.GetNumber("FOV"));
-		SetNearPlane(config.GetNumber("NearPlane"));
-		SetFarPlane(config.GetNumber("FarPlane"));
+		SetFOV(currentHFov);
+		SetNearPlane(nearPlane);
+		SetFarPlane(farPlane);
 	}
 }

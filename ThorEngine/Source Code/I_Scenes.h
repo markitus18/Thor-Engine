@@ -46,7 +46,7 @@ namespace Importer
 		//Save all model data (all contained nodes) into a buffer file saved as json
 		//Returns the size of the buffer file (0 if any errors)
 		//Warning: buffer memory needs to be released after the function call
-		uint64 Save(const R_Model* model, char** buffer);
+		uint64 Save(R_Model* model, char** buffer);
 
 		//Process an json model buffer and loads all the Model nodes
 		void Load(const char* buffer, R_Model* model);

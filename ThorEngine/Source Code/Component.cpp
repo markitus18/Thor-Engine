@@ -20,12 +20,6 @@ void Component::SetActive(bool set)
 
 void Component::Serialize(Config& config)
 {
-	if (config.isSaving)
-	{
-		config.SetNumber("ComponentType", (int)GetType());
-	}
-	else
-	{
-		
-	}
+	int intType = static_cast<int>(type);
+	config.Serialize("Component Type", intType);
 }

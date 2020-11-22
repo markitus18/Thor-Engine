@@ -129,7 +129,7 @@ public:
 	bool						active = true;
 	bool						isStatic = false;
 
-	unsigned long long			uid = 0;
+	uint64						uid = 0;
 	 
 private:
 	C_Transform*				transform = nullptr;

@@ -146,8 +146,11 @@ void M_Editor::SaveEditorState()
 	for (uint i = 0; i < windowFrames.size(); ++i)
 	{
 		Config node = arr.AddNode();
-		node.SetNumber("ID", windowFrames[i]->GetID());
-		node.SetNumber("Resource ID", windowFrames[i]->GetResourceID());
+		uint64 windowID = windowFrames[i]->GetID();
+		uint64 resourceID = windowFrames[i]->GetResourceID();
+
+		node.Serialize("ID", windowID);
+		node.Serialize("Resource ID", resourceID);
 	}
 	char* buffer = nullptr;
 	if (uint size = file.Serialize(&buffer))
@@ -166,7 +169,11 @@ bool M_Editor::TryLoadEditorState()
 		for (uint i = 0; i < arr.GetSize(); ++i)
 		{
 			Config windowNode = arr.GetNode(i);
-			OpenWindowFromResource(windowNode.GetNumber("Resource ID"), windowNode.GetNumber("ID"));
+			uint64 resourceID, windowID;
+
+			windowNode.Serialize("Resource ID", resourceID);
+			windowNode.Serialize("ID", windowID);
+			OpenWindowFromResource(resourceID, windowID);
 		}
 		return true;
 	}

@@ -37,15 +37,8 @@ void C_Mesh::Draw(RenderingFlags flags)
 void C_Mesh::Serialize(Config& config)
 {
 	Component::Serialize(config);
-	if (config.isSaving)
-	{
-		config.SetNumber("Mesh Resource", rMeshHandle.GetID());
-	}
-	else
-	{
-		uint64 resourceID = config.GetNumber("Mesh Resource");
-		SetResource(resourceID);
-	}
+
+	rMeshHandle.Serialize("Mesh Resource", config);
 }
 
 const AABB& C_Mesh::GetAABB() const

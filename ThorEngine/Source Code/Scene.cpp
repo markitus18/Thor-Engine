@@ -296,7 +296,7 @@ void Scene::DrawScene()
 
 		//TODO: Insert camera culling here so we avoid unnecessary draw calls
 		DrawAllChildren(root, (*viewportIt)->renderingFlags);
-		(*viewportIt)->GetCurrentCamera()->Draw(RenderingSettings::RenderFlag_MousePick & (*viewportIt)->renderingFlags);
+		(*viewportIt)->GetCurrentCamera()->Draw(ERenderingFlags::MousePick & (*viewportIt)->renderingFlags);
 
 		Engine->renderer3D->EndTargetCamera();
 	}
@@ -304,10 +304,10 @@ void Scene::DrawScene()
 	std::vector<C_Camera*>::iterator cameraIt;
 	for (cameraIt = enabledRenderingCameras.begin(); cameraIt != enabledRenderingCameras.end(); ++cameraIt)
 	{
-		Engine->renderer3D->BeginTargetCamera(*cameraIt, EViewportViewMode::LIT);
+		Engine->renderer3D->BeginTargetCamera(*cameraIt, EViewportViewMode::Lit);
 
 		//TODO: Insert camera culling here so we avoid unnecessary draw calls
-		DrawAllChildren(root, RenderingSettings::DefaultGameFlags);
+		DrawAllChildren(root, ERenderingFlags::DefaultGameFlags);
 
 		Engine->renderer3D->EndTargetCamera();
 	}

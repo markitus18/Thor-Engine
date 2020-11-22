@@ -6,6 +6,7 @@
 #include "Light.h"
 
 #include "ResourceHandle.h"
+#include "ERenderingFlagsh.h"
 
 //TODO: this should be removed or changed by float4x4
 #include "MathGeoLib\src\MathGeoLib.h"
@@ -60,13 +61,12 @@ struct RenderParticle
 	float4 color;
 };
 
-enum class EViewportViewMode;
 struct CameraTarget
 {
-	CameraTarget(const C_Camera* camera, EViewportViewMode viewMode) : camera(camera), viewMode(viewMode){};
+	CameraTarget(const C_Camera* camera, EViewportViewMode::Flags viewMode) : camera(camera), viewMode(viewMode){};
 
 	const C_Camera* camera = nullptr;
-	EViewportViewMode viewMode;
+	EViewportViewMode::Flags viewMode;
 
 	std::vector<RenderMesh> meshes;
 	std::map<float, RenderParticle> particles;
@@ -93,7 +93,7 @@ public:
 
 	void DrawTargetCamera(CameraTarget& camera);
 
-	void BeginTargetCamera(const C_Camera* camera, EViewportViewMode viewMode);
+	void BeginTargetCamera(const C_Camera* camera, EViewportViewMode::Flags viewMode);
 	void EndTargetCamera();
 
 	void AddMesh(const float4x4& transform, C_Mesh* mesh, const C_Material* material);

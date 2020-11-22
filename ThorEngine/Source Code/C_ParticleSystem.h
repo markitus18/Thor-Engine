@@ -21,7 +21,7 @@ public:
 	void Update(float dt);
 	void Reset();
 
-	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
+	virtual void Draw(ERenderingFlags::Flags flags) override;
 	void Serialize(Config& config) override;
 
 	void SetResource(Resource* resource);

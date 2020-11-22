@@ -358,6 +358,9 @@
     <ClCompile Include="Source Code\W_MainViewport.cpp">
       <Filter>Source Code\Editor\Windows\Main</Filter>
     </ClCompile>
+    <ClCompile Include="Source Code\ImGuiHelper.cpp">
+      <Filter>Source Code\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source Code\External Libraries\MathGeoLib\src\Geometry\AABB.h">
@@ -840,6 +843,9 @@
     </ClInclude>
     <ClInclude Include="Source Code\W_MainViewport.h">
       <Filter>Source Code\Editor\Windows\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Source Code\ImGuiHelper.h">
+      <Filter>Source Code\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

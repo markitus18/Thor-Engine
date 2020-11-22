@@ -3,36 +3,18 @@
 
 #include "Window.h"
 #include "ERenderingFlagsh.h"
+#include "ResourceHandle.h"
 
 #include "ImGuizmo/ImGuizmo.h"
 #include "MathGeoLib/src/Math/float3.h"
 
 class Scene;
 class C_Camera;
+class R_Texture;
 
 struct ImGuiWindowClass;
 
 #define CAMERA_KEYBOARD_MULT 60.0f
-
-enum class EViewportViewMode
-{
-	NONE		= 0,
-	LIT			= 1 << 0,
-	WIREFRAME	= 1 << 1,
-	UNLIT		= 1 << 2,
-};
-
-enum class EViewportCameraAngle
-{
-	NONE		= 0,
-	PERSPECTIVE = 1 << 0,
-	TOP			= 1 << 1,
-	BOTTOM		= 1 << 2,
-	LEFT		= 1 << 3,
-	RIGHT		= 1 << 4,
-	FRONT		= 1 << 5,
-	BACK		= 1 << 6,
-};
 
 class WViewport : public Window
 {
@@ -105,12 +87,16 @@ private:
 	void ZoomCamera(float zoom);
 
 public:
-	EViewportViewMode viewMode = EViewportViewMode::LIT;
-	EViewportCameraAngle cameraAngle = EViewportCameraAngle::PERSPECTIVE;
-	RenderingSettings::RenderingFlags renderingFlags = RenderingSettings::DefaultEditorFlags;
+	EViewportViewMode::Flags viewMode = EViewportViewMode::Lit;
+	EViewportCameraAngle::Flags cameraAngle = EViewportCameraAngle::Perspective;
+	ERenderingFlags::Flags renderingFlags = ERenderingFlags::DefaultEditorFlags;
 
 	float3 cameraReference; //TODO: Consider moving to C_Camera (or remove like Unreal?)
 	float cameraSpeed = 1.0f;
+
+private:
+	static void BeginToolbarStyle();
+	static void EndToolbarStyle();
 
 private:
 	//The scene linked to this viewport
@@ -143,6 +129,12 @@ private:
 	//Variables for gizmo's handling
 	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 	ImGuizmo::MODE gizmoMode = ImGuizmo::MODE::WORLD;
+
+	// Toolbar handling
+	bool toolbarCollapsed = false;
+
+	static ResourceHandle<R_Texture> hToolbarCollapseButton;
+	static ResourceHandle<R_Texture> hToolbarDisplayButton;
 };
 
 

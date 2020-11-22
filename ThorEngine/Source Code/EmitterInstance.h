@@ -14,7 +14,7 @@ public:
 	void Init(Emitter* emitterReference, C_ParticleSystem* component);
 
 	void Update(float dt);
-	void DrawParticles(RenderingSettings::RenderingFlags flags);
+	void DrawParticles(ERenderingFlags::Flags flags);
 	void Reset();
 
 	void SpawnParticle();

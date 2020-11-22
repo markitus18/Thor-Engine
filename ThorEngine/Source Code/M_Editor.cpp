@@ -391,6 +391,9 @@ void M_Editor::Draw()
 	if (show_fileName_window)
 		ShowFileNameWindow();
 
+	if (show_Demo_window)
+		ImGui::ShowDemoWindow(&show_Demo_window);
+
 	//Layouts are loaded after draw so the draw call on docks does not happen twice in the same frame
 	for (uint i = 0; i < windowFrames.size(); ++i)
 		if (windowFrames[i]->pendingLoadLayout)

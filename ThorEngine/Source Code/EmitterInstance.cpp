@@ -36,7 +36,7 @@ void EmitterInstance::Update(float dt)
 	UpdateModules(dt);
 }
 
-void EmitterInstance::DrawParticles(RenderingSettings::RenderingFlags flags)
+void EmitterInstance::DrawParticles(ERenderingFlags::Flags flags)
 {
 	for (unsigned int i = 0; i < activeParticles; ++i)
 	{

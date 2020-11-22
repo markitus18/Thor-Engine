@@ -186,12 +186,12 @@ void C_Camera::OnTransformUpdated()
 	frustum.GetPlanes(planes);
 }
 
-void C_Camera::Draw(RenderingSettings::RenderingFlags flags)
+void C_Camera::Draw(ERenderingFlags::Flags flags)
 {
-	if (flags & RenderingSettings::RenderFlag_Frustum)
+	if (flags & ERenderingFlags::Frustum)
 		Engine->renderer3D->AddFrustum(frustum, Blue);
 
-	if (flags & RenderingSettings::RenderFlag_MousePick)
+	if (flags & ERenderingFlags::MousePick)
 		Engine->renderer3D->AddLine(lastRay.a, lastRay.b, Red);
 }
 

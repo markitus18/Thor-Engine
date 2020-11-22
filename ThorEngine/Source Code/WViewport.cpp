@@ -11,13 +11,17 @@
 #include "GameObject.h"
 #include "C_Camera.h"
 #include "C_Transform.h"
+#include "R_Texture.h"
 
 #include "Time.h"
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
+#include "ImGuiHelper.h"
 
+ResourceHandle<R_Texture> WViewport::hToolbarCollapseButton;
+ResourceHandle<R_Texture> WViewport::hToolbarDisplayButton;
 
 WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID), cameraReference(.0f, .0f, .0f)
 {
@@ -45,6 +49,11 @@ WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* wi
 	
 	currentCamera = perspectiveCamera;
 	ImGuizmo::Enable(true);
+
+	// Toolbar
+	hToolbarCollapseButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/LeftTriangle.png")->ID);
+	hToolbarDisplayButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/RightTriangle.png")->ID);
+
 }
 
 WViewport::~WViewport()
@@ -76,6 +85,7 @@ void WViewport::Draw()
 		ImGui::PopStyleVar();
 		return;
 	}
+	ImGui::PopStyleVar();
 
 	//TODO: Can we check for resizing generically for all windows?
 	Vec2 currentSize = Vec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
@@ -87,7 +97,6 @@ void WViewport::Draw()
 	DrawToolbarCustom();
 
 	ImGui::End();
-	ImGui::PopStyleVar();
 }
 
 void WViewport::DrawScene()
@@ -111,13 +120,7 @@ void WViewport::DrawScene()
 
 				if (base.type == ResourceType::MODEL)
 				{
-					PerfTimer timer;
-					timer.Start();
-
 					Engine->sceneManager->LoadModel(resourceID, scene);
-
-					LOG("Load Model took %.2f ms", timer.ReadMs());
-
 				}
 			}
 		}
@@ -134,7 +137,55 @@ void WViewport::DrawScene()
 
 void WViewport::DrawToolbarShared()
 {
+	ImGui::SetCursorScreenPos(ImGui::GetCurrentWindow()->DC.CursorStartPos + ImGui::GetStyle().WindowPadding);
+	BeginToolbarStyle();
 
+	float toolbarHeight = 23.0f;
+
+	// Draw toolbar collapse / display icon
+	uint buttonTextureID = (toolbarCollapsed ? hToolbarDisplayButton : hToolbarCollapseButton).Get()->buffer;
+	ImVec2 imageSize = ImVec2(toolbarHeight, toolbarHeight) - ImGui::GetStyle().FramePadding * 2;
+
+	if (ImGui::ImageButton((ImTextureID)buttonTextureID, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f)))
+	{
+		toolbarCollapsed = !toolbarCollapsed;
+	}
+
+	if (!toolbarCollapsed)
+	{
+		std::string cameraViewText = std::string(EViewportCameraAngle::str[(int)(log2(cameraAngle)+1)]).append("##Camera View");
+		ImGui::SameLine(); if (ImGui::Button(cameraViewText.c_str())) ImGui::OpenPopup("Camera View Popup");
+
+		std::string viewModeText = std::string(EViewportViewMode::str[(int)(log2(viewMode) + 1)]).append("##View Mode");
+		ImGui::SameLine(); if (ImGui::Button(viewModeText.c_str())) ImGui::OpenPopup("View Mode Popup");
+
+		ImGui::SameLine(); if (ImGui::Button("Show")) ImGui::OpenPopup("Show Flags Popup");
+	}
+	EndToolbarStyle();
+
+	if (ImGui::BeginPopup("Camera View Popup"))
+	{
+		if (ImGuiHelper::FlagSelection<EViewportCameraAngle>(cameraAngle))
+		{
+			//TODO: Switch and move camera
+		}
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopup("View Mode Popup"))
+	{
+		ImGuiHelper::FlagSelection<EViewportViewMode>(viewMode);
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopup("Show Flags Popup"))
+	{
+		if (ImGuiHelper::FlagMultiSelection<ERenderingFlags>(renderingFlags))
+		{
+			//ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
 }
 
 void WViewport::OnResize(Vec2 newSize)
@@ -460,4 +511,19 @@ void WViewport::ZoomCamera(float zoom)
 	transform->SetPosition(newPos);
 
 	currentCamera->gameObject->Update(.0f);
+}
+
+void WViewport::BeginToolbarStyle()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5.0f, 5.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
+	ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+}
+
+void WViewport::EndToolbarStyle()
+{
+	ImGui::PopStyleVar(3);
+	ImGui::PopStyleColor();
 }

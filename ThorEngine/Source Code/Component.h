@@ -38,7 +38,7 @@ public:
 	virtual void Update(float dt) {}; //TODO: should return bool?
 	virtual void OnTransformUpdated() {};
 
-	virtual void Draw(RenderingSettings::RenderingFlags flags) { }
+	virtual void Draw(ERenderingFlags::Flags flags) { }
 
 	virtual void Serialize(Config& config);
 

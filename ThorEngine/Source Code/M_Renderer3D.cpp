@@ -311,7 +311,7 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 }
 
-void M_Renderer3D::BeginTargetCamera(const C_Camera* camera, EViewportViewMode viewMode)
+void M_Renderer3D::BeginTargetCamera(const C_Camera* camera, EViewportViewMode::Flags viewMode)
 {
 	cameraRenderingTargets.push_back(CameraTarget(camera, viewMode));
 	currentCameraTarget = &cameraRenderingTargets.back();

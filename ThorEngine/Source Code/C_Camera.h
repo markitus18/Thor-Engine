@@ -41,7 +41,7 @@ public:
 
 	void OnTransformUpdated() override;
 
-	virtual void Draw(RenderingSettings::RenderingFlags flags) override;
+	virtual void Draw(ERenderingFlags::Flags flags) override;
 
 	void Serialize(Config& config) override;
 

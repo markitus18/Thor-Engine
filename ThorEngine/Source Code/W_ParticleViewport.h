@@ -1,19 +1,18 @@
 #ifndef __W_PARTICLE_PREVIEW_H__
 #define __W_PARTICLE_PREVIEW_H__
 
-#include "Window.h"
+#include "WViewport.h"
 
 class WF_ParticleEditor;
 
-//TODO: This will inherit from W_Preview as the structure gets ready
-class W_ParticleViewport : public Window
+class W_ParticleViewport : public WViewport
 {
 public:
 	W_ParticleViewport(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID);
 	~W_ParticleViewport() {}
 
-	void Draw() override;
+	virtual void DrawToolbarCustom() override;
 
-	static inline const char* GetName() { return "Viewport"; };
+	static inline const char* GetName() { return "Particles Viewport"; };
 };
 #endif // !__W_PARTICLE_PREVIEW_H__

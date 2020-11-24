@@ -35,7 +35,6 @@ public:
 
 	void OnDestroyGameObject(GameObject* gameObject);
 	void OnGameObjectStaticChanged(GameObject* gameObject);
-	void OnCameraEnabledChanged(C_Camera* camera);
 
 	void PerformMousePick(const LineSegment& segment);
 
@@ -44,9 +43,6 @@ public:
 
 	void RegisterCamera(C_Camera* camera);
 	void UnregisterCamera(C_Camera* camera);
-
-	void RegisterViewport(WViewport* viewport);
-	void UnregisterViewport(WViewport* viewport);
 
 	//TODO: Keeping old structure for now. Consider moving somewhere else
 	//Tick handling should be done in a separate structure
@@ -73,8 +69,7 @@ public:
 	uint64 ID;
 
 	GameObject* root = nullptr; //TODO: Move to private. Access in M_Editor save scene
-	std::vector<C_Camera*> enabledRenderingCameras;
-	std::vector<WViewport*> registeredViewports;
+	std::vector<C_Camera*> registeredCameras;
 
 private:
 	M_SceneManager* managerOwner = nullptr;

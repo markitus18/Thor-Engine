@@ -75,6 +75,10 @@ WViewport::~WViewport()
 {
 	for (uint i = 0; i < cameras.size(); ++i)
 	{
+		if (scene != nullptr)
+		{
+			scene->UnregisterCamera(cameras[i]);
+		}
 		RELEASE(cameras[i]->gameObject);
 	}
 }
@@ -189,7 +193,9 @@ void WViewport::DrawToolbarShared()
 		EViewportViewMode::Flags currentAngle = currentCamera->cameraAngle;
 		if (ImGuiHelper::FlagSelection<EViewportCameraAngle>(currentAngle))
 		{
+			scene->UnregisterCamera(currentCamera);
 			currentCamera = cameras[log2((int)currentAngle)];
+			scene->RegisterCamera(currentCamera);
 		}
 		ImGui::EndPopup();
 	}
@@ -259,10 +265,10 @@ Vec2 WViewport::WorldToScreen(Vec2 p) const
 void WViewport::SetScene(Scene* scene)
 {
 	if (this->scene != nullptr && this->scene != scene)
-		scene->UnregisterViewport(this);
+		scene->UnregisterCamera(currentCamera);
 
 	this->scene = scene;
-	scene->RegisterViewport(this);
+	scene->RegisterCamera(currentCamera);
 }
 
 // -----------------------------------------------------------------

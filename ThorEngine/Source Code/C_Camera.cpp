@@ -120,7 +120,7 @@ void C_Camera::SetRenderingEnabled(bool enabled)
 		renderingEnabled = enabled;
 		if (gameObject->sceneOwner)
 		{
-			gameObject->sceneOwner->OnCameraEnabledChanged(this);
+			renderingEnabled ? gameObject->sceneOwner->RegisterCamera(this) : gameObject->sceneOwner->UnregisterCamera(this);
 		}
 	}
 }

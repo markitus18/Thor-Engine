@@ -119,26 +119,6 @@ void Scene::OnGameObjectStaticChanged(GameObject* gameObject)
 	}
 }
 
-void Scene::OnCameraEnabledChanged(C_Camera* camera)
-{
-	if (camera->renderingEnabled)
-	{
-		enabledRenderingCameras.push_back(camera);
-	}
-	else
-	{
-		std::vector<C_Camera*>::iterator it;
-		for (it = enabledRenderingCameras.begin(); it != enabledRenderingCameras.end(); ++it)
-		{
-			if (*it == camera)
-			{
-				enabledRenderingCameras.erase(it);
-				break;
-			}
-		}
-	}
-}
-
 void Scene::PerformMousePick(const LineSegment& segment)
 {
 	LOG("Starting Mouse Raycast...");
@@ -222,29 +202,15 @@ const C_Camera* Scene::GetMainCamera() const
 
 void Scene::RegisterCamera(C_Camera* camera)
 {
-	enabledRenderingCameras.push_back(camera);
+	registeredCameras.push_back(camera);
 }
 
 void Scene::UnregisterCamera(C_Camera* camera)
 {
-	std::vector<C_Camera*>::iterator it = std::find(enabledRenderingCameras.begin(), enabledRenderingCameras.end(), camera);
-	if (it != enabledRenderingCameras.end())
+	std::vector<C_Camera*>::iterator it = std::find(registeredCameras.begin(), registeredCameras.end(), camera);
+	if (it != registeredCameras.end())
 	{
-		enabledRenderingCameras.erase(it);
-	}
-}
-
-void Scene::RegisterViewport(WViewport* viewport)
-{
-	registeredViewports.push_back(viewport);
-}
-
-void Scene::UnregisterViewport(WViewport* viewport)
-{
-	std::vector<WViewport*>::iterator it = std::find(registeredViewports.begin(), registeredViewports.end(), viewport);
-	if (it != registeredViewports.end())
-	{
-		registeredViewports.erase(it);
+		registeredCameras.erase(it);
 	}
 }
 
@@ -289,25 +255,14 @@ void Scene::UpdateAllGameObjects(float dt)
 
 void Scene::DrawScene()
 {
-	std::vector<WViewport*>::iterator viewportIt;
-	for (viewportIt = registeredViewports.begin(); viewportIt != registeredViewports.end(); ++viewportIt)
-	{
-		Engine->renderer3D->BeginTargetCamera((*viewportIt)->GetCurrentCamera(), (*viewportIt)->GetCurrentCamera()->viewMode);
-
-		//TODO: Insert camera culling here so we avoid unnecessary draw calls
-		DrawAllChildren(root, (*viewportIt)->GetCurrentCamera()->renderingFlags);
-		(*viewportIt)->GetCurrentCamera()->Draw(ERenderingFlags::MousePick & (*viewportIt)->GetCurrentCamera()->renderingFlags);
-
-		Engine->renderer3D->EndTargetCamera();
-	}
-
 	std::vector<C_Camera*>::iterator cameraIt;
-	for (cameraIt = enabledRenderingCameras.begin(); cameraIt != enabledRenderingCameras.end(); ++cameraIt)
+	for (cameraIt = registeredCameras.begin(); cameraIt != registeredCameras.end(); ++cameraIt)
 	{
-		Engine->renderer3D->BeginTargetCamera(*cameraIt, EViewportViewMode::Lit);
+		Engine->renderer3D->BeginTargetCamera(*cameraIt, (*cameraIt)->viewMode);
 
 		//TODO: Insert camera culling here so we avoid unnecessary draw calls
-		DrawAllChildren(root, ERenderingFlags::DefaultGameFlags);
+		DrawAllChildren(root, (*cameraIt)->renderingFlags);
+		(*cameraIt)->Draw(ERenderingFlags::MousePick & (*cameraIt)->renderingFlags);
 
 		Engine->renderer3D->EndTargetCamera();
 	}

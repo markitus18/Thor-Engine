@@ -15,40 +15,21 @@ C_Camera::C_Camera(GameObject* gameObject) : Component(Component::Type::Camera, 
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(0.1f, 1000.0f);
-	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * 65.0f, (float)DEFAULT_CAMERA_WIDTH / (float)DEFAULT_CAMERA_HEIGHT);
+
+	hFov = 65.0f;
+	frustum.SetHorizontalFovAndAspectRatio(hFov * DEGTORAD, (float)DEFAULT_CAMERA_WIDTH / (float)DEFAULT_CAMERA_HEIGHT);
 
 	frustum.SetPos(float3(0, 0, 0));
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
 
 	frustum.GetPlanes(planes);
+	GenerateFrameBuffer();
 }
 
 C_Camera::~C_Camera()
 {
 
-}
-
-//Frustum variable management ----
-float C_Camera::GetNearPlane() const
-{
-	return frustum.NearPlaneDistance();
-}
-
-float C_Camera::GetFarPlane() const
-{
-	return frustum.FarPlaneDistance();
-}
-
-//Returns FOV in degrees
-float C_Camera::GetFOV() const
-{
-	return frustum.VerticalFov() * RADTODEG;
-}
-
-float C_Camera::GetAspectRatio() const
-{
-	return frustum.AspectRatio();
 }
 
 void C_Camera::SetNearPlane(float distance)
@@ -68,24 +49,63 @@ void C_Camera::SetFarPlane(float distance)
 //Setting vertical FOV in degrees 
 void C_Camera::SetFOV(float fov)
 {
-	fov *= DEGTORAD;
-	frustum.SetHorizontalFovAndAspectRatio(fov, frustum.AspectRatio());
+	hFov = fov;
+	frustum.SetHorizontalFovAndAspectRatio(hFov * DEGTORAD, frustum.AspectRatio());
 	frustum.GetPlanes(planes);
 }
 
+// Set Aspect Ratio has been disabled temporarily, as we cannot set the resolution of the orthographic frustum only from the aspect ratio
+/*
 void C_Camera::SetAspectRatio(float ar)
 {
-	float verticalFov = frustum.VerticalFov();
-	frustum.SetVerticalFovAndAspectRatio(verticalFov, ar);
+	if (cameraAngle & EViewportCameraAngle::Perspective)
+	{
+		float verticalFov = frustum.VerticalFov();
+		frustum.SetVerticalFovAndAspectRatio(verticalFov, ar);
+	}
+	else
+	{
+		frustum.SetOrthographic()
+	}
+
 	frustum.GetPlanes(planes);
+}
+*/
+
+void C_Camera::SetSize(float newSize)
+{
+	size = Clamp(newSize, 1.0f, 20.0f);
+	SetResolution(resolution.x, resolution.y);
 }
 
 void C_Camera::SetResolution(float width, float height)
 {
 	resolution = float2(width, height);
+	if (cameraAngle & EViewportCameraAngle::Perspective)
+	{
+		float verticalFov = frustum.VerticalFov();
+		frustum.SetVerticalFovAndAspectRatio(verticalFov, width / height);
+	}
+	else
+	{
+		frustum.SetOrthographic(width / size, height / size);
+	}
 	UpdateFrameBufferSize();
 }
 
+void C_Camera::SetCameraAngle(EViewportCameraAngle::Flags newCameraAngle)
+{
+	cameraAngle = newCameraAngle;
+	if (cameraAngle & EViewportCameraAngle::Perspective)
+	{
+		SetFOV(hFov);
+	}
+	else
+	{
+		frustum.SetOrthographic(resolution.x, resolution.y);
+		frustum.GetPlanes(planes);
+	}
+}
 //--------------------------------
 
 LineSegment C_Camera::GenerateRaycast(float normalizedX, float normalizedY)
@@ -170,19 +190,7 @@ float4x4 C_Camera::GetOpenGLProjectionMatrix() const
 void C_Camera::OnTransformUpdated()
 {
 	C_Transform* transform = gameObject->GetComponent<C_Transform>();
-
-	frustum.SetFront(transform->GetFwd());
-	frustum.SetUp(transform->GetUp());
-
-	float3 position = float3::zero;
-	float3 scale = float3::one;
-	Quat quat = Quat::identity;
-	transform->GetTransform().Decompose(position, quat, scale);
-
-	frustum.SetPos(position);
-
-	//TODO: Substitute for this function
-	//frustum.SetPos(global.TranslatePart());
+	frustum.SetFrame(transform->GetPosition(), transform->GetFwd(), transform->GetUp());
 	frustum.GetPlanes(planes);
 }
 

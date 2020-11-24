@@ -93,7 +93,7 @@ bool M_Renderer3D::Init(Config& config)
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
+		glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Check for error
@@ -153,6 +153,8 @@ bool M_Renderer3D::Start()
 // PreUpdate: clear buffer
 update_status M_Renderer3D::PreUpdate()
 {	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glMatrixMode(GL_PROJECTION);
@@ -269,6 +271,12 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(*cameraComponent->GetOpenGLViewMatrix().v);
 
+	if (cameraComponent->viewMode & EViewportViewMode::Wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glColor4f(0.0f, 0.3f, 0.7f, 1.0f);
+	}
+
 	//Set camera's frame buffer as the current target buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, cameraComponent->GetFrameBuffer());
 	glClearColor(cameraComponent->backgroundColor.r, cameraComponent->backgroundColor.g, cameraComponent->backgroundColor.b, cameraComponent->backgroundColor.a);
@@ -282,10 +290,12 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 	DrawAllBox(cameraTarget);
 	DrawAllLines(cameraTarget);
 
+	if (cameraComponent->viewMode & EViewportViewMode::Wireframe)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	//TODO: Move this into a mesh "prefab" or a renderer method
 	//Both draw and input handling
-	
-	if (drawGrid)
+	if (cameraComponent->renderingFlags & ERenderingFlags::Grid)
 	{
 		glLineWidth(1.0f);
 		glDisable(GL_LIGHTING);
@@ -307,8 +317,9 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 		glEnable(GL_LIGHTING);
 	}
 	
+	//Clear OpenGL states
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(0.278f, 0.278f, 0.278f, 0.278f);
 }
 
 void M_Renderer3D::BeginTargetCamera(const C_Camera* camera, EViewportViewMode::Flags viewMode)
@@ -348,14 +359,16 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	const R_Shader* shader = mat->hShader.GetID() ? mat->hShader.Get() : hDefaultShader.Get();
 	glUseProgram(shader->shaderProgram);
 
-	const R_Texture* rTex = mat->hTexture.GetID() ? mat->hTexture.Get() : hDefaultTexture.Get(); //TODO: Default texture is set manually from library ID
+	const R_Texture* rTex = (currentCameraTarget->camera->viewMode & EViewportViewMode::Lit && mat->hTexture.GetID()) ? mat->hTexture.Get() : hDefaultTexture.Get();
 	if (rTex && rTex->buffer != 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 	}
 
+	Color color = currentCameraTarget->camera->viewMode & EViewportViewMode::Wireframe ? wireframeColor : mat->color;
+
 	uint colorLoc = glGetUniformLocation(shader->shaderProgram, "baseColor");
-	glUniform4fv(colorLoc, 1, (GLfloat*)&mat->color);
+	glUniform4fv(colorLoc, 1, (GLfloat*)&color);
 
 	//Sending prefab matrix
 	uint modelLoc = glGetUniformLocation(shader->shaderProgram, "model_matrix");
@@ -378,10 +391,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	glDrawElements(GL_TRIANGLES, resMesh->buffersSize[R_Mesh::b_indices], GL_UNSIGNED_INT, nullptr);
 
 	//Back to default OpenGL state --------------
-	if (rMesh.material)
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glFrontFace(GL_CCW);
 	glUseProgram(0);
 	glBindVertexArray(0);

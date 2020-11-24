@@ -292,11 +292,11 @@ void Scene::DrawScene()
 	std::vector<WViewport*>::iterator viewportIt;
 	for (viewportIt = registeredViewports.begin(); viewportIt != registeredViewports.end(); ++viewportIt)
 	{
-		Engine->renderer3D->BeginTargetCamera((*viewportIt)->GetCurrentCamera(), (*viewportIt)->viewMode);
+		Engine->renderer3D->BeginTargetCamera((*viewportIt)->GetCurrentCamera(), (*viewportIt)->GetCurrentCamera()->viewMode);
 
 		//TODO: Insert camera culling here so we avoid unnecessary draw calls
-		DrawAllChildren(root, (*viewportIt)->renderingFlags);
-		(*viewportIt)->GetCurrentCamera()->Draw(ERenderingFlags::MousePick & (*viewportIt)->renderingFlags);
+		DrawAllChildren(root, (*viewportIt)->GetCurrentCamera()->renderingFlags);
+		(*viewportIt)->GetCurrentCamera()->Draw(ERenderingFlags::MousePick & (*viewportIt)->GetCurrentCamera()->renderingFlags);
 
 		Engine->renderer3D->EndTargetCamera();
 	}

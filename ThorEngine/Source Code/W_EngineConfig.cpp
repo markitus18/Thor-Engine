@@ -50,11 +50,8 @@ void W_EngineConfig::Draw()
 
 	if (ImGui::CollapsingHeader("Renderer"))
 	{
-		bool enabled = Engine->renderer3D->depthEnabled;
-		if (ImGui::Checkbox("Depth Buffer", &enabled))
-		{
-			//TODO: Removal
-		}
+		ImGui::ColorEdit3("Background Color", (float*)&Engine->renderer3D->backgroundColor, ImGuiColorEditFlags_NoInputs);
+		ImGui::ColorEdit3("Wireframe Color", (float*)&Engine->renderer3D->wireframeColor, ImGuiColorEditFlags_NoInputs);
 	}
 
 	if (ImGui::CollapsingHeader("Camera"))

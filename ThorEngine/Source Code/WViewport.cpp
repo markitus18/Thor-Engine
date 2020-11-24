@@ -20,46 +20,63 @@
 #include "ImGui/imgui_internal.h"
 #include "ImGuiHelper.h"
 
+#define CAMERA_START_DISTANCE 50.0f
+
 ResourceHandle<R_Texture> WViewport::hToolbarCollapseButton;
 ResourceHandle<R_Texture> WViewport::hToolbarDisplayButton;
 
 WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID), cameraReference(.0f, .0f, .0f)
 {
 	GameObject* perspectiveGO = new GameObject();
-	perspectiveCamera = new C_Camera(nullptr);
-	perspectiveGO->AddComponent(perspectiveCamera);
 
-	perspectiveCamera->SetFarPlane(10000.0f);
-	perspectiveGO->GetComponent<C_Transform>()->SetPosition(float3(-100.0f, 50.0f, -50.0f));
-	perspectiveGO->GetComponent<C_Transform>()->LookAt(float3::zero);
-	perspectiveGO->Update(.0f);
+	EViewportCameraAngle::Flags it = 1 << 0;
+	for (uint i = 0; it < EViewportCameraAngle::Max; ++i, it = 1ull << i)
+	{
+		GameObject* cameraGameObject = new GameObject();
+		C_Camera* cameraComp = (C_Camera*)cameraGameObject->CreateComponent(Component::Camera);
 
-	perspectiveCamera->GenerateFrameBuffer();
-	
-	GameObject* orthographicGO = new GameObject();
-	orthographicCamera = new C_Camera(nullptr);
-	orthographicGO->AddComponent(orthographicCamera);
+		cameraComp->SetFarPlane(10000.0f);
+		cameraComp->renderingFlags = ERenderingFlags::DefaultEditorFlags;
+		cameraComp->SetCameraAngle(it);
 
-	orthographicCamera->SetFarPlane(10000.0f);
-	orthographicGO->GetComponent<C_Transform>()->SetPosition(float3(0.0f, 50.f, 0.0f));
-	orthographicGO->GetComponent<C_Transform>()->LookAt(float3::zero);
-	orthographicGO->Update(.0f);
+		float3 cameraPosition = float3::zero;
+		switch (it)
+		{
+			case(EViewportCameraAngle::Perspective):	cameraPosition = float3(-2, 1, -1); break;
+			case(EViewportCameraAngle::Top):			cameraPosition = float3(0, 1, 0); break;
+			case(EViewportCameraAngle::Bottom):			cameraPosition = float3(0, -1, 0); break;
+			case(EViewportCameraAngle::Left):			cameraPosition = float3(1, 0, 0); break;
+			case(EViewportCameraAngle::Right):			cameraPosition = float3(-1, 0, 0); break;
+			case(EViewportCameraAngle::Front):			cameraPosition = float3(0, 0, 1); break;
+			case(EViewportCameraAngle::Back):			cameraPosition = float3(0, 0, -1); break;
+		}
+		cameraPosition *= CAMERA_START_DISTANCE;
 
-	orthographicCamera->GenerateFrameBuffer();
-	
-	currentCamera = perspectiveCamera;
+		cameraGameObject->GetComponent<C_Transform>()->SetPosition(cameraPosition);
+		cameraGameObject->GetComponent<C_Transform>()->LookAt(float3::zero);
+		cameraGameObject->Update(.0f);
+
+		if (it != EViewportCameraAngle::Perspective)
+			cameraComp->viewMode = EViewportViewMode::Wireframe;
+
+		cameras.push_back(cameraComp);
+	}
+
+	currentCamera = cameras[0];
+
 	ImGuizmo::Enable(true);
 
 	// Toolbar
 	hToolbarCollapseButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/LeftTriangle.png")->ID);
 	hToolbarDisplayButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/RightTriangle.png")->ID);
-
 }
 
 WViewport::~WViewport()
 {
-	RELEASE(perspectiveCamera->gameObject);
-	RELEASE(orthographicCamera->gameObject);
+	for (uint i = 0; i < cameras.size(); ++i)
+	{
+		RELEASE(cameras[i]->gameObject);
+	}
 }
 
 void WViewport::PrepareUpdate()
@@ -67,8 +84,10 @@ void WViewport::PrepareUpdate()
 	//TODO: There is a one frame delay and it is lightly noticeable
 	if (cameraSettingsNeedUpdate)
 	{
-		currentCamera->SetAspectRatio(textureSize.x / textureSize.y);
-		currentCamera->SetResolution(textureSize.x, textureSize.y);
+		for (uint i = 0; i < cameras.size(); ++i)
+		{
+			cameras[i]->SetResolution(textureSize.x, textureSize.y);
+		}
 		cameraSettingsNeedUpdate = false;
 	}
 }
@@ -81,7 +100,7 @@ void WViewport::Draw()
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
 	if (!ImGui::Begin(windowStrID.c_str(), &active, flags))
 	{ 
-		ImGui::End(); //TODO: Particles viewport is not being 'beginned' and crashes on PushStyleVar missmatch
+		ImGui::End();
 		ImGui::PopStyleVar();
 		return;
 	}
@@ -151,38 +170,54 @@ void WViewport::DrawToolbarShared()
 		toolbarCollapsed = !toolbarCollapsed;
 	}
 
+	// Draw toolbar popup buttons
 	if (!toolbarCollapsed)
 	{
-		std::string cameraViewText = std::string(EViewportCameraAngle::str[(int)(log2(cameraAngle)+1)]).append("##Camera View");
+		std::string cameraViewText = std::string(EViewportCameraAngle::str[(int)(log2(currentCamera->cameraAngle)+1)]).append("##Camera View");
 		ImGui::SameLine(); if (ImGui::Button(cameraViewText.c_str())) ImGui::OpenPopup("Camera View Popup");
 
-		std::string viewModeText = std::string(EViewportViewMode::str[(int)(log2(viewMode) + 1)]).append("##View Mode");
+		std::string viewModeText = std::string(EViewportViewMode::str[(int)(log2(currentCamera->viewMode) + 1)]).append("##View Mode");
 		ImGui::SameLine(); if (ImGui::Button(viewModeText.c_str())) ImGui::OpenPopup("View Mode Popup");
 
 		ImGui::SameLine(); if (ImGui::Button("Show")) ImGui::OpenPopup("Show Flags Popup");
 	}
 	EndToolbarStyle();
 
+	// Draw toolbar popups
 	if (ImGui::BeginPopup("Camera View Popup"))
 	{
-		if (ImGuiHelper::FlagSelection<EViewportCameraAngle>(cameraAngle))
+		EViewportViewMode::Flags currentAngle = currentCamera->cameraAngle;
+		if (ImGuiHelper::FlagSelection<EViewportCameraAngle>(currentAngle))
 		{
-			//TODO: Switch and move camera
+			currentCamera = cameras[log2((int)currentAngle)];
 		}
 		ImGui::EndPopup();
 	}
 
 	if (ImGui::BeginPopup("View Mode Popup"))
 	{
-		ImGuiHelper::FlagSelection<EViewportViewMode>(viewMode);
+		// Update current camera. Update all orthographic cameras together
+		ImGuiHelper::FlagSelection<EViewportViewMode>(currentCamera->viewMode);
+		if (currentCamera->cameraAngle != EViewportCameraAngle::Perspective)
+		{
+			for (uint i = 0; i < cameras.size(); ++i)
+			{
+				if (cameras[i]->cameraAngle != EViewportCameraAngle::Perspective)
+					cameras[i]->viewMode = currentCamera->viewMode;
+			}
+		}
 		ImGui::EndPopup();
 	}
 
 	if (ImGui::BeginPopup("Show Flags Popup"))
 	{
-		if (ImGuiHelper::FlagMultiSelection<ERenderingFlags>(renderingFlags))
+		// Flags are shared through all the cameras
+		if (ImGuiHelper::FlagMultiSelection<ERenderingFlags>(currentCamera->renderingFlags))
 		{
-			//ImGui::CloseCurrentPopup();
+			for (uint i = 0; i < cameras.size(); ++i)
+			{
+				cameras[i]->renderingFlags = currentCamera->renderingFlags;
+			}
 		}
 		ImGui::EndPopup();
 	}
@@ -505,12 +540,19 @@ void WViewport::HandleKeyboardInput()
 
 void WViewport::ZoomCamera(float zoom)
 {
-	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
-	float distance = cameraReference.Distance(transform->GetPosition());
-	vec newPos = transform->GetPosition() + transform->GetFwd() * zoom * distance * 0.05f;
-	transform->SetPosition(newPos);
+	if (currentCamera->cameraAngle == EViewportCameraAngle::Perspective)
+	{
+		C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
+		float distance = cameraReference.Distance(transform->GetPosition());
+		vec newPos = transform->GetPosition() + transform->GetFwd() * zoom * distance * 0.05f;
 
-	currentCamera->gameObject->Update(.0f);
+		transform->SetPosition(newPos);
+		currentCamera->gameObject->Update(.0f);
+	}
+	else
+	{
+		currentCamera->SetSize(currentCamera->GetSize() + zoom);
+	}
 }
 
 void WViewport::BeginToolbarStyle()

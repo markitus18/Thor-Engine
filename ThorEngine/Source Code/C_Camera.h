@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "Color.h"
 
+#include "ERenderingFlagsh.h"
+
 #include "MathGeoLib\src\MathBuildConfig.h"
 #include "MathGeoLib\src\MathGeoLib.h"
 
@@ -16,16 +18,20 @@ public:
 	~C_Camera();
 
 	//Frustum management ----
-	float GetNearPlane() const;
-	float GetFarPlane() const;
-	float GetFOV() const;
-	float GetAspectRatio() const;
+	inline float GetNearPlane() const { return frustum.NearPlaneDistance(); }
+	inline float GetFarPlane() const { return frustum.FarPlaneDistance(); }
+	inline float GetFOV() const { return hFov; }
+	inline float GetSize() const { return size; }
+	inline float GetAspectRatio() const { return frustum.AspectRatio(); }
 
 	void SetNearPlane(float distance);
 	void SetFarPlane(float distance);
 	void SetFOV(float fov); 
-	void SetAspectRatio(float ar);
+	//void SetAspectRatio(float ar);
+	void SetSize(float newSize);
 	void SetResolution(float width, float height);
+
+	void SetCameraAngle(EViewportCameraAngle::Flags);
 	//--------------------------------
 
 	LineSegment GenerateRaycast(float normalizedX, float normalizedY);
@@ -54,6 +60,10 @@ public:
 	float2		resolution;
 	Color		backgroundColor;
 
+	EViewportViewMode::Flags viewMode = EViewportViewMode::Lit;
+	EViewportCameraAngle::Flags cameraAngle = EViewportCameraAngle::Perspective;
+	ERenderingFlags::Flags renderingFlags = ERenderingFlags::DefaultGameFlags;
+
 private:
 	Frustum		frustum;
 
@@ -62,6 +72,9 @@ private:
 	uint frameBuffer = 0;
 	uint depthStencilBuffer = 0;
 	uint renderTexture = 0;
+
+	float hFov = 0.0f;
+	float size = 5.0f;
 };
 
 #endif // __CAMERA_H__

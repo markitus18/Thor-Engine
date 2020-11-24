@@ -87,9 +87,7 @@ private:
 	void ZoomCamera(float zoom);
 
 public:
-	EViewportViewMode::Flags viewMode = EViewportViewMode::Lit;
-	EViewportCameraAngle::Flags cameraAngle = EViewportCameraAngle::Perspective;
-	ERenderingFlags::Flags renderingFlags = ERenderingFlags::DefaultEditorFlags;
+
 
 	float3 cameraReference; //TODO: Consider moving to C_Camera (or remove like Unreal?)
 	float cameraSpeed = 1.0f;
@@ -105,11 +103,8 @@ private:
 	//The current camera used in this viewport. Can be 'perspectiveCamera' or 'orthographicCamera'
 	C_Camera* currentCamera = nullptr;
 
-	//Camera set to perspective mode to render the screen
-	C_Camera* perspectiveCamera = nullptr;
-
-	//Camera set to orthographic mode to render the screen
-	C_Camera* orthographicCamera = nullptr;
+	//All the cameras held in this viewport
+	std::vector<C_Camera*> cameras;
 
 	//Bottom-left corner of the scene image in OpenGL space coordinates (0y at the bottom of the screen)
 	Vec2 sceneTextureScreenPosition;

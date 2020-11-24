@@ -127,8 +127,8 @@ public:
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 
-	bool drawGrid = true;
-	bool depthEnabled = true;
+	Color backgroundColor = { 0.278f, 0.278f, 0.278f, 0.278f };
+	Color wireframeColor = { 1.0f, 0.6f, 0.0f, 1.0f };
 
 private:
 	ResourceHandle<R_Texture> hDefaultTexture;

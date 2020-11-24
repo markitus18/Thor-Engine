@@ -25,8 +25,7 @@ struct ERenderingFlags
 	static const Flags DefaultGameFlags =		Skybox;
 
 	static const Flags DefaultEditorFlags =		Grid		| Skybox		| Gizmo2D |
-												Frustum		| Bones			|
-												Bounds_AABB	| Bounds_OBB;
+												Frustum		| Bones;
 };
 
 struct EViewportCameraAngle

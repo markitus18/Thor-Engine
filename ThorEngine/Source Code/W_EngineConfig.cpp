@@ -69,6 +69,7 @@ void W_EngineConfig::Draw()
 		{
 			mainViewport->SetNewCameraTarget(camera_ref);
 		}
+		ImGui::Text("Camera Size: %.2f", mainViewport->GetCurrentCamera()->GetSize());
 	}
 
 	if (ImGui::CollapsingHeader("Input"))

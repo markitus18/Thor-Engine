@@ -377,9 +377,7 @@ void WViewport::HandleInput()
 		case(CameraInputOperation::PAN):
 		{
 			Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-			Vec2 mouseMotion_screen = mouseMotion * 1.7f;// / windowSize * Engine->window->windowSize;
-
-			PanCamera(mouseMotion_screen.x, mouseMotion_screen.y);
+			PanCamera(mouseMotion.x, mouseMotion.y);
 			Engine->input->InfiniteHorizontal();
 
 			if (Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_IDLE)
@@ -454,10 +452,16 @@ void WViewport::OnClick(const Vec2& mousePos)
 void WViewport::PanCamera(float motion_x, float motion_y)
 {
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
-	float distance = currentCamera->referencePoint.Distance(transform->GetPosition());
 
-	float3 deltaX = transform->GetRight() * motion_x * (distance / 1800);
-	float3 deltaY = transform->GetUp() * motion_y * (distance / 1800);
+	// Speed factor is based on some rule of thumb values but we get pretty decent results
+	// It could be improved by some more precise calculation.
+	// Should we send the final motion_x and motion_y values with calculations already included ?
+	float speedFactor = currentCamera->referencePoint.Distance(transform->GetPosition()) / 1400;
+	if (currentCamera->cameraAngle != EViewportCameraAngle::Perspective)
+		speedFactor = 1 / currentCamera->GetSize();
+
+	float3 deltaX = transform->GetRight() * motion_x * speedFactor;
+	float3 deltaY = transform->GetUp() * motion_y * speedFactor;
 
 	currentCamera->referencePoint += deltaX;
 	currentCamera->referencePoint += deltaY;
@@ -469,9 +473,10 @@ void WViewport::PanCamera(float motion_x, float motion_y)
 // -----------------------------------------------------------------
 void WViewport::OrbitCamera(float dx, float dy)
 {
-	// Create a vector from camera position to reference position
-	// Rotate that vector according to our mouse motion
-	// Move the camera to where that vector ended up
+	// 1 - Create a vector from camera position to reference position
+	// 2 - Rotate that vector according to our mouse motion
+	// 3 - Move the camera to where that vector ended up
+	// *We could link orbit speed to camera inclination. Vertical orbits should be slower
 
 	// TODO: When the camera forward is near (0, -1, 0) the rotation starts tittering
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();

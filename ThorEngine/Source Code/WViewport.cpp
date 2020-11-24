@@ -25,7 +25,7 @@
 ResourceHandle<R_Texture> WViewport::hToolbarCollapseButton;
 ResourceHandle<R_Texture> WViewport::hToolbarDisplayButton;
 
-WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID), cameraReference(.0f, .0f, .0f)
+WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID)
 {
 	GameObject* perspectiveGO = new GameObject();
 
@@ -280,12 +280,12 @@ void WViewport::FocusCameraOnPosition(const float3& target, float distance)
 	transform->SetPosition(target + (v * distance));
 	currentCamera->gameObject->Update(.0f);
 
-	cameraReference = target;
+	currentCamera->referencePoint = target;
 }
 
 void WViewport::SetNewCameraTarget(const float3& new_target)
 {
-	float distance = cameraReference.Distance(new_target);
+	float distance = currentCamera->referencePoint.Distance(new_target);
 	FocusCameraOnPosition(new_target, distance);
 }
 
@@ -296,8 +296,7 @@ void WViewport::MatchCamera(const C_Camera* camera)
 	cameraTransform->SetGlobalTransform(targetTransform->GetTransform());
 	currentCamera->gameObject->Update(.0f);
 
-	//TODO: Store reference in C_Camera (?)
-	cameraReference = cameraTransform->GetPosition() + cameraTransform->GetFwd() * 40.0f;
+	currentCamera->referencePoint = cameraTransform->GetPosition() + cameraTransform->GetFwd() * 40.0f;
 }
 
 void WViewport::SetCameraPosition(float3 position)
@@ -308,7 +307,7 @@ void WViewport::SetCameraPosition(float3 position)
 	transform->SetPosition(position);
 	currentCamera->gameObject->Update(.0f);
 
-	cameraReference += offset;
+	currentCamera->referencePoint += offset;
 }
 
 //Handles user input
@@ -321,22 +320,25 @@ void WViewport::HandleInput()
 		
 		if (Engine->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && Engine->moduleEditor->selectedGameObjects.size() > 0)
 		{
-			float distance = (cameraReference - currentCamera->gameObject->GetComponent<C_Transform>()->GetPosition()).Length();
+			float distance = (currentCamera->referencePoint - currentCamera->gameObject->GetComponent<C_Transform>()->GetPosition()).Length();
 			GameObject* gameObject = ((GameObject*)Engine->moduleEditor->selectedGameObjects[0]);
 			FocusCameraOnPosition(gameObject->GetComponent<C_Transform>()->GetPosition(), distance);
 		}
 		
-		if (Engine->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
-			cameraInputOperation = CameraInputOperation::ORBIT;
+		// Do not allow rotations for orthographic cameras
+		if (currentCamera->cameraAngle == EViewportCameraAngle::Perspective)
+		{
+			if (Engine->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
+				cameraInputOperation = CameraInputOperation::ORBIT;
+			if (Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
+				cameraInputOperation = CameraInputOperation::TURN;
+		}
 
 		if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
 		{
 			cameraInputOperation = CameraInputOperation::SELECTION;
 			selectionStartPoint = Vec2(Engine->input->GetMouseY(), Engine->input->GetMouseY());
 		}
-		if (Engine->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
-			cameraInputOperation = CameraInputOperation::TURN;
-
 		if (Engine->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN && cameraInputOperation == CameraInputOperation::NONE)
 			cameraInputOperation = CameraInputOperation::PAN;
 	}
@@ -452,13 +454,13 @@ void WViewport::OnClick(const Vec2& mousePos)
 void WViewport::PanCamera(float motion_x, float motion_y)
 {
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
-	float distance = cameraReference.Distance(transform->GetPosition());
+	float distance = currentCamera->referencePoint.Distance(transform->GetPosition());
 
 	float3 deltaX = transform->GetRight() * motion_x * (distance / 1800);
 	float3 deltaY = transform->GetUp() * motion_y * (distance / 1800);
 
-	cameraReference += deltaX;
-	cameraReference += deltaY;
+	currentCamera->referencePoint += deltaX;
+	currentCamera->referencePoint += deltaY;
 
 	transform->SetPosition(transform->GetPosition() + deltaX + deltaY);
 	currentCamera->gameObject->Update(.0f);
@@ -473,7 +475,7 @@ void WViewport::OrbitCamera(float dx, float dy)
 
 	// TODO: When the camera forward is near (0, -1, 0) the rotation starts tittering
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
-	float3 vector = transform->GetPosition() - cameraReference;
+	float3 vector = transform->GetPosition() - currentCamera->referencePoint;
 
 	Quat quat_y(transform->GetUp(), dx * 0.003);
 	Quat quat_x(transform->GetRight().Neg(), dy * 0.003);
@@ -482,10 +484,10 @@ void WViewport::OrbitCamera(float dx, float dy)
 	vector = quat_y.Transform(vector);
 
 	// Change camera position
-	transform->SetPosition(vector + cameraReference);
+	transform->SetPosition(vector + currentCamera->referencePoint);
 
 	// Center camera back to the reference
-	currentCamera->gameObject->GetComponent<C_Transform>()->LookAt(cameraReference);
+	currentCamera->gameObject->GetComponent<C_Transform>()->LookAt(currentCamera->referencePoint);
 	currentCamera->gameObject->Update(.0f);
 }
 
@@ -513,8 +515,8 @@ void WViewport::TurnCamera(float motion_x, float motion_y)
 	currentCamera->gameObject->Update(.0f);
 
 	// Moving the camera reference to the same distance we had before
-	float distancetoReference = (cameraReference - transform->GetPosition()).Length();
-	cameraReference = transform->GetPosition() + newFwd * distancetoReference;
+	float distancetoReference = (currentCamera->referencePoint - transform->GetPosition()).Length();
+	currentCamera->referencePoint = transform->GetPosition() + newFwd * distancetoReference;
 
 	HandleKeyboardInput();
 }
@@ -541,7 +543,7 @@ void WViewport::HandleKeyboardInput()
 
 	transform->SetPosition(transform->GetPosition() + deltaFwd + deltaRight + deltaUp);
 	currentCamera->gameObject->Update(0.0f);
-	cameraReference += deltaRight + deltaUp;
+	currentCamera->referencePoint += deltaRight + deltaUp;
 }
 
 void WViewport::ZoomCamera(float zoom)
@@ -549,7 +551,7 @@ void WViewport::ZoomCamera(float zoom)
 	if (currentCamera->cameraAngle == EViewportCameraAngle::Perspective)
 	{
 		C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
-		float distance = cameraReference.Distance(transform->GetPosition());
+		float distance = currentCamera->referencePoint.Distance(transform->GetPosition());
 		vec newPos = transform->GetPosition() + transform->GetFwd() * zoom * distance * 0.05f;
 
 		transform->SetPosition(newPos);

@@ -64,7 +64,7 @@ void W_EngineConfig::Draw()
 		{
 			mainViewport->SetCameraPosition(camera_pos);
 		}
-		float3 camera_ref = mainViewport->cameraReference;
+		float3 camera_ref = mainViewport->GetCurrentCamera()->referencePoint;
 		if (ImGui::DragFloat3("Reference", (float*)&camera_ref))
 		{
 			mainViewport->SetNewCameraTarget(camera_ref);

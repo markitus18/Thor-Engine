@@ -87,9 +87,6 @@ private:
 	void ZoomCamera(float zoom);
 
 public:
-
-
-	float3 cameraReference; //TODO: Consider moving to C_Camera (or remove like Unreal?)
 	float cameraSpeed = 1.0f;
 
 private:

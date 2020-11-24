@@ -64,6 +64,7 @@ public:
 	EViewportCameraAngle::Flags cameraAngle = EViewportCameraAngle::Perspective;
 	ERenderingFlags::Flags renderingFlags = ERenderingFlags::DefaultGameFlags;
 
+	float3 referencePoint = float3::zero;
 private:
 	Frustum		frustum;
 

@@ -39,7 +39,9 @@ void C_Transform::SetGlobalTransform(float4x4 transform)
 	// Recalculate local transform depending on the parent transform
 	localTransform = transform;
 	if (gameObject->parent)
+	{
 		localTransform = gameObject->parent->GetComponent<C_Transform>()->GetTransform().Transposed() * transform;
+	}
 	SetLocalTransform(localTransform);
 }
 
@@ -58,12 +60,12 @@ void C_Transform::SetRotationAxis(float3 x, float3 y, float3 z)
 	SetGlobalTransform(transform);
 }
 
-void C_Transform::LookAt(float3 target)
+void C_Transform::LookAt(float3 target, float3 worldUp)
 {
 	float3 dir = target - GetPosition();
 
 	float3 fwd = dir.Normalized();
-	float3 right = float3::unitY.Cross(fwd).Normalized();
+	float3 right = worldUp.Cross(fwd).Normalized();
 	float3 up = fwd.Cross(right).Normalized();
 
 	SetRotationAxis(right, up, fwd);

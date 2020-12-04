@@ -67,6 +67,8 @@ private:
 	//Converts a 2D point in the real scene to a 2D point in the scene image
 	Vec2 WorldToScreen(Vec2 p) const;
 
+	void DrawWorldAxisGizmo();
+
 	void HandleInput();
 	void HandleGizmoUsage();
 	void HandleKeyboardInput();

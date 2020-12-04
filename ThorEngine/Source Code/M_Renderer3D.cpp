@@ -14,6 +14,7 @@
 #include "C_Camera.h"
 #include "C_Material.h"
 #include "C_Mesh.h"
+#include "C_Transform.h"
 
 #include "R_Mesh.h"
 #include "R_Material.h"
@@ -301,7 +302,7 @@ void M_Renderer3D::DrawTargetCamera(CameraTarget& cameraTarget)
 		glDisable(GL_LIGHTING);
 
 		glBegin(GL_LINES);
-		glColor4f(0.8f, 0.8f, 0.8f, 0.8f);
+		glColor4f(0.8f, 0.8f, 0.8f, 0.2f);
 
 		float d = 40.0f;
 

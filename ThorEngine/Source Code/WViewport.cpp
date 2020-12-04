@@ -20,6 +20,8 @@
 #include "ImGui/imgui_internal.h"
 #include "ImGuiHelper.h"
 
+#include "OpenGL.h"
+
 #define CAMERA_START_DISTANCE 50.0f
 
 ResourceHandle<R_Texture> WViewport::hToolbarCollapseButton;
@@ -118,6 +120,7 @@ void WViewport::Draw()
 	DrawScene();
 	DrawToolbarShared();
 	DrawToolbarCustom();
+	DrawWorldAxisGizmo();
 
 	ImGui::End();
 }
@@ -260,6 +263,37 @@ Vec2 WViewport::WorldToScreen(Vec2 p) const
 	Vec2 ret = p / Engine->window->windowSize * windowSize;
 	ret += sceneTextureScreenPosition;
 	return ret;
+}
+
+void WViewport::DrawWorldAxisGizmo()
+{
+	float axisLenght = 20.0f;
+	ImDrawList* drawList = ImGui::GetCurrentWindow()->DrawList;
+	ImVec2 origin = ImVec2(sceneTextureScreenPosition.x + 38.0f, Engine->window->windowSize.y - sceneTextureScreenPosition.y - 15.0f);
+
+	C_Transform* cameraTransform = GetCurrentCamera()->gameObject->GetComponent<C_Transform>();
+	float3x3 rotatePart = cameraTransform->GetTransform().RotatePart().Inverted();
+
+	float3 worldX = rotatePart.Transform(float3::unitX);
+	float3 worldY = rotatePart.Transform(float3::unitY);
+	float3 worldZ = rotatePart.Transform(float3::unitZ);
+
+	ImVec2 dirX = ImVec2(-worldX.x, -worldX.y);
+	ImVec2 dirY = ImVec2(worldY.x, -worldY.y);
+	ImVec2 dirZ = ImVec2(-worldZ.x, -worldZ.y);
+
+	ImU32 colX = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+	ImU32 colY = ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 1.0f, 0.0f, 1.0f));
+	ImU32 colZ = ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+	drawList->AddLine(origin, origin + dirX * axisLenght, colX);
+	drawList->AddLine(origin, origin + dirY * axisLenght, colY);
+	drawList->AddLine(origin, origin + dirZ * axisLenght, colZ);
+
+	ImVec2 textOffset = ImGui::CalcTextSize("X") / 2;
+	drawList->AddText(origin + dirX * (axisLenght + 10) - textOffset, colX, "X");
+	drawList->AddText(origin + dirY * (axisLenght + 10) - textOffset, colY, "Y");
+	drawList->AddText(origin + dirZ * (axisLenght + 10) - textOffset, colZ, "Z");
 }
 
 void WViewport::SetScene(Scene* scene)

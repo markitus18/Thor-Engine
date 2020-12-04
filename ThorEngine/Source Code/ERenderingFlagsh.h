@@ -62,4 +62,19 @@ struct EViewportViewMode
 	inline static uint ToI(Flags flag) { return log2(flag) + 1; }
 };
 
+struct EViewportStats
+{
+	typedef unsigned __int64 Flags;
+	enum
+	{
+		None = 0,
+		FPS = 1 << 0,
+		MeshCount = 1 << 1,
+		VertexCount = 1 << 2,
+		Max = 1 << 3
+	};
+	inline static const std::string str[] = { "None", "FPS", "Mesh Count", "Triangle Count", "Max" };
+	inline static uint ToI(Flags flag) { return log2(flag) + 1; }
+};
+
 #endif // __RENDERING_FLAGS_H__

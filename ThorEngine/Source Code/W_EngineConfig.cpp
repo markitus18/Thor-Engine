@@ -70,6 +70,34 @@ void W_EngineConfig::Draw()
 			mainViewport->SetNewCameraTarget(camera_ref);
 		}
 		ImGui::Text("Camera Size: %.2f", mainViewport->GetCurrentCamera()->GetSize());
+
+		ImGui::Separator();
+		{
+			ImGui::Text("World Unit Transformed:");
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+
+			float3x3 viewRotationMatrix = cameraTransform->GetTransform().RotatePart().Inverted();
+			float3 worldX = viewRotationMatrix.Transform(float3::unitX);
+			float3 worldY = viewRotationMatrix.Transform(float3::unitY);
+			float3 worldZ = viewRotationMatrix.Transform(float3::unitZ);
+
+			ImGui::Text("World X: %.2f, %.2f, %.2f", worldX.x, worldX.y, worldX.z);
+			ImGui::Text("World Y: %.2f, %.2f, %.2f", worldY.x, worldY.y, worldY.z);
+			ImGui::Text("World Z: %.2f, %.2f, %.2f", worldZ.x, worldZ.y, worldZ.z);
+			ImGui::PopStyleColor();
+		}
+		ImGui::Separator();
+		{
+			ImGui::Text("World View Transposed:");
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+			float3 worldX = mainViewport->GetCurrentCamera()->GetOpenGLViewMatrix().Col3(0);
+			float3 worldY = mainViewport->GetCurrentCamera()->GetOpenGLViewMatrix().Col3(1);
+			float3 worldZ = mainViewport->GetCurrentCamera()->GetOpenGLViewMatrix().Col3(2);
+			ImGui::Text("World X: %.2f, %.2f, %.2f", worldX.x, worldX.y, worldX.z);
+			ImGui::Text("World Y: %.2f, %.2f, %.2f", worldY.x, worldY.y, worldY.z);
+			ImGui::Text("World Z: %.2f, %.2f, %.2f", worldZ.x, worldZ.y, worldZ.z);
+			ImGui::PopStyleColor();
+		}
 	}
 
 	if (ImGui::CollapsingHeader("Input"))

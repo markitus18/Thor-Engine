@@ -51,7 +51,7 @@ public:
 	inline float3		GetRight() const { return transform.WorldX(); }
 
 public:
-	void LookAt(float3 target);
+	void LookAt(float3 target, float3 worldUp = float3::unitY);
 
 	void Reset();
 

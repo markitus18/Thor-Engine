@@ -22,6 +22,8 @@
 
 W_MainViewport::W_MainViewport(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : WViewport(parent, GetName(), windowClass, ID)
 {
+	statsMask = EViewportStats::FPS | EViewportStats::MeshCount | EViewportStats::TriangleCount | EViewportStats::ObjectCount;
+	statsDisplayed = statsMask; //Temporal, to display all stats at the start
 	ImGuizmo::Enable(true);
 }
 

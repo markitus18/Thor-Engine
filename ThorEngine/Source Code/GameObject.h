@@ -4,9 +4,6 @@
 #include "MathGeoLib/src/MathBuildConfig.h"
 #include "MathGeoLib/src/MathGeoLib.h"
 
-//#include "MathGeoLib/src/Geometry/AABB.h"
-
-
 #include "TreeNode.h"
 
 #include <vector>
@@ -15,8 +12,6 @@
 class C_Transform;
 class Config;
 class Scene;
-
-typedef unsigned __int64 RenderingFlags;
 
 class GameObject : public TreeNode
 {
@@ -28,9 +23,9 @@ public:
 	~GameObject();
 
 	void Destroy();
-	void Update(float dt);
-	void Draw(RenderingFlags flags);
-	void DrawResursive(RenderingFlags flags);
+	void Update();
+	void Draw(ERenderingFlags::Flags flags);
+	void DrawResursive(ERenderingFlags::Flags flags);
 
 	void OnTransformUpdated();
 	const AABB& GetAABB() const;

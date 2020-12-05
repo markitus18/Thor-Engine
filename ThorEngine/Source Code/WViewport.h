@@ -68,10 +68,11 @@ private:
 	Vec2 WorldToScreen(Vec2 p) const;
 
 	void DrawWorldAxisGizmo();
+	void DisplaySceneStats();
 
 	void HandleInput();
-	void HandleGizmoUsage();
 	void HandleKeyboardInput();
+	void HandleGizmoUsage();
 
 	// Normalizes the mouse click position and performs a raycast collision test
 	void OnClick(const Vec2& mousePos);
@@ -95,7 +96,7 @@ private:
 	static void BeginToolbarStyle();
 	static void EndToolbarStyle();
 
-private:
+protected:
 	//The scene linked to this viewport
 	Scene* scene = nullptr;
 
@@ -105,6 +106,7 @@ private:
 	//All the cameras held in this viewport
 	std::vector<C_Camera*> cameras;
 
+// Scene texture management
 	//Bottom-left corner of the scene image in OpenGL space coordinates (0y at the bottom of the screen)
 	Vec2 sceneTextureScreenPosition;
 
@@ -115,6 +117,7 @@ private:
 	//The size of the screen texture in the window
 	Vec2 textureSize;
 
+// Input operations management
 	bool cameraSettingsNeedUpdate = false;
 
 	CameraInputOperation cameraInputOperation = CameraInputOperation::NONE;
@@ -127,6 +130,14 @@ private:
 	// Toolbar handling
 	bool toolbarCollapsed = false;
 
+	// Stats from the scene displayed in the window
+	EViewportStats::Flags statsDisplayed = 0;
+
+	// Stats which each viewport implementation allows.
+	// Stats not in this mask will not be displayed as a selectable option
+	EViewportStats::Flags statsMask;
+
+// Graphics
 	static ResourceHandle<R_Texture> hToolbarCollapseButton;
 	static ResourceHandle<R_Texture> hToolbarDisplayButton;
 };

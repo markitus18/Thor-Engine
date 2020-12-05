@@ -44,6 +44,7 @@ void Scene::AddGameObject(GameObject* newGameObject, GameObject* parent)
 	for (uint i = 0; i < newGameObjects.size(); ++i)
 	{
 		newGameObjects[i]->sceneOwner = this;
+		OnGameObjectAdded(newGameObjects[i]);
 		OnGameObjectStaticChanged(newGameObjects[i]);
 	}
 }
@@ -84,6 +85,23 @@ int Scene::GetGameObjectNameCount(const char* name, const GameObject* parent)
 	return count;
 }
 
+void Scene::OnGameObjectAdded(GameObject* gameObject)
+{
+	// Add GameObject to Space Partitioning
+	OnGameObjectStaticChanged(gameObject);
+
+	// Collect GameObject stats
+	if (C_Mesh* mesh = gameObject->GetComponent<C_Mesh>())
+	{
+		++stats.meshCount;
+		if (mesh->rMeshHandle.Get())
+		{
+			stats.triangleCount += mesh->rMeshHandle.Get()->buffersSize[R_Mesh::b_indices] / 3;
+		}
+	}
+	++stats.objectsCount;
+}
+
 void Scene::OnDestroyGameObject(GameObject* gameObject)
 {
 	//Remove from quadtree // non-static vector
@@ -96,8 +114,20 @@ void Scene::OnDestroyGameObject(GameObject* gameObject)
 			dynamicGameObjects.erase(it);
 	}
 	gameObjectsPendingRemoval.push_back(gameObject);
-	Engine->OnRemoveGameObject(gameObject);
+
+	// Remove GameObject stats
+	if (C_Mesh* mesh = gameObject->GetComponent<C_Mesh>())
+	{
+		--stats.meshCount;
+		if (mesh->rMeshHandle.Get())
+		{
+			stats.triangleCount -= mesh->rMeshHandle.Get()->buffersSize[R_Mesh::b_indices] / 3;
+		}
+	}
+	--stats.objectsCount;
+
 	//TODO: WARNING, temporal setup. Engine should not be accessed from scene
+	Engine->OnRemoveGameObject(gameObject);
 }
 
 void Scene::OnGameObjectStaticChanged(GameObject* gameObject)
@@ -248,9 +278,9 @@ void Scene::ClearGameObjectsForRemoval()
 	gameObjectsPendingRemoval.clear();
 }
 
-void Scene::UpdateAllGameObjects(float dt)
+void Scene::Update()
 {
-	root->Update(dt);
+	root->Update();
 }
 
 void Scene::DrawScene()
@@ -260,7 +290,7 @@ void Scene::DrawScene()
 	{
 		Engine->renderer3D->BeginTargetCamera(*cameraIt, (*cameraIt)->viewMode);
 
-		//TODO: Insert camera culling here so we avoid unnecessary draw calls
+		//TODO: Insert camera culling here to avoid unnecessary draw calls
 		DrawAllChildren(root, (*cameraIt)->renderingFlags);
 		(*cameraIt)->Draw(ERenderingFlags::MousePick & (*cameraIt)->renderingFlags);
 

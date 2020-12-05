@@ -35,7 +35,7 @@ public:
 	inline bool IsActive() const { return active; };
 	inline Type GetType() const { return type; };
 
-	virtual void Update(float dt) {}; //TODO: should return bool?
+	virtual void Update() {}; //TODO: should return bool?
 	virtual void OnTransformUpdated() {};
 
 	virtual void Draw(ERenderingFlags::Flags flags) { }

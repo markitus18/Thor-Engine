@@ -493,6 +493,13 @@ void M_Editor::UpdateFPSData(int fps, int ms)
 		if (w_engineConfig)
 			w_engineConfig->UpdateFPSData(fps, ms);
 	}
+
+	// Quite a dirty way of sending the data. Re-structure time accessing.
+	// FPS and ms should be accesed through Time:: and we can avoid calling this function. Update in w_engineConfig draw itself
+	for (uint i = 0; i < Engine->sceneManager->activeScenes.size(); ++i)
+	{
+		Engine->sceneManager->activeScenes[i]->stats.FPS = fps;
+	}
 }
 
 void M_Editor::OnResize(int screen_width, int screen_height)

@@ -74,7 +74,7 @@ update_status M_SceneManager::Update()
 
 	for (uint i = 0; i < activeScenes.size(); ++i)
 	{
-		activeScenes[i]->UpdateAllGameObjects(Time::deltaTime);
+		activeScenes[i]->Update();
 		activeScenes[i]->DrawScene();
 	}
 

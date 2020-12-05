@@ -71,7 +71,7 @@ void GameObject::Destroy()
 	}
 }
 
-void GameObject::Update(float dt)
+void GameObject::Update()
 {
 	//Throw on update transform event if matrix has been updated
 	if (transform && transform->transform_updated)
@@ -83,14 +83,14 @@ void GameObject::Update(float dt)
 	std::vector<Component*>::iterator it;
 	for (it = components.begin(); it != components.end(); ++it)
 	{
-		(*it)->Update(dt);
+		(*it)->Update();
 	}
 
 	//Iterate through all children
 	for (uint i = 0; i < childs.size(); i++)
 	{
 		if (childs[i]->active)
-			childs[i]->Update(dt);
+			childs[i]->Update();
 	}
 }
 

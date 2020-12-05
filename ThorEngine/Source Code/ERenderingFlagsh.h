@@ -67,13 +67,14 @@ struct EViewportStats
 	typedef unsigned __int64 Flags;
 	enum
 	{
-		None = 0,
-		FPS = 1 << 0,
-		MeshCount = 1 << 1,
-		VertexCount = 1 << 2,
-		Max = 1 << 3
+		None =			0,
+		FPS =			1 << 0,
+		MeshCount =		1 << 1,
+		TriangleCount =	1 << 2,
+		ObjectCount =	1 << 3,
+		Max =			1 << 4
 	};
-	inline static const std::string str[] = { "None", "FPS", "Mesh Count", "Triangle Count", "Max" };
+	inline static const std::string str[] = { "None", "FPS", "Mesh Count", "Triangle Count", "Object Count", "Max" };
 	inline static uint ToI(Flags flag) { return log2(flag) + 1; }
 };
 

@@ -17,6 +17,14 @@ class M_SceneManager;
 
 typedef unsigned __int64 RenderingFlags;
 
+struct SceneStats
+{
+	int FPS = 0;
+	int meshCount = 0;
+	int triangleCount = 0;
+	int objectsCount = 0;
+};
+
 class Scene
 {
 	friend class M_SceneManager;
@@ -33,6 +41,7 @@ public:
 	std::string GetNewGameObjectName(const char* name, const GameObject* parent = nullptr);
 	int GetGameObjectNameCount(const char* name, const GameObject* parent = nullptr);
 
+	void OnGameObjectAdded(GameObject* gameObject);
 	void OnDestroyGameObject(GameObject* gameObject);
 	void OnGameObjectStaticChanged(GameObject* gameObject);
 
@@ -53,7 +62,7 @@ public:
 	void ClearScene();
 
 private:
-	void UpdateAllGameObjects(float dt);
+	void Update();
 
 	void DrawScene();
 
@@ -70,6 +79,8 @@ public:
 
 	GameObject* root = nullptr; //TODO: Move to private. Access in M_Editor save scene
 	std::vector<C_Camera*> registeredCameras;
+
+	SceneStats stats;
 
 private:
 	M_SceneManager* managerOwner = nullptr;

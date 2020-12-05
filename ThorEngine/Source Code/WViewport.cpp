@@ -29,8 +29,7 @@ ResourceHandle<R_Texture> WViewport::hToolbarDisplayButton;
 
 WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID)
 {
-	GameObject* perspectiveGO = new GameObject();
-
+	// Generate all 7 cameras - perspective + 6 orthographic
 	EViewportCameraAngle::Flags it = 1 << 0;
 	for (uint i = 0; it < EViewportCameraAngle::Max; ++i, it = 1ull << i)
 	{
@@ -41,6 +40,7 @@ WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* wi
 		cameraComp->renderingFlags = ERenderingFlags::DefaultEditorFlags;
 		cameraComp->SetCameraAngle(it);
 
+		// Deciding camera position depending on the view angle
 		float3 cameraPosition = float3::zero;
 		switch (it)
 		{
@@ -56,7 +56,7 @@ WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* wi
 
 		cameraGameObject->GetComponent<C_Transform>()->SetPosition(cameraPosition);
 		cameraGameObject->GetComponent<C_Transform>()->LookAt(float3::zero);
-		cameraGameObject->Update(.0f);
+		cameraGameObject->Update();
 
 		if (it != EViewportCameraAngle::Perspective)
 			cameraComp->viewMode = EViewportViewMode::Wireframe;
@@ -68,7 +68,7 @@ WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* wi
 
 	ImGuizmo::Enable(true);
 
-	// Toolbar
+	// Toolbar icons
 	hToolbarCollapseButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/LeftTriangle.png")->ID);
 	hToolbarDisplayButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/RightTriangle.png")->ID);
 }
@@ -104,7 +104,7 @@ void WViewport::Draw()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	
 	ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
-	if (!ImGui::Begin(windowStrID.c_str(), &active, flags))
+	if (!ImGui::Begin(windowStrID.c_str(), &active, flags) || scene == nullptr)
 	{ 
 		ImGui::End();
 		ImGui::PopStyleVar();
@@ -118,9 +118,12 @@ void WViewport::Draw()
 		OnResize(currentSize);
 
 	DrawScene();
+
 	DrawToolbarShared();
 	DrawToolbarCustom();
+
 	DrawWorldAxisGizmo();
+	DisplaySceneStats();
 
 	ImGui::End();
 }
@@ -187,6 +190,8 @@ void WViewport::DrawToolbarShared()
 		ImGui::SameLine(); if (ImGui::Button(viewModeText.c_str())) ImGui::OpenPopup("View Mode Popup");
 
 		ImGui::SameLine(); if (ImGui::Button("Show")) ImGui::OpenPopup("Show Flags Popup");
+
+		ImGui::SameLine(); if (ImGui::Button("Stats")) ImGui::OpenPopup("Show Stats Popup");
 	}
 	EndToolbarStyle();
 
@@ -228,6 +233,12 @@ void WViewport::DrawToolbarShared()
 				cameras[i]->renderingFlags = currentCamera->renderingFlags;
 			}
 		}
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopup("Show Stats Popup"))
+	{
+		ImGuiHelper::FlagMultiSelection<EViewportStats>(statsDisplayed);
 		ImGui::EndPopup();
 	}
 }
@@ -296,6 +307,53 @@ void WViewport::DrawWorldAxisGizmo()
 	drawList->AddText(origin + dirZ * (axisLenght + 10) - textOffset, colZ, "Z");
 }
 
+void WViewport::DisplaySceneStats()
+{
+	ImDrawList* drawList = ImGui::GetCurrentWindow()->DrawList;
+	float windowPositionPercentageY = 0.15f;
+	float indent = ImGui::GetWindowSize().x - 200.0f;
+
+	ImVec2 cursorPos = ImGui::GetCurrentWindow()->DC.CursorStartPos;
+
+	ImGui::SetCursorScreenPos(ImVec2(cursorPos.x, cursorPos.y + ImGui::GetWindowSize().y * windowPositionPercentageY));
+	ImGui::Indent(indent);
+
+	// TODO: There might be a way to automatize the process and avoid checking all stats individually
+	ImGui::BeginColumns("Stat Columns", 2, ImGuiColumnsFlags_NoResize);
+	ImGui::SetColumnOffset(1, indent + ImGui::CalcTextSize("Triangle Count").x + 20.0f);
+
+	if (statsDisplayed & EViewportStats::FPS)
+	{
+		ImGui::Text("FPS");
+		ImGui::NextColumn();
+		ImGui::Text("%i", scene->stats.FPS);
+		ImGui::NextColumn();
+	}
+	if (statsDisplayed & EViewportStats::MeshCount)
+	{
+		ImGui::Text("Mesh Count");
+		ImGui::NextColumn();
+		ImGui::Text("%i", scene->stats.meshCount);
+		ImGui::NextColumn();
+	}
+	if (statsDisplayed & EViewportStats::TriangleCount)
+	{
+		ImGui::Text("Triangle Count");
+		ImGui::NextColumn();
+		ImGui::Text("%i", scene->stats.triangleCount);
+		ImGui::NextColumn();
+	}
+	if (statsDisplayed & EViewportStats::ObjectCount)
+	{
+		ImGui::Text("Objects Count");
+		ImGui::NextColumn();
+		ImGui::Text("%i", scene->stats.objectsCount);
+		ImGui::NextColumn();
+	}
+	ImGui::Columns(1);
+	ImGui::Unindent(indent);
+}
+
 void WViewport::SetScene(Scene* scene)
 {
 	if (this->scene != nullptr && this->scene != scene)
@@ -312,7 +370,7 @@ void WViewport::FocusCameraOnPosition(const float3& target, float distance)
 	float3 v = transform->GetFwd().Neg();
 
 	transform->SetPosition(target + (v * distance));
-	currentCamera->gameObject->Update(.0f);
+	currentCamera->gameObject->Update();
 
 	currentCamera->referencePoint = target;
 }
@@ -328,7 +386,7 @@ void WViewport::MatchCamera(const C_Camera* camera)
 	C_Transform* targetTransform = camera->gameObject->GetComponent<C_Transform>();
 	C_Transform* cameraTransform = currentCamera->gameObject->GetComponent<C_Transform>();
 	cameraTransform->SetGlobalTransform(targetTransform->GetTransform());
-	currentCamera->gameObject->Update(.0f);
+	currentCamera->gameObject->Update();
 
 	currentCamera->referencePoint = cameraTransform->GetPosition() + cameraTransform->GetFwd() * 40.0f;
 }
@@ -339,12 +397,11 @@ void WViewport::SetCameraPosition(float3 position)
 	float3 offset = position - transform->GetPosition();
 
 	transform->SetPosition(position);
-	currentCamera->gameObject->Update(.0f);
+	currentCamera->gameObject->Update();
 
 	currentCamera->referencePoint += offset;
 }
 
-//Handles user input
 void WViewport::HandleInput()
 {
 	if (ImGui::IsItemHovered())
@@ -379,6 +436,7 @@ void WViewport::HandleInput()
 
 	switch (cameraInputOperation)
 	{
+		// TODO: All movement speeds are pretty much a rule of thumb. They could use some tweaking.
 		case(CameraInputOperation::NONE): break;
 
 		case(CameraInputOperation::SELECTION):
@@ -399,7 +457,7 @@ void WViewport::HandleInput()
 			if (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			{
 				Vec2 mouseMotion = Vec2(Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-				Vec2 mouseMotion_screen = mouseMotion * 1.5f;// / windowSize * Engine->window->windowSize;
+				Vec2 mouseMotion_screen = mouseMotion * 1.5f;
 
 				OrbitCamera(-mouseMotion_screen.x, -mouseMotion_screen.y);
 				Engine->input->InfiniteHorizontal();
@@ -421,7 +479,7 @@ void WViewport::HandleInput()
 		case(CameraInputOperation::TURN):
 		{
 			Vec2 mouseMotion = Vec2(-Engine->input->GetMouseXMotion(), Engine->input->GetMouseYMotion());
-			Vec2 mouseMotion_screen = mouseMotion / 350.0f;// / windowSize * Engine->window->windowSize;
+			Vec2 mouseMotion_screen = mouseMotion / 350.0f;
 
 			TurnCamera(mouseMotion_screen.x, mouseMotion_screen.y);
 			Engine->input->InfiniteHorizontal();
@@ -475,7 +533,7 @@ void WViewport::OnClick(const Vec2& mousePos)
 	float mouseNormX = mousePos.x / currentCamera->resolution.x;
 	float mouseNormY = mousePos.y / currentCamera->resolution.y;
 
-	//Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
+	// Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
 	mouseNormX = (mouseNormX - 0.5) / 0.5;
 	mouseNormY = (mouseNormY - 0.5) / 0.5;
 
@@ -501,10 +559,9 @@ void WViewport::PanCamera(float motion_x, float motion_y)
 	currentCamera->referencePoint += deltaY;
 
 	transform->SetPosition(transform->GetPosition() + deltaX + deltaY);
-	currentCamera->gameObject->Update(.0f);
+	currentCamera->gameObject->Update();
 }
 
-// -----------------------------------------------------------------
 void WViewport::OrbitCamera(float dx, float dy)
 {
 	// 1 - Create a vector from camera position to reference position
@@ -527,7 +584,7 @@ void WViewport::OrbitCamera(float dx, float dy)
 
 	// Center camera back to the reference
 	currentCamera->gameObject->GetComponent<C_Transform>()->LookAt(currentCamera->referencePoint);
-	currentCamera->gameObject->Update(.0f);
+	currentCamera->gameObject->Update();
 }
 
 void WViewport::TurnCamera(float motion_x, float motion_y)
@@ -551,7 +608,7 @@ void WViewport::TurnCamera(float motion_x, float motion_y)
 	}
 
 	transform->SetRotationAxis(newRight, newUp, newFwd);
-	currentCamera->gameObject->Update(.0f);
+	currentCamera->gameObject->Update();
 
 	// Moving the camera reference to the same distance we had before
 	float distancetoReference = (currentCamera->referencePoint - transform->GetPosition()).Length();
@@ -581,7 +638,7 @@ void WViewport::HandleKeyboardInput()
 		deltaUp -= float3::unitY * Time::deltaTime * CAMERA_KEYBOARD_MULT * cameraSpeed;
 
 	transform->SetPosition(transform->GetPosition() + deltaFwd + deltaRight + deltaUp);
-	currentCamera->gameObject->Update(0.0f);
+	currentCamera->gameObject->Update();
 	currentCamera->referencePoint += deltaRight + deltaUp;
 }
 
@@ -594,7 +651,7 @@ void WViewport::ZoomCamera(float zoom)
 		vec newPos = transform->GetPosition() + transform->GetFwd() * zoom * distance * 0.05f;
 
 		transform->SetPosition(newPos);
-		currentCamera->gameObject->Update(.0f);
+		currentCamera->gameObject->Update();
 	}
 	else
 	{

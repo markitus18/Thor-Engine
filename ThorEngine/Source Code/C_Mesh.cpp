@@ -26,7 +26,7 @@ C_Mesh::~C_Mesh()
 
 }
 
-void C_Mesh::Draw(RenderingFlags flags)
+void C_Mesh::Draw(ERenderingFlags::Flags flags)
 {
 	//StartBoneDeformation();
 	//DeformAnimMesh();

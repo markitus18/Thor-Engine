@@ -12,6 +12,8 @@ W_ParticleViewport::W_ParticleViewport(WindowFrame* parent, ImGuiWindowClass* wi
 void W_ParticleViewport::DrawToolbarCustom()
 {
 
+
+	WViewport::DrawToolbarCustom();
 }
 
 

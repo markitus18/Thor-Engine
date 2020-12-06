@@ -14,6 +14,12 @@ public:
 	virtual void DrawToolbarCustom() override;
 
 	static inline const char* GetName() { return "Scene Viewport"; };
+
+private:
+	ResourceHandle<R_Texture> hTranslateIcon;
+	ResourceHandle<R_Texture> hRotateIcon;
+	ResourceHandle<R_Texture> hScaleIcon;
+
 };
 
 #endif

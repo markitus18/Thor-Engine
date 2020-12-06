@@ -26,6 +26,7 @@
 
 ResourceHandle<R_Texture> WViewport::hToolbarCollapseButton;
 ResourceHandle<R_Texture> WViewport::hToolbarDisplayButton;
+ResourceHandle<R_Texture> WViewport::hCameraSettingsButton;
 
 WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID)
 {
@@ -71,6 +72,7 @@ WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* wi
 	// Toolbar icons
 	hToolbarCollapseButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/LeftTriangle.png")->ID);
 	hToolbarDisplayButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/RightTriangle.png")->ID);
+	hCameraSettingsButton.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/CameraIcon.png")->ID);
 }
 
 WViewport::~WViewport()
@@ -120,7 +122,6 @@ void WViewport::Draw()
 	DrawScene();
 
 	DrawToolbarShared();
-	DrawToolbarCustom();
 
 	DrawWorldAxisGizmo();
 	DisplaySceneStats();
@@ -192,11 +193,16 @@ void WViewport::DrawToolbarShared()
 		ImGui::SameLine(); if (ImGui::Button("Show")) ImGui::OpenPopup("Show Flags Popup");
 
 		ImGui::SameLine(); if (ImGui::Button("Stats")) ImGui::OpenPopup("Show Stats Popup");
+	
+
+		DrawToolbarCustom();
+
+		if (ImGui::ImageButton((ImTextureID)hCameraSettingsButton.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f))) ImGui::OpenPopup("Camera Settings Popup");
 	}
 	EndToolbarStyle();
 
 	// Draw toolbar popups
-	if (ImGui::BeginPopup("Camera View Popup"))
+	if (ImGui::BeginPopup("Camera View Popup", ImGuiWindowFlags_NoMove))
 	{
 		EViewportViewMode::Flags currentAngle = currentCamera->cameraAngle;
 		if (ImGuiHelper::FlagSelection<EViewportCameraAngle>(currentAngle))
@@ -208,7 +214,7 @@ void WViewport::DrawToolbarShared()
 		ImGui::EndPopup();
 	}
 
-	if (ImGui::BeginPopup("View Mode Popup"))
+	if (ImGui::BeginPopup("View Mode Popup", ImGuiWindowFlags_NoMove))
 	{
 		// Update current camera. Update all orthographic cameras together
 		ImGuiHelper::FlagSelection<EViewportViewMode>(currentCamera->viewMode);
@@ -223,7 +229,7 @@ void WViewport::DrawToolbarShared()
 		ImGui::EndPopup();
 	}
 
-	if (ImGui::BeginPopup("Show Flags Popup"))
+	if (ImGui::BeginPopup("Show Flags Popup", ImGuiWindowFlags_NoMove))
 	{
 		// Flags are shared through all the cameras
 		if (ImGuiHelper::FlagMultiSelection<ERenderingFlags>(currentCamera->renderingFlags))
@@ -236,11 +242,34 @@ void WViewport::DrawToolbarShared()
 		ImGui::EndPopup();
 	}
 
-	if (ImGui::BeginPopup("Show Stats Popup"))
+	if (ImGui::BeginPopup("Show Stats Popup", ImGuiWindowFlags_NoMove))
 	{
 		ImGuiHelper::FlagMultiSelection<EViewportStats>(statsDisplayed);
 		ImGui::EndPopup();
 	}
+
+	if (ImGui::BeginPopup("Camera Settings Popup", ImGuiWindowFlags_NoMove))
+	{
+		ImGui::SliderInt("Speed", &cameraSpeed, 1, 8);
+
+		float cameraFOV = currentCamera->GetFOV();
+		if (ImGui::DragFloat("FOV", &cameraFOV, 5.0f, 360.0f)) currentCamera->SetFOV(cameraFOV);
+
+		float nearPlane = currentCamera->GetNearPlane();
+		if (ImGui::DragFloat("Near Plane", &nearPlane, 0.01f, 100.0f)) currentCamera->SetNearPlane(nearPlane);
+
+		float farPlane = currentCamera->GetFarPlane();
+		if (ImGui::DragFloat("Far Plane", &farPlane, 0.01f, 100000.0f)) currentCamera->SetFarPlane(farPlane);
+
+		ImGui::EndPopup();
+	}
+}
+
+void WViewport::DrawToolbarCustom()
+{
+	ImVec2 cursorPos = ImGui::GetCurrentWindow()->DC.CursorStartPos + ImGui::GetStyle().WindowPadding;
+	cursorPos += ImVec2(ImGui::GetWindowSize().x - 40.0f, 0.0f);
+	ImGui::SetCursorScreenPos(cursorPos);
 }
 
 void WViewport::OnResize(Vec2 newSize)

@@ -14,7 +14,7 @@ class R_Texture;
 
 struct ImGuiWindowClass;
 
-#define CAMERA_KEYBOARD_MULT 60.0f
+#define CAMERA_KEYBOARD_MULT 15.0f
 
 class WViewport : public Window
 {
@@ -59,7 +59,8 @@ protected:
 	void DrawToolbarShared();
 
 	// Draw a custom toolbar with specific implementations
-	virtual void DrawToolbarCustom() {}
+	// If no custom toolbar is drawn, the cursor is set for the camera button on the right
+	virtual void DrawToolbarCustom();
 
 private:
 	//Converts a 2D point in the scene image to a 2D point in the real scene
@@ -90,7 +91,7 @@ private:
 	void ZoomCamera(float zoom);
 
 public:
-	float cameraSpeed = 1.0f;
+	int cameraSpeed = 4;
 
 private:
 	static void BeginToolbarStyle();
@@ -130,6 +131,8 @@ protected:
 	// Toolbar handling
 	bool toolbarCollapsed = false;
 
+	float toolbarHeight = 23.0f;
+
 	// Stats from the scene displayed in the window
 	EViewportStats::Flags statsDisplayed = 0;
 
@@ -140,6 +143,7 @@ protected:
 // Graphics
 	static ResourceHandle<R_Texture> hToolbarCollapseButton;
 	static ResourceHandle<R_Texture> hToolbarDisplayButton;
+	static ResourceHandle<R_Texture> hCameraSettingsButton;
 };
 
 

@@ -12,7 +12,7 @@ R_AnimatorController::~R_AnimatorController()
 
 void R_AnimatorController::AddAnimation()
 {
-	animations.push_back(0);
+	animations.push_back(ResourceHandle<R_Animation>(nullptr));
 }
 
 void R_AnimatorController::AddAnimation(uint64 animationID)

@@ -23,6 +23,9 @@
 
 #include "MathGeoLib\src\MathGeoLib.h" //TODO: Include ONLY the necessary structures
 
+#include "Engine.h" //TODO: Quite temporal, loading animator controller
+#include "M_Resources.h" //TODO: Quite temporal, loading animator controller
+
 namespace Importer { namespace Models { LCG randomID; } }
 
 R_Model* Importer::Models::Create()
@@ -171,6 +174,18 @@ GameObject* Importer::Models::LoadNewRoot(const R_Model* model)
 		{
 			C_Material* materialComponent = (C_Material*)newGameObject->CreateComponent(Component::Type::Material);
 			materialComponent->SetResource(node.materialID);
+		}
+	}
+
+	//TODO: Quite temporal, loading animator controller
+	for (uint i = 0; i < model->baseData->containedResources.size(); ++i)
+	{
+		uint64 containedID = model->baseData->containedResources[i];
+		if (Engine->moduleResources->GetResourceBase(containedID)->type == ResourceType::ANIMATOR_CONTROLLER)
+		{
+			C_Animator* animator = (C_Animator*)root->CreateComponent(Component::Type::Animator);
+			animator->SetResource(containedID);
+			break;
 		}
 	}
 

@@ -22,6 +22,7 @@ public:
 
 	~GameObject();
 
+	void Start(); //Called at the beginning of the simulation
 	void Destroy();
 	void Update();
 	void Draw(ERenderingFlags::Flags flags);

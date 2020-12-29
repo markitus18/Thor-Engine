@@ -19,8 +19,8 @@ public:
 
 	void DrawLinkedBones() const;
 
-	void Start();
-	void Update(float dt);
+	void Start() override;
+	void Update() override;
 
 	void Draw(ERenderingFlags::Flags flags) override;
 	void Serialize(Config& config) override;
@@ -28,7 +28,7 @@ public:
 	void SetAnimation(const char* name, float blendTime = 0.0f);
 	void SetAnimation(uint index, float blendTime = 0.0f);
 
-	R_Animation* GetAnimation(uint index);
+	ResourceHandle<R_Animation> GetAnimation(uint index);
 
 	void SetResource(Resource* resource);
 	void SetResource(unsigned long long ID);
@@ -54,7 +54,7 @@ public:
 	uint previous_animation = 0;
 	uint current_animation = 0;
 
-	bool playing = false;
+	bool playing = true;
 
 	ResourceHandle<R_AnimatorController> rAnimatorHandle;
 

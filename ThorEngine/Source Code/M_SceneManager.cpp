@@ -16,6 +16,8 @@
 #include "Scene.h"
 #include "R_Model.h"
 
+#include "Brofiler/Brofiler.h"
+
 #include <windows.h>
 #include <shobjidl.h> 
 
@@ -139,6 +141,8 @@ void M_SceneManager::LoadMap(uint64 resourceID, bool append)
 
 void M_SceneManager::LoadModel(uint64 modelID, Scene* targetScene)
 {
+	BROFILER_CATEGORY("Scene Manager - Load Model", Profiler::Color::Aqua)
+
 	ResourceHandle<R_Model> rModelHandle(modelID);
 	GameObject* root = Importer::Models::LoadNewRoot(rModelHandle.Get());
 	targetScene->AddGameObject(root, nullptr);

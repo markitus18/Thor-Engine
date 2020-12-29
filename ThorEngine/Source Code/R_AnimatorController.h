@@ -4,6 +4,9 @@
 #include "Resource.h"
 #include "Globals.h"
 
+#include "ResourceHandle.h"
+#include "R_Animation.h"
+
 #include <vector>
 
 class R_AnimatorController : public Resource
@@ -17,7 +20,8 @@ public:
 	void AddAnimation(uint64 animationID);
 
 public:
-	std::vector<uint64> animations;
+	std::vector<ResourceHandle<R_Animation>> animations;
+	//std::vector<uint64> animations;
 };
 
 #endif

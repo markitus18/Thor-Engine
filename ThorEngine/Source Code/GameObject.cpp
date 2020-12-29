@@ -52,6 +52,18 @@ GameObject::~GameObject()
 	}
 }
 
+void GameObject::Start()
+{
+	for (uint i = 0; i < components.size(); i++)
+	{
+		components[i]->Start();
+	}
+	for (uint i = 0; i < childs.size(); i++)
+	{
+		childs[i]->Start();
+	}
+}
+
 void GameObject::Destroy()
 {
 	if (parent)

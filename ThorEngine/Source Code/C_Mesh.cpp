@@ -28,8 +28,8 @@ C_Mesh::~C_Mesh()
 
 void C_Mesh::Draw(ERenderingFlags::Flags flags)
 {
-	//StartBoneDeformation();
-	//DeformAnimMesh();
+	StartBoneDeformation();
+	DeformAnimMesh();
 
 	Engine->renderer3D->AddMesh(gameObject->GetComponent<C_Transform>()->GetTransformT(), this, gameObject->GetComponent<C_Material>());
 }

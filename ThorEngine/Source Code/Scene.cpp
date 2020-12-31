@@ -249,8 +249,6 @@ void Scene::Play()
 	Time::Start(60);
 	//TODO: Call resources and save current scene ("Engine/tmp.scene")
 	//It should probably be handled through scene manager
-
-	root->Start();
 }
 
 void Scene::Stop()

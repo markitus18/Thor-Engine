@@ -23,7 +23,6 @@ template class ResourceHandle<R_Shader>;
 template class ResourceHandle<R_Texture>;
 template class ResourceHandle<R_Material>;
 template class ResourceHandle<R_ParticleSystem>;
-template class ResourceHandle<R_Animation>;
 template class ResourceHandle<R_AnimatorController>;
 
 template <typename T>

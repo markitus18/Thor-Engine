@@ -14,7 +14,6 @@
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "R_Model.h"
-#include "R_AnimatorController.h" //TODO: Remove, temporal
 
 #include "M_FileSystem.h"
 #include "PathNode.h"
@@ -22,8 +21,6 @@
 #include "Config.h"
 
 #include "Assimp/include/scene.h"
-
-#include "Brofiler/Brofiler.h"
 
 M_Resources::M_Resources(bool start_enabled) : Module("Resources", start_enabled)
 {
@@ -37,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -62,7 +59,7 @@ update_status M_Resources::Update()
 
 	if (updateAssets_timer.ReadSec() > 5)
 	{
-		LoadAllAssets(); //TODO: Add to update in several frames
+		//LoadAllAssets(); //TODO: Add to update in several frames
 		updateAssets_timer.Start();
 	}
 
@@ -245,8 +242,6 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 
 void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
 {
-	BROFILER_CATEGORY("Module Resources - Import Model", Profiler::Color::Magenta)
-
 	R_Model* rModel = (R_Model*)model;
 	const aiScene* scene = Importer::Models::ProcessAssimpScene(buffer, size);
 	Importer::Models::Import(scene, rModel);
@@ -272,22 +267,11 @@ void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
 		model->AddContainedResource(materials.back());
 	}
 
-	//TODO: Quite temporal, loading animator controller
-	if (scene->mNumAnimations > 0)
+	for (uint i = 0; i < scene->mNumAnimations; ++i)
 	{
-		ResourceHandle<R_AnimatorController> hAnimatorController;
-		hAnimatorController.Set(CreateNewCopyResource("Engine/Assets/Defaults/New Animator Controller.animator", "Assets/Models/"));
-
-		for (uint i = 0; i < scene->mNumAnimations; ++i)
-		{
-			aiAnimation* anim = scene->mAnimations[i];
-			animations.push_back(ImportResourceFromModel(model->GetAssetsFile(), anim, anim->mName.C_Str(), ResourceType::ANIMATION));
-			hAnimatorController.Get()->AddAnimation(animations.back());
-
-			//model->AddContainedResource(animations.back());
-		}
-		model->AddContainedResource(hAnimatorController.GetID());
-		SaveResource(hAnimatorController.Get());
+		aiAnimation* anim = scene->mAnimations[i];
+		animations.push_back(ImportResourceFromModel(model->GetAssetsFile(), anim, anim->mName.C_Str(), ResourceType::ANIMATION));
+		model->AddContainedResource(animations.back());
 	}
 
 	//Link all loaded meshes and materials to the existing gameObjects

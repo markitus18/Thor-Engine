@@ -79,7 +79,7 @@ uint64 Importer::Animators::Save(const R_AnimatorController* rAnimator, char** b
 
 	for (uint i = 0; i < rAnimator->animations.size(); ++i)
 	{
-		animationsNode.AddNumber(rAnimator->animations[i].GetID());
+		animationsNode.AddNumber(rAnimator->animations[i]);
 	}
 
 	return file.Serialize(buffer);

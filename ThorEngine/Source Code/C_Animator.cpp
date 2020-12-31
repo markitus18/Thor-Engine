@@ -45,8 +45,8 @@ void C_Animator::DrawLinkedBones() const
 void C_Animator::Start()
 {
 	//TODO: hard-coding root bone for fast code iteration
-	rootBone = gameObject->childs[0]->childs[0]; //Should be childs[0] childs[0] in skeleton mesh
-	gameObject->childs[1]->GetComponent<C_Mesh>()->rootBone = rootBone;
+	rootBone = gameObject->childs[1]->childs[0]; //Should be childs[0] childs[0] in skeleton mesh
+	gameObject->childs[0]->GetComponent<C_Mesh>()->rootBone = rootBone;
 
 	if (rootBone == nullptr) return;
 
@@ -59,37 +59,36 @@ void C_Animator::Start()
 	{
 		boneMapping[bones[i]->name] = bones[i];
 	}
-
-	started = true;
 }
 
-void C_Animator::Update()
+void C_Animator::Update(float dt)
 {
+	dt = Time::deltaTime;
 	//"if" not necessary but we avoid all calculations
-	if (Time::deltaTime > 0.0f)
+	if (dt > 0.0f)
 	{
 		if (playing == true)
 		{
 			if (started == false)
 				Start();
 
-			ResourceHandle<R_Animation> prevAnimation = GetAnimation(previous_animation);
-			ResourceHandle<R_Animation> currentAnimation = GetAnimation(current_animation);
+			R_Animation* prevAnimation = GetAnimation(previous_animation);
+			R_Animation* currentAnimation = GetAnimation(current_animation);
 
 			//Updating animation blend
 			float blendRatio = 0.0f;
 			if (blendTimeDuration > 0.0f)
 			{
-				prevAnimTime += Time::deltaTime;
-				blendTime += Time::deltaTime;
+				prevAnimTime += dt;
+				blendTime += dt;
 
 				if (blendTime >= blendTimeDuration)
 				{
 					blendTimeDuration = 0.0f;
 				}
-				else if (prevAnimation.Get() && prevAnimTime >= prevAnimation.Get()->duration)
+				else if (prevAnimation && prevAnimTime >= prevAnimation->duration)
 				{
-					if (prevAnimation.Get()->loopable == true)
+					if (prevAnimation->loopable == true)
 					{
 						prevAnimTime = 0.0f;
 						// + (currentFrame - endFrame);
@@ -101,11 +100,11 @@ void C_Animator::Update()
 			}
 			//Endof Updating animation blend
 		
-			time += Time::deltaTime;
-			LOG("Animation Time: %.2f", time);
-			if (currentAnimation.Get() && time * currentAnimation.Get()->ticksPerSecond > currentAnimation.Get()->duration )
+			time += dt;
+
+			if (currentAnimation && time > currentAnimation->duration)
 			{
-				if (currentAnimation.Get()->loopable == true)
+				if (currentAnimation->loopable == true)
 				{
 					time = 0.0f;
 				}
@@ -117,7 +116,7 @@ void C_Animator::Update()
 				}
 			}
 
-			UpdateChannelsTransform(currentAnimation.Get(), blendRatio > 0.0f ? prevAnimation.Get() : nullptr, blendRatio);
+			UpdateChannelsTransform(currentAnimation, blendRatio > 0.0f ? prevAnimation : nullptr, blendRatio);
 			UpdateMeshAnimation(gameObject->childs[0]);
 		}
 	}
@@ -162,12 +161,12 @@ void C_Animator::SetAnimation(const char* name, float blendTime)
 
 void C_Animator::SetAnimation(uint index, float blendTime)
 {
-	ResourceHandle<R_Animation> newAnimation = GetAnimation(index);
-	ResourceHandle<R_Animation> currentAnimation = GetAnimation(current_animation);
+	R_Animation* newAnimation = GetAnimation(index);
+	R_Animation* currentAnimation = GetAnimation(current_animation);
 
-	if (newAnimation.GetID() != 0)
+	if (newAnimation)
 	{
-		if (currentAnimation.GetID() != 0 && index != current_animation)
+		if (currentAnimation && index != current_animation)
 		{
 			if (blendTime > 0 && playing == true)
 			{
@@ -183,14 +182,14 @@ void C_Animator::SetAnimation(uint index, float blendTime)
 	}
 }
 
-ResourceHandle<R_Animation> C_Animator::GetAnimation(uint index)
+R_Animation* C_Animator::GetAnimation(uint index)
 {
 	R_AnimatorController* rAnimator = rAnimatorHandle.Get();
 	if (index < rAnimator->animations.size())
 	{
 		//TODO: Animations should be all loaded with the animator controller
 		//return (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[index]);
-		return ResourceHandle<R_Animation>(rAnimator->animations[index].Get());
+		return nullptr;
 	}
 }
 

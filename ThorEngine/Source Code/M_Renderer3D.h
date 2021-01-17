@@ -135,8 +135,22 @@ private:
 	ResourceHandle<R_Material> hDefaultMaterial;
 	ResourceHandle<R_Shader> hDefaultShader;
 
+	ResourceHandle<R_Texture> hDefaultParticlesTexture;
+	ResourceHandle<R_Material> hDefaultParticlesMaterial;
+	ResourceHandle<R_Shader> hDefaultParticlesShader;
+
 	std::vector<CameraTarget> cameraRenderingTargets;
 	CameraTarget* currentCameraTarget = nullptr;
+
+	// Purely temporal as we port particles to shaders
+private:
+	std::vector<float> particleVertices;
+	std::vector<float> particleUVs;
+
+	uint particleVAO;
+	uint particleVertexBuffer;
+	uint particleUVBuffer;
+
 };
 
 #endif //__M_RENDERER_H__

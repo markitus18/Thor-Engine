@@ -268,12 +268,14 @@ void M_Editor::ClearWindowFromIni(WindowFrame* windowFrame)
 				if (sscanf(cursor, "ID=0x%08X Window=0x%08X%n", &ID, &windowID, &r) != 2) { line = line_end + 1; continue; }
 
 				bool matchingEntry = false;
-				if (strcmp(ImGui::FindWindowByID(windowID)->Name, windowFrame->GetWindowStrID()) == 0)
+				ImGuiWindow* window = ImGui::FindWindowByID(windowID);
+				if (window && strcmp(window->Name, windowFrame->GetWindowStrID()) == 0)
 					matchingEntry = true;
 
 				for (uint i = 0u; i < childWindows.size() && !matchingEntry; ++i)
 				{
-					if (strcmp(ImGui::FindWindowByID(windowID)->Name, childWindows[i]->GetWindowStrID()) == 0)
+					ImGuiWindow* childWindow = ImGui::FindWindowByID(windowID);
+					if (childWindow && strcmp(childWindow->Name, childWindows[i]->GetWindowStrID()) == 0)
 						matchingEntry = true;
 				}
 				if (matchingEntry)

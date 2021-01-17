@@ -30,6 +30,12 @@
 
 M_Renderer3D::M_Renderer3D(bool start_enabled) : Module("Renderer", start_enabled)
 {
+	// Purely temporal as we port particles to shaders
+	particleVertices = {-0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, -0.5f, 0.5f, 0.0f,
+						-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f };
+
+	particleUVs = { 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+					0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f };
 }
 
 // Destructor
@@ -140,6 +146,30 @@ bool M_Renderer3D::Init(Config& config)
 	OnResize();
 	//-----------------------------------------
 
+	// Purely temporal as we port particles to shaders
+	// Create a vertex array object which will hold all buffer objects
+	glGenVertexArrays(1, &particleVAO);
+	glBindVertexArray(particleVAO);
+
+	// Create a vertex buffer object to hold vertex positions
+	glGenBuffers(1, &particleVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, particleVertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 18, particleVertices.data(), GL_STATIC_DRAW);
+
+	// Set the vertex attrib pointer
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// Create the array buffer for tex coords and enable attrib pointer
+	glGenBuffers(1, &particleUVBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, particleUVBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, particleUVs.data(), GL_STATIC_DRAW);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+
+	glBindVertexArray(0);
+
 	return ret;
 }
 
@@ -147,6 +177,9 @@ bool M_Renderer3D::Start()
 {
 	hDefaultTexture.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Default Texture.png")->ID);
 	hDefaultShader.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Shaders/Default Shader_PlainLight.shader")->ID);
+
+	hDefaultParticlesShader.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Shaders/Default Particle Shader.shader")->ID);
+	hDefaultParticlesTexture.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Textures/bubble.png")->ID);
 
 	return true;
 }
@@ -371,7 +404,7 @@ void M_Renderer3D::DrawMesh(RenderMesh& rMesh)
 	uint colorLoc = glGetUniformLocation(shader->shaderProgram, "baseColor");
 	glUniform4fv(colorLoc, 1, (GLfloat*)&color);
 
-	//Sending prefab matrix
+	//Sending model matrix
 	uint modelLoc = glGetUniformLocation(shader->shaderProgram, "model_matrix");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, rMesh.transform.ptr());
 
@@ -407,63 +440,53 @@ void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, 
 
 void M_Renderer3D::DrawAllParticles(CameraTarget& cameraTarget)
 {
+	if (hDefaultParticlesShader.GetID() == 0) return;
+
+	glUseProgram(hDefaultParticlesShader.Get()->shaderProgram);
+
 	std::map<float, RenderParticle>::reverse_iterator it;
 	for (it = cameraTarget.particles.rbegin(); it != cameraTarget.particles.rend(); ++it)
 	{
 		DrawParticle((*it).second);
 	}
 	cameraTarget.particles.clear();
+
+	glUseProgram(0);
 }
 
 void M_Renderer3D::DrawParticle(RenderParticle& particle)
 {
-	glUseProgram(0);
+	R_Shader* shader = hDefaultParticlesShader.Get();
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMultMatrixf(currentCameraTarget->camera->GetOpenGLProjectionMatrix().ptr());
+	//Sending model matrix
+	uint modelLoc = glGetUniformLocation(shader->shaderProgram, "model_matrix");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, particle.transform.ptr());
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glMultMatrixf(currentCameraTarget->camera->GetOpenGLViewMatrix().ptr());
+	//Sending view matrix
+	uint projectionLoc = glGetUniformLocation(shader->shaderProgram, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, currentCameraTarget->camera->GetOpenGLProjectionMatrix().ptr());
 
-	glPushMatrix();
-	glMultMatrixf((float*)&particle.transform);
+	//Sending projection matrix
+	uint viewLoc = glGetUniformLocation(shader->shaderProgram, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, currentCameraTarget->camera->GetOpenGLViewMatrix().ptr());
+
+	//Sending color uniform
+	uint colorLoc = glGetUniformLocation(shader->shaderProgram, "baseColor");
+	glUniform4fv(colorLoc, 1, (GLfloat*)&particle.color);
 
 	//Binding particle Texture
-	if (particle.mat)
+	const R_Texture* rTex = (particle.mat && particle.mat->hTexture.GetID()) ? particle.mat->hTexture.Get() : hDefaultParticlesTexture.Get();
+	if (rTex && rTex->buffer != 0)
 	{
-		if (R_Texture* rTex = particle.mat->hTexture.Get())
-		{
-			if (rTex && rTex->buffer != 0)
-			{
-				glBindTexture(GL_TEXTURE_2D, rTex->buffer);
-			}
-		}
+		glBindTexture(GL_TEXTURE_2D, rTex->buffer);
 	}
 
-	glColor4f(particle.color.x, particle.color.y, particle.color.z, particle.color.w);
+	glBindVertexArray(particleVAO);
 
-	//Drawing to tris in direct mode
-	glBegin(GL_TRIANGLES);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(.5f, -.5f, .0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-.5f, .5f, .0f);
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-.5f, -.5f, .0f);
-
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(.5f, -.5f, .0f);
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(.5f, .5f, .0f);
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-.5f, .5f, .0f);
-
-	glEnd();
-	glPopMatrix();
 	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
 }
 
 void M_Renderer3D::AddAABB(const AABB& box, const Color& color)

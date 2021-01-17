@@ -34,7 +34,7 @@ T* ResourceHandle<T>::RequestResource() const
 template <typename T>
 void ResourceHandle<T>::Free()
 {
-	if (resource != nullptr)
+	if (resource != nullptr && Engine != nullptr) //TODO: This is just a fix to avoid destructor crash on exit
 	{
 		Engine->moduleResources->ReleaseResource(resource);
 		resource = nullptr;

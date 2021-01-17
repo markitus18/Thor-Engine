@@ -417,6 +417,16 @@ void M_Renderer3D::DrawAllParticles(CameraTarget& cameraTarget)
 
 void M_Renderer3D::DrawParticle(RenderParticle& particle)
 {
+	glUseProgram(0);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMultMatrixf(currentCameraTarget->camera->GetOpenGLProjectionMatrix().ptr());
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glMultMatrixf(currentCameraTarget->camera->GetOpenGLViewMatrix().ptr());
+
 	glPushMatrix();
 	glMultMatrixf((float*)&particle.transform);
 

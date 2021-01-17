@@ -6,7 +6,7 @@
 #include "Emitter.h"
 #include "R_Material.h"
 #include "ParticleModule.h"
-
+#include "Time.h"
 #include <map>
 
 EmitterInstance::EmitterInstance()
@@ -28,12 +28,12 @@ void EmitterInstance::Init(Emitter* emitterReference, C_ParticleSystem* componen
 	}
 }
 
-void EmitterInstance::Update(float dt)
+void EmitterInstance::Update()
 {
-	emitterTime += dt;
+	emitterTime += Time::deltaTime;
 
 	KillDeadParticles();
-	UpdateModules(dt);
+	UpdateModules();
 }
 
 void EmitterInstance::DrawParticles(ERenderingFlags::Flags flags)
@@ -91,10 +91,10 @@ void EmitterInstance::KillAllParticles()
 	activeParticles = 0;
 }
 
-void EmitterInstance::UpdateModules(float dt)
+void EmitterInstance::UpdateModules()
 {
 	for (int i = 0; i < emitterReference->modules.size(); ++i)
 	{
-		emitterReference->modules[i]->Update(dt, this);
+		emitterReference->modules[i]->Update(this);
 	}
 }

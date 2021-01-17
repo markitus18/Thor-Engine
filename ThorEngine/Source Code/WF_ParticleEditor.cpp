@@ -1,11 +1,17 @@
 #include "WF_ParticleEditor.h"
 
+#include "Engine.h"
+#include "M_SceneManager.h"
+#include "Scene.h"
+#include "GameObject.h"
+
 #include "W_Emitters.h"
 #include "W_ParticleDetails.h"
 #include "W_ParticleCurves.h"
 #include "W_ParticleViewport.h"
 #include "W_ParticleToolbar.h"
 
+#include "C_ParticleSystem.h"
 #include "R_ParticleSystem.h"
 
 #include "ImGui/imgui.h"
@@ -22,13 +28,21 @@ WF_ParticleEditor::WF_ParticleEditor(M_Editor* editor, ImGuiWindowClass* frameWi
 
 WF_ParticleEditor::~WF_ParticleEditor()
 {
-
+	Engine->sceneManager->RemoveScene(scene);
 }
 
 void WF_ParticleEditor::SetResource(uint64 resourceID)
 {
 	WindowFrame::SetResource(resourceID);
 	particleSystem = (R_ParticleSystem*)resourceHandle.Get();
+
+	scene = Engine->sceneManager->CreateNewScene();
+	GameObject* gameObject = scene->CreateNewGameObject("Particle System");
+	C_ParticleSystem*  particleComponent = (C_ParticleSystem*)gameObject->CreateComponent(Component::ParticleSystem);
+	particleComponent->SetResource(resourceID);
+
+	W_ParticleViewport* viewport = (W_ParticleViewport*)GetWindow(W_ParticleViewport::GetName());
+	viewport->SetScene(scene);
 }
 
 void WF_ParticleEditor::MenuBar_Custom()

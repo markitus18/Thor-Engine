@@ -35,7 +35,5 @@ void R_ParticleSystem::AddDefaultEmitter()
 
 void R_ParticleSystem::Serialize(Config& config)
 {
-	Config_Array emittersArray = config.SetArray("Emitters");
-
 	config.SerializeVector("Emitters", emitters);
 }

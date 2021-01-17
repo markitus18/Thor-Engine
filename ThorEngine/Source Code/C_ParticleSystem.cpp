@@ -17,11 +17,11 @@ C_ParticleSystem::~C_ParticleSystem()
 
 }
 
-void C_ParticleSystem::Update(float dt)
+void C_ParticleSystem::Update()
 {
 	for (unsigned int i = 0; i < emitters.size(); ++i)
 	{
-		emitters[i].Update(dt);
+		emitters[i].Update();
 	}
 }
 

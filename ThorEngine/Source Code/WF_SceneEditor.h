@@ -37,8 +37,6 @@ private:
 
 	//Specific window class for the explorer smallest windows
 	ImGuiWindowClass* explorerWindowClass = nullptr;
-
-	Scene* scene = nullptr;
 };
 
 #endif // !__WF_MAIN_WINDOW_H

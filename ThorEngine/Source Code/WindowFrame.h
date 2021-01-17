@@ -7,11 +7,14 @@
 #include "ResourceHandle.h"
 
 class Window;
+class Scene;
 class Config;
 class Resource;
+
 struct ImGuiWindow;
 struct ImGuiDockNode;
 struct ImGuiWindowClass;
+
 typedef unsigned int ImGuiID;
 typedef unsigned int uint;
 typedef unsigned __int64 uint64;
@@ -60,34 +63,37 @@ private:
 	virtual void MenuBar_Development() { };
 
 protected:
-	//The name of the window frame. Used for saving layout information references
+	// The name of the window frame. Used for saving layout information references
 	std::string name;
 
-	//The name that will be displayed in the window tab. Some windows will change names depending on the content
-	//i.e: scene will display the name of the currently open scene
+	// The name that will be displayed in the window tab. Some windows will change names depending on the content
+	// i.e: scene will display the name of the currently open scene
 	std::string displayName;
 
-	//The string used as ID for ImGui's window call. It is a combination of the displayName, the name and the ID
+	// The string used as ID for ImGui's window call. It is a combination of the displayName, the name and the ID
 	std::string windowStrID;
 
-	//Windows belonging in this particular window frame. All windows are added in the constructor, even if not active
+	// Windows belonging in this particular window frame. All windows are added in the constructor, even if not active
 	std::vector<Window*> windows;
 
-	//Flag to allow docking/un-docking on this WindowFrame. The main window should not be moved or resized
+	// Flag to allow docking/un-docking on this WindowFrame. The main window should not be moved or resized
 	bool isDockable = true;
 
-	//ImGui classes for blocking docking a frame window into a normal window and viceversa
+	// ImGui classes for blocking docking a frame window into a normal window and viceversa
 	ImGuiWindowClass* frameWindowClass = nullptr;
 	ImGuiWindowClass* windowClass = nullptr;
 
-	//An Unique Identifier in order to have different WindowStrID sent to ImGui for the same type of window frames
+	// A Unique Identifier in order to have different WindowStrID sent to ImGui for the same type of window frames
 	int ID = -1;
 
-	//Flag used to request a window close. When the window frame is closed by the user, we can safely destroy its memory
+	// Flag used to request a window close. When the window frame is closed by the user, we can safely destroy its memory
 	bool active = true;
 
-	//Most if not all windows will have a resource assigned to them (scene, particle editor, material editor,...)
+	// Most if not all windows will have a resource assigned to them (scene, particle editor, material editor,...)
 	ResourceHandle<Resource> resourceHandle;
+
+	// Most frames will hold a scene to display its content. Asides from the main frame, all frames will be owners of their scene
+	Scene* scene = nullptr;
 
 public:
 	bool pendingLoadLayout = false;

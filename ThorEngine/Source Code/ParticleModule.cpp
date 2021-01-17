@@ -9,6 +9,9 @@
 #include "Particle.h"
 #include "Engine.h"
 #include "C_Camera.h"
+
+#include "Time.h"
+
 #include "MathGeoLib/src/Geometry/Frustum.h"
 
 void ParticleModule::Serialize(Config& config)
@@ -34,7 +37,7 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->position += position + emitterOrigin;
 }
 
-void EmitterBase::Update(float dt, EmitterInstance* emitter)
+void EmitterBase::Update(EmitterInstance* emitter)
 {
 	for (unsigned int i = 0; i < emitter->activeParticles; ++i)
 	{
@@ -42,7 +45,7 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 		Particle* particle = &emitter->particles[particleIndex];
 
 		//TODO: should this be handled in particle lifetime?
-		particle->relativeLifetime += particle->oneOverMaxLifetime * dt;
+		particle->relativeLifetime += particle->oneOverMaxLifetime * Time::deltaTime;
 		//TODO: find a way to link the camera
 
 		//particle->worldRotation = GetAlignmentRotation(particle->position, Engine->camera->GetCamera()->frustum.WorldMatrix());
@@ -131,9 +134,9 @@ void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
 
 }
 
-void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
+void EmitterSpawn::Update(EmitterInstance* emitter)
 {
-	currentTimer += dt;
+	currentTimer += Time::deltaTime;
 	if (currentTimer > spawnRatio)
 	{
 		currentTimer -= spawnRatio;
@@ -153,7 +156,7 @@ void EmitterArea::Spawn(EmitterInstance* emitter, Particle* particle)
 
 }
 
-void EmitterArea::Update(float dt, EmitterInstance* emitter)
+void EmitterArea::Update(EmitterInstance* emitter)
 {
 
 }
@@ -168,7 +171,7 @@ void ParticlePosition::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->position += RandomFloat3(initialPosition1, initialPosition2);
 }
 
-void ParticlePosition::Update(float dt, EmitterInstance* emitter)
+void ParticlePosition::Update(EmitterInstance* emitter)
 {
 
 }
@@ -186,7 +189,7 @@ void ParticleRotation::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->rotation = math::Lerp(initialRotation1, initialRotation2, random.Float());
 }
 
-void ParticleRotation::Update(float dt, EmitterInstance* emitter)
+void ParticleRotation::Update(EmitterInstance* emitter)
 {
 
 }
@@ -204,7 +207,7 @@ void ParticleSize::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->size = math::Lerp(initialSize1, initialSize2, random.Float());
 }
 
-void ParticleSize::Update(float dt, EmitterInstance* emitter)
+void ParticleSize::Update(EmitterInstance* emitter)
 {
 
 }
@@ -222,7 +225,7 @@ void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->color = RandomFloat4(initialColor1, initialColor2);
 }
 
-void ParticleColor::Update(float dt, EmitterInstance* emitter)
+void ParticleColor::Update(EmitterInstance* emitter)
 {
 
 }
@@ -242,14 +245,14 @@ void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->relativeLifetime = 0.0f;
 }
 
-void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
+void ParticleLifetime::Update(EmitterInstance* emitter)
 {
 	for (unsigned int i = 0; i < emitter->activeParticles; ++i)
 	{
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		particle->relativeLifetime += particle->oneOverMaxLifetime * dt;
+		particle->relativeLifetime += particle->oneOverMaxLifetime * Time::deltaTime;
 	}
 }
 
@@ -267,15 +270,16 @@ void ParticleVelocity::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->velocity = float4(direction, initialVelocity1.w);
 }
 
-void ParticleVelocity::Update(float dt, EmitterInstance* emitter)
+void ParticleVelocity::Update(EmitterInstance* emitter)
 {
 	//TODO: should not be here, will be moved later
+	// can't remember what this comment whas about :'(
 	for (int i = emitter->activeParticles - 1; i >= 0; --i)
 	{
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		particle->position += particle->velocity.Float3Part() * particle->velocity.w * dt;
+		particle->position += particle->velocity.Float3Part() * particle->velocity.w * Time::deltaTime;
 	}
 }
 

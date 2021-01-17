@@ -13,7 +13,7 @@ public:
 
 	void Init(Emitter* emitterReference, C_ParticleSystem* component);
 
-	void Update(float dt);
+	void Update();
 	void DrawParticles(ERenderingFlags::Flags flags);
 	void Reset();
 
@@ -22,7 +22,7 @@ public:
 private:
 	void KillDeadParticles();
 	void KillAllParticles();
-	void UpdateModules(float dt);
+	void UpdateModules();
 
 public:
 	float emitterTime = 0;					//Keeping emitter time count, useful later for looping

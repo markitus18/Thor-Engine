@@ -69,7 +69,7 @@ struct CameraTarget
 	EViewportViewMode::Flags viewMode;
 
 	std::vector<RenderMesh> meshes;
-	std::map<float, RenderParticle> particles;
+	std::multimap<float, RenderParticle> particles;
 
 	std::vector<RenderBox<AABB>> aabb;
 	std::vector<RenderBox<OBB>> obb;

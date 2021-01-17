@@ -30,7 +30,6 @@ public:
 	R_ParticleSystem* particleSystem = nullptr;
 	Emitter* selectedEmitter = nullptr;
 	ParticleModule* selectedModule = nullptr;
-
 };
 
 #endif //__WF_PARTICLE_EDITOR_H

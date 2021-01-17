@@ -18,7 +18,7 @@ public:
 
 	static inline Type GetType() { return Type::ParticleSystem; };
 
-	void Update(float dt);
+	void Update();
 	void Reset();
 
 	virtual void Draw(ERenderingFlags::Flags flags) override;

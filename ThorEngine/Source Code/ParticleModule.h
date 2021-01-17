@@ -31,7 +31,7 @@ struct ParticleModule
 	ParticleModule(Type type) : type(type) {};
 
 	virtual void Spawn(EmitterInstance* emitter, Particle* particle) = 0;
-	virtual void Update(float dt, EmitterInstance* emitter) = 0;
+	virtual void Update(EmitterInstance* emitter) = 0;
 
 	virtual void Serialize(Config& config) = 0;
 
@@ -60,7 +60,7 @@ struct EmitterBase : ParticleModule
 	EmitterBase() : ParticleModule(Type::EmitterBase) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
 	
 	void Serialize(Config& config);
@@ -74,7 +74,7 @@ struct EmitterSpawn : ParticleModule
 	EmitterSpawn() : ParticleModule(Type::EmitterSpawn) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 
@@ -87,7 +87,7 @@ struct EmitterArea: ParticleModule
 	EmitterArea() : ParticleModule(Type::EmitterArea) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 
@@ -99,7 +99,7 @@ struct ParticlePosition : ParticleModule
 	ParticlePosition() : ParticleModule(Type::ParticlePosition) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 
@@ -112,7 +112,7 @@ struct ParticleRotation : ParticleModule
 	ParticleRotation() : ParticleModule(Type::ParticleRotation) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 
@@ -125,7 +125,7 @@ struct ParticleSize : ParticleModule
 	ParticleSize() : ParticleModule(Type::ParticleSize) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 
@@ -138,7 +138,7 @@ struct ParticleColor : ParticleModule
 	ParticleColor() : ParticleModule(Type::ParticleColor) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 
@@ -151,7 +151,7 @@ struct ParticleLifetime : ParticleModule
 	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 
@@ -164,7 +164,7 @@ struct ParticleVelocity : ParticleModule
 	ParticleVelocity() : ParticleModule(Type::ParticleVelocity) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
-	void Update(float dt, EmitterInstance* emitter);
+	void Update(EmitterInstance* emitter);
 
 	void Serialize(Config& config);
 

@@ -58,7 +58,7 @@ public:
 	void SerializeArray(const char* name, float* data, uint size);
 
 	template <class T>
-	void SerializeVector(const char* name, std::vector<T> vector)
+	void SerializeVector(const char* name, std::vector<T>& vector)
 	{
 		Config_Array arr;
 		if (isSaving)

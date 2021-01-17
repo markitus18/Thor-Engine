@@ -28,6 +28,10 @@ ResourceHandle<R_Texture> WViewport::hToolbarCollapseButton;
 ResourceHandle<R_Texture> WViewport::hToolbarDisplayButton;
 ResourceHandle<R_Texture> WViewport::hCameraSettingsButton;
 
+std::vector<WViewport::GridSnapping> WViewport::gridSnapValues = { {1}, {5}, {10}, {50}, {100}, {500} };
+std::vector<WViewport::RotationSnapping> WViewport::rotationSnapValues = { {5}, {10}, {15}, {30}, {45}, {60}, {90}, {120} };
+std::vector<WViewport::ScaleSnapping> WViewport::scaleSnapValues = { {10.f, 2}, {1.f, 1}, {0.5f, 3}, {0.25f, 4}, {0.125f, 5}, {0.0625, 6} };
+
 WViewport::WViewport(WindowFrame* parent, const char* name, ImGuiWindowClass* windowClass, int ID) : Window(parent, name, windowClass, ID)
 {
 	// Generate all 7 cameras - perspective + 6 orthographic
@@ -170,7 +174,7 @@ void WViewport::DrawToolbarShared()
 	ImGui::SetCursorScreenPos(ImGui::GetCurrentWindow()->DC.CursorStartPos + ImGui::GetStyle().WindowPadding);
 	BeginToolbarStyle();
 
-	float toolbarHeight = 23.0f;
+	float toolbarHeight = 26.0f;
 
 	// Draw toolbar collapse / display icon
 	uint buttonTextureID = (toolbarCollapsed ? hToolbarDisplayButton : hToolbarCollapseButton).Get()->buffer;
@@ -184,6 +188,8 @@ void WViewport::DrawToolbarShared()
 	// Draw toolbar popup buttons
 	if (!toolbarCollapsed)
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6.5f, 6.5f));
+
 		std::string cameraViewText = std::string(EViewportCameraAngle::str[(int)(log2(currentCamera->cameraAngle)+1)]).append("##Camera View");
 		ImGui::SameLine(); if (ImGui::Button(cameraViewText.c_str())) ImGui::OpenPopup("Camera View Popup");
 
@@ -194,6 +200,7 @@ void WViewport::DrawToolbarShared()
 
 		ImGui::SameLine(); if (ImGui::Button("Stats")) ImGui::OpenPopup("Show Stats Popup");
 	
+		ImGui::PopStyleVar();
 
 		DrawToolbarCustom();
 
@@ -547,7 +554,28 @@ void WViewport::HandleGizmoUsage()
 	float modelPtr[16];
 	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
 	ImGuizmo::MODE finalMode = (gizmoOperation == ImGuizmo::OPERATION::SCALE ? ImGuizmo::MODE::LOCAL : gizmoMode);
-	ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr);
+
+	switch (gizmoOperation)
+	{
+		case(ImGuizmo::OPERATION::TRANSLATE):
+		{
+			float snapValue = gridSnapValues[gridSnapIndex].value;
+			ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr, nullptr, gridSnapActive ? &snapValue : nullptr);
+			break;
+		}
+		case(ImGuizmo::OPERATION::ROTATE):
+		{
+			float snapValue = rotationSnapValues[rotationSnapIndex].value;
+			ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr, nullptr, rotationSnapActive ? &snapValue : nullptr);
+			break;
+		}
+		case(ImGuizmo::OPERATION::SCALE):
+		{
+			float snapValue = scaleSnapValues[scaleSnapIndex].value;
+			ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr, nullptr, scaleSnapActive ? &snapValue : nullptr);
+			break;
+		}
+	}
 
 	if (ImGuizmo::IsUsing())
 	{

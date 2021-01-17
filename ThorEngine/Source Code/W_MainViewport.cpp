@@ -21,6 +21,7 @@
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui/imgui_internal.h"
+#include "ImGuiHelper.h"
 
 W_MainViewport::W_MainViewport(WindowFrame* parent, ImGuiWindowClass* windowClass, int ID) : WViewport(parent, GetName(), windowClass, ID)
 {
@@ -32,6 +33,14 @@ W_MainViewport::W_MainViewport(WindowFrame* parent, ImGuiWindowClass* windowClas
 	hTranslateIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/TranslateIcon.png")->ID);
 	hRotateIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/RotateIcon.png")->ID);
 	hScaleIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ScaleIcon.png")->ID);
+
+	hLocalGizmoIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/LocalAxisIcon.png")->ID);
+	hWorldGizmoIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/WorldAxisIcon.png")->ID);
+
+	hGridSnapIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/GridIcon.png")->ID);
+	hRotationSnapIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/RotationSnapIcon.png")->ID);
+	hScaleSnapIcon.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Icons/ScaleSnapIcon.png")->ID);
+
 }
 
 void W_MainViewport::DrawToolbarCustom()
@@ -40,9 +49,10 @@ void W_MainViewport::DrawToolbarCustom()
 	cursorPos += ImVec2(ImGui::GetWindowSize().x - 400.0f, 0.0f);
 	ImGui::SetCursorScreenPos(cursorPos);
 
-	float toolbarHeight = 23.0f;
+	float toolbarHeight = 26.0f;
 	ImVec2 imageSize = ImVec2(toolbarHeight, toolbarHeight) - ImGui::GetStyle().FramePadding * 2;
 
+	// Translate operation
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2.0f, 2.0f));
 	ImVec4 highlight = gizmoOperation == ImGuizmo::OPERATION::TRANSLATE ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	if (ImGui::ImageButton((ImTextureID)hTranslateIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
@@ -50,6 +60,7 @@ void W_MainViewport::DrawToolbarCustom()
 		gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 	}
 	
+	// Rotate operation
 	ImGui::SameLine();
 	highlight = gizmoOperation == ImGuizmo::OPERATION::ROTATE ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	if (ImGui::ImageButton((ImTextureID)hRotateIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
@@ -57,13 +68,105 @@ void W_MainViewport::DrawToolbarCustom()
 		gizmoOperation = ImGuizmo::OPERATION::ROTATE;
 	}
 
+	// Scale operation
 	ImGui::SameLine();
 	highlight = gizmoOperation == ImGuizmo::OPERATION::SCALE ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	if (ImGui::ImageButton((ImTextureID)hScaleIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
 	{
 		gizmoOperation = ImGuizmo::OPERATION::SCALE;
 	}
+	 
+	// Gizmo mode: World vs. Local
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));	ImGui::SameLine();
+	uint textureBuffer = (gizmoOperation == ImGuizmo::OPERATION::SCALE || gizmoMode == ImGuizmo::MODE::LOCAL) ? hLocalGizmoIcon.Get()->buffer : hWorldGizmoIcon.Get()->buffer;
+	if (ImGui::ImageButton((ImTextureID)textureBuffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f)))
+	{
+		gizmoMode = gizmoMode == ImGuizmo::MODE::LOCAL ? ImGuizmo::MODE::WORLD : ImGuizmo::MODE::LOCAL;
+	}
+	ImGui::SameLine(); ImGui::PopStyleVar();
+
+	// Grid Snap
+	highlight = gridSnapActive ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	if (ImGui::ImageButton((ImTextureID)hGridSnapIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	{
+		gridSnapActive = !gridSnapActive;
+	}
+	ImGui::SameLine();
+
+	// Grid snap value
+	ImVec2 buttonTextMinSize = imageSize + ImGui::GetStyle().FramePadding * 2;
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6.5f, 6.5f));
+
+	std::string gridSnapText = std::to_string(gridSnapValues[gridSnapIndex].value);
+	ImVec2 buttonSize = ImGui::CalcTextSize(gridSnapText.c_str()) + ImGui::GetStyle().FramePadding * 2;
+	buttonSize.x = Clamp(buttonSize.x, buttonTextMinSize.x, buttonSize.x);
+	if (ImGui::Button(gridSnapText.append("##GridSnap").c_str(), buttonSize))
+	{
+		ImGui::OpenPopup("Grid Snap Settings");
+	}
 	ImGui::PopStyleVar();
 
+	// Rotation snap
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f)); ImGui::SameLine();
+	highlight = rotationSnapActive ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	if (ImGui::ImageButton((ImTextureID)hRotationSnapIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	{
+		rotationSnapActive = !rotationSnapActive;
+	}
+	ImGui::PopStyleVar(); 
+	
+	// Rotation snap value
+	ImGui::SameLine();
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6.5f, 6.5f));
+	std::string rotationSnapText = std::to_string(rotationSnapValues[rotationSnapIndex].value);
+	buttonSize = ImGui::CalcTextSize(rotationSnapText.c_str()) + ImGui::GetStyle().FramePadding * 2;
+	buttonSize.x = Clamp(buttonSize.x, buttonTextMinSize.x, buttonSize.x);
+
+	if (ImGui::Button(rotationSnapText.append("##RotationSnap").c_str(), buttonSize))
+	{
+		ImGui::OpenPopup("Rotation Snap Settings");
+	}
+	ImGui::PopStyleVar();
+
+	// Scale snap
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f)); ImGui::SameLine();
+	highlight = scaleSnapActive ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	if (ImGui::ImageButton((ImTextureID)hScaleSnapIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	{
+		scaleSnapActive = !scaleSnapActive;
+	}
+	ImGui::PopStyleVar();
+
+	// Scale snap value
+	ImGui::SameLine();
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6.5f, 6.5f));
+	std::string scaleSnapText = std::to_string(scaleSnapValues[scaleSnapIndex].value).substr(0, scaleSnapValues[scaleSnapIndex].characters);
+	buttonSize = ImGui::CalcTextSize(scaleSnapText.c_str()) + ImGui::GetStyle().FramePadding * 2;
+	buttonSize.x = Clamp(buttonSize.x, buttonTextMinSize.x, buttonSize.x);
+
+	if (ImGui::Button(scaleSnapText.append("##ScaleSnap").c_str(), buttonSize))
+	{
+		ImGui::OpenPopup("Scale Snap Settings");
+	}
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+
+	if (ImGui::BeginPopup("Grid Snap Settings"))
+	{
+		ImGuiHelper::ValueSelection<GridSnapping>(gridSnapIndex, gridSnapValues);
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopup("Rotation Snap Settings"))
+	{
+		ImGuiHelper::ValueSelection<RotationSnapping>(rotationSnapIndex, rotationSnapValues);
+		ImGui::EndPopup();
+	}
+	
+	if (ImGui::BeginPopup("Scale Snap Settings"))
+	{
+		ImGuiHelper::ValueSelection<ScaleSnapping>(scaleSnapIndex, scaleSnapValues);
+		ImGui::EndPopup();
+	}
 	WViewport::DrawToolbarCustom();
 }

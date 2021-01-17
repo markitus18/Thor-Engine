@@ -128,6 +128,14 @@ protected:
 	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 	ImGuizmo::MODE gizmoMode = ImGuizmo::MODE::WORLD;
 
+	bool gridSnapActive = false;
+	bool rotationSnapActive = false;
+	bool scaleSnapActive = false;
+
+	uint gridSnapIndex = 0;
+	uint rotationSnapIndex = 0;
+	uint scaleSnapIndex = 4;
+
 	// Toolbar handling
 	bool toolbarCollapsed = false;
 
@@ -138,12 +146,36 @@ protected:
 
 	// Stats which each viewport implementation allows.
 	// Stats not in this mask will not be displayed as a selectable option
-	EViewportStats::Flags statsMask;
+	EViewportStats::Flags statsMask = 0;
 
-// Graphics
+	// Graphics
 	static ResourceHandle<R_Texture> hToolbarCollapseButton;
 	static ResourceHandle<R_Texture> hToolbarDisplayButton;
 	static ResourceHandle<R_Texture> hCameraSettingsButton;
+
+	// Gizmo snapping settings
+protected:
+	struct GridSnapping
+	{
+		std::string toStr() const { return std::to_string(value); }
+		uint value;
+	};
+	struct RotationSnapping
+	{
+		std::string toStr() const { return std::to_string(value).append("º"); }
+		uint value;
+	};
+	struct ScaleSnapping
+	{
+		ScaleSnapping(float v, uint c) : value(v), characters(c) {}
+		std::string toStr() const { return std::to_string(value).substr(0, characters); }
+		float value;
+		uint characters;
+	};
+
+	static std::vector<GridSnapping> gridSnapValues;
+	static std::vector<RotationSnapping> rotationSnapValues;
+	static std::vector<ScaleSnapping> scaleSnapValues;
 };
 
 

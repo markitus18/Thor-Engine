@@ -19,7 +19,8 @@ public:
 
 	~C_Transform();
 
-	// All transformation methods en up calling this function. Updates TRS from the new local transform and recursively updates the global transformations
+	// All transformation methods en up calling this function.
+	// Updates TRS from the new local transform and recursively updates the global transformations
 	void SetLocalTransform(float4x4 newTransform);
 
 	// Local setters

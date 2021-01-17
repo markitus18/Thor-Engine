@@ -1,6 +1,8 @@
 #ifndef __IMGUI_HELPER_H__
 #define __IMGUI_HELPER_H__
 
+#include <vector>
+
 namespace ImGuiHelper
 {
 	void PushInvisibleButtonStyle();
@@ -14,11 +16,17 @@ namespace ImGuiHelper
 		{
 			if (!mask || *mask & it)
 			{
-				if (ImGui::Selectable(T::str[i + 1].c_str(), currentFlag & it))
+				bool selected = currentFlag & it;
+				selected ? ImGui::Bullet() : ImGui::Indent(ImGui::GetStyle().FramePadding.x * 5.5f);
+
+				if (ImGui::Selectable(T::str[i + 1].c_str(), false))
 				{
 					currentFlag = it;
 					return true;
 				}
+
+				if (!selected)
+					ImGui::Unindent(ImGui::GetStyle().FramePadding.x * 5.5f);
 			}
 		}
 		return false;
@@ -42,6 +50,7 @@ namespace ImGuiHelper
 					currentFlag ^= it;
 					modified = true;
 				}
+
 				if (!selected)
 					ImGui::Unindent(ImGui::GetStyle().FramePadding.x * 5.5f);
 			}
@@ -57,6 +66,29 @@ namespace ImGuiHelper
 			memset(&currentFlag, 0, sizeof(currentFlag));
 			modified = true;
 		}
+		return modified;
+	}
+
+	template <class T>
+	bool ValueSelection(unsigned int& currentIndex, const std::vector<T>& values)
+	{
+		bool modified = false;
+
+		for (unsigned int i = 0; i < values.size(); ++i)
+		{
+			bool selected = currentIndex == i;
+			selected == true ? ImGui::Bullet() : ImGui::Indent(ImGui::GetStyle().FramePadding.x * 4.8f);
+
+			if (ImGui::Selectable(values[i].toStr().append("##").append(std::to_string(i)).c_str(), false))
+			{
+				currentIndex = i;
+				modified = true;
+			}
+
+			if (!selected)
+				ImGui::Unindent(ImGui::GetStyle().FramePadding.x * 4.8f);
+		}
+
 		return modified;
 	}
 }

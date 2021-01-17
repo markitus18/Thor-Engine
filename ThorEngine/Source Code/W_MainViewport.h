@@ -19,7 +19,13 @@ private:
 	ResourceHandle<R_Texture> hTranslateIcon;
 	ResourceHandle<R_Texture> hRotateIcon;
 	ResourceHandle<R_Texture> hScaleIcon;
+	
+	ResourceHandle<R_Texture> hLocalGizmoIcon;
+	ResourceHandle<R_Texture> hWorldGizmoIcon;
 
+	ResourceHandle<R_Texture> hGridSnapIcon;
+	ResourceHandle<R_Texture> hRotationSnapIcon;
+	ResourceHandle<R_Texture> hScaleSnapIcon;
 };
 
 #endif

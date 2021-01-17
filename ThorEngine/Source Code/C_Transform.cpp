@@ -40,7 +40,8 @@ void C_Transform::SetGlobalTransform(float4x4 transform)
 	localTransform = transform;
 	if (gameObject->parent)
 	{
-		localTransform = gameObject->parent->GetComponent<C_Transform>()->GetTransform().Transposed() * transform;
+		//TODO: This should, theoretically, be changed to Inversed instead of Transposed. Review matrix equation solving
+		localTransform = gameObject->parent->GetComponent<C_Transform>()->GetTransform().Transposed() * transform; 
 	}
 	SetLocalTransform(localTransform);
 }

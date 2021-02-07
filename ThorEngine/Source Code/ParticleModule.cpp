@@ -8,6 +8,7 @@
 #include "C_Transform.h"
 #include "Particle.h"
 #include "Engine.h"
+#include "Scene.h"
 #include "C_Camera.h"
 
 #include "Time.h"
@@ -39,19 +40,21 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void EmitterBase::Update(EmitterInstance* emitter)
 {
+	//TODO: might clean camera access later
+	float4x4 cameraTransform = float4x4::identity;
+	if (emitter->component->gameObject->sceneOwner->registeredCameras.size() > 0)
+	{
+		C_Camera* camera = emitter->component->gameObject->sceneOwner->registeredCameras.front();
+		cameraTransform = camera->gameObject->GetComponent<C_Transform>()->GetTransform();
+	}
+
 	for (unsigned int i = 0; i < emitter->activeParticles; ++i)
 	{
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		//TODO: should this be handled in particle lifetime?
-		particle->relativeLifetime += particle->oneOverMaxLifetime * Time::deltaTime;
-		//TODO: find a way to link the camera
-
-		//particle->worldRotation = GetAlignmentRotation(particle->position, Engine->camera->GetCamera()->frustum.WorldMatrix());
-		
-		//TODO: Get scene camera! Maybe through render?
-		//particle->distanceToCamera = float3(Engine->camera->GetCamera()->frustum.WorldMatrix().TranslatePart() - particle->position).LengthSq();
+		particle->worldRotation = GetAlignmentRotation(particle->position, cameraTransform);
+		particle->distanceToCamera = float3(cameraTransform.TranslatePart() - particle->position).LengthSq();
 	}
 }
 
@@ -273,7 +276,7 @@ void ParticleVelocity::Spawn(EmitterInstance* emitter, Particle* particle)
 void ParticleVelocity::Update(EmitterInstance* emitter)
 {
 	//TODO: should not be here, will be moved later
-	// can't remember what this comment whas about :'(
+	// can't remember what this comment was about :'(
 	for (int i = emitter->activeParticles - 1; i >= 0; --i)
 	{
 		unsigned int particleIndex = emitter->particleIndices[i];

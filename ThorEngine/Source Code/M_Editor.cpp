@@ -77,7 +77,7 @@ bool M_Editor::Init(Config& config)
 bool M_Editor::Start()
 {
 	//TODO: Add different windowClasses for every windowFrame.
-	//This way only windos belonging to the same windowFrame can dock into it  
+	//This way only windows belonging to the same windowFrame can dock into it  
 	frameWindowClass = new ImGuiWindowClass();
 	frameWindowClass->ClassId = 1;
 	frameWindowClass->DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoSplit;

@@ -80,13 +80,13 @@ bool M_Renderer3D::Init(Config& config)
 			ret = false;
 		}
 
-		//Initialize Projection Matrix
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
+		////Initialize Projection Matrix
+		//glMatrixMode(GL_PROJECTION);
+		//glLoadIdentity();
 
-		//Initialize ModelView Matrix
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+		////Initialize ModelView Matrix
+		//glMatrixMode(GL_MODELVIEW);
+		//glLoadIdentity();
 
 		//Check for error
 		error = glGetError();
@@ -115,23 +115,7 @@ bool M_Renderer3D::Init(Config& config)
 		glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		//GLfloat lmodel_ambient[] = { 1.4, 1.4, 1.4, 1.0 };
-		//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-
-		lights[0].ref = GL_LIGHT0;
-		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
-		lights[0].Init();
-		lights[0].Active(true);		
-
-		//GLfloat MaterialAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		//glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
-
-		//GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		//glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-		
+	
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_LIGHTING);
@@ -190,18 +174,6 @@ update_status M_Renderer3D::PreUpdate()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	
-	//light 0 on cam pos
-	//lights[0].SetPos(Engine->camera->GetCamera()->frustum.Pos().x, Engine->camera->GetCamera()->frustum.Pos().y, Engine->camera->GetCamera()->frustum.Pos().z);
-
-	//for(uint i = 0; i < MAX_LIGHTS; ++i)
-	//	lights[i].Render();
 
 	return UPDATE_CONTINUE;
 }
@@ -216,7 +188,6 @@ update_status M_Renderer3D::PostUpdate()
 	}
 	cameraRenderingTargets.clear();
 
-	//glViewport(0, 0, Engine->window->windowSize.x, Engine->window->windowSize.y); //TODO: Is this necessary...?*/
 	Engine->moduleEditor->Draw();
 
 	SDL_GL_SwapWindow(Engine->window->window);

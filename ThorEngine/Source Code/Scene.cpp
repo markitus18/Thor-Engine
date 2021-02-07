@@ -53,6 +53,7 @@ GameObject* Scene::CreateNewGameObject(const char* name, GameObject* parent)
 {
 	GameObject* go = new GameObject(parent ? parent : root, name);
 	go->uid = random.Int();
+	go->sceneOwner = this;
 	return go;
 }
 

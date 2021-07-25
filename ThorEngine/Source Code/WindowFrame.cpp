@@ -3,8 +3,6 @@
 #include "Engine.h"
 #include "Config.h"
 
-#include "M_Resources.h"
-
 #include "Window.h"
 #include "Resource.h"
 
@@ -33,17 +31,25 @@ void WindowFrame::PrepareUpdate()
 
 void WindowFrame::Draw()
 {
-	if (pendingLoadLayout) return;
+	if (pendingLoadLayout)
+		return;
 
 	ImGuiWindowFlags frameWindow_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 	if (!isDockable)
 		frameWindow_flags |= ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	if (resourceHandle.Get() && resourceHandle.Get()->needs_save)
+		frameWindow_flags |= ImGuiWindowFlags_UnsavedDocument;
 
 	//Window settings and display
 	ImGui::SetNextWindowClass(frameWindowClass);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin(windowStrID.c_str(), isDockable ? &active : nullptr, frameWindow_flags);
+
+	bool isActive = true;
+	bool isOpen = ImGui::Begin(windowStrID.c_str(), isDockable ? &isActive : nullptr, frameWindow_flags);
 	ImGui::PopStyleVar();
+
+	if (!isActive)
+		requestClose = true;
 
 	//Adding a dock space to dock all child windows
 	std::string dockName = windowStrID + std::string("_DockSpace");
@@ -53,6 +59,9 @@ void WindowFrame::Draw()
 	DrawMenuBar();
 
 	ImGui::End();
+
+	if (!isOpen)
+		return;
 
 	for (uint i = 0; i < windows.size(); ++i)
 	{

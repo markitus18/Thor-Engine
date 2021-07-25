@@ -81,7 +81,7 @@ void C_Mesh::StartBoneDeformation()
 	}
 	if (animMesh->buffersSize[R_Mesh::b_tex_coords] > 0)
 	{
-		memset(animMesh->normals, 0, animMesh->buffersSize[R_Mesh::b_tex_coords] * sizeof(float) * 2);
+		//memset(animMesh->normals, 0, animMesh->buffersSize[R_Mesh::b_tex_coords] * sizeof(float) * 2); This was old code, why is it here?
 	}
 
 	if (newMesh)

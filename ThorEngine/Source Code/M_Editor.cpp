@@ -26,6 +26,7 @@
 
 #include "OpenGL.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 #include "ImGui/imgui_impl_sdl.h"
@@ -101,16 +102,7 @@ update_status M_Editor::PreUpdate()
 {
 	for (uint i = 0; i < windowFrames.size(); ++i)
 	{
-		//Handle any window frame close requests
-		if (!windowFrames[i]->IsActive())
-		{
-			CloseWindow(windowFrames[i]);
-			--i;
-		}
-		else
-		{
-			windowFrames[i]->PrepareUpdate();
-		}
+		windowFrames[i]->PrepareUpdate();
 	}
 
 	//Begin new ImGui Frame
@@ -388,7 +380,14 @@ void M_Editor::Draw()
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
 
 	for (uint i = 0; i < windowFrames.size(); ++i)
+	{
 		windowFrames[i]->Draw();
+		if (windowFrames[i]->requestClose)
+		{
+			if (RequestWindowClose(windowFrames[i]))
+				--i;
+		}
+	}
 
 	if (show_fileName_window)
 		ShowFileNameWindow();
@@ -396,10 +395,15 @@ void M_Editor::Draw()
 	if (show_Demo_window)
 		ImGui::ShowDemoWindow(&show_Demo_window);
 
+	if (windowPendingDelete)
+		ShowWindowCloseConfirmation();
+
 	//Layouts are loaded after draw so the draw call on docks does not happen twice in the same frame
 	for (uint i = 0; i < windowFrames.size(); ++i)
+	{
 		if (windowFrames[i]->pendingLoadLayout)
 			LoadLayout_Default(windowFrames[i]);
+	}
 
 	ImGui::End();
 
@@ -437,9 +441,25 @@ void M_Editor::Log(const char* input)
 	}
 }
 
-void M_Editor::GetEvent(SDL_Event* event)
+void M_Editor::ProcessSDLEvent(const SDL_Event& event)
 {
-	ImGui_ImplSDL2_ProcessEvent(event);
+	if (event.window.event != SDL_WINDOWEVENT_CLOSE)
+	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
+	}
+	else
+	{
+		// If the user requests to close a window frame we check if there are any changes to be saved
+		if (WindowFrame* windowFrame = GetWindowFromSDLID(event.window.windowID))
+		{
+			windowFrame->requestClose = true;
+		}
+		// Otherwise it is a window and we close it normally
+		else
+		{
+			ImGui_ImplSDL2_ProcessEvent(&event);
+		}
+	}
 }
 
 void M_Editor::ShowFileNameWindow()
@@ -468,6 +488,47 @@ void M_Editor::ShowFileNameWindow()
 	ImGui::End();
 }
 
+void M_Editor::ShowWindowCloseConfirmation()
+{
+	ImGuiWindow* window = ImGui::FindWindowByName(windowPendingDelete->GetWindowStrID());
+	ImGui::SetNextWindowViewport(window->ViewportId);
+	ImGui::SetNextWindowPos(window->ViewportPos + window->Viewport->Size / 2.0f, 0, ImVec2(0.5f, 0.5f));
+	
+	if (ImGui::BeginPopupModal("Close confirmation", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize))
+	{
+		ImGui::Text("There might be unsaved changes in the file, are you sure you want to quit?");
+		ImGui::NewLine();
+		ImGui::NewLine();
+
+		if (ImGui::Button("Save & Close"))
+		{
+			ResourceHandle<Resource> windowResource(windowPendingDelete->GetResourceID());
+			Engine->moduleResources->SaveResource(windowResource.Get());
+
+			CloseWindow(windowPendingDelete);
+			windowPendingDelete = nullptr;
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Close"))
+		{
+			CloseWindow(windowPendingDelete);
+			windowPendingDelete = nullptr;
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			windowPendingDelete->requestClose = false;
+			windowPendingDelete = nullptr;
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+}
+
 void M_Editor::OpenFileNameWindow()
 {
 	show_fileName_window = true;
@@ -482,7 +543,22 @@ WindowFrame* M_Editor::GetWindowFrame(const char* name) const
 	return nullptr;
 }
 
-const char* M_Editor::GetCurrentExplorerDirectory()
+WindowFrame* M_Editor::GetWindowFromSDLID(uint32_t SDLWindowID) const
+{
+	ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle((void*)SDL_GetWindowFromID(SDLWindowID));
+
+	for (uint i = 0u; i < windowFrames.size(); ++i)
+	{
+		ImGuiWindow* window = ImGui::FindWindowByName(windowFrames[i]->GetWindowStrID());
+		if (window->Viewport == viewport)
+		{
+			return windowFrames[i];
+		}
+	}
+	return nullptr;
+}
+
+const char* M_Editor::GetCurrentExplorerDirectory() const
 {
 	return hExplorerFolder.Get()->GetAssetsFile();
 }
@@ -491,7 +567,8 @@ void M_Editor::UpdateFPSData(int fps, int ms)
 {
 	if (windowFrames.size() > 0)
 	{
-		W_EngineConfig* w_engineConfig = (W_EngineConfig*)GetWindowFrame(WF_SceneEditor::GetName())->GetWindow(W_EngineConfig::GetName());
+		WindowFrame* mainWindowFrame = GetWindowFrame(WF_SceneEditor::GetName());
+		W_EngineConfig* w_engineConfig = mainWindowFrame ? (W_EngineConfig*)mainWindowFrame->GetWindow(W_EngineConfig::GetName()) : nullptr;
 		if (w_engineConfig)
 			w_engineConfig->UpdateFPSData(fps, ms);
 	}
@@ -517,15 +594,21 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 	if (resource == nullptr) return false;
 
 	WindowFrame* windowFrame = nullptr;
+	uint64 newWindowID = forceWindowID ? forceWindowID : random.Int();
 
 	switch (resource->GetType())
 	{
 		case(ResourceType::MAP):
 		{
 			if (windowFrame = GetWindowFrame(WF_SceneEditor::GetName()))
-				{ windowFrame->SetResource(resourceID); return true; }
+			{
+				windowFrame->SetResource(resourceID);
+				return true;
+			}
 			else
-				windowFrame = new WF_SceneEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : random.Int());
+			{
+				windowFrame = new WF_SceneEditor(this, frameWindowClass, normalWindowClass, newWindowID);
+			}
 			break;
 		}
 		case (ResourceType::MATERIAL):
@@ -535,7 +618,7 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 		}
 		case(ResourceType::PARTICLESYSTEM):
 		{
-			windowFrame = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, forceWindowID ? forceWindowID : random.Int());
+			windowFrame = new WF_ParticleEditor(this, frameWindowClass, normalWindowClass, newWindowID);
 			break;
 		}
 	}
@@ -548,6 +631,25 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 		if (forceWindowID == 0 || !IsWindowLayoutSaved(windowFrame))
 			windowFrame->pendingLoadLayout = true;
 	}
+}
+
+bool M_Editor::RequestWindowClose(WindowFrame* windowFrame)
+{
+	if (!windowPendingDelete && windowFrame)
+	{
+		ResourceHandle<Resource> windowResource(windowFrame->GetResourceID());
+		if (windowResource.Get() && windowResource.Get()->needs_save)
+		{
+			windowPendingDelete = windowFrame;
+			ImGui::OpenPopup("Close confirmation");
+		}
+		else
+		{
+			CloseWindow(windowFrame);
+			return true;
+		}
+	}
+	return false;
 }
 
 void M_Editor::CloseWindow(WindowFrame* windowFrame)
@@ -756,22 +858,4 @@ void M_Editor::OnRemoveGameObject(GameObject* gameObject)
 	}
 	if (lastSelected == gameObject) lastSelected = nullptr;
 }
-
-void M_Editor::OnViewportClosed(uint32_t SDLWindowID)
-{
-	ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle((void*)SDL_GetWindowFromID(SDLWindowID));
-	
-	for (uint i = 0u; i < windowFrames.size(); ++i)
-	{
-		ImGuiWindow* window = ImGui::FindWindowByName(windowFrames[i]->GetWindowStrID());
-		if (window->Viewport == viewport)
-		{
-			//This function will be called from Input's PreUpdate so it's safe to destroy the windows here
-			CloseWindow(windowFrames[i]);
-			--i;
-		}
-	}
-
-}
-
 //------------------------------------

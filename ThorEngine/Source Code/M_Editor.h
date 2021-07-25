@@ -34,7 +34,7 @@ public:
 	void Draw();
 
 	void Log(const char* input);
-	void GetEvent(SDL_Event* event);
+	void ProcessSDLEvent(const SDL_Event& event);
 	void UpdateFPSData(int fps, int ms);
 
 	void OnResize(int screen_width, int screen_height);
@@ -43,6 +43,9 @@ public:
 	inline bool UsingMouse() const { return using_mouse; }
 
 	bool OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID = 0);
+
+	bool RequestWindowClose(WindowFrame* windowFrame);
+	void ShowWindowCloseConfirmation();
 	void CloseWindow(WindowFrame* windowFrame); //Warning: do not call in the middle of the editor drawing frame!
 
 	//Selection --------------------
@@ -65,13 +68,14 @@ public:
 	void ResetScene();
 
 	void OnRemoveGameObject(GameObject* gameObject) override;
-	void OnViewportClosed(uint32_t SDLWindowID);
 
 	void OpenFileNameWindow();
 	void ShowFileNameWindow();
 
 	WindowFrame* GetWindowFrame(const char* name) const;
-	const char* GetCurrentExplorerDirectory();
+	WindowFrame* GetWindowFromSDLID(uint32_t SDLWindowID) const;
+	const char* GetCurrentExplorerDirectory() const;
+
 private:
 	void LoadLayout_Default(WindowFrame* windowFrame);
 	void LoadLayout(WindowFrame* windowFrame, const char* layout = "Default");
@@ -85,7 +89,6 @@ private:
 	bool Ini_FindNextDockEntry(char*& line, char*& line_end, char*& buffer_end) const;
 	
 public:
-
 	std::vector<TreeNode*> selectedGameObjects;
 	std::vector<TreeNode*> toSelectGOs;
 	std::vector<TreeNode*> toDragGOs;
@@ -102,12 +105,16 @@ public:
 	bool show_Demo_window = false;
 	bool show_fileName_window = false;
 	
+	// Temporary set to public
+	WindowFrame* windowPendingDelete = nullptr;
+
 private:
 	//All currently active window frames
 	std::vector<WindowFrame*> windowFrames;
 
 	ImGuiWindowClass* frameWindowClass = nullptr;
 	ImGuiWindowClass* normalWindowClass = nullptr;
+
 
 	char fileName[50];
 
@@ -117,7 +124,7 @@ private:
 	float mainWindowPositionY = 0;
 	float toolbarSizeY = 30;
 
-	LCG random;
+	LCG random; //TODO: Avoid including everywhere. Math namespace?
 };
 
 #endif //!__M_EDITOR_H__

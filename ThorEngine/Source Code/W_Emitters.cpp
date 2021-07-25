@@ -66,6 +66,7 @@ void W_Emitters::Draw()
 	if (ImGui::Button("Add Emitter"))
 	{
 		particleSystem->AddDefaultEmitter();
+		particleSystem->needs_save = true;
 	}
 
 	ImGui::End();

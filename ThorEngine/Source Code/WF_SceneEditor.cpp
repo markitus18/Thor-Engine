@@ -107,7 +107,7 @@ void WF_SceneEditor::MenuBar_File()
 			}
 		}
 
-		if (ImGui::MenuItem("Save Scene as"))
+		if (ImGui::MenuItem("Save Map as"))
 		{
 			Engine->moduleEditor->OpenFileNameWindow();
 		}
@@ -149,6 +149,7 @@ void WF_SceneEditor::MenuBar_Custom()
 				Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
 			}
 		}
+
 		if (ImGui::BeginMenu("3D Object"))
 		{
 			if (ImGui::MenuItem("Cube"))
@@ -156,7 +157,6 @@ void WF_SceneEditor::MenuBar_Custom()
 				std::string name(scene->GetNewGameObjectName("Cube"));
 				GameObject* newGameObject = scene->CreateNewGameObject(name.c_str());
 				Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
-
 			}
 			ImGui::EndMenu();
 		}

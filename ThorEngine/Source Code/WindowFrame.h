@@ -30,9 +30,8 @@ public:
 
 	virtual void LoadLayout_Default(ImGuiID mainDockID) = 0;
 
-	inline const char* GetName() { return name.c_str(); }
-	inline const char* GetWindowStrID() { return windowStrID.c_str(); }
-	inline bool IsActive() { return active; };
+	inline const char* GetName() const { return name.c_str(); }
+	inline const char* GetWindowStrID() const { return windowStrID.c_str(); }
 
 	virtual void SetResource(uint64 resourceID);
 	inline uint64 GetResourceID() const { return resourceHandle.GetID(); }
@@ -40,26 +39,30 @@ public:
 	Window* GetWindow(const char* name) const;
 	inline const std::vector<Window*> GetWindows() const { return windows; }
 
+public:
+	// Flag used to request a window close. When the window frame is closed by the user, we can safely destroy its memory
+	bool requestClose = false;
+
 private:
 	//Performs the entire management of drawing the menu bar
 	void DrawMenuBar();
 
-	//Generic File tab. Can be overriden in child classes
+	//Generic File tab. Can be overridden in child classes
 	virtual void MenuBar_File();
 
-	//Generic Edit tab. Can be overriden in child classes
+	//Generic Edit tab. Can be overridden in child classes
 	virtual void MenuBar_Edit();
 
 	//Any custom tabs needed for each specific window frame
 	virtual void MenuBar_Custom() { };
 
-	//Generic Window tab. Can be overriden in child classes
+	//Generic Window tab. Can be overridden in child classes
 	virtual void MenuBar_Window();
 
-	//Generic Help tab. Can be overriden in child classes
+	//Generic Help tab. Can be overridden in child classes
 	virtual void MenuBar_Help();
 
-	//Generic Development tab. Can be overriden in child classes
+	//Generic Development tab. Can be overridden in child classes
 	virtual void MenuBar_Development() { };
 
 protected:
@@ -76,18 +79,15 @@ protected:
 	// Windows belonging in this particular window frame. All windows are added in the constructor, even if not active
 	std::vector<Window*> windows;
 
-	// Flag to allow docking/un-docking on this WindowFrame. The main window should not be moved or resized
+	// Flag to allow docking/undocking on this WindowFrame. The main window should not be moved or resized
 	bool isDockable = true;
 
-	// ImGui classes for blocking docking a frame window into a normal window and viceversa
+	// ImGui classes for blocking docking a frame window into a normal window and vice versa
 	ImGuiWindowClass* frameWindowClass = nullptr;
 	ImGuiWindowClass* windowClass = nullptr;
 
 	// A Unique Identifier in order to have different WindowStrID sent to ImGui for the same type of window frames
 	int ID = -1;
-
-	// Flag used to request a window close. When the window frame is closed by the user, we can safely destroy its memory
-	bool active = true;
 
 	// Most if not all windows will have a resource assigned to them (scene, particle editor, material editor,...)
 	ResourceHandle<Resource> resourceHandle;

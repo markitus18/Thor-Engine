@@ -14,16 +14,16 @@ enum TreeNode_Type
 class TreeNode
 {
 public:
-	TreeNode(TreeNode_Type type) : type(type) {}
+	TreeNode(TreeNode_Type type) : type(type) { }
 
 	TreeNode_Type GetType() const { return type; }
 
-	virtual std::vector<TreeNode*> GetChilds() const { std::vector<TreeNode*> ret; return ret; };
-	virtual const char* GetName() const { return nullptr;};
-	virtual unsigned long long GetID() const { return 0; };
-	virtual bool IsNodeActive() const { return true; };
-	virtual bool DrawTreeNode() const { return true; };
-	virtual TreeNode* GetParentNode() const { return nullptr;};
+	virtual std::vector<TreeNode*> GetChilds() const { std::vector<TreeNode*> ret; return ret; }
+	virtual const char* GetName() const { return nullptr;}
+	virtual unsigned long long GetID() const { return 0; }
+	virtual bool IsNodeActive() const { return true; }
+	virtual bool DrawTreeNode() const { return true; }
+	virtual TreeNode* GetParentNode() const { return nullptr;}
 
 	uint GetChildNodeIndex(const TreeNode* child) const;
 	TreeNode* GetChildNode(uint index) const;

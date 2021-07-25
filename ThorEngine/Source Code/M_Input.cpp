@@ -44,8 +44,6 @@ bool M_Input::Init(Config& config)
 // Called every draw update
 update_status M_Input::PreUpdate()
 {
-	static SDL_Event event;
-
 	mouse_motion_x = mouse_motion_y = 0;
 
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
@@ -100,9 +98,10 @@ update_status M_Input::PreUpdate()
 
 	mouse_z = 0;
 
+	static SDL_Event event;
 	while(SDL_PollEvent(&event) != 0)
 	{
-		Engine->moduleEditor->GetEvent(&event);
+		Engine->moduleEditor->ProcessSDLEvent(event);
 
 		switch(event.type)
 		{
@@ -152,14 +151,9 @@ update_status M_Input::PreUpdate()
 			case SDL_WINDOWEVENT:
 			{        
 				if (event.window.event == SDL_WINDOWEVENT_CLOSE)
-					if(event.window.windowID == SDL_GetWindowID(Engine->window->window))
-					{
-						quit = true;
-					}
-					else
-					{
-						Engine->moduleEditor->OnViewportClosed(event.window.windowID);
-					}
+				{
+					// We should quit = true when playing in game. For now, the editor will handle closing (received at moduleEditor->ProcessSDLEvent)
+				}
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED && event.window.windowID == SDL_GetWindowID(Engine->window->window))
 				{				
 					//TODO: We should not be resizing scene camera depending on window size
@@ -184,7 +178,7 @@ update_status M_Input::PreUpdate()
 		}
 	}
 
-	if(quit == true)// || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
+	if(quit == true)
 		return UPDATE_STOP;
 
 	infiniteHorizontal = false;

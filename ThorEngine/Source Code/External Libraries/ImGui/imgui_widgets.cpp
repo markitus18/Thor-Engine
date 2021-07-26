@@ -5384,7 +5384,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (!display_frame && (flags & (ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth)) == 0)
         interact_bb.Max.x = frame_bb.Min.x + text_width + style.ItemSpacing.x * 2.0f;
 
-    //Thor Modification -------------- The node is not selected when clicking the arrow
+    //#ThorEngine -------------- The node is not selected when clicking the arrow
     ImRect interact_bb_button = interact_bb;
     if ((display_frame || (flags & ImGuiTreeNodeFlags_NoTreePushOnOpen)) == false) //<-- Moving bb only when arrow is displayed
         interact_bb_button.Min.x += text_offset_x;
@@ -5398,7 +5398,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (is_open && !g.NavIdIsAlive && (flags & ImGuiTreeNodeFlags_NavLeftJumpsBackHere) && !(flags & ImGuiTreeNodeFlags_NoTreePushOnOpen))
         window->DC.TreeJumpToParentOnPopMask |= (1 << window->DC.TreeDepth);
 
-    bool item_add = ItemAdd(interact_bb_button, id); //Thor -- Switched interact_bb by interact_bb_button
+    bool item_add = ItemAdd(interact_bb_button, id); //#ThorEngine -- Switched interact_bb by interact_bb_button
     window->DC.LastItemStatusFlags |= ImGuiItemStatusFlags_HasDisplayRect;
     window->DC.LastItemDisplayRect = frame_bb;
 
@@ -5493,17 +5493,17 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     if (selected != was_selected) //-V547
         window->DC.LastItemStatusFlags |= ImGuiItemStatusFlags_ToggledSelection;
 
-    bool fill = IsItemHovered(ImGuiHoveredFlags_RectOnly) && (flags & ImGuiTreeNodeFlags_Fill); //Thor -- Display a frame when hovering for drag
+    bool fill = IsItemHovered(ImGuiHoveredFlags_RectOnly) && (flags & ImGuiTreeNodeFlags_Fill); //#ThorEngine -- Display a frame when hovering for drag
 
     // Render
     const ImU32 text_col = GetColorU32(ImGuiCol_Text);
     ImGuiNavHighlightFlags nav_highlight_flags = ImGuiNavHighlightFlags_TypeThin;
-    if (display_frame || fill) //Thor
+    if (display_frame || fill) //#ThorEngine
     {
         // Framed type
         if (fill)
         {
-            window->DrawList->AddRect(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_HeaderActive), 0.0f, 0, 2.0f); //<--ThorUI
+            window->DrawList->AddRect(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_HeaderActive), 0.0f, 0, 2.0f); //<--#ThorEngine
         }
         else
         {
@@ -6806,7 +6806,8 @@ static void ImGui::TabBarLayout(ImGuiTabBar* tab_bar)
         // Additionally, when using TabBarAddTab() to manipulate tab bar order we occasionally insert new tabs that don't have a width yet,
         // and we cannot wait for the next BeginTabItem() call. We cannot compute this width within TabBarAddTab() because font size depends on the active window.
         const char* tab_name = tab_bar->GetTabName(tab);
-        const bool has_close_button = tab->Window ? tab->Window->HasCloseButton : ((tab->Flags & ImGuiTabItemFlags_NoCloseButton) == 0);
+		// #ThorEngine: Added '|| tab->Flags & ImGuiTabItemFlags_UnsavedDocument' so that the title text does not get cut when adding the unsaved '*' feedback
+        const bool has_close_button = tab->Window ? (tab->Window->HasCloseButton || tab->Flags & ImGuiTabItemFlags_UnsavedDocument) : ((tab->Flags & ImGuiTabItemFlags_NoCloseButton) == 0);
         tab->ContentWidth = TabItemCalcSize(tab_name, has_close_button).x;
 
         width_total_contents += (tab_n > 0 ? g.Style.ItemInnerSpacing.x : 0.0f) + tab->ContentWidth;
@@ -7196,7 +7197,8 @@ bool    ImGui::TabItemEx(ImGuiTabBar* tab_bar, const char* label, bool* p_open, 
         flags |= ImGuiTabItemFlags_NoCloseButton;
 
     // Calculate tab contents size
-    ImVec2 size = TabItemCalcSize(label, p_open != NULL);
+	// #ThorEngine: Added || ImGuiTabItemFlags_UnsavedDocument so that it does eat the space for the '*' when unsaved changes
+    ImVec2 size = TabItemCalcSize(label, p_open != NULL /*|| flags & ImGuiTabItemFlags_UnsavedDocument*/);
 
     // Acquire tab data
     ImGuiTabItem* tab = TabBarFindTabByID(tab_bar, id);

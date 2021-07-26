@@ -930,6 +930,9 @@
     <Filter Include="Source Code\Resources\Base">
       <UniqueIdentifier>{58d1bd90-280e-4d97-9088-3689a60ca9e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Code\Editor\Windows\General">
+      <UniqueIdentifier>{b81f8752-21cc-484d-8000-ec185b0b0359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source Code\External Libraries\MathGeoLib\src\Geometry\TriangleMesh_IntersectRay_CPP.inl">

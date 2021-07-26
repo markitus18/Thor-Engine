@@ -591,8 +591,8 @@ void WViewport::OnClick(const Vec2& mousePos)
 	float mouseNormY = mousePos.y / currentCamera->resolution.y;
 
 	// Normalizing mouse position in range of -1 / 1 // -1, -1 being at the bottom left corner
-	mouseNormX = (mouseNormX - 0.5) / 0.5;
-	mouseNormY = (mouseNormY - 0.5) / 0.5;
+	mouseNormX = (mouseNormX - 0.5f) / 0.5f;
+	mouseNormY = (mouseNormY - 0.5f) / 0.5f;
 
 	LineSegment ray = currentCamera->GenerateRaycast(mouseNormX, mouseNormY);
 	scene->PerformMousePick(ray);
@@ -630,8 +630,8 @@ void WViewport::OrbitCamera(float dx, float dy)
 	C_Transform* transform = currentCamera->gameObject->GetComponent<C_Transform>();
 	float3 vector = transform->GetPosition() - currentCamera->referencePoint;
 
-	Quat quat_y(transform->GetUp(), dx * 0.003);
-	Quat quat_x(transform->GetRight().Neg(), dy * 0.003);
+	Quat quat_y(transform->GetUp(), dx * 0.003f);
+	Quat quat_x(transform->GetRight().Neg(), dy * 0.003f);
 
 	vector = quat_x.Transform(vector);
 	vector = quat_y.Transform(vector);
@@ -699,7 +699,7 @@ void WViewport::HandleKeyboardInput()
 	currentCamera->referencePoint += deltaRight + deltaUp;
 }
 
-void WViewport::ZoomCamera(float zoom)
+void WViewport::ZoomCamera(int zoom)
 {
 	if (currentCamera->cameraAngle == EViewportCameraAngle::Perspective)
 	{

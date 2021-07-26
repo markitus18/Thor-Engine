@@ -100,6 +100,9 @@ bool M_Editor::Start()
 
 update_status M_Editor::PreUpdate()
 {
+	if (userRequestedExit)
+		return UPDATE_STOP;
+
 	for (uint i = 0; i < windowFrames.size(); ++i)
 	{
 		windowFrames[i]->PrepareUpdate();
@@ -199,6 +202,19 @@ bool M_Editor::IsWindowLayoutSaved(WindowFrame* windowFrame) const
 	return false;
 }
 
+bool M_Editor::DoesAnyWindowNeedSave() const
+{
+	for (uint i = 0; i < windowFrames.size(); ++i)
+	{
+		ResourceHandle<Resource> windowResource = windowFrames[i]->GetResourceID();
+		if (windowResource.Get() && windowResource.Get()->needs_save)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void M_Editor::ClearWindowFromIni(WindowFrame* windowFrame)
 {
 	const std::vector<Window*> childWindows = windowFrame->GetWindows();
@@ -208,7 +224,7 @@ void M_Editor::ClearWindowFromIni(WindowFrame* windowFrame)
 	if (!Engine->fileSystem->Exists("Engine/imgui.ini")) return;
 
 	char* buffer = nullptr;
-	uint64 fileSize = Engine->fileSystem->Load("Engine/imgui.ini", &buffer);
+	uint fileSize = Engine->fileSystem->Load("Engine/imgui.ini", &buffer);
 
 	//Parsing imgui.ini. We mimic ImGui's logic (function LoadIniSettingsFromMemory in imgui.cpp)
 	char* buffer_end = buffer + fileSize - 1;
@@ -379,13 +395,14 @@ void M_Editor::Draw()
 	ImGuiID dockspace_id = ImGui::GetID("Main Dockspace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_NoSplit, frameWindowClass);
 
-	for (uint i = 0; i < windowFrames.size(); ++i)
+	// We iterate in reverse so that we can handle the main window closure last
+	// and can remove windows from the array without the need of moving the iterator
+	for (int i = windowFrames.size() - 1; i >= 0; --i)
 	{
 		windowFrames[i]->Draw();
 		if (windowFrames[i]->requestClose)
 		{
-			if (RequestWindowClose(windowFrames[i]))
-				--i;
+			RequestWindowClose(windowFrames[i]);
 		}
 	}
 
@@ -496,14 +513,43 @@ void M_Editor::ShowWindowCloseConfirmation()
 	
 	if (ImGui::BeginPopupModal("Close confirmation", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize))
 	{
-		ImGui::Text("There might be unsaved changes in the file, are you sure you want to quit?");
+		ImGui::Text("There might be unsaved changes, are you sure you want to quit?");
+
+		if (windowPendingDelete == windowFrames[0])
+		{
+			ImGui::Separator();
+			ImGui::NewLine();
+			for (uint i = 0; i < windowFrames.size(); ++i)
+			{
+				ResourceHandle<Resource> windowResource = windowFrames[i]->GetResourceID();
+				if (windowResource.Get() && windowResource.Get()->needs_save)
+				{
+					ImGui::Checkbox(windowResource.Get()->GetName(), &windowFrames[i]->checkedForSave);
+				}
+			}
+		}
+
 		ImGui::NewLine();
 		ImGui::NewLine();
 
 		if (ImGui::Button("Save & Close"))
 		{
-			ResourceHandle<Resource> windowResource(windowPendingDelete->GetResourceID());
-			Engine->moduleResources->SaveResource(windowResource.Get());
+			if (windowPendingDelete == windowFrames[0])
+			{
+				for (uint i = 0; i < windowFrames.size(); ++i)
+				{
+					ResourceHandle<Resource> windowResource = windowFrames[i]->GetResourceID();
+					if (windowResource.Get() && windowResource.Get()->needs_save && windowFrames[i]->checkedForSave)
+					{
+						Engine->moduleResources->SaveResource(windowResource.Get());
+					}
+				}
+			}
+			else
+			{
+				ResourceHandle<Resource> windowResource(windowPendingDelete->GetResourceID());
+				Engine->moduleResources->SaveResource(windowResource.Get());
+			}
 
 			CloseWindow(windowPendingDelete);
 			windowPendingDelete = nullptr;
@@ -522,6 +568,7 @@ void M_Editor::ShowWindowCloseConfirmation()
 		if (ImGui::Button("Cancel"))
 		{
 			windowPendingDelete->requestClose = false;
+			windowFrames[0]->requestClose = false;
 			windowPendingDelete = nullptr;
 			ImGui::CloseCurrentPopup();
 		}
@@ -630,15 +677,18 @@ bool M_Editor::OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID)
 		//If the window layout is not saved in ImGui.ini file, we will load the default layout in the next frame
 		if (forceWindowID == 0 || !IsWindowLayoutSaved(windowFrame))
 			windowFrame->pendingLoadLayout = true;
+
+		return true;
 	}
+	return false;
 }
 
-bool M_Editor::RequestWindowClose(WindowFrame* windowFrame)
+void M_Editor::RequestWindowClose(WindowFrame* windowFrame)
 {
 	if (!windowPendingDelete && windowFrame)
 	{
 		ResourceHandle<Resource> windowResource(windowFrame->GetResourceID());
-		if (windowResource.Get() && windowResource.Get()->needs_save)
+		if (windowResource.Get() && windowResource.Get()->needs_save || windowFrame == windowFrames[0] && DoesAnyWindowNeedSave())
 		{
 			windowPendingDelete = windowFrame;
 			ImGui::OpenPopup("Close confirmation");
@@ -646,18 +696,28 @@ bool M_Editor::RequestWindowClose(WindowFrame* windowFrame)
 		else
 		{
 			CloseWindow(windowFrame);
-			return true;
 		}
 	}
-	return false;
 }
 
 void M_Editor::CloseWindow(WindowFrame* windowFrame)
 {
-	//TODO: Remove data from ImGui's memory. The library will later override the file.
-	ClearWindowFromIni(windowFrame);
-	windowFrames.erase(std::find(windowFrames.begin(), windowFrames.end(), windowFrame));
-	RELEASE(windowFrame);
+	if (windowFrame == windowFrames[0])
+	{
+		userRequestedExit = true;
+	}
+	else
+	{
+		//TODO: Remove data from ImGui's memory. The library will later override the file.
+		ClearWindowFromIni(windowFrame);
+		windowFrames.erase(std::find(windowFrames.begin(), windowFrames.end(), windowFrame));
+		RELEASE(windowFrame);
+	}
+}
+
+void M_Editor::OnUserExitRequest()
+{
+	windowFrames[0]->requestClose = true;
 }
 
 //Selection----------------------------

@@ -54,28 +54,25 @@ void W_MainViewport::DrawToolbarCustom()
 
 	// Translate operation
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(2.0f, 2.0f));
-	ImVec4 highlight = gizmoOperation == ImGuizmo::OPERATION::TRANSLATE ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	if (ImGui::ImageButton((ImTextureID)hTranslateIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	if (ImGuiHelper::HighlightedImageButton((ImTextureID)hTranslateIcon.Get()->buffer, imageSize, gizmoOperation == ImGuizmo::OPERATION::TRANSLATE))
 	{
 		gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 	}
 	
 	// Rotate operation
 	ImGui::SameLine();
-	highlight = gizmoOperation == ImGuizmo::OPERATION::ROTATE ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	if (ImGui::ImageButton((ImTextureID)hRotateIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	if (ImGuiHelper::HighlightedImageButton((ImTextureID)hRotateIcon.Get()->buffer, imageSize, gizmoOperation == ImGuizmo::OPERATION::ROTATE))
 	{
 		gizmoOperation = ImGuizmo::OPERATION::ROTATE;
 	}
 
 	// Scale operation
 	ImGui::SameLine();
-	highlight = gizmoOperation == ImGuizmo::OPERATION::SCALE ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	if (ImGui::ImageButton((ImTextureID)hScaleIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	if (ImGuiHelper::HighlightedImageButton((ImTextureID)hScaleIcon.Get()->buffer, imageSize, gizmoOperation == ImGuizmo::OPERATION::SCALE))
 	{
 		gizmoOperation = ImGuizmo::OPERATION::SCALE;
 	}
-	 
+
 	// Gizmo mode: World vs. Local
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));	ImGui::SameLine();
 	uint textureBuffer = (gizmoOperation == ImGuizmo::OPERATION::SCALE || gizmoMode == ImGuizmo::MODE::LOCAL) ? hLocalGizmoIcon.Get()->buffer : hWorldGizmoIcon.Get()->buffer;
@@ -86,8 +83,7 @@ void W_MainViewport::DrawToolbarCustom()
 	ImGui::SameLine(); ImGui::PopStyleVar();
 
 	// Grid Snap
-	highlight = gridSnapActive ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	if (ImGui::ImageButton((ImTextureID)hGridSnapIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	if (ImGuiHelper::HighlightedImageButton((ImTextureID)hGridSnapIcon.Get()->buffer, imageSize, gridSnapActive))
 	{
 		gridSnapActive = !gridSnapActive;
 	}
@@ -108,8 +104,7 @@ void W_MainViewport::DrawToolbarCustom()
 
 	// Rotation snap
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f)); ImGui::SameLine();
-	highlight = rotationSnapActive ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	if (ImGui::ImageButton((ImTextureID)hRotationSnapIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	if (ImGuiHelper::HighlightedImageButton((ImTextureID)hRotationSnapIcon.Get()->buffer, imageSize, rotationSnapActive))
 	{
 		rotationSnapActive = !rotationSnapActive;
 	}
@@ -130,8 +125,7 @@ void W_MainViewport::DrawToolbarCustom()
 
 	// Scale snap
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f)); ImGui::SameLine();
-	highlight = scaleSnapActive ? ImVec4(1.0f, 1.0f, 0.0f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	if (ImGui::ImageButton((ImTextureID)hScaleSnapIcon.Get()->buffer, imageSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f), -1, ImVec4(), highlight))
+	if (ImGuiHelper::HighlightedImageButton((ImTextureID)hScaleSnapIcon.Get()->buffer, imageSize, scaleSnapActive))
 	{
 		scaleSnapActive = !scaleSnapActive;
 	}

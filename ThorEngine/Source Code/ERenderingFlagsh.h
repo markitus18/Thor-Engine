@@ -20,7 +20,7 @@ struct ERenderingFlags
 		Max =			1 << 9
 	};
 	inline static const std::string str[] = { "None", "Grid", "Skybox", "Quadtree", "Bounds_AABB", "Bounds_OBB", "Gizmo2D", "Frustum", "MousePick", "Bones", "Max" };
-	inline static uint ToI(Flags flag) { return log2(flag) + 1; }
+	inline static uint ToI(Flags flag) { return (uint)log2(flag) + 1; }
 
 	static const Flags DefaultGameFlags =		Skybox;
 
@@ -44,7 +44,7 @@ struct EViewportCameraAngle
 		Max =			1 << 7
 	};
 	inline static const std::string str[] = { "None", "Perspective", "Top", "Bottom", "Left", "Right", "Front", "Back", "Max" };
-	inline static uint ToI(Flags flag) { return log2(flag) + 1; }
+	inline static uint ToI(Flags flag) { return (uint)log2(flag) + 1; }
 };
 
 struct EViewportViewMode
@@ -59,7 +59,7 @@ struct EViewportViewMode
 		Max =		1 << 3
 	};
 	inline static const std::string str[] = { "None", "Lit", "Wireframe", "Unlit", "Max" };
-	inline static uint ToI(Flags flag) { return log2(flag) + 1; }
+	inline static uint ToI(Flags flag) { return (uint)log2(flag) + 1; }
 };
 
 struct EViewportStats
@@ -75,7 +75,7 @@ struct EViewportStats
 		Max =			1 << 4
 	};
 	inline static const std::string str[] = { "None", "FPS", "Mesh Count", "Triangle Count", "Object Count", "Max" };
-	inline static uint ToI(Flags flag) { return log2(flag) + 1; }
+	inline static uint ToI(Flags flag) { return (uint)log2(flag) + 1; }
 };
 
 #endif // __RENDERING_FLAGS_H__

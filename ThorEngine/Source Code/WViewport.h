@@ -88,7 +88,7 @@ private:
 	void TurnCamera(float motion_x, float motion_y);
 
 	// Moves the camera forward or backward
-	void ZoomCamera(float zoom);
+	void ZoomCamera(int zoom);
 
 public:
 	int cameraSpeed = 4;

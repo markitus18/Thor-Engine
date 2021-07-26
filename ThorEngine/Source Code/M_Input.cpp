@@ -47,7 +47,6 @@ update_status M_Input::PreUpdate()
 	mouse_motion_x = mouse_motion_y = 0;
 
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
-	bool quit = false;
 
 	for(int i = 0; i < MAX_KEYS; ++i)
 	{
@@ -145,7 +144,7 @@ update_status M_Input::PreUpdate()
 			break;
 
 			case SDL_QUIT:
-				quit = true;
+				Engine->moduleEditor->OnUserExitRequest();
 				break;
 
 			case SDL_WINDOWEVENT:
@@ -177,9 +176,6 @@ update_status M_Input::PreUpdate()
 			}
 		}
 	}
-
-	if(quit == true)
-		return UPDATE_STOP;
 
 	infiniteHorizontal = false;
 

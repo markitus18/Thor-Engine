@@ -52,13 +52,14 @@ public:
 	bool explorerActive = true;
 	std::map<ResourceType, ResourceHandle<R_Texture>> hResourceIcons;
 	
-	uint imageSize = 64;
-	uint columnsNumber = 0;
-	uint imageSpacingX = 50;
-	uint imageSpacingY = 50;
-	uint textOffset = 6;
-	uint topMarginOffset = 10;
-	uint nodeButtonOffset = 30;
+	// ImGui works with pixels as floats so we store them as floats to avoid conversion
+	float imageSize = 64.0f;
+	float columnsNumber = 0.0f;
+	float imageSpacingX = 50.0f;
+	float imageSpacingY = 50.0f;
+	float textOffset = 6.0f;
+	float topMarginOffset = 10.0f;
+	float nodeButtonOffset = 30.0f;
 
 private:
 	ImGuiWindowClass* explorerWindowClass = nullptr;

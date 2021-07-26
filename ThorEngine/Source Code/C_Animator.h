@@ -6,7 +6,7 @@
 #include <map>
 
 class GameObject;
-class Channel;
+struct Channel;
 class C_Mesh;
 class R_Animation;
 class R_AnimatorController;

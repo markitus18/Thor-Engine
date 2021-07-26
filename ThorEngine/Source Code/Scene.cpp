@@ -320,8 +320,8 @@ void Scene::DrawCulledGameObjects(C_Camera* targetCamera)
 
 	for (uint i = 0; i < finalCandidates.size(); i++)
 	{
-		if (finalCandidates[i]->name != "root");
-		((GameObject*)finalCandidates[i])->Draw(0);
+		if (finalCandidates[i]->name != "root")
+			((GameObject*)finalCandidates[i])->Draw(0);
 	}
 }
 

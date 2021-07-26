@@ -44,9 +44,10 @@ public:
 
 	bool OpenWindowFromResource(uint64 resourceID, uint64 forceWindowID = 0);
 
-	bool RequestWindowClose(WindowFrame* windowFrame);
+	void RequestWindowClose(WindowFrame* windowFrame);
 	void ShowWindowCloseConfirmation();
 	void CloseWindow(WindowFrame* windowFrame); //Warning: do not call in the middle of the editor drawing frame!
+	void OnUserExitRequest();
 
 	//Selection --------------------
 	void SelectSingle(TreeNode* node, bool openTree = true);
@@ -83,6 +84,8 @@ private:
 	bool TryLoadEditorState();
 	bool IsWindowLayoutSaved(WindowFrame* windowFrame) const;
 
+	bool DoesAnyWindowNeedSave() const;
+
 	//imgui.ini parsing functions
 	void ClearWindowFromIni(WindowFrame* windowFrame);
 	bool Ini_FindNextEntry(char*& line, char*& line_end, char*& buffer_end) const;
@@ -115,7 +118,6 @@ private:
 	ImGuiWindowClass* frameWindowClass = nullptr;
 	ImGuiWindowClass* normalWindowClass = nullptr;
 
-
 	char fileName[50];
 
 	bool using_keyboard;
@@ -123,6 +125,8 @@ private:
 
 	float mainWindowPositionY = 0;
 	float toolbarSizeY = 30;
+
+	bool userRequestedExit = false;
 
 	LCG random; //TODO: Avoid including everywhere. Math namespace?
 };

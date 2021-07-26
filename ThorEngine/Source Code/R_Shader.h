@@ -28,7 +28,7 @@ public:
 	static int GetShaderMacro(Object_Type type);
 
 public:
-	uint64 shaderProgram = 0;
-	uint64 shaderObjects[(int)Object_Type::Unknown];
+	uint shaderProgram = 0;
+	uint shaderObjects[(int)Object_Type::Unknown];
 };
 #endif

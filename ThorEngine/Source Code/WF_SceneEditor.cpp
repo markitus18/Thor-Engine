@@ -56,6 +56,7 @@ WF_SceneEditor::~WF_SceneEditor()
 void WF_SceneEditor::SetResource(uint64 resourceID)
 {
 	WindowFrame::SetResource(resourceID);
+
 	if (!scene || scene->ID != resourceID)
 	{
 		Engine->sceneManager->LoadMap(resourceID);
@@ -64,6 +65,9 @@ void WF_SceneEditor::SetResource(uint64 resourceID)
 		W_MainViewport* viewport = (W_MainViewport*)GetWindow(W_MainViewport::GetName());
 		viewport->SetScene(scene);
 	}
+
+	// TODO: Manually setting needs_save on window open as we do not currently support scene modification detection
+	resourceHandle.Get()->needs_save = true;
 }
 
 void WF_SceneEditor::MenuBar_File()

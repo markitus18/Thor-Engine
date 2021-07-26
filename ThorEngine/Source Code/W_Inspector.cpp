@@ -106,7 +106,7 @@ void W_Inspector::DrawGameObject(GameObject* gameObject)
 	ImGui::Separator();
 	ImGui::Separator();
 
-	int buttonPos_x = ImGui::GetWindowWidth() / 2 - 100;
+	float buttonPos_x = ImGui::GetWindowWidth() / 2.0f - 100.0f;
 	ImGui::SetCursorPosX(buttonPos_x);
 	if (ImGui::Button("Add Component", ImVec2(200, 0)))
 	{

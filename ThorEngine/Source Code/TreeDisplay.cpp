@@ -109,7 +109,7 @@ void TreeDisplay::ShowNode(TreeNode* node)
 		flags |= ImGuiTreeNodeFlags_Fill;
 
 	if (node->IsNodeActive() == false)
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 0.4));
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 0.4f));
 
 	if (node->beenSelected == true)
 	{

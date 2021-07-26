@@ -43,6 +43,10 @@ public:
 	// Flag used to request a window close. When the window frame is closed by the user, we can safely destroy its memory
 	bool requestClose = false;
 
+	bool pendingLoadLayout = false;
+
+	bool checkedForSave = false;
+
 private:
 	//Performs the entire management of drawing the menu bar
 	void DrawMenuBar();
@@ -94,9 +98,6 @@ protected:
 
 	// Most frames will hold a scene to display its content. Asides from the main frame, all frames will be owners of their scene
 	Scene* scene = nullptr;
-
-public:
-	bool pendingLoadLayout = false;
 };
 
 #endif //__WINDOW_FRAME_H__

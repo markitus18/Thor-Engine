@@ -3,6 +3,9 @@
 
 #include <vector>
 
+typedef void* ImTextureID;
+struct ImVec2;
+
 namespace ImGuiHelper
 {
 	void PushInvisibleButtonStyle();
@@ -91,6 +94,10 @@ namespace ImGuiHelper
 
 		return modified;
 	}
+
+	bool HighlightedImageButton(ImTextureID textureID, ImVec2 imageSize, bool highlight);
+	void PushButtonBackgroundHighlight();
+	void PopButtonBackgroundHighlight();
 }
 
 

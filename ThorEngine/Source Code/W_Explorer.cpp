@@ -87,7 +87,7 @@ void W_Explorer::Draw()
 void W_Explorer::OnResize(Vec2 newSize)
 {
 	windowSize = newSize;
-	columnsNumber = ((newSize.x * 0.8f ) * 10) / 1152;
+	columnsNumber = ((newSize.x * 0.8f ) * 10.0f) / 1152.0f;
 }
 
 void W_Explorer::LoadLayout_Default()
@@ -286,8 +286,8 @@ std::string W_Explorer::GetTextAdjusted(const char* text) const
 	uint textLenght = newText.size();
 
 	const char* text_end = text + textLenght;
-	uint textSizeX = ImGui::CalcTextSize(text, text_end, false, 0).x;
-	uint dotsSizeX = ImGui::CalcTextSize("...", nullptr, false, 0).x;
+	float textSizeX = ImGui::CalcTextSize(text, text_end, false, 0).x;
+	float dotsSizeX = ImGui::CalcTextSize("...", nullptr, false, 0).x;
 
 	if (textSizeX > imageSize + 15.0f)
 	{
@@ -309,7 +309,7 @@ void W_Explorer::HandleResourceDoubleClick(const ResourceBase& base)
 
 uint W_Explorer::GetTextureFromResource(const ResourceBase& base, std::string* dnd_event)
 {
-	uint64 textureBuffer = 0;
+	uint textureBuffer = 0;
 	if (base.type == ResourceType::TEXTURE)
 	{
 		std::map<uint64, ResourceHandle<R_Texture>>::iterator it = texturesInFolder.find(base.ID);

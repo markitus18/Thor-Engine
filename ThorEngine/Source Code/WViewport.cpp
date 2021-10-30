@@ -555,28 +555,31 @@ void WViewport::HandleGizmoUsage()
 	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
 	ImGuizmo::MODE finalMode = (gizmoOperation == ImGuizmo::OPERATION::SCALE ? ImGuizmo::MODE::LOCAL : gizmoMode);
 
+	float snapValue = 0.0f;
 	switch (gizmoOperation)
 	{
 		case(ImGuizmo::OPERATION::TRANSLATE):
 		{
-			float snapValue = gridSnapValues[gridSnapIndex].value;
-			ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr, nullptr, gridSnapActive ? &snapValue : nullptr);
+			if (gridSnapActive)
+				snapValue = gridSnapValues[gridSnapIndex].value;
 			break;
 		}
 		case(ImGuizmo::OPERATION::ROTATE):
 		{
-			float snapValue = rotationSnapValues[rotationSnapIndex].value;
-			ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr, nullptr, rotationSnapActive ? &snapValue : nullptr);
+			if (rotationSnapActive)
+				snapValue = rotationSnapValues[rotationSnapIndex].value;
 			break;
 		}
 		case(ImGuizmo::OPERATION::SCALE):
 		{
-			float snapValue = scaleSnapValues[scaleSnapIndex].value;
-			ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr, nullptr, scaleSnapActive ? &snapValue : nullptr);
+			if (scaleSnapActive)
+				snapValue = scaleSnapValues[scaleSnapIndex].value;
 			break;
 		}
 	}
 
+	float snap[] = {snapValue, snapValue, snapValue};
+	ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr, nullptr, snapValue != 0.0f ? snap : nullptr);
 	if (ImGuizmo::IsUsing())
 	{
 		float4x4 newMatrix;

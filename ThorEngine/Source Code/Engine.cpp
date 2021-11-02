@@ -9,7 +9,7 @@
 #include "M_Editor.h"
 #include "M_Resources.h"
 
-#include "Scene.h"
+#include "Scene.h" // TODO: Can be removed if the scene manager handles naming by itself
 
 #include "Config.h"
 #include "Time.h"

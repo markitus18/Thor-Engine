@@ -4,7 +4,12 @@
 #include "Component.h"
 
 #include "Globals.h"
+
 #include "MathGeoLib\src\MathGeoLib.h" //TODO: include only the used structures
+
+#include "glm/ext/vector_float3.hpp"
+#include "glm/ext/matrix_float4x4.hpp"
+#include "glm/ext/quaternion_float.hpp"
 
 #include <vector>
 #include <list>
@@ -66,6 +71,15 @@ private:
 	void UpdateTransformHierarchy();
 
 private:
+	glm::mat4x4 localTransform_glm;
+	glm::mat4x4 transform_glm;
+	glm::mat4x4 transformT_glm;
+
+	glm::vec3 localPosition_glm;
+	glm::vec3 localScale_glm;
+	glm::quat localRotation_glm;
+	glm::vec3 localRotationEuler_glm;
+
 	float4x4	localTransform;
 	float4x4	transform;
 	float4x4	transformT;

@@ -51,7 +51,7 @@ public:
 		config.Serialize(name, ID);
 	}
 
-	//Loads the resource if it has not been loaded previously. Compiler throws errors when trying 'inline'
+	//Loads the resource if it has not been loaded previously
 	inline T* Get() { return resource ? resource : (resource = RequestResource()); }
 	inline const T* Get() const { return resource ? resource : (resource = RequestResource()); }
 

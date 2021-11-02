@@ -8,8 +8,7 @@
 #include "ResourceHandle.h"
 #include "ERenderingFlagsh.h"
 
-//TODO: this should be removed or changed by float4x4
-#include "MathGeoLib\src\MathGeoLib.h"
+#include "MathGeoLib\src\Math\float4x4.h"
 #include <map>
 
 #define MAX_LIGHTS 8

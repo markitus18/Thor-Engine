@@ -26,14 +26,14 @@ public:
 
 	// All transformation methods en up calling this function.
 	// Updates TRS from the new local transform and recursively updates the global transformations
-	void SetLocalTransform(float4x4 newTransform);
+	void SetLocalTransform(glm::mat4x4 newTransform); // private
+	void SetLocalTransform(glm::vec3 position, glm::quat rotation, glm::vec3 scale); // private
 
 	// Local setters
 	inline void SetLocalPosition(float3 newPosition)	{ SetLocalTransform(newPosition, localRotation, localScale); }
 	inline void SetLocalScale(float3 newScale)			{ SetLocalTransform(localPosition, localRotation, newScale); }
 	inline void SetLocalRotation(Quat newRotation)		{ SetLocalTransform(localPosition, newRotation, localScale); }
 	void SetLocalEulerRotation(float3 euler_angles);
-	inline void SetLocalTransform(float3 position, Quat rotation, float3 scale) { SetLocalTransform(float4x4::FromTRS(position, rotation, scale)); }
 
 	// Global setters
 	void SetPosition(float3 newPosition);
@@ -56,7 +56,6 @@ public:
 	inline float3		GetUp() const { return transform.WorldY(); }
 	inline float3		GetRight() const { return transform.WorldX(); }
 
-public:
 	void LookAt(float3 target, float3 worldUp = float3::unitY);
 
 	void Reset();

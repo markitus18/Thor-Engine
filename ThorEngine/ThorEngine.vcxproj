@@ -770,7 +770,7 @@
     <ResourceCompile Include="ThorEngine.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Source Code\External Libraries\glm\CMakeLists.txt" />
+    <Text Include="Source Code\External Libraries\glm\copying.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

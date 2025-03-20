@@ -17,6 +17,8 @@ public:
 	R_Material();
 	~R_Material();
 
+	void Serialize(Config& config);
+
 public:
 	ResourceHandle<R_Shader> hShader;
 	ResourceHandle<R_Texture> hTexture;

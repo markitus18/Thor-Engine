@@ -112,8 +112,13 @@ void Importer::Materials::Import(const aiMaterial* material, R_Material* rMateri
 //Process R_Material data into a buffer ready to save
 //Returns the size of the buffer file (0 if any errors)
 //Warning: buffer memory needs to be released after the function call
-uint64 Importer::Materials::Save(const R_Material* rMaterial, char** buffer)
+uint64 Importer::Materials::Save(R_Material* rMaterial, char** buffer)
 {
+	Config file;
+	rMaterial->Serialize(file);
+	return file.Serialize(buffer);
+
+	/*
 	//Name size, name string, texture resource ID, color
 	uint size = sizeof(unsigned long long) + sizeof(float) * 4;
 
@@ -131,12 +136,18 @@ uint64 Importer::Materials::Save(const R_Material* rMaterial, char** buffer)
 	cursor += bytes;
 
 	return size;
+	*/
 }
 
 //Process buffer data into a ready-to-use R_Material.
 //Returns nullptr if any errors occured during the process.
 void Importer::Materials::Load(const char* buffer, uint size, R_Material* rMaterial)
 {
+	Config file(buffer);
+	rMaterial->Serialize(file);
+
+
+	/*
 	const char* cursor = buffer;
 
 	uint64 textureID = 0;
@@ -151,6 +162,7 @@ void Importer::Materials::Load(const char* buffer, uint size, R_Material* rMater
 	cursor += bytes;
 
 	rMaterial->color = Color(color[0], color[1], color[2], color[3]);
+	*/
 }
 
 void Importer::Textures::Init()

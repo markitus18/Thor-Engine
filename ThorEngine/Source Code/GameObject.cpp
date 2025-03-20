@@ -393,11 +393,13 @@ Component* GameObject::CreateComponent(Component::Type type)
 		{
 			if (!HasComponent(Component::Billboard))
 				new_component = new C_Billboard(this);
+			break;
 		}
 		case(Component::Type::ParticleSystem):
 		{
 			if (!HasComponent(Component::ParticleSystem))
 				new_component = new C_ParticleSystem(this);
+			break;
 		}
 	}
 	if (new_component)

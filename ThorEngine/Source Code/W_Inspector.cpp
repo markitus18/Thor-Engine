@@ -219,13 +219,14 @@ void W_Inspector::DrawTransform(GameObject* gameObject, C_Transform* transform)
 void W_Inspector::DrawMesh(GameObject* gameObject, C_Mesh* mesh)
 {
 	if (mesh == nullptr) return;
+
 	R_Mesh* rMesh = mesh->rMeshHandle.Get();
 
 	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
 
-		if (uint64 newID = DrawDetails_Resource("Mesh", mesh->rMeshHandle.Get())) //TODO: Handle nullified ID
+		if (uint64 newID = DrawDetails_Resource("Mesh", rMesh, ResourceType::MESH)) //TODO: Handle nullified ID
 		{
 			mesh->SetResource(newID);
 		}
@@ -260,7 +261,7 @@ void W_Inspector::DrawMaterial(GameObject* gameObject, C_Material* material, uin
 	if (material == nullptr) return;
 
 	std::string name = std::string("Element ") + std::to_string(index);
-	if (uint64 newID = DrawDetails_Resource(name.c_str(), material->rMaterialHandle.Get()))
+	if (uint64 newID = DrawDetails_Resource(name.c_str(), material->rMaterialHandle.Get(), ResourceType::MATERIAL))
 	{
 		material->SetResource(newID);
 	}

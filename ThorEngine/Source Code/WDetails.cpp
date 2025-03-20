@@ -122,7 +122,7 @@ bool WDetails::DrawDetails_Float3(const char* name, float3& value)
 	return ret;
 }
 
-uint64 WDetails::DrawDetails_Resource(const char* name, const Resource* resource)
+uint64 WDetails::DrawDetails_Resource(const char* name, const Resource* resource, const ResourceType resourceType)
 {
 	uint64 ret = 0;
 
@@ -132,7 +132,11 @@ uint64 WDetails::DrawDetails_Resource(const char* name, const Resource* resource
 	ImVec2 prevCursor = ImGui::GetCursorPos();
 	ImGui::Image((ImTextureID)hPreviewTexture.Get()->buffer, ImVec2(64, 64), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::SetCursorPos(prevCursor + ImVec2(64 + 10, 12));
-	ImGui::Text(resource->GetName());
+
+	if (resource != nullptr)
+	{
+		ImGui::Text(resource->GetName());
+	}
 
 	ImGui::SetCursorPos(prevCursor + ImVec2(64 + 10, 12 + ImGui::GetTextLineHeightWithSpacing()));
 	ImGui::Button("A"); ImGui::SameLine();
@@ -142,7 +146,7 @@ uint64 WDetails::DrawDetails_Resource(const char* name, const Resource* resource
 
 	if (ImGui::BeginDragDropTarget())
 	{
-		std::string dnd_event = std::string("DND_RESOURCE_") + std::to_string((int)resource->GetType());
+		std::string dnd_event = std::string("DND_RESOURCE_") + std::to_string((int)resourceType);
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(dnd_event.c_str()))
 		{
 			if (payload->DataSize == sizeof(uint64))

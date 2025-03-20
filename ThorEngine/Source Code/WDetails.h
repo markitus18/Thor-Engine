@@ -27,7 +27,7 @@ public:
 	bool DrawDetails_Float2(const char* name, float2& value);
 	bool DrawDetails_Float3(const char* name, float3& value);
 	
-	uint64 DrawDetails_Resource(const char* name, const Resource* resource);
+	uint64 DrawDetails_Resource(const char* name, const Resource* resource, const ResourceType resourceType);
 
 private:
 	float columnSeparator = 0.3f;

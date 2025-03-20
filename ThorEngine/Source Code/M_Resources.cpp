@@ -52,7 +52,7 @@ bool M_Resources::Start()
 update_status M_Resources::Update()
 {
 	//Little dirty trick to offset both updates
-	if (saveChangedResources_timer.IsRunning() == false && updateAssets_timer.ReadSec() > 2.5)
+	if (saveChangedResources_timer.IsRunning() == false && updateAssets_timer.ReadSec() > 2.5f)
 	{
 		saveChangedResources_timer.Start();
 	}

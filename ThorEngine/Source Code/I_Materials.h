@@ -22,7 +22,7 @@ namespace Importer
 		//Process R_Material data into a buffer ready to save
 		//Returns the size of the buffer file (0 if any errors)
 		//Warning: buffer memory needs to be released after the function call
-		uint64 Save(const R_Material* rMaterial, char** buffer);
+		uint64 Save(R_Material* rMaterial, char** buffer);
 
 		//Process buffer data into a ready-to-use R_Material.
 		//Returns nullptr if any errors occurred during the process.

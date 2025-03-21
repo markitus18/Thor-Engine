@@ -101,13 +101,15 @@ void Importer::Models::Private::ImportNodeData(const aiScene* scene, const aiNod
 	}
 }
 
-void Importer::Models::LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials)
+void Importer::Models::LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, uint64 animatorID)
 {
 	for (uint i = 0u; i < model->nodes.size(); ++i)
 	{
 		model->nodes[i].meshID = (model->nodes[i].meshID != -1 ? meshes[model->nodes[i].meshID] : 0);
 		model->nodes[i].materialID = (model->nodes[i].materialID != -1 ? materials[model->nodes[i].materialID] : 0);
 	}
+
+	model->nodes[0].animatorID = animatorID;
 }
 
 uint64 Importer::Models::Save(R_Model* model, char** buffer)
@@ -171,6 +173,13 @@ GameObject* Importer::Models::LoadNewRoot(const R_Model* model)
 		{
 			C_Material* materialComponent = (C_Material*)newGameObject->CreateComponent(Component::Type::Material);
 			materialComponent->SetResource(node.materialID);
+		}
+
+		//Adding animator component and assigning its resource (if any)
+		if (node.animatorID != 0)
+		{
+			C_Animator* animatorComponent = (C_Animator*)newGameObject->CreateComponent(Component::Type::Animator);
+			animatorComponent->SetResource(node.animatorID);
 		}
 	}
 

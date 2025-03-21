@@ -30,7 +30,6 @@ struct Channel
 class R_Animation : public Resource
 {
 public:
-
 	R_Animation();
 	~R_Animation();
 

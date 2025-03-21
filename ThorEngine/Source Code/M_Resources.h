@@ -106,8 +106,8 @@ public:
 
 	ResourceHandle<Resource> hAssetsFolder;
 	ResourceHandle<Resource> hEngineAssetsFolder;
-private:
 
+private:
 	//All resources imported
 	std::map<uint64, ResourceBase> resourceLibrary;
 	

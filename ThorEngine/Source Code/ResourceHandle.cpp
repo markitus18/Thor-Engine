@@ -24,6 +24,7 @@ template class ResourceHandle<R_Texture>;
 template class ResourceHandle<R_Material>;
 template class ResourceHandle<R_ParticleSystem>;
 template class ResourceHandle<R_AnimatorController>;
+template class ResourceHandle<R_Animation>;
 
 template <typename T>
 T* ResourceHandle<T>::RequestResource() const

@@ -15,7 +15,7 @@ struct ModelNode
 {
 	ModelNode() {}
 	ModelNode(uint64 ID, const char* name = "No name", const float3& translation = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity, uint64 parentID = 0) :
-	ID(ID), name(name), parentID(parentID), materialID(-1), meshID(-1)
+	ID(ID), name(name), parentID(parentID), materialID(-1), meshID(-1), animatorID(0)
 	{
 		transform = float4x4::FromTRS(translation, rotation, scale);
 	}
@@ -27,6 +27,7 @@ struct ModelNode
 	uint64 parentID;
 	int meshID;
 	int materialID;
+	int animatorID;
 
 	virtual void Serialize(Config& config)
 	{
@@ -39,6 +40,7 @@ struct ModelNode
 
 		config.Serialize("Mesh ID", meshID);
 		config.Serialize("Material ID", materialID);
+		config.Serialize("Animator ID", animatorID);
 	}
 };
 

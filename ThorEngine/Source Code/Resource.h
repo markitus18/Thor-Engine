@@ -14,9 +14,8 @@ class Resource : public TreeNode
 	friend class M_ParticleSystems;
 
 public:
-
 	Resource(ResourceType type);
-	~Resource();
+	virtual ~Resource();
 
 	TreeNode* GetParentNode() const;
 

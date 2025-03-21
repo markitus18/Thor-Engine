@@ -162,6 +162,12 @@ bool M_Renderer3D::Start()
 	hDefaultTexture.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Default Texture.png")->ID);
 	hDefaultShader.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Shaders/Default Shader_PlainLight.shader")->ID);
 
+	hDefaultMaterial.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Defaults/Default Material.mat")->ID);
+	R_Material* material = hDefaultMaterial.Get();
+	material->hTexture = hDefaultTexture;
+	material->hShader = hDefaultShader;
+	Engine->moduleResources->SaveResource(material);
+
 	hDefaultParticlesShader.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Shaders/Default Particle Shader.shader")->ID);
 	hDefaultParticlesTexture.Set(Engine->moduleResources->FindResourceBase("Engine/Assets/Textures/bubble.png")->ID);
 

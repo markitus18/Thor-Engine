@@ -2,6 +2,9 @@
 #define __R_ANIMATOR_H__
 
 #include "Resource.h"
+#include "ResourceHandle.h"
+#include "R_Animation.h"
+
 #include "Globals.h"
 
 #include <vector>
@@ -12,12 +15,11 @@ public:
 	R_AnimatorController();
 	~R_AnimatorController();
 
-	//Animation configuration management
 	void AddAnimation();
 	void AddAnimation(uint64 animationID);
 
 public:
-	std::vector<uint64> animations;
+	std::vector<ResourceHandle<R_Animation>> animations;
 };
 
 #endif

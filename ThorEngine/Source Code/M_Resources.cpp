@@ -14,6 +14,7 @@
 #include "Resource.h"
 #include "ResourceHandle.h"
 #include "R_Model.h"
+#include "R_AnimatorController.h"
 
 #include "M_FileSystem.h"
 #include "PathNode.h"
@@ -267,15 +268,30 @@ void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
 		model->AddContainedResource(materials.back());
 	}
 
-	for (uint i = 0; i < scene->mNumAnimations; ++i)
+	uint64 animatorID = 0;
+	if (scene->mNumAnimations > 0)
 	{
-		aiAnimation* anim = scene->mAnimations[i];
-		animations.push_back(ImportResourceFromModel(model->GetAssetsFile(), anim, anim->mName.C_Str(), ResourceType::ANIMATION));
-		model->AddContainedResource(animations.back());
+		// TODO: Create Animator Resource. Fill with animations. Add Animator Resource to model.nodes.begin().animatorID
+		animatorID = ImportResourceFromModel(model->GetAssetsFile(), nullptr, "Animator", ResourceType::ANIMATOR_CONTROLLER);
+		R_AnimatorController* animator = (R_AnimatorController*)RequestResource(animatorID);
+		animator->isExternal = true; // Temp so that we don't override the original FBX
+
+		for (uint i = 0; i < scene->mNumAnimations; ++i)
+		{
+			aiAnimation* anim = scene->mAnimations[i];
+			animations.push_back(ImportResourceFromModel(model->GetAssetsFile(), anim, anim->mName.C_Str(), ResourceType::ANIMATION));
+			model->AddContainedResource(animations.back());
+
+			animator->AddAnimation(animations.back());
+		}
+
+		model->AddContainedResource(animatorID);
+		SaveResource(animator, false);
+		UnloadResource(animator->GetID());
 	}
 
 	//Link all loaded meshes and materials to the existing gameObjects
-	Importer::Models::LinkModelResources((R_Model*)model, meshes, materials);
+	Importer::Models::LinkModelResources((R_Model*)model, meshes, materials, animatorID);
 }
 
 uint64 M_Resources::ImportResourceFromModel(const char* file, const void* data, const char* name, ResourceType type)
@@ -688,6 +704,8 @@ ResourceType M_Resources::GetTypeFromFileExtension(const char* path) const
 		return ResourceType::MODEL;
 	if (ext == "tga" || ext == "png" || ext == "jpg" || ext == "TGA" || ext == "PNG" || ext == "JPG")
 		return ResourceType::TEXTURE;
+	if (ext == "mat")
+		return ResourceType::MATERIAL;
 	if (ext == "shader")
 		return ResourceType::SHADER;
 	if (ext == "particles")

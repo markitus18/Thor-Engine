@@ -45,8 +45,8 @@ void C_Animator::DrawLinkedBones() const
 void C_Animator::Start()
 {
 	//TODO: hard-coding root bone for fast code iteration
-	rootBone = gameObject->childs[1]->childs[0]; //Should be childs[0] childs[0] in skeleton mesh
-	gameObject->childs[0]->GetComponent<C_Mesh>()->rootBone = rootBone;
+	rootBone = gameObject->childs[0]->childs[0]; //Should be childs[0] childs[0] in skeleton mesh
+	gameObject->childs[1]->GetComponent<C_Mesh>()->rootBone = rootBone;
 
 	if (rootBone == nullptr) return;
 
@@ -59,11 +59,14 @@ void C_Animator::Start()
 	{
 		boneMapping[bones[i]->name] = bones[i];
 	}
+
+	time = 0.0f;
+	started = true;
 }
 
-void C_Animator::Update(float dt)
+void C_Animator::Update()
 {
-	dt = Time::deltaTime;
+	float dt = Time::deltaTime;
 	//"if" not necessary but we avoid all calculations
 	if (dt > 0.0f)
 	{
@@ -111,13 +114,14 @@ void C_Animator::Update(float dt)
 				else
 				{
 					playing = false;
+					started = false;
 					//TODO: is it really necessary? Not returning could end in last anim frame
 					return;
 				}
 			}
 
 			UpdateChannelsTransform(currentAnimation, blendRatio > 0.0f ? prevAnimation : nullptr, blendRatio);
-			UpdateMeshAnimation(gameObject->childs[0]);
+			UpdateMeshAnimation(gameObject->childs[1]);
 		}
 	}
 }
@@ -147,15 +151,12 @@ void C_Animator::SetAnimation(const char* name, float blendTime)
 	R_AnimatorController* rAnimator = rAnimatorHandle.Get();
 	for (uint i = 0; i < rAnimator->animations.size(); ++i)
 	{
-		//TODO: Animations should be loaded with animator controller
-		/*
-		R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
-		if (animation && animation->name == name)
+		R_Animation* animation = rAnimator->animations[i].Get();
+		if (animation && animation->GetName() == name)
 		{
 			SetAnimation(i, blendTime);
 			break;
 		}
-		*/
 	}
 }
 
@@ -187,9 +188,7 @@ R_Animation* C_Animator::GetAnimation(uint index)
 	R_AnimatorController* rAnimator = rAnimatorHandle.Get();
 	if (index < rAnimator->animations.size())
 	{
-		//TODO: Animations should be all loaded with the animator controller
-		//return (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[index]);
-		return nullptr;
+		return rAnimator->animations[index].Get();
 	}
 }
 
@@ -285,11 +284,15 @@ Quat C_Animator::GetChannelRotation(const Channel& channel, float currentKey, Qu
 		key_Quat next = channel.GetNextRotKey(currentKey);
 
 		if (next == channel.rotationKeys.end())
+		{
 			next = previous;
+		}
 
 		//If both keys are the same, no need to blend
 		if (previous == next)
+		{
 			rotation = previous->second;
+		}
 		else //blend between both keys
 		{
 			//0 to 1
@@ -310,11 +313,15 @@ float3 C_Animator::GetChannelScale(const Channel& channel, float currentKey, flo
 		key_f3 next = channel.GetPrevScaleKey(currentKey);
 
 		if (next == channel.scaleKeys.end())
+		{
 			next = previous;
+		}
 
 		//If both keys are the same, no need to blend
 		if (previous == next)
+		{
 			scale = previous->second;
+		}
 		else //blend between both keys
 		{
 			//0 to 1
@@ -336,5 +343,7 @@ void C_Animator::UpdateMeshAnimation(GameObject* gameObject)
 	}
 
 	for (uint i = 0; i < gameObject->childs.size(); i++)
+	{
 		UpdateMeshAnimation(gameObject->childs[i]);
+	}
 }

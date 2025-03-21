@@ -41,7 +41,7 @@ namespace Importer
 
 		//'Import' will store all meshes and materials as their index in the scene lists
 		//Here we update them to assign the correct resource IDs
-		void LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials);
+		void LinkModelResources(R_Model* model, const std::vector<uint64>& meshes, const std::vector<uint64>& materials, uint64 animatorID);
 
 		//Save all model data (all contained nodes) into a buffer file saved as json
 		//Returns the size of the buffer file (0 if any errors)

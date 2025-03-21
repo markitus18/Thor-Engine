@@ -317,21 +317,30 @@ void W_Inspector::DrawAnimator(GameObject* gameObject, C_Animator* animator)
 	{
 		ImGui::Indent();
 
-		ImGui::Text("Animations");
-		ImGui::Separator();
+		ImGui::Checkbox("Playing", &animator->playing);
 
 		R_AnimatorController* rAnimator = animator->rAnimatorHandle.Get();
-		for (uint i = 0; i < rAnimator->animations.size(); ++i)
+		if (uint64 newID = DrawDetails_Resource("Animator", rAnimator, ResourceType::ANIMATOR_CONTROLLER))
 		{
-			//TODO: Animations should all be loaded with animation controller
-
-			//R_Animation* animation = (R_Animation*)Engine->moduleResources->GetResource(rAnimator->animations[i]);
-			//ImGui::Text(animation ? animation->name.c_str() : "Empty Animation");
+			animator->SetResource(newID);
+			rAnimator = animator->rAnimatorHandle.Get();
 		}
 
-		if (ImGui::Button("Add Animation"))
+		if (rAnimator != nullptr)
 		{
-			rAnimator->AddAnimation();
+			ImGui::Separator();
+			ImGui::Text("Animations");
+
+			for (uint i = 0; i < rAnimator->animations.size(); ++i)
+			{
+				R_Animation* animation = rAnimator->animations[i].Get();
+				ImGui::Text(animation ? animation->GetName() : "Empty Animation");
+			}
+
+			if (ImGui::Button("Add Animation"))
+			{
+				rAnimator->AddAnimation();
+			}
 		}
 
 		ImGui::Unindent();

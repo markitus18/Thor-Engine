@@ -6,10 +6,16 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.meta
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+
+# User-specific ThorEngine content
+imgui.ini
+EditorState.json
+
+# Intermediate ThorEngine content
+Library/
 
 # Build results
 [Dd]ebug/
@@ -49,7 +55,6 @@ artifacts/
 *_p.c
 *_i.h
 *.ilk
-*.meta
 *.obj
 *.pch
 *.pdb

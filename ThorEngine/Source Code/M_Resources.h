@@ -12,6 +12,7 @@
 #include <vector>
 
 class R_Folder;
+class R_Model;
 struct PathNode;
 
 class M_Resources : public Module
@@ -46,7 +47,7 @@ public:
 	//Returns the newly created resource's ID
 	uint64 SaveResourceAs(Resource* resource, const char* directory, const char* fileName);
 
-	const ResourceBase* FindResourceBase(const char* path, const char* name = nullptr, ResourceType type = ResourceType::UNKNOWN) const;
+	ResourceBase* FindResourceBase(const char* path, const char* name = nullptr, ResourceType type = ResourceType::UNKNOWN);
 	const ResourceBase* GetResourceBase(uint64 ID) const;
 
 	bool GetAllMetaFromType(ResourceType type, std::vector<const ResourceBase*>& metas) const;
@@ -58,14 +59,13 @@ private:
 	void LoadAllAssets();
 
 	//Loads the base data from the resource in 'node.path' and all its children
-	//Returns whether the resource was imported as new or not
-	bool LoadAssetBase(PathNode node, uint64& assetID);
+	void LoadAssetBase(PathNode node, uint64& assetID);
 
 	//Import a 3D scene file
 	void ImportModel(const char* buffer, uint size, Resource* prefab);
 
 	//Import a resource existing in a prefab (3D scene) file
-	uint64 ImportResourceFromModel(const char* file, const void* data, const char* name, ResourceType type);
+	uint64 ImportResourceFromModel(const R_Model* rModel, const void* data, const char* name, ResourceType type);
 
 	//Generates the model's thumbnail and saves it in library
 	uint64 ImportModelThumbnail(char* buffer, const char* source_file, uint sizeX, uint sizeY);
@@ -75,6 +75,8 @@ private:
 
 	//Creates a resource from the base data in the library
 	Resource* CreateResourceFromBase(ResourceBase& base);
+
+	void ImportResource(Resource* resource);
 
 	//.meta file generation
 	void SaveMetaInfo(ResourceBase& base);

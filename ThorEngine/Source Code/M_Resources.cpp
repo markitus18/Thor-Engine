@@ -2,7 +2,6 @@
 
 #include "Engine.h"
 
-//Importers
 #include "I_Meshes.h"
 #include "I_Materials.h"
 #include "I_Scenes.h"
@@ -35,7 +34,7 @@ M_Resources::~M_Resources()
 
 bool M_Resources::Init(Config& config)
 {
-	ClearMetaData();
+	//ClearMetaData();
 	Importer::Textures::Init();
 
 	return true;
@@ -105,23 +104,27 @@ void M_Resources::LoadAllAssets()
 	hAssetsFolder.Set(folderID);
 }
 
-bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modification date check!
+void M_Resources::LoadAssetBase(PathNode node, uint64& assetID)
 {
-	bool importedAsNew = false;
-
-	//Load resource base from .meta file if it exists
 	std::string metaFile = node.path + ".meta";
-	if (Engine->fileSystem->Exists(metaFile.c_str()))
+	const bool isNewResource = !Engine->fileSystem->Exists(metaFile.c_str());
+	if (isNewResource)
 	{
+		assetID = ImportFileFromAssets(node.path.c_str());
+	}
+	else
+	{
+		//Load resource base from .meta file
 		char* buffer = nullptr;
 		Engine->fileSystem->Load(metaFile.c_str(), &buffer);
 		Config metaData(buffer);
 
 		ResourceBase newResourceBase;
 		newResourceBase.Serialize(metaData);
-
 		std::map<uint64, ResourceBase>::iterator it = resourceLibrary.find(newResourceBase.ID);
-		if (it != resourceLibrary.end()) //The resource is already loaded. Check modification date in case it needs re-importing
+
+		// The resource has already been processed. Check modification date in case it has to be re-imported
+		if (it != resourceLibrary.end()) 
 		{
 			assetID = it->first;
 
@@ -129,42 +132,53 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 			uint64 configDate = 0;
 			metaData.Serialize("Date", configDate);
 
-			if (fileMod != configDate)
-				ImportFileFromAssets(node.path.c_str()); //Send 'newResourceBase'?
+			if ((fileMod != configDate))
+			{
+				//TODO: Send 'newResourceBase'
+				ImportFileFromAssets(node.path.c_str());
+			}
 		}
-		else //Load resource base from the .meta content
+		else // Resource not processed yet. Load the resource base from the .meta content
 		{
 			newResourceBase.assetsFile = node.path;
 
+			// TODO: This piece could use some cleanup.
+			// At the moment we are trying to share logic for folders and assets
+			// but it is making things a bit more complicated.
+			// By importing the folder as a new resource, it will override the .meta
+			// with no contained resources (because they have not been processed yet)
+			// but we will be able to rebuild and save them at the end of the function
+			
 			//Add all contained resources saved in the meta file
 			Config_Array arr = metaData.GetArray("Contained Resources");
 			for (uint i = 0; i < arr.GetSize(); ++i)
 			{
+				// Add contained resources data
+				ResourceBase childBase;
+				childBase.Serialize(arr.GetNode(i));
+				newResourceBase.containedResources.push_back(childBase.ID);
+
+				// For folders, we will not add them to the resource library since they will be processed later as PathNodes
 				if (newResourceBase.type != ResourceType::FOLDER)
 				{
-					ResourceBase childBase;
-					childBase.Serialize(arr.GetNode(i));
 					childBase.assetsFile = newResourceBase.assetsFile;
 					resourceLibrary[childBase.ID] = childBase;
-					newResourceBase.containedResources.push_back(childBase.ID);
-				}
-				else // For folders we only store the contained resources ID instead of loading all the data (library data will be loaded when we load each individual file)
-				{
-					Config arrNode = arr.GetNode(i);
-					uint64 childID = 0;
-					arrNode.Serialize("ID", childID);
-					newResourceBase.containedResources.push_back(childID);
 				}
 			}
+
 			resourceLibrary[newResourceBase.ID] = newResourceBase;
 			assetID = newResourceBase.ID;
+
+			// The resource has not been imported to the current workspace
+			// Do the full import process as we would do for a new resource, but maintain IDs
+			if (!Engine->fileSystem->Exists(newResourceBase.libraryFile.c_str()))
+			{
+				Resource* resource = CreateResourceFromBase(newResourceBase);
+				ImportResource(resource);
+				UnloadResource(assetID);
+			}
 		}
 		RELEASE_ARRAY(buffer);
-	}
-	else //Import resource as new
-	{
-		assetID = ImportFileFromAssets(node.path.c_str());
-		importedAsNew = true;
 	}
 
 	//Load the assets contained in the current folder
@@ -186,7 +200,6 @@ bool M_Resources::LoadAssetBase(PathNode node, uint64& assetID) //TODO: Add modi
 			SaveResource(hFolder.Get());
 		}
 	}
-	return importedAsNew;
 }
 
 void M_Resources::ImportFileFromExplorer(const char* path, const char* dstDir)
@@ -215,28 +228,8 @@ uint64 M_Resources::ImportFileFromAssets(const char* path)
 	Resource* resource = CreateNewResource(path, type);
 	uint64 resourceID = resource->GetID();
 
-	char* buffer = nullptr;
-	uint64 fileSize = 0;
-	if (type != ResourceType::FOLDER)
-		fileSize = Engine->fileSystem->Load(path, &buffer);
-	
-	if (resource->isExternal) //TODO: Shaders should not be external, keeping it by now
-	{
-		switch (type)
-		{
-			case (ResourceType::TEXTURE):				Importer::Textures::Import(buffer, fileSize, (R_Texture*)resource); break;
-			case (ResourceType::MODEL):					ImportModel(buffer, fileSize, resource); break;
-			case (ResourceType::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break;
-		}
-		SaveResource(resource);
-	}
-	else //We skip import process as we only need to duplicate the file into library
-	{
-		Engine->fileSystem->Save(resource->GetLibraryFile(), buffer, fileSize);
-		SaveMetaInfo(*resource->baseData);
-	}		
-	RELEASE_ARRAY(buffer);
-	UnloadResource(resource->GetID());
+	ImportResource(resource);
+	UnloadResource(resourceID);
 
 	return resourceID;
 }
@@ -257,14 +250,14 @@ void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
 				meshName = rModel->nodes[n].name;
 		}
 		scene->mMeshes[i]->mName = meshName;
-		meshes.push_back(ImportResourceFromModel(model->GetAssetsFile(), scene->mMeshes[i], meshName.c_str(), ResourceType::MESH));
+		meshes.push_back(ImportResourceFromModel(rModel, scene->mMeshes[i], meshName.c_str(), ResourceType::MESH));
 		model->AddContainedResource(meshes.back());
 	}
 	for (uint i = 0; i < scene->mNumMaterials; ++i)
 	{
 		aiString matName;
 		scene->mMaterials[i]->Get(AI_MATKEY_NAME, matName);
-		materials.push_back(ImportResourceFromModel(model->GetAssetsFile(), scene->mMaterials[i], matName.C_Str(), ResourceType::MATERIAL));
+		materials.push_back(ImportResourceFromModel(rModel, scene->mMaterials[i], matName.C_Str(), ResourceType::MATERIAL));
 		model->AddContainedResource(materials.back());
 	}
 
@@ -272,14 +265,14 @@ void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
 	if (scene->mNumAnimations > 0)
 	{
 		// TODO: Create Animator Resource. Fill with animations. Add Animator Resource to model.nodes.begin().animatorID
-		animatorID = ImportResourceFromModel(model->GetAssetsFile(), nullptr, "Animator", ResourceType::ANIMATOR_CONTROLLER);
+		animatorID = ImportResourceFromModel(rModel, nullptr, "Animator", ResourceType::ANIMATOR_CONTROLLER);
 		R_AnimatorController* animator = (R_AnimatorController*)RequestResource(animatorID);
 		animator->isExternal = true; // Temp so that we don't override the original FBX
 
 		for (uint i = 0; i < scene->mNumAnimations; ++i)
 		{
 			aiAnimation* anim = scene->mAnimations[i];
-			animations.push_back(ImportResourceFromModel(model->GetAssetsFile(), anim, anim->mName.C_Str(), ResourceType::ANIMATION));
+			animations.push_back(ImportResourceFromModel(rModel, anim, anim->mName.C_Str(), ResourceType::ANIMATION));
 			model->AddContainedResource(animations.back());
 
 			animator->AddAnimation(animations.back());
@@ -294,9 +287,22 @@ void M_Resources::ImportModel(const char* buffer, uint size, Resource* model)
 	Importer::Models::LinkModelResources((R_Model*)model, meshes, materials, animatorID);
 }
 
-uint64 M_Resources::ImportResourceFromModel(const char* file, const void* data, const char* name, ResourceType type)
+uint64 M_Resources::ImportResourceFromModel(const R_Model* rModel, const void* data, const char* name, ResourceType type)
 {
-	Resource* resource = CreateNewResource(file, type, name);
+	Resource* resource = nullptr;
+
+	const char* assetsFilePath = rModel->GetAssetsFile();
+	ResourceBase* existingResourceBase = FindResourceBase(assetsFilePath, name, type);
+
+	if (existingResourceBase != nullptr)
+	{
+		resource = CreateResourceFromBase(*existingResourceBase);
+	}
+	else
+	{
+		resource = CreateNewResource(assetsFilePath, type, name);
+	}
+
 	uint64 resourceID = resource->GetID();
 	resource->isExternal = true;
 
@@ -392,6 +398,31 @@ Resource* M_Resources::CreateResourceFromBase(ResourceBase& base)
 	return resources[base.ID] = resource;
 }
 
+void M_Resources::ImportResource(Resource* resource)
+{
+	char* buffer = nullptr;
+	uint64 fileSize = 0;
+	if (resource->GetType() != ResourceType::FOLDER)
+		fileSize = Engine->fileSystem->Load(resource->GetAssetsFile(), &buffer);
+
+	if (resource->isExternal) //TODO: Shaders should not be external, keeping it by now
+	{
+		switch (resource->GetType())
+		{
+		case (ResourceType::TEXTURE):				Importer::Textures::Import(buffer, fileSize, (R_Texture*)resource); break;
+		case (ResourceType::MODEL):					ImportModel(buffer, fileSize, resource); break;
+		case (ResourceType::SHADER):				Importer::Shaders::Import(buffer, (R_Shader*)resource); break;
+		}
+		SaveResource(resource);
+	}
+	else //We skip import process as we only need to duplicate the file into library
+	{
+		Engine->fileSystem->Save(resource->GetLibraryFile(), buffer, fileSize);
+		SaveMetaInfo(*resource->baseData);
+	}
+	RELEASE_ARRAY(buffer);
+}
+
 uint64 M_Resources::CreateNewCopyResource(const char* srcFile, const char* dstDir)
 {
 	uint64 resourceID = 0;
@@ -429,6 +460,8 @@ Resource* M_Resources::RequestResource(uint64 ID)
 	std::map<uint64, ResourceBase>::iterator libraryIt = resourceLibrary.find(ID);
 	if (libraryIt != resourceLibrary.end())
 	{
+		// TODO: Manage 'isExternal' for resources that have already been imported but are laoded from library
+
 		resource = CreateResourceFromBase(libraryIt->second);
 		char* buffer = nullptr;
 		uint size = Engine->fileSystem->Load(resource->GetLibraryFile(), &buffer);
@@ -471,11 +504,11 @@ void M_Resources::ReleaseResource(Resource* resource)
 	}
 }
 
-const ResourceBase* M_Resources::FindResourceBase(const char* path, const char* name, ResourceType type) const
+ResourceBase* M_Resources::FindResourceBase(const char* path, const char* name, ResourceType type)
 {
 	//TODO: Search process should start at Root Folder and iterate down the path
 	//		It will make it much faster than comparing all strings
-	std::map<uint64, ResourceBase>::const_iterator it;
+	std::map<uint64, ResourceBase>::iterator it;
 	for (it = resourceLibrary.begin(); it != resourceLibrary.end(); ++it)
 	{
 		if (it->second.Compare(path, name, type))
@@ -582,8 +615,13 @@ void M_Resources::SaveMetaInfo(ResourceBase& base)
 	Config_Array children = config.SetArray("Contained Resources");
 	for (uint i = 0; i < base.containedResources.size(); ++i)
 	{
-		ResourceBase& baseChild = resourceLibrary[base.containedResources[i]];
-		baseChild.Serialize(children.AddNode());
+		const auto containedResourceIt = resourceLibrary.find(base.containedResources[i]);
+		if (containedResourceIt != resourceLibrary.end())
+		{
+			ResourceBase& baseChild = containedResourceIt->second;
+			baseChild.Serialize(children.AddNode());
+		}
+
 	}
 
 	char* buffer = nullptr;
@@ -650,7 +688,7 @@ uint M_Resources::UnloadResource(uint64 ID)
 		it->second->FreeMemory();
 		instances = it->second->instances;
 		RELEASE(it->second);
-		resources.erase(it); //TODO: Can this break after releasing "second"?
+		resources.erase(it);
 	}
 	return instances;
 }

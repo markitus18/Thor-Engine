@@ -179,7 +179,6 @@ void C_Animator::SetAnimation(uint index, float blendTime)
 		}
 		current_animation = index;
 		time = 0.0f;
-		playing = true;
 	}
 }
 

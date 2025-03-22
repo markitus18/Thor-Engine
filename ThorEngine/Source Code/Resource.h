@@ -31,9 +31,9 @@ public:
 	bool DrawTreeNode() const;
 	bool HasResource(uint64 ID) const;
 
-	virtual void AddContainedResource(uint64 ID);
-	virtual void RemoveContainedResource(uint64 ID);
-	virtual bool HasContainedResource(uint64 ID) const;
+	void AddContainedResource(uint64 ID);
+	void RemoveContainedResource(uint64 ID);
+	bool HasContainedResource(uint64 ID) const;
 
 	virtual void LoadOnMemory() {};
 	virtual void FreeMemory() {};

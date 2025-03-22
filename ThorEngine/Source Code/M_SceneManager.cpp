@@ -166,9 +166,12 @@ void M_SceneManager::SaveCurrentScene(const char* saveAsNewPath)
 
 void M_SceneManager::AddRootMapToScene(GameObject* root, Scene* target)
 {
-	for (uint i = 0; i < root->childs.size(); ++i)
+	// Root children are transfered from 'root' to 'target' scene.
+	// Does it make sense to simply replace 'target->root' with 'root'?
+	// At the moment we only do this when creating new scenes, so all data is replaced
+	while (!root->childs.empty())
 	{
-		target->AddGameObject(root->childs[i]);
+		target->AddGameObject(*root->childs.begin());
 	}
 }
 

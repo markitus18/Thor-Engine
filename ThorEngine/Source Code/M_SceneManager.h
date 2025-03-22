@@ -59,11 +59,7 @@ public:
 private:
 	void AddRootMapToScene(GameObject* root, Scene* target);
 
-public:
-	bool drawQuadtree = false;
-	bool drawBounds = false;
-	bool drawBoundsSelected = false;
-	  
+public: 
 	Scene* mainScene = nullptr;
 	std::vector<Scene*> activeScenes;
 };

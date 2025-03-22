@@ -179,9 +179,6 @@ void WF_SceneEditor::MenuBar_Development()
 		ImGui::MenuItem("ImGui Demo", nullptr, &Engine->moduleEditor->show_Demo_window);
 		if (ImGui::BeginMenu("Display"))
 		{
-			ImGui::MenuItem("Quadtree", nullptr, &Engine->sceneManager->drawQuadtree);
-			ImGui::MenuItem("GameObjects box", nullptr, &Engine->sceneManager->drawBounds);
-			ImGui::MenuItem("GameObjects box (selected)", nullptr, &Engine->sceneManager->drawBoundsSelected);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();

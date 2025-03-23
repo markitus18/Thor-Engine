@@ -20,6 +20,7 @@ Scene::Scene()
 {
 	quadtree = new Quadtree(AABB(vec(-80, -30, -80), vec(80, 30, 80)));
 	root = new GameObject(nullptr, float4x4::identity, "Root");
+	root->hierarchyOpen = true;
 }
 
 Scene::~Scene()

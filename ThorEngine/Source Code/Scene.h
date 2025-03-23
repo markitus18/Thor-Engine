@@ -72,6 +72,7 @@ private:
 	void CollectCullingCandidates(std::vector<const GameObject*>& vector, std::vector<const GameObject*>& candidates);
 
 	void ClearGameObjectsForRemoval();
+
 public:
 	std::string file_path;
 	std::string name;

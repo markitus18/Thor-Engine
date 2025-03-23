@@ -370,13 +370,6 @@ void M_Editor::Draw()
 		DeleteSelected();
 	}
 
-	if (dragging == true && (Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP || Engine->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE))
-	{
-		toDragGOs.clear();
-		FinishDrag(true, false);
-		dragging = false;
-	}
-
 	ImGuiWindowFlags frameWindow_flags =
 		ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |

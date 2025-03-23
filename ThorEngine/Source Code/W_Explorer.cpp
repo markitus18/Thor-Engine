@@ -122,6 +122,7 @@ void W_Explorer::LoadLayout_Default()
 
 	ImGui::End();
 }
+
 void W_Explorer::DrawFolderNode(PathNode& node)
 {
 	ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
@@ -139,6 +140,8 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 	//If node folder has something inside
 	if (node.isFile == false)
 	{
+		ImGui::PushID(node.path.c_str());
+
 		bool open = ImGui::TreeNodeEx(node.localPath.c_str(), nodeFlags, node.localPath.c_str());
 		if (ImGui::IsItemClicked())
 		{
@@ -152,6 +155,8 @@ void W_Explorer::DrawFolderNode(PathNode& node)
 			}
 			ImGui::TreePop();
 		}
+
+		ImGui::PopID();
 	}
 }
 

@@ -167,7 +167,9 @@ void GameObject::Serialize(Config& config)
 	{
 		Config_Array compConfig = config.SetArray("Components");
 		for (uint i = 0; i < components.size(); ++i)
+		{
 			components[i]->Serialize(compConfig.AddNode());
+		}
 	}
 	else
 	{
@@ -178,7 +180,9 @@ void GameObject::Serialize(Config& config)
 			compConfig.GetNode(i).Serialize("Component Type", componentType);
 
 			if (Component* component = CreateComponent((Component::Type)componentType))
+			{
 				component->Serialize(compConfig.GetNode(i));
+			}
 		}
 		OnTransformUpdated();
 	}

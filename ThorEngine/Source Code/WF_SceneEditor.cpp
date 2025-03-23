@@ -146,11 +146,12 @@ void WF_SceneEditor::MenuBar_Custom()
 
 		if (ImGui::MenuItem("Empty Child x10"))
 		{
+			Engine->moduleEditor->UnselectAll();
 			for (uint i = 0; i < 10; i++)
 			{
 				std::string name(scene->GetNewGameObjectName("GameObject"));
 				GameObject* newGameObject = scene->CreateNewGameObject(name.c_str());
-				Engine->moduleEditor->SelectSingle((TreeNode*)newGameObject);
+				Engine->moduleEditor->AddSelect((TreeNode*)newGameObject);
 			}
 		}
 

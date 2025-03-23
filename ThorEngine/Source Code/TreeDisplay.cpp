@@ -30,6 +30,7 @@ void TreeDisplay::DrawTree(TreeNode* root)
 {
 	DrawNodeChilds(root);
 	HandleArrows();
+
 	if (selecting == true && Engine->input->LastClickMoved() == true)
 	{
 		Engine->moduleEditor->dragging = true;
@@ -142,7 +143,9 @@ void TreeDisplay::HandleUserInput(TreeNode* node)
 		{
 			bool parentSet = SetParentByPlace(node, Engine->moduleEditor->toDragGOs);
 			if (parentSet)
+			{
 				node->beenSelected = true;
+			}
 
 			Engine->moduleEditor->FinishDrag(true, true);
 			selecting = false;
@@ -195,15 +198,21 @@ void TreeDisplay::HandleUserInput(TreeNode* node)
 			for (it = Engine->moduleEditor->selectedGameObjects.begin(); it != Engine->moduleEditor->selectedGameObjects.end(); ++it)
 			{
 				if (*it != node)
+				{
 					Engine->moduleEditor->toUnselectGOs.push_back(*it);
+				}
 				if (node->IsSelected() == true)
+				{
 					Engine->moduleEditor->toDragGOs.push_back(*it);
+				}
 			}
+
 			if (node->IsSelected() == false)
 			{
 				Engine->moduleEditor->AddToSelect(node);
 				Engine->moduleEditor->toDragGOs.push_back(node);
 			}
+
 			Engine->moduleEditor->lastSelected = node;
 		}
 	}
@@ -360,9 +369,12 @@ bool TreeDisplay::IsHighlighted(TreeNode* node) const
 
 bool TreeDisplay::SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> childs, TreeNode* next)
 {
-	bool previousParentHierarchyOpen = parent->hierarchyOpen;
 	bool ret = false;
-	parent->hierarchyOpen = true; //Little trick, in case the parent needs to add multiple childs
+
+	//Little trick, in case the parent needs to have multiple childs added
+	bool previousParentHierarchyOpen = parent->hierarchyOpen;
+	parent->hierarchyOpen = true;
+
 	std::vector<TreeNode*>::const_iterator it = TreeNode::GetFirstOpenNode(Engine->sceneManager->GetRoot(), childs);
 	while (it != childs.end())
 	{
@@ -374,7 +386,9 @@ bool TreeDisplay::SetParentByPlace(TreeNode* parent, std::vector<TreeNode*> chil
 		childs.erase(it);
 		it = TreeNode::GetFirstOpenNode(Engine->sceneManager->GetRoot(), childs);
 	}
+
 	parent->hierarchyOpen = previousParentHierarchyOpen;
 	parent->RecalculateOpenNodes();
+
 	return ret;
 }

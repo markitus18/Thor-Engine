@@ -377,69 +377,16 @@ void W_Inspector::DrawParticleSystem(GameObject* gameObject, C_ParticleSystem* p
 {
 	if (particleSystem == nullptr) return;
 
+	R_ParticleSystem* rParticleSystem = particleSystem->rParticleSystemHandle.Get();
+
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
 
-		R_ParticleSystem* resource = particleSystem->rParticleSystemHandle.Get();
-		std::string menuName = resource ? resource->GetName() : "-- Select Particle System --";
-
-		if (ImGui::BeginMenu(menuName.c_str()))
+		if (uint64 newID = DrawDetails_Resource("Particle System", rParticleSystem, ResourceType::PARTICLESYSTEM))
 		{
-			if (ImGui::MenuItem("Create New"))
-			{
-				W_Explorer* w_explorer = (W_Explorer*)parentFrame->GetWindow(W_Explorer::GetName());
-				const char* targetDir = Engine->moduleEditor->GetCurrentExplorerDirectory();
-				if (uint64 resourceID = Engine->moduleResources->CreateNewCopyResource("Engine/Assets/Defaults/New Particle System.particles", targetDir))
-				{
-					particleSystem->SetResource(resourceID);
-				}
-			}
-			
-			std::vector<const ResourceBase*> resourceBases;
-			if (Engine->moduleResources->GetAllMetaFromType(ResourceType::PARTICLESYSTEM, resourceBases))
-			{
-				ImGui::Separator();
-				for (uint i = 0; i < resourceBases.size(); ++i)
-				{
-					if (ImGui::MenuItem(resourceBases[i]->name.c_str()))
-					{
-						particleSystem->SetResource(resourceBases[i]->ID);
-					}
-				}
-			}
-			ImGui::EndMenu();
+			particleSystem->SetResource(newID);
 		}
 		ImGui::Unindent();
-
-		if (showDebugInfo)
-		{
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-			ImGui::Separator();
-			ImGui::Text("Emitters:");
-			ImGui::Indent();
-
-			for (uint i = 0; i < particleSystem->emitters.size(); ++i)
-			{
-				ImGui::Text(particleSystem->emitters[i].emitterReference->name.c_str());
-				ImGui::Text("Particles");
-				ImGui::Indent();
-
-				EmitterInstance* instance = &particleSystem->emitters[i];
-				for (uint i = 0; i < instance->activeParticles; ++i)
-				{
-					unsigned int particleIndex = instance->particleIndices[i];
-					Particle* particle = &instance->particles[particleIndex];
-
-					ImGui::Text("Particle %i - %f", particleIndex, particle->relativeLifetime);
-				}
-
-				ImGui::Unindent();
-				ImGui::Separator();
-			}
-
-			ImGui::PopStyleColor();
-			ImGui::Unindent();
-		}
 	}
 }

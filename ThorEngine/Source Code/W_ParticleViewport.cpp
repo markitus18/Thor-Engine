@@ -15,5 +15,3 @@ void W_ParticleViewport::DrawToolbarCustom()
 
 	WViewport::DrawToolbarCustom();
 }
-
-

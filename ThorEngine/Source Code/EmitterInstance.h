@@ -25,7 +25,7 @@ private:
 	void UpdateModules();
 
 public:
-	float emitterTime = 0;					//Keeping emitter time count, useful later for looping
+	float emitterTime = 0;				//Keeping emitter time count, useful later for looping
 
 	//Particle-related data
 	unsigned int activeParticles = 0;

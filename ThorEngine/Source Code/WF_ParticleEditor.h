@@ -7,6 +7,7 @@ class M_Editor;
 class R_ParticleSystem;
 class Emitter;
 class ParticleModule;
+class C_ParticleSystem;
 
 struct ImGuiWindowClass;
 
@@ -30,6 +31,8 @@ public:
 	R_ParticleSystem* particleSystem = nullptr;
 	Emitter* selectedEmitter = nullptr;
 	ParticleModule* selectedModule = nullptr;
+
+	C_ParticleSystem* sceneParticleSystem = nullptr;
 };
 
 #endif //__WF_PARTICLE_EDITOR_H

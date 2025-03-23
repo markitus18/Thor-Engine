@@ -38,8 +38,8 @@ void WF_ParticleEditor::SetResource(uint64 resourceID)
 
 	scene = Engine->sceneManager->CreateNewScene();
 	GameObject* gameObject = scene->CreateNewGameObject("Particle System");
-	C_ParticleSystem*  particleComponent = (C_ParticleSystem*)gameObject->CreateComponent(Component::ParticleSystem);
-	particleComponent->SetResource(resourceID);
+	sceneParticleSystem = (C_ParticleSystem*)gameObject->CreateComponent(Component::ParticleSystem);
+	sceneParticleSystem->SetResource(resourceID);
 
 	W_ParticleViewport* viewport = (W_ParticleViewport*)GetWindow(W_ParticleViewport::GetName());
 	viewport->SetScene(scene);

@@ -107,7 +107,7 @@ void GameObject::Draw(ERenderingFlags::Flags flags)
 
 		if (flags & ERenderingFlags::Bounds_AABB)
 			Engine->renderer3D->AddAABB(aabb, Green);
-		if (flags & ERenderingFlags::Bounds_OBB)
+		if (flags & ERenderingFlags::Bounds_OBB || (flags & ERenderingFlags::Selected_Bounds && IsSelected()))
 			Engine->renderer3D->AddOBB(obb, Yellow);
 	}
 }

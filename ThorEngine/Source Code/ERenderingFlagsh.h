@@ -7,25 +7,26 @@ struct ERenderingFlags
 	typedef unsigned __int64 Flags;
 	enum
 	{
-		None =			0,
-		Grid =			1 << 0,
-		Skybox =		1 << 1,
-		Quadtree =		1 << 2,
-		Bounds_AABB =	1 << 3,
-		Bounds_OBB =	1 << 4,
-		Gizmo2D =		1 << 5,
-		Frustum =		1 << 6,
-		MousePick =		1 << 7,
-		Bones =			1 << 8,
-		Max =			1 << 9
+		None =				0,
+		Grid =				1 << 0,
+		Skybox =			1 << 1,
+		Quadtree =			1 << 2,
+		Bounds_AABB =		1 << 3,
+		Bounds_OBB =		1 << 4,
+		Selected_Bounds =	1 << 5,
+		Gizmo2D =			1 << 6,
+		Frustum =			1 << 7,
+		MousePick =			1 << 8,
+		Bones =				1 << 9,
+		Max =				1 << 10
 	};
-	inline static const std::string str[] = { "None", "Grid", "Skybox", "Quadtree", "Bounds_AABB", "Bounds_OBB", "Gizmo2D", "Frustum", "MousePick", "Bones", "Max" };
+	inline static const std::string str[] = { "None", "Grid", "Skybox", "Quadtree", "Bounds_AABB", "Bounds_OBB", "Selected_Bounds", "Gizmo2D", "Frustum", "MousePick", "Bones", "Max" };
 	inline static uint ToI(Flags flag) { return (uint)log2(flag) + 1; }
 
 	static const Flags DefaultGameFlags =		Skybox;
 
 	static const Flags DefaultEditorFlags =		Grid		| Skybox		| Gizmo2D |
-												Frustum		| Bones;
+												Frustum		| Bones			| Selected_Bounds;
 };
 
 struct EViewportCameraAngle

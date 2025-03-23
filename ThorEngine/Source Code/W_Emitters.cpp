@@ -3,6 +3,7 @@
 #include "WF_ParticleEditor.h"
 #include "R_ParticleSystem.h"
 #include "ParticleModule.h"
+#include "C_ParticleSystem.h"
 
 #include "ImGui/imgui.h"
 
@@ -19,6 +20,7 @@ void W_Emitters::Draw()
 	R_ParticleSystem* particleSystem = hostWindow->particleSystem;
 	Emitter* selectedEmitter = hostWindow->selectedEmitter;
 	ParticleModule* selectedModule = hostWindow->selectedModule;
+	C_ParticleSystem* sceneParticleSystem = hostWindow->sceneParticleSystem;
 
 	ImGui::SetNextWindowClass(windowClass);
 	if (!ImGui::Begin(windowStrID.c_str(), &active)) { ImGui::End(); return; }
@@ -32,7 +34,10 @@ void W_Emitters::Draw()
 			Emitter* emitter = &particleSystem->emitters[i];
 			ImGui::PushID(emitter);
 			if (ImGui::Selectable(particleSystem->emitters[i].name.c_str(), selectedEmitter == emitter))
+			{
 				selectedEmitter = emitter;
+			}
+
 			ImGui::PopID();
 			ImGui::NextColumn();
 		}
@@ -67,6 +72,7 @@ void W_Emitters::Draw()
 	{
 		particleSystem->AddDefaultEmitter();
 		particleSystem->needs_save = true;
+		sceneParticleSystem->SetResource(particleSystem);
 	}
 
 	ImGui::End();
